@@ -1,0 +1,5 @@
+# Noboru Supabase local development configuration.
+# Run `npx supabase init` and link your project when ready.
+
+[project]
+id = "noboru"

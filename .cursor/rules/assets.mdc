@@ -1,0 +1,226 @@
+---
+description: Noboru assets — naming category_name_variant_version, metadata.json required, public and assets dirs; reference docs/asset-pipeline.md and docs/asset-registry.md.
+globs: **/assets/**, **/public/**
+alwaysApply: false
+---
+
+# NOBORU ASSETS RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs all static and managed visual assets within Noboru.
+
+Every illustration, icon, mascot image, achievement badge, background, audio file, UI asset, and public media file must follow this document, docs/asset-pipeline.md, and docs/asset-registry.md.
+
+Assets are part of the product system.
+
+Not informal file drops.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Visual consistency with Noboru identity
+* Traceable ownership and versioning of assets
+* Predictable naming and metadata for search and reuse
+* No duplicate or orphaned files in public/ or assets/
+* Performance-safe delivery of media
+* Long-term maintainability of the asset library
+
+Every asset should immediately feel like Noboru.
+
+⸻
+
+REQUIREMENTS
+
+References
+
+* docs/asset-pipeline.md defines creation, review, publishing, and lifecycle
+* docs/asset-registry.md defines registry entries and discoverability
+* architecture.mdc ASSET PIPELINE ARCHITECTURE requires metadata, ownership, versioning, and registry entries
+
+Naming Format
+
+All production assets use:
+
+category_name_variant_version
+
+Examples:
+
+* icon_review_check_v1.svg
+* mascot_yama_happy_v2.png
+* bg_region_kyoto_night_v1.webp
+* achievement_streak_7day_v1.png
+
+Rules
+
+* lowercase
+* underscore separators
+* explicit version suffix
+* no spaces or ambiguous abbreviations
+
+Metadata
+
+* Every managed asset directory or bundle requires metadata.json
+* metadata.json must include at minimum:
+  id
+  category
+  name
+  variant
+  version
+  owner
+  purpose
+  format
+  createdAt or versionDate
+  license or source if applicable
+* Registry entries must align with docs/asset-registry.md
+
+Ownership
+
+* Every asset has a named owner: feature, art direction, or shared system
+* No anonymous assets in production paths
+
+Versioning
+
+* Do not overwrite production assets in place when meaningfully changed
+* Increment version suffix and update metadata
+* Keep deprecated assets marked in registry until safe removal
+
+Locations
+
+* assets/ for managed pipeline assets and source organization
+* public/ for delivered static files intended for direct URL serving
+* Do not place unmanaged duplicates across both trees
+
+Performance
+
+* Prefer modern formats such as webp or svg where appropriate
+* Optimize images before production use
+* Do not block core learning on decorative asset download
+
+Educational and Brand Integrity
+
+* Assets support learning, immersion, and progression
+* Avoid generic stock visuals that break Noboru identity
+* Achievement and shop assets must not imply educational advantage
+
+⸻
+
+CODING STANDARDS
+
+Registry
+
+* Register new assets in docs/asset-registry.md or approved registry system before production use
+* Include feature ownership and usage locations when known
+
+Imports
+
+* Reference assets via stable paths or registry IDs as established by codebase conventions
+* Avoid hardcoded scattered magic paths in multiple features
+
+Metadata Files
+
+* Keep metadata.json valid JSON
+* Update version and purpose fields on change
+* Document replacement relationships when superseding old assets
+
+Public Folder Discipline
+
+* public/ contains only intentional shipped assets
+* Remove unused public assets when deprecated and registry updated
+
+Audio and Media
+
+* Name audio assets with same category_name_variant_version pattern
+* Include duration or usage notes in metadata when helpful
+
+⸻
+
+SUCCESS CRITERIA
+
+Asset work is successful when:
+
+* Assets follow category_name_variant_version naming
+* metadata.json exists and is accurate for managed assets
+* Registry entries exist per docs/asset-registry.md
+* No duplicate assets serve the same purpose under different names
+* Visual style matches Noboru art direction
+* Asset changes are versioned, not silently overwritten
+* Core learning routes do not depend on unoptimized oversized media
+
+⸻
+
+FAILURE CRITERIA
+
+Asset quality is degraded when any of the following occur:
+
+* Unnamed files such as image1.png in production paths
+* Missing metadata.json for managed asset groups
+* Duplicate icons or backgrounds across features with different names
+* In-place overwrite of versioned assets without version bump
+* Orphan files in public/ with no registry entry or usage
+* Assets that break mobile performance on lesson entry
+* Visuals inconsistent with art direction
+* Asset registry out of sync with actual files
+
+When failure criteria appear, clean up naming and registry before adding more assets.
+
+⸻
+
+EXAMPLES
+
+Correct asset path
+
+public/icons/icon_review_check_v1.svg
+
+Correct metadata
+
+assets/mascots/yama/metadata.json documents mascot_yama_happy_v2.png with owner and purpose.
+
+Correct version change
+
+Replace mascot_yama_happy_v2.png with mascot_yama_happy_v3.png and update registry.
+
+Incorrect naming
+
+public/Yama Happy Final.png
+
+Incorrect lifecycle
+
+Editing v1 file in place after release without version increment.
+
+Incorrect duplication
+
+Same achievement badge copied into achievements and shop folders under different names without registry entries.
+
+⸻
+
+ANTI-PATTERNS
+
+Spaces or uppercase in production filenames
+
+Missing metadata.json in managed asset folders
+
+Unversioned overwrite of shipped assets
+
+Random public/ dumps after design exports
+
+Untracked duplicate icons per feature
+
+Huge uncompressed PNG backgrounds on mobile lesson routes
+
+Registry entries with no actual file
+
+Assets used before art direction or pipeline review
+
+Hardcoded /public/foo.png paths scattered without registry IDs
+
+Decorative assets blocking critical learning downloads
+
+END OF assets.mdc

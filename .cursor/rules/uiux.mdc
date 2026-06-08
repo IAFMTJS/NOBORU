@@ -1,6 +1,10 @@
-uiux.mdc
+---
+description: Authoritative Noboru UI/UX — mobile-first design, navigation, colors, components, screen specs, Yama usage, and mockup references.
+globs: **/*.tsx, **/components/**, **/app/**, **/features/**/components/**
+alwaysApply: false
+---
 
-NOBORU UI/UX RULE
+# NOBORU UI/UX RULE
 
 Version: 1.0
 

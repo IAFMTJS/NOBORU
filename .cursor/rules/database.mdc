@@ -1,0 +1,226 @@
+---
+description: Noboru database — Supabase schema, repositories, UUID PKs, RLS required, migrations, no direct DB access from UI; reference docs/database-schema.md.
+globs: **/supabase/**, **/repositories/**, **/*repository*
+alwaysApply: false
+---
+
+# NOBORU DATABASE RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all database design, migrations, repository access, and Supabase configuration within Noboru.
+
+Every table, migration, policy, repository, and query must follow this document and docs/database-schema.md.
+
+If implementation and docs/database-schema.md diverge, the schema document must be updated before the change is considered complete.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* A single authoritative database schema
+* Safe, auditable, recoverable educational data
+* Row Level Security on all user-owned resources
+* Repository-only access from application code
+* Predictable migrations and versioning
+* Long-term scalability of Noboru data
+
+Educational progress is sacred.
+
+The database is the source of truth.
+
+⸻
+
+REQUIREMENTS
+
+Canonical Schema
+
+* docs/database-schema.md is authoritative
+* No new table, column, index, or relationship without updating the schema doc
+* Educational domains own their tables; gamification consumes, never owns, educational progress
+
+Primary Keys
+
+* Use uuid for all primary keys
+* Do not introduce serial or integer primary keys for domain entities
+
+Standard Columns
+
+Every table must include:
+
+* id
+* created_at
+* updated_at
+
+Recommended:
+
+* deleted_at for soft deletes where appropriate
+
+Timestamps
+
+* Store timestamps in UTC
+* Never store local user time in core tables
+
+Migrations
+
+* All schema changes live in supabase/migrations/
+* Migrations must be idempotent in intent and reviewable
+* Never mutate production schema manually outside migration files
+* Include RLS policies in the same migration when introducing user-owned tables
+
+Row Level Security
+
+* RLS is required on every user-owned resource
+* Policies must enforce ownership and role boundaries
+* Application authorization is required in addition to RLS, not instead of it
+
+Repository Access
+
+* All application database access goes through repositories
+* Forbidden in components, pages, hooks, and UI logic:
+  supabase.from("table") direct queries
+
+Naming
+
+* Tables: snake_case plural where established by schema
+* Columns: snake_case
+* Foreign keys must be explicit and indexed when queried
+
+Educational Integrity
+
+* Learning history must be auditable and recoverable
+* Gamification tables must not become the authority for mastery or progress
+* Educational systems must never depend on gamification tables
+
+Supabase
+
+* Use Supabase Auth as the authentication source
+* Service role keys are server-only
+* Client keys are public-only with RLS protection
+
+⸻
+
+CODING STANDARDS
+
+Repositories
+
+* One repository per domain aggregate where possible
+* Methods express intent: getDueReviews, upsertProgress, findByUserId
+* Return typed records mapped to domain types
+* Handle not-found and constraint errors explicitly
+
+Queries
+
+* Select only required columns
+* Paginate large result sets
+* Index columns used in filters, joins, and ordering
+* Avoid N+1 query patterns
+
+Migrations
+
+* Name migrations descriptively
+* Include up/down clarity in review even if tool supports one direction
+* Document breaking changes in migration comments
+
+Policies
+
+* Default deny for user-owned data
+* Separate read and write policies when needed
+* Test policies against typical user and admin roles
+
+Types
+
+* Database row types map to feature domain types at repository boundary
+* Do not leak raw database shapes into UI
+
+⸻
+
+SUCCESS CRITERIA
+
+Database work is successful when:
+
+* docs/database-schema.md matches the implemented schema
+* New user-owned tables ship with RLS in the same migration
+* All access from app code flows through repositories
+* UUID primary keys and standard timestamps are present
+* Educational progress remains authoritative and independent from gamification
+* Queries are typed, indexed, and scoped to user ownership
+* Migrations are reproducible across environments
+
+⸻
+
+FAILURE CRITERIA
+
+Database quality is degraded when any of the following occur:
+
+* UI or pages query Supabase directly
+* Tables added without schema documentation
+* Missing RLS on user-owned data
+* Integer primary keys for domain entities
+* Gamification tables storing authoritative learning progress
+* Business logic inside repositories
+* Manual production edits bypassing migrations
+* Unindexed filters on high-traffic queries
+* Local timestamps stored as canonical values
+
+When failure criteria appear, stop feature work and restore schema discipline first.
+
+⸻
+
+EXAMPLES
+
+Correct repository method
+
+reviewRepository.listDueItems(userId) applies user scope and returns typed ReviewItem[].
+
+Correct migration
+
+supabase/migrations/20260101000000_add_review_events.sql creates table, indexes, and RLS policies together.
+
+Correct schema alignment
+
+Adding vocabulary_tags updates docs/database-schema.md in the same change set.
+
+Incorrect UI access
+
+useEffect(() => { supabase.from("kanji").select("*") }, []) in a component.
+
+Incorrect authority model
+
+Storing SRS interval authority only in achievements tables.
+
+Incorrect repository
+
+Repository calculates league rank or lesson completion rules.
+
+⸻
+
+ANTI-PATTERNS
+
+Direct database access from UI
+
+Database queries inside hooks used by components
+
+Migrations without RLS for user-owned tables
+
+Schema changes without documentation updates
+
+Repositories returning untyped any rows
+
+Using gamification tables as source of truth for mastery
+
+Hard deletes of educational history without audit strategy
+
+Service role key usage in client code
+
+God repositories spanning unrelated domains
+
+Storing secrets or tokens in database tables unnecessarily
+
+END OF database.mdc

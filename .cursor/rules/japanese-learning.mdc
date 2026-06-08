@@ -1,0 +1,216 @@
+---
+description: Noboru Japanese learning UI — furigana, JLPT levels, respectful pedagogy, reading and listening considerations in feature components and types.
+globs: **/features/**/components/**, **/features/**/types/**
+alwaysApply: false
+---
+
+# NOBORU JAPANESE LEARNING RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs Japanese-specific learning presentation, pedagogy, types, and learner-facing language UX within Noboru feature modules.
+
+Every component and type involved in lessons, reviews, readings, listening activities, kanji study, grammar explanation, and vocabulary drills must follow this document and docs/jlpt-content-architecture.md.
+
+Noboru teaches Japanese with respect for the language and the learner.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Correct, learner-appropriate presentation of Japanese text
+* JLPT-aligned progression and labeling
+* Furigana and reading support where pedagogy requires it
+* Respectful, accurate linguistic representation
+* Reading and listening activities designed for real acquisition
+* Types and UI that encode language structure explicitly
+
+Language learning UX is part of the product system.
+
+Not decorative localization.
+
+⸻
+
+REQUIREMENTS
+
+Pedagogy
+
+* Follow the educational model in docs/jlpt-content-architecture.md:
+  Exposure → Understanding → Recognition → Recall → Production → Mastery
+* Activities must target a clear skill: recognition, recall, production, reading, or listening
+* Difficulty must match declared JLPT level and learner stage
+* Avoid punishing learners for respectful alternative valid answers when domain rules allow variants
+
+JLPT Levels
+
+* N5 through N1 labeling must be consistent across features
+* Level indicators must reflect authoritative progression data, not UI-only badges
+* Do not imply official JLPT certification where Noboru provides preparation only
+
+Furigana and Readings
+
+* Support furigana for learner-appropriate kanji presentation
+* Furigana display must be controllable by learner settings where product supports it
+* Store and transport readings separately from surface text in types where applicable
+* Do not destroy reading information by over-normalizing Japanese strings in UI
+
+Kanji
+
+* Present stroke order, radicals, readings, and meanings with clear hierarchy
+* Distinguish on-yomi and kun-yomi when relevant to the lesson goal
+* Avoid overloading one screen with every reading at once unless review context requires it
+
+Grammar
+
+* Explain patterns with natural example sentences sourced from content systems
+* Highlight structure without reducing grammar to vague glosses
+* Use respectful, natural Japanese in examples
+
+Vocabulary
+
+* Show word type, pitch accent metadata when available, and context examples when appropriate
+* Distinguish transitive and intransitive pairs, suru verbs, and common collocations when pedagogically relevant
+
+Reading
+
+* Support graded reading with appropriate furigana policy per level
+* Line breaking and ruby text must remain readable on mobile
+* Reading questions must test comprehension, not trick wording
+
+Listening
+
+* Listening prompts must remain accessible with transcripts or support modes where product rules allow
+* Audio controls must be keyboard accessible
+* Do not rely on color alone for playback state
+
+Respect
+
+* Use accurate Japanese, not machine-sounding or misleading shorthand in learner-facing content
+* Avoid stereotype-driven copy or cultural mockery
+* Present politeness levels accurately when teaching grammar or speech patterns
+
+Types
+
+* Feature types must model language data explicitly:
+  surface form, reading, meaning, level, part of speech, audio URL, example sentences, furigana policy
+* Avoid flattening Japanese entries into plain strings when structure matters
+
+⸻
+
+CODING STANDARDS
+
+Components
+
+* Use dedicated renderers for ruby text and furigana instead of ad hoc HTML strings
+* Separate display components from session logic
+* Keep answer checking in services, not JSX
+
+Types
+
+* Define VocabularyEntry, KanjiEntry, GrammarPoint, ReadingPassage, ListeningItem types in feature types/
+* Prefer explicit optional fields over ambiguous any
+
+Settings Integration
+
+* Respect learner preferences for furigana, romaji display if supported, and audio autoplay policy
+
+Accessibility
+
+* Ensure furigana and main text remain usable with screen readers where feasible
+* Provide textual alternatives when animated stroke teaching is used
+
+Content Usage
+
+* All learner-facing Japanese content comes from content systems per content.mdc
+* Components format and present; they do not author curriculum
+
+⸻
+
+SUCCESS CRITERIA
+
+Japanese learning work is successful when:
+
+* Japanese text renders correctly on mobile with readable ruby text
+* JLPT labeling is consistent and honest
+* Furigana behavior matches learner settings and level policy
+* Reading and listening activities support real comprehension
+* Types encode linguistic structure clearly
+* Pedagogy aligns with docs/jlpt-content-architecture.md
+* Presentation remains respectful and accurate
+
+⸻
+
+FAILURE CRITERIA
+
+Japanese learning quality is degraded when any of the following occur:
+
+* Furigana baked incorrectly into immutable strings with no reading metadata
+* JLPT levels used as cosmetic badges unrelated to content difficulty
+* Romaji substituted silently where kana literacy is the goal
+* Reading screens with illegible ruby layout on small devices
+* Listening activities with no accessible control or support path
+* Grammar explanations that are vague or misleading
+* Answer checking in components with incomplete Japanese normalization rules
+* Cultural stereotype examples or careless translations in learner UI
+
+When failure criteria appear, fix language modeling and presentation before adding new activities.
+
+⸻
+
+EXAMPLES
+
+Correct type
+
+VocabularyEntry includes word, reading, meanings[], jlptLevel, partOfSpeech, exampleSentences[].
+
+Correct furigana rendering
+
+RubyText component receives structured tokens, not a single unbroken HTML string from content authors.
+
+Correct reading screen
+
+Passage view applies furigana policy from learner settings and level rules.
+
+Incorrect modeling
+
+type Word = string for all vocabulary everywhere.
+
+Incorrect pedagogy
+
+N5 screen showing dense literary passages without support.
+
+Incorrect checking
+
+Component compares raw strings only and rejects valid kanji variant answers without service rules.
+
+⸻
+
+ANTI-PATTERNS
+
+Plain-string Japanese everywhere
+
+Hand-built ruby markup scattered across features
+
+JLPT labels with no connection to content metadata
+
+Overuse of romaji in kana-learning stages
+
+Illegible furigana sizes on mobile
+
+Listening UI with invisible state and no keyboard control
+
+Grammar tooltips that restate English only with no pattern structure
+
+Hardcoded example sentences in components
+
+Mixing politeness levels in one explanation without clarity
+
+Using anime tropes as substitute for pedagogical examples
+
+END OF japanese-learning.mdc

@@ -1,0 +1,206 @@
+---
+description: Noboru testing — unit, integration, e2e; every feature requires tests; reference docs/testing-strategy.md.
+globs: **/tests/**, **/*.test.ts, **/*.test.tsx
+alwaysApply: false
+---
+
+# NOBORU TESTING RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs all automated testing within Noboru.
+
+Every feature, service, repository, workflow, and critical UI behavior must follow this document and docs/testing-strategy.md.
+
+Tests exist to protect learners' progress and developers' velocity.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Domain logic remains correct as Noboru scales
+* Regressions are caught before users encounter them
+* Services and repositories are verifiable in isolation
+* Features ship with meaningful coverage, not token tests
+* Educational, auth, and gamification boundaries remain enforced by tests
+* Refactoring remains safe over years of development
+
+Test systems.
+
+Not only snapshots.
+
+⸻
+
+REQUIREMENTS
+
+Coverage Expectations
+
+* Every feature module includes a tests/ directory
+* Services require unit tests for business rules
+* Repositories require integration tests where query behavior is non-trivial
+* API routes require request validation and auth behavior tests where applicable
+* Critical user workflows require e2e coverage as defined in docs/testing-strategy.md
+
+Test Types
+
+Unit Tests
+
+* Pure logic, service methods, validators, mappers
+* Fast, isolated, deterministic
+
+Integration Tests
+
+* Service plus repository behavior against controlled fixtures or test database
+* Auth and RLS-sensitive paths where feasible
+
+End-to-End Tests
+
+* Core learning, review, auth, and progression flows
+* Mobile-first viewport scenarios where UI automation supports them
+
+Feature Structure
+
+features/feature-name/tests/
+
+Required for all feature modules over time.
+
+Architecture Boundaries
+
+* Tests must verify UI does not own business logic indirectly through untested hooks
+* Tests must verify gamification does not own educational progress
+* Tests must verify repositories remain the only database access layer from services
+
+Educational Integrity
+
+* Review scheduling, progress updates, and content selection logic require tests
+* Content-driven behavior must use fixtures sourced from representative domain data, not hardcoded production content in UI tests
+
+Reference
+
+* docs/testing-strategy.md defines tooling, CI expectations, coverage priorities, and e2e scope
+
+States
+
+* Tests must cover loading, success, error, and recovery paths for critical workflows where applicable
+
+⸻
+
+CODING STANDARDS
+
+Organization
+
+* Co-locate feature tests under features/*/tests/
+* Shared test utilities live in tests/ or lib/test/ as established
+* Name files *.test.ts or *.test.tsx consistently
+
+Style
+
+* Arrange, act, assert structure
+* One behavioral assertion focus per test where possible
+* Use descriptive test names that explain rule or workflow
+
+Fixtures
+
+* Prefer factory helpers over copy-pasted mock objects
+* Keep educational fixtures minimal and domain-realistic
+
+Mocking
+
+* Mock repositories at service unit boundaries
+* Do not mock the behavior under test
+* Avoid over-mocking rendering libraries in unit tests
+
+Determinism
+
+* No flaky time-dependent tests without clock control
+* No network dependence in unit tests
+
+CI
+
+* Tests must run in continuous integration
+* Failing tests block merge for protected domains defined in docs/testing-strategy.md
+
+⸻
+
+SUCCESS CRITERIA
+
+Testing work is successful when:
+
+* Every feature has a tests/ directory or an documented exception in docs/testing-strategy.md
+* Core services have unit tests for business rules
+* Auth and permission failures are tested
+* Educational progress workflows have regression tests
+* Gamification unlock logic is tested against educational inputs
+* Tests run reliably in CI
+* Failures clearly identify broken domain rules
+
+⸻
+
+FAILURE CRITERIA
+
+Testing quality is degraded when any of the following occur:
+
+* Features ship with no tests folder and no approved exception
+* Tests that only assert component renders without behavior
+* Missing tests for SRS, progress, or auth-sensitive mutations
+* Flaky e2e suites ignored instead of fixed
+* Duplicated test utilities across features
+* Tests that hit production databases or secrets
+* Untested permission checks on user-owned mutations
+* Snapshot-only coverage for critical workflows
+
+When failure criteria appear, add tests before expanding feature scope.
+
+⸻
+
+EXAMPLES
+
+Correct service unit test
+
+review.service.test.ts verifies next interval calculation for known inputs using mocked repository.
+
+Correct integration test
+
+review.repository.integration.test.ts verifies user-scoped due query returns only owned rows.
+
+Correct boundary test
+
+achievements.service.test.ts verifies unlock reads learning summary and does not mutate educational tables.
+
+Incorrect test
+
+expect(screen.getByText("Noboru")).toBeInTheDocument() as sole coverage for review submission flow.
+
+Incorrect fixture
+
+Hardcoding entire JLPT vocabulary lists inside component tests instead of minimal fixture objects.
+
+⸻
+
+ANTI-PATTERNS
+
+Testing implementation details instead of behavior
+
+Giant e2e tests covering every edge case without unit coverage
+
+No tests for authorization failures
+
+Copy-pasted mocks in every feature
+
+Tests coupled to brittle CSS selectors without role-based queries
+
+Skipping tests for "UI-only" changes that moved business logic into hooks
+
+Using production credentials in test suites
+
+False confidence from 100% snapshot coverage
+
+Testing gamification unlocks against manually edited fake progress in UI state only
+
+END OF testing.mdc

@@ -1,0 +1,206 @@
+---
+description: Noboru performance — initial load under 2s, route change under 300ms, user action under 100ms, Lighthouse above 90; aligns with architecture targets.
+alwaysApply: false
+---
+
+# NOBORU PERFORMANCE RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs runtime performance, loading behavior, bundle discipline, and responsiveness across Noboru.
+
+Every page, route, service call, animation, and data workflow must respect the performance targets defined in architecture.mdc and uiux.mdc.
+
+Performance protects learning flow.
+
+Slow software breaks focus.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Fast initial load on mobile networks
+* Near-instant route transitions within the app shell
+* User interactions feel immediate
+* Animations remain smooth at 60fps
+* Core learning flows stay usable offline and under load
+* Noboru remains Lighthouse-competitive as features grow
+
+Optimize systems.
+
+Not individual screens in isolation.
+
+⸻
+
+REQUIREMENTS
+
+Targets
+
+From architecture.mdc:
+
+* Initial Load < 2 seconds on representative mobile conditions
+* Route Change < 300ms for in-app navigation
+* User Action < 100ms perceived response for primary interactions
+* Animation 60fps
+* Lighthouse score > 90 for core pages where measurable
+
+Scope
+
+* Applies to app routes, feature workflows, API latency, client rendering, and asset delivery
+* Core learning paths receive highest priority: lessons, reviews, vocabulary, kanji, grammar
+
+Frontend
+
+* Prefer Server Components where interactivity is not required
+* Split client bundles with dynamic import for heavy modules
+* Avoid unnecessary re-renders in drill and review loops
+* Prefetch only when it improves real navigation paths
+
+Data
+
+* Fetch only required fields
+* Paginate large lists
+* Cache stable reads where architecture permits
+* Offline-first features must not block interaction waiting for network retries
+
+Assets
+
+* Optimize images and media per asset-pipeline and assets.mdc rules
+* Lazy-load non-critical visuals
+* Never block lesson start on decorative assets
+
+API and Services
+
+* Keep service methods focused to reduce round trips
+* Batch reads where appropriate
+* Avoid sequential waterfall requests in critical screens
+
+Animations
+
+* Animations must remain smooth and purposeful
+* Respect reduced motion
+* Do not animate expensive layout properties without need
+
+Measurement
+
+* Profile before large optimizations
+* Track regressions on core routes during review
+
+⸻
+
+CODING STANDARDS
+
+React and Next.js
+
+* Minimize client component tree depth on hot paths
+* Memoize only when profiling shows benefit
+* Stabilize callbacks passed to expensive child trees in review and game loops
+
+Network
+
+* Show optimistic UI only where domain rules allow
+* Use skeleton states instead of blocking spinners on full pages when possible
+
+Database
+
+* Index query paths used in due reviews and dashboards
+* Avoid unbounded selects in repositories
+
+Lists
+
+* Virtualize long lists where rendering cost is measurable
+
+Monitoring
+
+* Treat performance regressions on core flows as defects, not cosmetic issues
+
+⸻
+
+SUCCESS CRITERIA
+
+Performance work is successful when:
+
+* Core learning screens feel immediate on mobile
+* Route transitions remain under target in normal conditions
+* Primary actions respond within 100ms perceived latency
+* Animations remain smooth during drills and transitions
+* Lighthouse remains above 90 on agreed core pages
+* Bundle growth is justified by user value
+* Offline paths avoid unnecessary network blocking
+
+⸻
+
+FAILURE CRITERIA
+
+Performance quality is degraded when any of the following occur:
+
+* Lesson or review screens wait on decorative assets
+* Large client bundles loaded for static pages
+* Unindexed queries on hot paths
+* Re-render storms during answer submission loops
+* Full-page blocking fetches for small UI updates
+* Animation jank on primary interactions
+* Route changes noticeably lag beyond 300ms in normal conditions
+* Performance optimizations that break accessibility or pedagogy
+
+When failure criteria appear, profile core flows before adding more features to the same path.
+
+⸻
+
+EXAMPLES
+
+Correct route performance
+
+Review page loads session shell immediately and streams due items via service call with skeleton cards.
+
+Correct bundle split
+
+Heavy game module dynamically imported only on game routes.
+
+Correct query
+
+Repository selects id, prompt, due_at for review queue instead of full content graph.
+
+Incorrect pattern
+
+Dashboard page client-fetches entire vocabulary table on mount.
+
+Incorrect animation
+
+Continuous bouncing mascot during timed quiz causing layout thrash.
+
+Incorrect API usage
+
+Five sequential service calls on lesson open that could be one composed read.
+
+⸻
+
+ANTI-PATTERNS
+
+Giant client-only pages for mostly static content
+
+Fetching entire datasets for small UI widgets
+
+Unvirtualized thousand-item lists
+
+Synchronous heavy work on main thread during answer grading
+
+Blocking lesson entry on non-critical animations
+
+Premature memoization everywhere without measurement
+
+Performance tuning that hides missing indexes
+
+Optimizing Lighthouse by removing essential instructional content
+
+Adding caching without invalidation strategy on progress mutations
+
+Shipping large unoptimized media on critical paths
+
+END OF performance.mdc

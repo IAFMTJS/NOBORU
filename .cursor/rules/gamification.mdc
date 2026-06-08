@@ -1,0 +1,223 @@
+---
+description: Noboru gamification — achievements, leagues, games, shop; reads educational progress, never owns it; reference docs/game-design.md and docs/gamification.md.
+globs: **/features/achievements/**, **/features/leagues/**, **/features/games/**, **/features/shop/**
+alwaysApply: false
+---
+
+# NOBORU GAMIFICATION RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs achievements, leagues, games, shop systems, and all motivational mechanics within Noboru.
+
+Every badge, rank, reward, challenge, event, and cosmetic economy interaction must follow this document, docs/game-design.md, and docs/gamification.md.
+
+architecture.mdc defines the prime rule: gamification reads educational progress; it never owns it.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Gamification strengthens learning instead of replacing it
+* Rewards remain fair, transparent, and non-manipulative
+* Educational progress stays authoritative
+* Game systems remain isolated behind their feature modules
+* Premium and cosmetic systems never create educational advantage
+* Long-term engagement without dark patterns
+
+Motivation must support mastery.
+
+Never undermine it.
+
+⸻
+
+REQUIREMENTS
+
+Authority Model
+
+* Educational progress is authoritative
+* Gamification systems read progress from learning domains
+* Forbidden: gamification tables becoming the source of truth for mastery, SRS, lesson completion, or JLPT advancement
+* Forbidden: educational services depending on league rank, shop inventory, or achievement state
+
+References
+
+* docs/game-design.md defines game objectives, forbidden design, and activity structure
+* docs/gamification.md defines reward systems, leagues, achievements, and economy rules
+* When documents conflict with architecture.mdc on ownership, architecture.mdc wins
+
+Feature Ownership
+
+* achievements owns achievement definitions, unlock logic presentation, and achievement UI
+* leagues owns ranking presentation and seasonal league workflows
+* games owns educational mini-games that teach
+* shop owns cosmetics, convenience items, and non-educational purchases
+
+Educational Games
+
+* Every game must teach
+* Fun without learning is a failure
+* Learning without reasonable enjoyment is a failure
+* Games consume content from educational domains; they do not own vocabulary, kanji, or grammar data
+
+Rewards
+
+* Rewards must map to real learning behavior
+* Never grant educational advantage through payment or randomness
+* Premium may offer convenience and customization only
+
+Engagement Ethics
+
+* No guilt messaging
+* No fear-of-loss streak manipulation as primary retention
+* No fake urgency or artificial scarcity for learning outcomes
+* Notifications must be respectful and actionable
+
+Layering
+
+* Gamification services orchestrate reads and writes within their domain
+* Progress reads go through educational services or repositories as defined by architecture
+* UI in gamification features must not query educational tables directly
+
+Offline
+
+* Non-critical gamification may degrade gracefully offline
+* Core learning must remain functional without gamification sync
+
+⸻
+
+CODING STANDARDS
+
+Services
+
+* achievements.service.ts evaluates unlock conditions from read-only educational inputs
+* leagues.service.ts computes rank from approved metrics, not hidden heuristics in UI
+* games.service.ts assembles sessions from educational content services
+* shop.service.ts validates purchases, ownership, and entitlements
+
+Data Flow
+
+Educational Domain
+
+↓
+
+Read model or service adapter
+
+↓
+
+Gamification service
+
+↓
+
+Gamification repository
+
+↓
+
+Gamification tables
+
+Types
+
+* Separate gamification types from educational domain types
+* Use explicit mapping layers when combining data for UI
+
+UI
+
+* Present progress and rewards clearly
+* Never obscure learning state behind game metaphors alone
+* One primary action per screen, per uiux.mdc
+
+Testing
+
+* Test unlock logic against representative educational inputs
+* Test that educational services do not import gamification services
+
+⸻
+
+SUCCESS CRITERIA
+
+Gamification work is successful when:
+
+* Learning remains the primary user feeling
+* Educational progress remains authoritative
+* Rewards are understandable and tied to real improvement
+* Games measurably reinforce recall, recognition, or production
+* Shop and premium systems do not alter learning quality
+* Feature modules remain isolated and testable
+* docs/game-design.md and docs/gamification.md remain accurate
+
+⸻
+
+FAILURE CRITERIA
+
+Gamification quality is degraded when any of the following occur:
+
+* Mastery or review state stored only in gamification tables
+* Educational services importing shop or league modules
+* Games that entertain without teaching
+* Pay-to-learn advantages
+* Streak systems that punish learning gaps coercively
+* Reward spam or infinite popup loops
+* Hidden randomness affecting educational outcomes
+* Cross-feature UI coupling between unrelated game systems
+
+When failure criteria appear, remove gamification authority over learning before adding new rewards.
+
+⸻
+
+EXAMPLES
+
+Correct unlock flow
+
+achievementsService.evaluate(userId) reads completed lesson count from learningService.getSummary(userId) and writes achievement unlock rows only.
+
+Correct game session
+
+gamesService.startVocabularyDrill(userId, level) requests items from vocabularyService.getSessionItems().
+
+Correct shop item
+
+Cosmetic trail effect with no impact on lesson access or review scheduling.
+
+Incorrect authority
+
+Updating user kanji mastery only inside leagues progression tables.
+
+Incorrect dependency
+
+learningService imports shopService to gate lesson access.
+
+Incorrect game
+
+Timed slot machine with Japanese icons but no targeted learning objective.
+
+⸻
+
+ANTI-PATTERNS
+
+Gamification owning educational progress
+
+Educational domains reading league or shop state to unlock content
+
+Grinding loops with no learning benefit
+
+Manipulative streak loss messaging
+
+Paid boosts to SRS outcomes or JLPT placement
+
+Hardcoded achievement thresholds scattered in UI
+
+Direct educational database queries inside games components
+
+Reward popups that interrupt active lessons
+
+Cross-feature reward logic duplicated in multiple services
+
+Using engagement metrics as a substitute for mastery metrics
+
+END OF gamification.mdc

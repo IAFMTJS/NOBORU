@@ -1,0 +1,212 @@
+---
+description: Noboru educational content — learning, vocabulary, kanji, grammar, review; never hardcode content in UI; reference docs/content-pipeline.md and jlpt-content-architecture.md.
+globs: **/features/learning/**, **/features/vocabulary/**, **/features/kanji/**, **/features/grammar/**, **/features/review/**
+alwaysApply: false
+---
+
+# NOBORU CONTENT RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all educational content usage and assembly within Noboru learning features.
+
+Every lesson, vocabulary item, kanji entry, grammar point, review card, and progression screen must follow this document, docs/content-pipeline.md, and docs/jlpt-content-architecture.md.
+
+Educational content is sacred.
+
+It must never live in JSX as the source of truth.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Educational content originates from authoritative systems
+* UI renders content, it does not own it
+* JLPT progression remains coherent and documented
+* Features assemble content without duplicating domain ownership
+* Content updates do not require code deploys for routine editorial changes
+* Learning quality remains consistent as content volume grows
+
+Content systems feed the climb.
+
+UI shows the trail markers.
+
+⸻
+
+REQUIREMENTS
+
+Content Authority
+
+* Database, CMS, and approved content systems are authoritative
+* Forbidden: hardcoded vocabulary lists, kanji tables, grammar explanations, or lesson scripts in UI files
+* Allowed in UI: loading states, layout, formatting, pedagogy-preserving presentation, and mapping rendered fields
+
+References
+
+* docs/content-pipeline.md defines ingestion, validation, publishing, and update flow
+* docs/jlpt-content-architecture.md defines progression, level structure, and educational model
+* When documents conflict with architecture.mdc on ownership, architecture.mdc wins
+
+Domain Ownership
+
+* vocabulary owns vocabulary data
+* kanji owns kanji data
+* grammar owns grammar data
+* learning assembles lessons and paths
+* review assembles sessions from owned domain data
+* Lessons do not own underlying content entities
+
+Progression
+
+* JLPT levels and mastery progression follow docs/jlpt-content-architecture.md
+* Educational progress is authoritative
+* Gamification may read progress but must not define it
+
+Layering
+
+Component
+
+↓
+
+Feature service
+
+↓
+
+Repository
+
+↓
+
+Content tables or CMS-backed source
+
+UI must not bypass services to query content tables directly.
+
+Offline
+
+* Core learning content must be available offline after sync or download as defined by architecture
+* Offline caches store content snapshots, not alternate authoritative copies without merge rules
+
+Validation
+
+* Content consumed by services must be validated against feature schemas
+* Reject malformed content at service boundary with logged errors
+
+Testing
+
+* Use fixtures representing content shape, not production content copied into tests as hidden source of truth
+
+⸻
+
+CODING STANDARDS
+
+Services
+
+* learning.service.ts assembles lesson views from owned domain services
+* vocabulary.service.ts, kanji.service.ts, grammar.service.ts own retrieval and rules for their domains
+* review.service.ts builds queues from progress and content records
+
+Components
+
+* Render props or view models only
+* Format readings, furigana, examples, and hints via dedicated presentation components
+* No embedded lesson copy except static UI chrome unrelated to curriculum
+
+Types
+
+* Content types live in feature types/ directories
+* Separate transport rows from presentation view models where useful
+
+Updates
+
+* Content pipeline changes must update docs/content-pipeline.md when process changes
+* Schema or progression changes must update docs/jlpt-content-architecture.md
+
+⸻
+
+SUCCESS CRITERIA
+
+Content work is successful when:
+
+* Curriculum changes can flow through content systems without UI edits
+* Each domain owns its entities clearly
+* Lessons and reviews assemble from services, not static arrays
+* JLPT progression matches documented architecture
+* Offline mode uses synced authoritative content
+* UI remains pedagogy-focused and formatting-aware
+* Documentation reflects actual content flow
+
+⸻
+
+FAILURE CRITERIA
+
+Content quality is degraded when any of the following occur:
+
+* Vocabulary or kanji hardcoded in components
+* Lesson order encoded only in page files
+* Review queues built from inline mock arrays in production paths
+* Multiple features storing conflicting copies of the same word or kanji
+* Learning progress derived from gamification tables
+* Content validation skipped at service boundaries
+* Editorial updates requiring code changes for routine text changes
+* Undocumented JLPT progression logic in hooks
+
+When failure criteria appear, move content back to authoritative systems before adding new lessons.
+
+⸻
+
+EXAMPLES
+
+Correct rendering
+
+VocabularyCard receives VocabularyViewModel from vocabularyService.getItem(id).
+
+Correct lesson assembly
+
+learningService.getLesson(lessonId) composes vocabulary, grammar, and kanji references by ID.
+
+Correct test fixture
+
+Minimal fake VocabularyItem object in tests/content.fixture.ts.
+
+Incorrect production code
+
+const words = [{ jp: "食べる", en: "to eat" }, ...] inside a lesson component.
+
+Incorrect ownership
+
+learning feature defining canonical kanji stroke metadata inline.
+
+Incorrect review source
+
+Review queue built from hardcoded array in page.tsx.
+
+⸻
+
+ANTI-PATTERNS
+
+Hardcoded educational content in UI
+
+Copy-pasted JLPT word lists across features
+
+Lesson scripts in React components
+
+Direct content table queries from components
+
+Multiple sources of truth for the same grammar point
+
+Gamification defining lesson unlock authority
+
+CMS-bypassing "temporary" inline content that ships to production
+
+Unvalidated JSON content rendered directly into lesson UI
+
+Feature-local content edits without pipeline documentation
+
+Using test fixtures as shadow production curriculum
+
+END OF content.mdc

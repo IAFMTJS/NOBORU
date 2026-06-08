@@ -1,0 +1,209 @@
+---
+description: Noboru accessibility — WCAG-oriented UI, keyboard, screen readers, reduced motion; aligns with uiux.mdc accessibility rules.
+globs: **/*.tsx, **/components/**
+alwaysApply: false
+---
+
+# NOBORU ACCESSIBILITY RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs accessible implementation for all Noboru UI.
+
+Every screen, component, dialog, lesson interaction, game control, and notification surface must follow this document and the accessibility rules in uiux.mdc.
+
+Accessible design is part of premium quality.
+
+Not an optional polish pass.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Noboru is usable by keyboard-only learners
+* Screen reader users can navigate lessons, reviews, and core flows
+* Motion-sensitive users are respected
+* Color is never the only carrier of meaning
+* Text remains readable at larger sizes
+* Japanese learning UI remains accessible without sacrificing pedagogy
+
+Learning must be reachable.
+
+For everyone.
+
+⸻
+
+REQUIREMENTS
+
+Standards Baseline
+
+* Target WCAG 2.1 AA for core user flows
+* Meet uiux.mdc requirements for screen readers, keyboard navigation, reduced motion, color blindness, high contrast, and large text
+
+Keyboard
+
+* All interactive controls must be reachable and operable by keyboard
+* Focus order must follow visual and logical reading order
+* Focus states must be visible and consistent with design tokens
+* Trap focus inside modals and dialogs appropriately
+
+Screen Readers
+
+* Interactive elements require accessible names
+* Form inputs require labels or aria-labelledby
+* Dynamic content updates use appropriate live region patterns when necessary
+* Decorative visuals must be hidden from assistive technology
+
+Motion
+
+* Honor prefers-reduced-motion
+* Disable or simplify non-essential animation when reduced motion is requested
+* Essential feedback may remain, but must not rely on continuous motion
+
+Color and Contrast
+
+* Text and interactive states must meet contrast requirements
+* Do not communicate correctness, danger, or progress by color alone
+* Support high contrast and dark mode token usage from app/globals.css
+
+Touch and Mobile
+
+* Tap targets must be large enough for mobile use
+* Spacing must prevent accidental activation of adjacent controls
+
+Language and Content
+
+* Use lang attributes appropriately for Japanese and interface language content
+* Furigana and reading aids must remain usable with assistive technology where applicable
+
+Components
+
+* Prefer semantic HTML before ARIA replacements
+* ShadCN components must retain accessible labels, roles, and focus behavior
+* Custom game and lesson controls require explicit accessibility review
+
+Reference
+
+* uiux.mdc ACCESSIBILITY RULES section is the UX authority for supported accommodations
+
+⸻
+
+CODING STANDARDS
+
+Markup
+
+* Use button for actions, a for navigation
+* Use headings in order without skipping levels arbitrarily
+* Associate errors with inputs using describedby patterns
+
+Labels
+
+* Visible labels preferred over aria-label alone when space allows
+* Icon-only buttons require aria-label
+
+Focus
+
+* Do not remove focus outlines without replacement focus styling
+* Restore focus after closing dialogs when appropriate
+
+Testing
+
+* Verify keyboard path through primary flows
+* Verify screen reader name and role for custom controls
+* Verify reduced motion behavior in animated components
+
+Japanese UI
+
+* Provide text alternatives for critical visual kanji learning aids when the visual alone would be inaccessible
+* Ensure review and quiz inputs expose their purpose clearly
+
+⸻
+
+SUCCESS CRITERIA
+
+Accessibility work is successful when:
+
+* Core flows are fully keyboard operable
+* Screen readers announce controls, errors, and major state changes clearly
+* Reduced motion preferences are respected
+* Color contrast meets baseline requirements in light and dark themes
+* Icon-only controls have accessible names
+* Custom lesson and game interactions remain understandable without sight-only cues
+* Accessibility behavior matches uiux.mdc intent
+
+⸻
+
+FAILURE CRITERIA
+
+Accessibility quality is degraded when any of the following occur:
+
+* Keyboard traps without escape path
+* Missing labels on form fields or icon buttons
+* Focus lost after modal close with no restoration
+* Motion-heavy feedback ignoring prefers-reduced-motion
+* Success or failure indicated by color alone
+* Non-semantic div click handlers without role and keyboard support
+* Illegible text on mobile or in dark mode
+* Furigana or reading UI that cannot be parsed by assistive technology in core flows
+
+When failure criteria appear, fix accessibility before shipping the interaction.
+
+⸻
+
+EXAMPLES
+
+Correct button
+
+<Button aria-label="Submit answer">Submit</Button> or visible text label.
+
+Correct modal
+
+Dialog traps focus, closes on Escape, returns focus to trigger.
+
+Correct reduced motion
+
+motion components check prefers-reduced-motion and render static feedback.
+
+Incorrect control
+
+<div onClick={submit}>Submit</div> with no keyboard support.
+
+Incorrect status
+
+Green border only to indicate correct answer with no text or icon alternative.
+
+Incorrect icon button
+
+<Button size="icon"><X /></Button> without aria-label.
+
+⸻
+
+ANTI-PATTERNS
+
+Div buttons
+
+Removing focus outlines globally
+
+Autoplaying motion required to understand state
+
+Color-only error states
+
+Inaccessible custom sliders or drag interactions without keyboard alternatives
+
+aria-hidden on essential instructional text
+
+Tiny tap targets on mobile drills
+
+Animations that ignore reduced motion preferences
+
+Inconsistent heading hierarchy across feature screens
+
+Teaching interactions that rely solely on stroke animation with no textual alternative
+
+END OF accessibility.mdc

@@ -1,0 +1,230 @@
+---
+description: Noboru backend — services, API routes, validation, typed responses, layered Component→Service→Repository→DB, future Supabase edge functions.
+globs: **/services/**, **/features/**/services/**, **/app/api/**
+alwaysApply: false
+---
+
+# NOBORU BACKEND RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all server-side business logic, API routes, and service-layer implementation within Noboru.
+
+Every service, API handler, workflow orchestrator, and server action that performs domain work must follow this document.
+
+architecture.mdc is the parent authority for layering and domain ownership.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Business logic lives in services, not UI
+* All APIs are typed, validated, and permission-aware
+* Data access remains in repositories
+* Features remain isolated at the service boundary
+* Server behavior is testable and reusable
+* Future Supabase Edge Functions can be introduced without rewriting domains
+
+Build services.
+
+Not endpoints with embedded logic.
+
+⸻
+
+REQUIREMENTS
+
+Layered Flow
+
+Mandatory order:
+
+Component or Route Handler
+
+↓
+
+Service
+
+↓
+
+Repository
+
+↓
+
+Database
+
+Services
+
+* Own business rules, validation, and orchestration
+* Must be reusable across pages, APIs, background jobs, and future edge functions
+* Must not render UI
+* Must not perform raw SQL or Supabase queries directly when a repository exists
+
+Repositories
+
+* Own all persistence and query logic
+* Must not contain product rules or workflow orchestration
+
+API Routes
+
+* Located under app/api/ grouped by domain
+* Must validate input
+* Must validate permissions and ownership
+* Must return typed responses
+* Must handle errors consistently
+* Must log failures without leaking secrets
+
+Types
+
+* All public service methods require typed inputs and outputs
+* Forbidden: any without explicit justification
+* Shared domain types live in feature types/ or lib/ as appropriate
+
+Validation
+
+* Validate at system boundaries: API routes and service public methods
+* Use schemas where the codebase establishes them
+* Reject invalid input early with actionable errors
+
+Authorization
+
+* Every user-owned resource requires ownership validation
+* Never trust client-provided user IDs without session verification
+* RLS is required at the database layer; services must not rely on RLS alone
+
+Future Edge Functions
+
+* Domain logic must remain portable to Supabase Edge Functions
+* Keep side effects and external integrations isolated
+* Do not embed Next.js-specific assumptions into core service logic
+
+Error Handling
+
+* Distinguish validation, authorization, not-found, conflict, and system errors
+* Return stable error shapes to callers
+* Never expose internal stack traces or secrets to clients
+
+⸻
+
+CODING STANDARDS
+
+Service Design
+
+* One service per domain concern
+* Methods should be small, composable, and named by intent
+* Prefer pure functions for calculations; isolate I/O in repositories
+
+API Design
+
+* Group routes by feature domain, not HTTP verb folders
+* Use consistent response envelopes where established
+* Map service errors to correct HTTP status codes
+
+Dependencies
+
+* Services may depend on repositories and other services through clear interfaces
+* Forbidden: service-to-service hidden coupling across unrelated features
+* Forbidden: circular dependencies
+
+Logging
+
+* Log failures with domain context
+* Never log tokens, passwords, or full PII
+
+Testing Hooks
+
+* Services must be unit-testable without rendering UI
+* Repositories must be mockable at service boundaries
+
+Supabase Usage
+
+* Server-side Supabase clients belong in repository or infrastructure layers
+* API routes call services; services call repositories
+
+⸻
+
+SUCCESS CRITERIA
+
+Backend work is successful when:
+
+* Business logic exists in one authoritative service location
+* API routes are thin orchestrators
+* All inputs and outputs are typed
+* Authorization is enforced before mutations
+* Repositories contain all database access
+* Errors are handled consistently
+* The same service can be reused from UI workflows and API endpoints
+* Future edge deployment requires movement, not rewrite
+
+⸻
+
+FAILURE CRITERIA
+
+Backend quality is degraded when any of the following occur:
+
+* Database queries inside API route handlers beyond repository delegation
+* Business rules duplicated in pages, hooks, or components
+* Untyped API responses
+* Missing permission checks
+* Services that know about React or UI state
+* Repositories containing scoring, gamification, or lesson logic
+* Leaked secrets or environment values in responses or logs
+* Feature services importing each other's internals directly
+
+When failure criteria appear, extract services and repositories before extending behavior.
+
+⸻
+
+EXAMPLES
+
+Correct API route
+
+app/api/review/submit/route.ts validates session, parses body, calls reviewService.submitAnswer(), returns typed result.
+
+Correct service
+
+features/review/services/review.service.ts calculates next review state and delegates persistence to review.repository.ts.
+
+Correct repository
+
+features/review/repositories/review.repository.ts performs Supabase queries only.
+
+Incorrect route
+
+Route handler inserts directly into Supabase and computes SRS intervals inline.
+
+Incorrect service
+
+Service imports a React hook or reads window.
+
+Incorrect cross-layer call
+
+Component imports repository and bypasses service.
+
+⸻
+
+ANTI-PATTERNS
+
+Fat API routes with embedded business logic
+
+Direct supabase.from() calls in route handlers when a repository exists
+
+Duplicated validation in UI and API with divergent rules
+
+Services returning any
+
+Authorization checks only in the frontend
+
+Business logic in repositories
+
+Feature coupling through deep imports
+
+Logging access tokens or refresh tokens
+
+Putting Next.js request parsing logic inside reusable domain services without abstraction
+
+END OF backend.mdc

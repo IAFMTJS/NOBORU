@@ -1,0 +1,222 @@
+---
+description: Noboru frontend — Next.js 15, React 19, mobile-first UI, ShadCN, feature components, pages as orchestration only, Inter font, design tokens from globals.css.
+globs: **/*.tsx, **/components/**, **/app/**
+alwaysApply: false
+---
+
+# NOBORU FRONTEND RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all frontend implementation within Noboru.
+
+Every page, component, layout, hook used for presentation, and client interaction must follow this document.
+
+If this rule conflicts with architecture.mdc on layering, architecture.mdc takes precedence.
+
+For visual design, motion, and screen behavior, defer to uiux.mdc.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Consistent Next.js 15 and React 19 patterns
+* Mobile-first, premium UI aligned with Noboru identity
+* Clear separation between presentation and business logic
+* Reusable feature-scoped components
+* Design token consistency across the application
+* Long-term maintainability of the UI layer
+
+The frontend must feel like Noboru on every screen.
+
+It must never become a collection of one-off pages.
+
+⸻
+
+REQUIREMENTS
+
+Stack
+
+* Next.js 15 App Router
+* React 19
+* TypeScript strict mode
+* Tailwind CSS
+* ShadCN UI components
+* Inter as the primary typeface
+
+Structure
+
+* Feature UI lives in features/*/components/
+* Shared UI primitives live in components/ or lib/ as established by the codebase
+* Pages in app/ orchestrate workflows only
+* Hooks in features/*/hooks/ may coordinate UI state but must not contain business logic
+
+Layering
+
+* UI calls services or application-layer hooks
+* UI must never access repositories or the database directly
+* UI must never embed business rules that belong in services
+
+Design System
+
+* Use CSS variables and tokens defined in app/globals.css
+* Use semantic tokens: background, foreground, primary, secondary, muted, destructive, border, ring, radius
+* Support light and dark themes via existing token structure
+* Do not introduce hardcoded hex colors when a token exists
+
+Mobile First
+
+* Design and implement for mobile viewports first
+* Desktop layouts adapt from mobile, never the reverse
+* Primary actions must remain thumb-reachable
+
+Pages
+
+* Pages compose feature components
+* Pages handle routing, layout, and workflow entry
+* Pages must not contain validation, scoring, persistence, or domain calculations
+
+Offline Presentation
+
+* Core learning UI must support loading, empty, error, offline, and recovery states
+* UI must not assume network availability for core learning flows
+
+⸻
+
+CODING STANDARDS
+
+Components
+
+* Prefer function components with explicit TypeScript props
+* Keep components focused on one responsibility
+* Extract reusable UI into feature or shared components
+* Use ShadCN primitives before creating custom controls
+
+Naming
+
+* Components: PascalCase
+* Files: match exported component name
+* Feature components remain inside their feature module
+
+Imports
+
+* Prefer absolute imports using project aliases
+* Do not create cross-feature UI dependencies unless through shared lib systems
+
+Styling
+
+* Use Tailwind utility classes with design tokens
+* Use cn() or equivalent for conditional class merging
+* Avoid inline styles except for dynamic values that cannot be expressed with tokens
+
+Data Flow
+
+* Presentation components receive data via props
+* Container or page-level components fetch via services or application hooks
+* Never fetch directly from Supabase inside .tsx files
+
+Accessibility Baseline
+
+* Every interactive element requires an accessible name
+* Follow uiux.mdc and accessibility.mdc for keyboard, focus, and motion requirements
+
+Performance Baseline
+
+* Avoid unnecessary client components
+* Prefer Server Components where interactivity is not required
+* Lazy-load heavy client modules when appropriate
+
+⸻
+
+SUCCESS CRITERIA
+
+A frontend change is successful when:
+
+* The screen works on mobile first and scales cleanly to desktop
+* Business logic remains outside pages and presentational components
+* Design tokens from app/globals.css are used consistently
+* Feature ownership is obvious from file location
+* ShadCN and shared primitives are reused instead of duplicated
+* Loading, error, empty, and offline states are handled
+* A new developer can locate the correct feature component quickly
+
+⸻
+
+FAILURE CRITERIA
+
+Frontend quality is degraded when any of the following occur:
+
+* Business logic inside pages or presentational components
+* Direct database or repository access from UI
+* Hardcoded colors, spacing systems, or typography outside tokens
+* One-off components duplicated across features
+* Desktop-first layouts retrofitted onto mobile
+* Educational content hardcoded into UI
+* Missing error or offline states on core learning screens
+* Feature UI imported directly across unrelated feature boundaries
+
+When failure criteria appear, refactor before adding more UI on top.
+
+⸻
+
+EXAMPLES
+
+Correct page orchestration
+
+app/learning/page.tsx composes features/learning/components/LessonDashboard and passes route params only.
+
+Correct feature component
+
+features/vocabulary/components/VocabularyCard.tsx renders props, emits events, and contains no Supabase calls.
+
+Correct token usage
+
+className="bg-background text-foreground border-border"
+
+Correct service usage
+
+const items = await vocabularyService.getDueItems(userId);
+
+Incorrect page logic
+
+Calculating SRS intervals, validating answers, or writing progress inside app/review/page.tsx.
+
+Incorrect styling
+
+style={{ color: "#E23D4D" }} when --primary exists.
+
+Incorrect data access
+
+supabase.from("vocabulary").select("*") inside a component.
+
+⸻
+
+ANTI-PATTERNS
+
+Database queries inside components or pages
+
+Business logic inside pages
+
+Business logic inside presentational hooks
+
+Duplicated card, button, or modal implementations per feature
+
+Hardcoded educational content in JSX
+
+Hardcoded brand colors bypassing globals.css
+
+Cross-feature component imports that create coupling
+
+Giant components mixing fetch, validation, layout, and animation
+
+Using any without explicit justification
+
+Creating pages before the feature component system exists
+
+END OF frontend.mdc

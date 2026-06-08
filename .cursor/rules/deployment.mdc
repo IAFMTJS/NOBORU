@@ -1,0 +1,199 @@
+---
+description: Noboru deployment — Vercel hosting, scripts, env management, Next config; reference docs/deployment.md.
+globs: **/scripts/**, vercel.json, next.config.ts
+alwaysApply: false
+---
+
+# NOBORU DEPLOYMENT RULE
+
+Version: 1.0
+
+Priority: HIGH
+
+Status: AUTHORITATIVE
+
+This rule governs deployment configuration, environment management, build scripts, and production runtime settings for Noboru.
+
+Every change to scripts/, vercel.json, next.config.ts, or deployment-related infrastructure must follow this document and docs/deployment.md.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Predictable, repeatable deployments to Vercel
+* Safe environment variable management across local, preview, and production
+* Build and runtime configuration remain explicit and reviewable
+* Scripts automate operations without hiding domain logic
+* Production releases protect user learning data and auth boundaries
+* Noboru can scale deployment complexity without chaos
+
+Deploy systems.
+
+Not manual rituals.
+
+⸻
+
+REQUIREMENTS
+
+Hosting
+
+* Vercel is the primary hosting platform for the Next.js application
+* Preview deployments must use isolated environment configuration
+* Production deployments require reviewed configuration and passing CI
+
+Environment Management
+
+* Required variables documented in docs/deployment.md
+* Secrets stored in Vercel project settings or approved secret stores
+* Never commit .env.local, credentials, or private keys
+* Separate public and server-only variables clearly
+
+Next Configuration
+
+* next.config.ts changes must be intentional and documented when non-default
+* Image domains, redirects, headers, and experimental flags require review
+* Do not disable security headers for convenience
+
+Vercel Configuration
+
+* vercel.json defines routing, headers, redirects, and build behavior as needed
+* Keep configuration minimal and aligned with Next.js defaults where possible
+
+Scripts
+
+* scripts/ contains operational automation: seed helpers, migrations wrappers, asset checks, release utilities
+* Scripts must not embed business rules that belong in services
+* Scripts must fail clearly and avoid partial destructive operations without safeguards
+
+Database and Supabase
+
+* Schema changes deploy through supabase/migrations/, not ad hoc production edits
+* Production data operations require explicit procedure in docs/deployment.md
+
+Build Safety
+
+* Production builds must succeed with strict TypeScript
+* Failing tests in protected domains block release per docs/testing-strategy.md
+
+Observability
+
+* Deployment docs define logging and failure monitoring expectations
+* Do not log secrets during deploy or runtime bootstrap
+
+⸻
+
+CODING STANDARDS
+
+Scripts
+
+* Use explicit Node or shell entry points with usage comments
+* Accept environment via process.env, not hardcoded paths or credentials
+* Exit non-zero on failure
+* Idempotent where repeated execution is possible
+
+Configuration Files
+
+* Comment non-obvious settings briefly
+* Group related settings together
+* Avoid experimental features without documented reason
+
+Secrets
+
+* Load at runtime on server only
+* Validate required env vars during startup for server processes where practical
+
+Preview vs Production
+
+* Preview may use staging Supabase or isolated datasets as defined in docs/deployment.md
+* Never point preview builds at production databases without explicit approved process
+
+Performance
+
+* Respect architecture targets during deploy config: initial load, route change, interaction latency
+
+⸻
+
+SUCCESS CRITERIA
+
+Deployment work is successful when:
+
+* Local, preview, and production environments are clearly documented
+* Builds deploy to Vercel without manual undocumented steps
+* Secrets remain outside the repository
+* next.config.ts and vercel.json changes are reviewable and minimal
+* Scripts are safe, named clearly, and reusable
+* Database migrations align with deployed application versions
+* docs/deployment.md reflects the live process
+
+⸻
+
+FAILURE CRITERIA
+
+Deployment quality is degraded when any of the following occur:
+
+* Secrets committed or printed during deploy scripts
+* Manual production schema edits outside migrations
+* Undocumented required environment variables
+* Scripts that mutate production data without confirmation safeguards
+* Preview environments accidentally using production credentials
+* Build configuration disables type or lint enforcement without approval
+* Fragile one-off deploy steps known only to one developer
+* next.config.ts changes that break offline or auth behavior without review
+
+When failure criteria appear, fix deployment discipline before shipping features.
+
+⸻
+
+EXAMPLES
+
+Correct script
+
+scripts/check-env.ts validates required variables and exits with readable errors.
+
+Correct secret handling
+
+SUPABASE_SERVICE_ROLE_KEY configured only in Vercel production environment settings.
+
+Correct migration workflow
+
+Apply supabase migration locally, commit migration file, deploy app version expecting new schema.
+
+Incorrect script
+
+Script deletes user progress tables without backup or environment guard.
+
+Incorrect config
+
+Disabling TypeScript build errors in next.config.ts to unblock release.
+
+Incorrect env practice
+
+Committing .env.production with live credentials.
+
+⸻
+
+ANTI-PATTERNS
+
+Secrets in git
+
+Deploy scripts with embedded business logic
+
+Silent failure in operational scripts
+
+Shared production and preview credentials
+
+Manual hotfixes without migration files
+
+Unreviewed experimental Next flags in production
+
+Running destructive scripts against prod by default
+
+Undocumented one-step "just run this" deployment notes
+
+Disabling CI checks to force deploy
+
+Configuration sprawl across unreviewed local-only changes
+
+END OF deployment.mdc

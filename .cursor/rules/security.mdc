@@ -1,0 +1,216 @@
+---
+description: Noboru security — RLS, authentication, middleware, env vars, no secrets in code; aligns with architecture security rules.
+globs: **/middleware.ts, **/auth/**, **/features/authentication/**
+alwaysApply: false
+---
+
+# NOBORU SECURITY RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs authentication, authorization, middleware, session handling, and security-sensitive implementation within Noboru.
+
+Every auth flow, protected route, token handling path, and permission check must follow this document and the security requirements in architecture.mdc.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* User data remains protected by default
+* Authentication is consistent and verifiable
+* Authorization is enforced at every boundary
+* Secrets never enter source control or client bundles
+* Security failures are explicit, logged, and non-leaking
+* Noboru remains trustworthy as a long-term learning platform
+
+Security is not optional infrastructure.
+
+It is part of domain design.
+
+⸻
+
+REQUIREMENTS
+
+Authentication
+
+* Supabase Auth is the authentication source
+* Session validation must occur server-side for protected operations
+* features/authentication/ owns auth workflows, types, and presentation
+* Middleware in middleware.ts protects routes according to established patterns
+
+Authorization
+
+* Every user-owned resource requires ownership validation
+* Admin actions require explicit role checks
+* Never trust client-provided userId, role, or ownership flags without verification
+* RLS must protect database rows; application checks remain mandatory
+
+Row Level Security
+
+* Required on all user-owned tables
+* Policies must default to least privilege
+* Service role usage is server-only and narrowly scoped
+
+Secrets
+
+* Forbidden: API keys, service role keys, JWT secrets, or credentials in code
+* Required: environment variables via .env.local and deployment secret stores
+* Never log tokens, refresh tokens, passwords, or recovery codes
+* Never expose service role keys to client bundles
+
+Environment Variables
+
+* Public variables only for explicitly public values such as anon keys where required
+* Server-only secrets loaded only in server contexts
+* Document required env vars in deployment docs, not in committed secrets files
+
+Input Safety
+
+* Validate and sanitize input at API and service boundaries
+* Reject unexpected fields when schemas are used
+* Avoid dynamic SQL outside controlled repository patterns
+
+Transport and Cookies
+
+* Use secure cookie settings where auth cookies are involved
+* Follow framework and Supabase recommendations for session storage
+
+Error Handling
+
+* Return generic auth failure messages to clients
+* Log detailed failures server-side without sensitive payloads
+
+Architecture Alignment
+
+* UI must not access database directly
+* Repositories must scope queries by authenticated user where applicable
+* Security logic belongs in services, middleware, and policies—not scattered in components
+
+⸻
+
+CODING STANDARDS
+
+Middleware
+
+* Keep middleware focused on route protection and session presence
+* Avoid heavy business logic in middleware
+* Fail closed: unauthenticated users do not reach protected handlers
+
+Auth Feature
+
+* Centralize login, logout, signup, recovery, and session refresh workflows
+* Typed auth states: loading, authenticated, unauthenticated, error, recovery
+* Never store plaintext passwords outside auth provider flow
+
+API Routes
+
+* Verify session before mutations
+* Map auth failures to 401 and permission failures to 403
+* Do not leak whether a protected resource exists when unauthorized
+
+Client Code
+
+* Use anon key only with RLS-protected operations
+* Never embed service role or private keys in client-side code
+
+Logging
+
+* Log auth anomalies with request context
+* Redact tokens and credentials from all logs
+
+Dependencies
+
+* Keep auth utilities in authentication feature or shared lib/security as established
+* Do not duplicate permission checks with inconsistent rules
+
+⸻
+
+SUCCESS CRITERIA
+
+Security work is successful when:
+
+* Protected routes cannot be accessed without valid session verification
+* User-owned data is protected by RLS and service checks
+* No secrets appear in git history or client bundles
+* Authorization failures are handled consistently
+* Auth flows support error and recovery states
+* Middleware and authentication feature ownership is clear
+* Security behavior is testable at service and route boundaries
+
+⸻
+
+FAILURE CRITERIA
+
+Security is compromised or degraded when any of the following occur:
+
+* Secrets committed to the repository
+* Client-side service role usage
+* Missing RLS on user-owned tables
+* Trusting client-sent user IDs for mutations
+* Authorization enforced only in UI
+* Tokens or passwords logged to console or telemetry
+* Public env vars used for private credentials
+* Inconsistent permission checks across routes
+* Detailed internal errors returned to untrusted clients
+
+When failure criteria appear, treat as release-blocking until remediated.
+
+⸻
+
+EXAMPLES
+
+Correct protected mutation
+
+API route verifies session, resolves userId from auth context, calls service with that userId.
+
+Correct middleware
+
+middleware.ts redirects unauthenticated users away from protected app sections.
+
+Correct env usage
+
+process.env.SUPABASE_SERVICE_ROLE_KEY used only in server repository infrastructure.
+
+Incorrect client code
+
+Importing service role key into a React component.
+
+Incorrect authorization
+
+if (body.userId === profile.id) without session verification.
+
+Incorrect logging
+
+console.log({ refreshToken }) during auth debugging left in production path.
+
+⸻
+
+ANTI-PATTERNS
+
+Secrets in source code
+
+Authorization checks only in components
+
+Bypassing RLS assumptions because "the UI hides the button"
+
+Logging full auth responses
+
+Shared admin endpoints without role validation
+
+Using security through obscurity for protected resources
+
+Copy-pasted permission logic with divergent behavior
+
+Exposing stack traces on auth failures
+
+Hardcoded test credentials in non-test production paths
+
+Client-side-only route protection without server enforcement
+
+END OF security.mdc

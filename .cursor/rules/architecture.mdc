@@ -1,6 +1,9 @@
-architecture.mdc
+---
+description: Authoritative Noboru architecture — layered design, feature modules, services, repositories, offline-first, type safety, and forbidden patterns.
+alwaysApply: true
+---
 
-NOBORU ARCHITECTURE RULE
+# NOBORU ARCHITECTURE RULE
 
 Version: 1.0
 

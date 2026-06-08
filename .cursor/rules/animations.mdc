@@ -1,0 +1,215 @@
+---
+description: Noboru animations — Framer Motion, purposeful motion only, premium subtle feedback; aligns with uiux.mdc animation rules.
+globs: **/*.tsx, **/components/**
+alwaysApply: false
+---
+
+# NOBORU ANIMATIONS RULE
+
+Version: 1.0
+
+Priority: MEDIUM
+
+Status: AUTHORITATIVE
+
+This rule governs all motion, transitions, and animated feedback within Noboru UI.
+
+Every animation in components, pages, dialogs, games, lessons, and notifications must follow this document and the animation rules in uiux.mdc.
+
+Animations communicate.
+
+They do not decorate.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Motion reinforces learning feedback and navigation
+* The product feels premium, calm, and responsive
+* Animations never distract from study focus
+* Framer Motion is used consistently and intentionally
+* Reduced motion preferences are honored
+* Performance remains at 60fps on mobile
+
+Motion should help climbers continue upward.
+
+Not steal attention from the trail.
+
+⸻
+
+REQUIREMENTS
+
+Tooling
+
+* Framer Motion is the standard animation library for React UI
+* Prefer motion components and variants over ad hoc CSS animation sprawl
+* CSS transitions may be used for simple hover or focus states when sufficient
+
+Purpose
+
+Every animation must have one of these purposes:
+
+* Feedback
+* Progress
+* Success
+* Navigation
+* State change
+
+If an animation has no purpose, remove it.
+
+Style
+
+From uiux.mdc:
+
+* Smooth
+* Natural
+* Subtle
+* Premium
+* Responsive
+
+Forbidden Motion
+
+* Random animations
+* Decorative bouncing
+* Excessive movement
+* Attention-grabbing effects
+* Animation spam
+
+Accessibility
+
+* Honor prefers-reduced-motion
+* Provide non-motion alternatives for essential feedback
+* Follow accessibility.mdc for motion-sensitive users
+
+Performance
+
+* Animate transform and opacity where possible
+* Avoid layout-thrashing properties on hot paths
+* Keep review and game loops free of continuous motion
+
+Educational Context
+
+* Success and error feedback may animate briefly
+* Lesson content itself must remain readable and stable
+* Stroke order or kanji teaching animations must support learning, not spectacle alone
+
+Reference
+
+* uiux.mdc ANIMATION PHILOSOPHY, ANIMATION RULES, FORBIDDEN ANIMATIONS, and MOTION STYLE sections are authoritative for UX intent
+
+⸻
+
+CODING STANDARDS
+
+Framer Motion
+
+* Define variants for repeated patterns: fadeIn, slideUp, successPulse
+* Keep durations short for feedback; longer only for deliberate transitions
+* Use AnimatePresence for mount and unmount transitions that aid orientation
+
+Component Design
+
+* Encapsulate motion in presentational components when reused
+* Do not scatter one-off motion configs across unrelated features
+
+Reduced Motion
+
+* Centralize reduced motion checks where possible
+* Replace motion with instant state change or opacity-only feedback when required
+
+Games and Drills
+
+* Motion must not reduce time available for answers unless the activity explicitly requires it
+* Avoid looping background motion during recall tasks
+
+Consistency
+
+* Reuse shared motion tokens or constants for duration and easing where established
+
+⸻
+
+SUCCESS CRITERIA
+
+Animation work is successful when:
+
+* Motion clarifies feedback or navigation
+* The app feels polished without feeling busy
+* Reduced motion mode works across animated components
+* Hot paths remain smooth at 60fps
+* Animations match uiux.mdc tone: calm and premium
+* Games and lessons remain focus-friendly
+
+⸻
+
+FAILURE CRITERIA
+
+Animation quality is degraded when any of the following occur:
+
+* Decorative motion on study screens without purpose
+* Continuous looping animations during reviews
+* Motion ignores prefers-reduced-motion
+* Janky transitions on route changes or card flips
+* Different easing and duration systems in every feature
+* Motion delays critical interactions beyond usability needs
+* Flashy effects that conflict with Noboru calm identity
+* Animation used to mask slow loading instead of fixing performance
+
+When failure criteria appear, remove or simplify motion before adding more.
+
+⸻
+
+EXAMPLES
+
+Correct feedback
+
+Answer submission uses brief success or error transition then stable result state.
+
+Correct navigation
+
+Screen enter transition helps orientation between lesson steps.
+
+Correct reduced motion
+
+if (prefersReducedMotion) render static checkmark else animate successPulse.
+
+Incorrect decoration
+
+Mascot bounce loop on vocabulary list with no user action trigger.
+
+Incorrect drill UI
+
+Background particles animating during timed recall.
+
+Incorrect loading mask
+
+Infinite shimmer animation instead of fetching lesson data efficiently.
+
+⸻
+
+ANTI-PATTERNS
+
+Animation for its own sake
+
+Random delay stagger on every list item in core learning paths
+
+Bouncing buttons by default
+
+Heavy blur or filter animation on mobile hot paths
+
+Multiple simultaneous unrelated animations on one screen
+
+No reduced motion fallback
+
+Copy-pasted Framer configs with conflicting timing across features
+
+Using motion to create artificial urgency
+
+Looping celebration effects blocking next action
+
+Animating width and height on large lists during scroll
+
+Teaching interactions where motion is required to understand meaning with no static alternative
+
+END OF animations.mdc

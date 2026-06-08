@@ -1,0 +1,24 @@
+{
+  "name": "Noboru",
+  "short_name": "Noboru",
+  "description": "Your climb. Your language. Your journey.",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#0F1115",
+  "theme_color": "#0F1115",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon_app_light_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon_app_dark_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}
