@@ -1,0 +1,1497 @@
+uiux.mdc
+
+NOBORU UI/UX RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all user interface and user experience decisions within Noboru.
+
+Every screen, interaction, animation, component, page, dialog, onboarding flow, game, lesson, and notification must follow this document.
+
+This document is considered the primary source of truth for user experience.
+
+⸻
+
+PURPOSE
+
+Noboru must feel:
+
+Premium
+
+Calm
+
+Focused
+
+Modern
+
+Motivating
+
+Adventure-Oriented
+
+Educational
+
+The experience should encourage users to continue climbing.
+
+The experience should never feel overwhelming.
+
+⸻
+
+UX PHILOSOPHY
+
+Users are climbers.
+
+Not customers.
+
+Not students.
+
+Not productivity machines.
+
+Everything should reinforce progress and discovery.
+
+⸻
+
+PRIMARY EXPERIENCE GOAL
+
+The user should consistently feel:
+
+“I am getting better.”
+
+Not:
+
+“I am checking boxes.”
+
+Not:
+
+“I am maintaining a streak.”
+
+Not:
+
+“I am completing chores.”
+
+⸻
+
+CORE FEELING
+
+Noboru should feel like:
+
+A mountain expedition through Japan.
+
+Combined with:
+
+Apple-level polish
+
+Nintendo-level charm
+
+Modern mobile usability
+
+Premium educational quality
+
+⸻
+
+VISUAL PILLARS
+
+Clarity
+
+Users should instantly understand what to do.
+
+⸻
+
+Focus
+
+One primary action per screen.
+
+⸻
+
+Progress
+
+Progress should always be visible.
+
+⸻
+
+Delight
+
+Small moments of satisfaction.
+
+Never distraction.
+
+⸻
+
+Consistency
+
+Every screen should feel like Noboru.
+
+⸻
+
+MOBILE FIRST RULE
+
+All experiences must be designed for mobile first.
+
+Desktop adapts from mobile.
+
+Never the reverse.
+
+⸻
+
+THUMB REACHABILITY
+
+Primary actions must remain reachable.
+
+Critical actions belong:
+
+Bottom area
+
+Bottom sheets
+
+Bottom navigation
+
+Floating actions when appropriate
+
+⸻
+
+SCREEN PRIORITY RULE
+
+Every screen must answer:
+
+Where am I?
+
+What should I do?
+
+Why does it matter?
+
+What progress am I making?
+
+Within 3 seconds.
+
+⸻
+
+NAVIGATION PRINCIPLES
+
+Navigation must be simple.
+
+No deep nesting.
+
+No confusing routes.
+
+No hidden critical features.
+
+⸻
+
+PRIMARY NAVIGATION
+
+Bottom Navigation:
+
+Home
+
+Learn
+
+Review
+
+Games
+
+Community
+
+Profile
+
+Maximum:
+
+6 primary items
+
+⸻
+
+NAVIGATION ITEM DEFINITIONS
+
+Home
+
+Dashboard entry point.
+
+Shows daily quest, level progress, upcoming lesson, and quick actions.
+
+Learn
+
+Learning path, lessons, vocabulary, grammar, and kanji.
+
+Review
+
+Spaced repetition and review queue.
+
+Games
+
+Educational mini-games that reinforce mastery.
+
+Community
+
+Social features, challenges, and leagues.
+
+Profile
+
+User identity, stats, achievements, and account access.
+
+⸻
+
+HOME SCREEN RULE
+
+The home screen must always show:
+
+Current Region
+
+Current Trail
+
+Progress
+
+Daily Goals
+
+Continue Learning
+
+Elevation Progress
+
+Recent Achievements
+
+⸻
+
+DARK MODE RULE
+
+Dark mode is primary.
+
+Design dark mode first.
+
+Then create light mode.
+
+Not the reverse.
+
+⸻
+
+DARK MODE FEEL
+
+Theme:
+
+Mountain Night
+
+Feeling:
+
+Calm
+
+Focused
+
+Premium
+
+Readable
+
+Never harsh.
+
+Never neon.
+
+Never cyberpunk.
+
+⸻
+
+LIGHT MODE FEEL
+
+Theme:
+
+Mountain Dawn
+
+Feeling:
+
+Fresh
+
+Clean
+
+Elegant
+
+Optimistic
+
+⸻
+
+COLOR PHILOSOPHY
+
+Colors communicate meaning.
+
+Never decoration.
+
+⸻
+
+PRIMARY BRAND COLOR
+
+Mountain Red
+
+Used for:
+
+Primary Actions
+
+Progress
+
+Elevation
+
+Important Highlights
+
+⸻
+
+SUCCESS COLOR
+
+Used only for:
+
+Completion
+
+Achievements
+
+Positive Reinforcement
+
+⸻
+
+WARNING COLOR
+
+Used only for:
+
+Important Warnings
+
+Learning Risks
+
+Critical Notices
+
+⸻
+
+ERROR COLOR
+
+Used only for:
+
+Failures
+
+Blocking Errors
+
+Never overused.
+
+⸻
+
+INFORMATION DENSITY
+
+Keep screens breathable.
+
+Avoid clutter.
+
+Whitespace is a feature.
+
+Not wasted space.
+
+⸻
+
+COMPONENT RULES
+
+Components must be:
+
+Reusable
+
+Accessible
+
+Consistent
+
+Responsive
+
+Documented
+
+⸻
+
+BUTTON RULES
+
+Primary Button:
+
+One per screen.
+
+Maximum.
+
+⸻
+
+Secondary Buttons:
+
+Support actions only.
+
+⸻
+
+Danger Buttons:
+
+Rare.
+
+Require intent confirmation.
+
+⸻
+
+CARD RULES
+
+Cards should feel:
+
+Elevated
+
+Tactile
+
+Clean
+
+Readable
+
+Cards are primary UI building blocks.
+
+⸻
+
+ANIMATION PHILOSOPHY
+
+Animations communicate.
+
+Animations do not decorate.
+
+⸻
+
+ANIMATION RULES
+
+Every animation must have purpose.
+
+Examples:
+
+Feedback
+
+Progress
+
+Success
+
+Navigation
+
+State Changes
+
+⸻
+
+FORBIDDEN ANIMATIONS
+
+Random animations
+
+Decorative bouncing
+
+Excessive movement
+
+Attention grabbing effects
+
+Animation spam
+
+⸻
+
+MOTION STYLE
+
+Smooth
+
+Natural
+
+Subtle
+
+Premium
+
+Responsive
+
+⸻
+
+LOADING STATES
+
+Every loading state must feel intentional.
+
+Never show blank screens.
+
+⸻
+
+REQUIRED LOADING TYPES
+
+Skeletons
+
+Progress Indicators
+
+Loading Illustrations
+
+Yama Loading States
+
+⸻
+
+EMPTY STATES
+
+Empty states must teach users what to do next.
+
+Never show:
+
+“No data”
+
+Instead explain:
+
+Why
+
+What happens next
+
+How to proceed
+
+⸻
+
+ERROR STATES
+
+Error states must:
+
+Explain issue
+
+Offer recovery
+
+Remain calm
+
+Avoid technical language
+
+⸻
+
+SUCCESS STATES
+
+Success should feel rewarding.
+
+Not addictive.
+
+⸻
+
+SUCCESS MOMENTS
+
+Lesson Completion
+
+Level Up
+
+Achievement Unlock
+
+Quest Completion
+
+Milestone Reached
+
+Region Cleared
+
+⸻
+
+ELEVATION FEEDBACK
+
+Every progression event should reinforce ascent.
+
+Examples:
+
+Elevation Gained
+
+Trail Advanced
+
+Summit Reached
+
+Milestone Earned
+
+⸻
+
+YAMA USAGE RULES
+
+Yama appears as:
+
+Companion
+
+Explorer
+
+Encourager
+
+Guidepost
+
+⸻
+
+YAMA MUST NEVER
+
+Nag
+
+Pressure
+
+Guilt users
+
+Manipulate streaks
+
+Interrupt learning
+
+Become annoying
+
+⸻
+
+YAMA MAY
+
+Celebrate
+
+Encourage
+
+Explain
+
+Appear during milestones
+
+Appear during onboarding
+
+Appear during loading
+
+Appear during achievements
+
+⸻
+
+LESSON EXPERIENCE RULE
+
+Lessons should feel:
+
+Focused
+
+Short
+
+Achievable
+
+Meaningful
+
+⸻
+
+LESSON SCREEN RULE
+
+Only one educational objective at a time.
+
+Never overload users.
+
+⸻
+
+REVIEW EXPERIENCE
+
+Review should feel:
+
+Training
+
+Preparation
+
+Mastery
+
+Not punishment.
+
+Not homework.
+
+⸻
+
+GAME EXPERIENCE RULE
+
+Games must reinforce learning.
+
+Games are educational tools.
+
+Not distractions.
+
+⸻
+
+GAME DESIGN REQUIREMENTS
+
+Every game must:
+
+Teach
+
+Reinforce
+
+Reward
+
+Measure mastery
+
+Track progress
+
+⸻
+
+ACHIEVEMENT EXPERIENCE
+
+Achievements should feel earned.
+
+Not handed out constantly.
+
+⸻
+
+ACHIEVEMENT REACTIONS
+
+Minor
+
+Major
+
+Legendary
+
+Different celebration levels.
+
+⸻
+
+ONBOARDING RULE
+
+Onboarding must feel like:
+
+Beginning an expedition.
+
+Not creating an account.
+
+⸻
+
+ONBOARDING NARRATIVE
+
+Welcome to Noboru.
+
+Every climb begins with a first step.
+
+Every summit begins at the base.
+
+Let’s begin your ascent.
+
+⸻
+
+SCREEN VISUAL LANGUAGE
+
+All screens must match the approved product mockups.
+
+Reference assets:
+
+assets/marketing/mockup_product_dark_v1.png
+
+assets/marketing/mockup_product_light_v1.png
+
+assets/marketing/mockup_supplementary_dark_v1.png
+
+⸻
+
+MOCKUP VISUAL TOKENS
+
+Background Dark:
+
+#0F1115
+
+Background Light:
+
+#F7F8FA
+
+Surface Dark:
+
+#171A21
+
+Surface Light:
+
+#FFFFFF
+
+Card Dark:
+
+#1E232D
+
+Primary Action:
+
+#D64045 Mountain Red
+
+Success:
+
+#2FBF71
+
+Warning:
+
+#F6AE2D
+
+Error:
+
+#E63946
+
+Typography:
+
+Inter
+
+Border Radius:
+
+Cards 16px
+
+Buttons 12px
+
+Bottom Nav 0px top radius
+
+Shadows:
+
+Soft, subtle elevation only in light mode
+
+⸻
+
+MOCKUP COMPONENT PATTERNS
+
+Header:
+
+Greeting or screen title left, profile or action icon right.
+
+Level Card:
+
+JLPT badge, progress percentage, Yama illustration, mountain accent.
+
+Quest Card:
+
+Title, description, progress bar, red accent border on active quest.
+
+List Row:
+
+Japanese primary text, furigana or reading secondary, English meaning, status icon right.
+
+Primary CTA:
+
+Full-width red Continue or action button pinned to bottom safe area.
+
+JLPT Tabs:
+
+Horizontal pill tabs: All, N5, N4, N3, N2, N1.
+
+Bottom Navigation:
+
+5–6 icon tabs with labels, active tab in Mountain Red.
+
+⸻
+
+ONBOARDING SCREENS
+
+Style must match product mockups.
+
+Full-screen mobile layout.
+
+Yama appears on welcome and meet-Yama steps.
+
+Progress dots at top show step position.
+
+⸻
+
+ONBOARDING STEP 1 — WELCOME
+
+Layout:
+
+Centered Yama illustration (yama_main_light_v1 or yama_main_dark_v1 based on theme).
+
+NOBORU wordmark with 登る subtitle.
+
+Tagline: Your climb. Your language. Your journey.
+
+Primary CTA: Begin Your Ascent
+
+Secondary: Already have an account? Sign in
+
+⸻
+
+ONBOARDING STEP 2 — LEARNING GOAL
+
+Title:
+
+Why are you learning Japanese?
+
+Options (single select cards):
+
+Anime
+
+Travel
+
+Culture
+
+Work
+
+JLPT
+
+Each card: icon, label, subtle mountain border on selection.
+
+CTA: Continue
+
+⸻
+
+ONBOARDING STEP 3 — CURRENT LEVEL
+
+Title:
+
+Where are you on the trail?
+
+Options (single select):
+
+Absolute Beginner
+
+N5
+
+N4
+
+N3
+
+N2
+
+N1
+
+Show JLPT badge styling per option.
+
+CTA: Continue
+
+⸻
+
+ONBOARDING STEP 4 — DAILY GOAL
+
+Title:
+
+How far do you want to climb each day?
+
+Options (single select):
+
+5 min
+
+10 min
+
+20 min
+
+30 min
+
+60 min
+
+Show estimated daily XP or lesson count hint per option.
+
+CTA: Continue
+
+⸻
+
+ONBOARDING STEP 5 — THEME PREFERENCE
+
+Title:
+
+Choose your trail atmosphere
+
+Options (visual preview cards):
+
+Light Mode — Mountain Dawn preview
+
+Dark Mode — Mountain Night preview
+
+Default selection: Dark Mode (dark mode is primary).
+
+CTA: Continue
+
+⸻
+
+ONBOARDING STEP 6 — MEET YAMA
+
+Layout:
+
+Large Yama illustration.
+
+Title: Meet Yama
+
+Body: Your climbing companion. Yama climbs alongside you — not above you.
+
+CTA: Begin Climb
+
+⸻
+
+AUTHENTICATION SCREENS
+
+Style must match product mockups.
+
+Same color tokens, card surfaces, and red primary actions.
+
+⸻
+
+AUTH SCREEN — LOGIN
+
+Header:
+
+NOBORU logo centered.
+
+Subtext: Welcome back, Climber
+
+Fields:
+
+Email
+
+Password
+
+Actions:
+
+Sign In (primary red button)
+
+Forgot Password (text link)
+
+Footer:
+
+Don't have an account? Create one
+
+Optional:
+
+Continue as Guest
+
+Remember me toggle
+
+⸻
+
+AUTH SCREEN — REGISTER
+
+Header:
+
+Join the climb
+
+Fields:
+
+Display Name
+
+Email
+
+Password
+
+Confirm Password
+
+Actions:
+
+Create Account (primary red button)
+
+Footer:
+
+Already have an account? Sign in
+
+⸻
+
+AUTH SCREEN — PASSWORD RESET
+
+Header:
+
+Reset your path
+
+Field:
+
+Email
+
+Action:
+
+Send Reset Link (primary red button)
+
+Confirmation state:
+
+Calm success message with return to login link
+
+⸻
+
+KANJI SCREEN
+
+Style must match Vocabulary and Grammar list screens from product mockups.
+
+Route:
+
+Accessible from Learn section.
+
+Not a bottom-nav tab.
+
+⸻
+
+KANJI SCREEN — LIST VIEW
+
+Header:
+
+Kanji
+
+JLPT filter tabs: All, N5, N4, N3, N2, N1
+
+Search icon right
+
+List Row:
+
+Large kanji character left
+
+Readings (on/kun) and primary meaning center
+
+Mastery indicator right (star, progress ring, or checkmark)
+
+Status icons:
+
+Completed checkmark
+
+In progress dash
+
+Locked lock icon
+
+Optional filter chips:
+
+Needs Review
+
+Mastered
+
+New
+
+⸻
+
+KANJI SCREEN — DETAIL VIEW
+
+Header:
+
+Back navigation, kanji character as title
+
+Sections:
+
+Stroke order animation or diagram
+
+Meanings
+
+On-yomi readings
+
+Kun-yomi readings
+
+Example vocabulary words
+
+Radical breakdown
+
+JLPT level badge
+
+Actions:
+
+Add to Review Queue
+
+Mark as Mastered
+
+⸻
+
+SETTINGS SCREEN
+
+Route:
+
+Profile → Settings
+
+Style must match product mockups.
+
+⸻
+
+SETTINGS SCREEN — LAYOUT
+
+Header:
+
+Settings with back navigation
+
+Sections (grouped cards):
+
+Appearance
+
+Theme: Light / Dark / System
+
+Study
+
+Daily goal
+
+Review reminder time
+
+Audio playback speed
+
+Account
+
+Email
+
+Change password
+
+Sign out
+
+Data
+
+Offline downloads
+
+Clear cache
+
+Sync now
+
+About
+
+Version
+
+Terms
+
+Privacy
+
+Support
+
+Each row: label left, value or chevron right.
+
+Destructive actions use Error color sparingly.
+
+⸻
+
+ADMIN PANEL SCREENS
+
+Style:
+
+Same Noboru visual language as product mockups.
+
+Functional density may be higher than learner screens.
+
+Desktop-first layout with responsive collapse.
+
+Learner-facing polish is not required.
+
+Operational clarity is required.
+
+⸻
+
+ADMIN SCREEN — DASHBOARD
+
+Sidebar navigation left:
+
+Dashboard
+
+Content
+
+Users
+
+Assets
+
+Achievements
+
+Analytics
+
+Settings
+
+Main area:
+
+Key metrics cards: Active Users, Lessons Completed, Reviews Today, Content Items
+
+Recent activity feed
+
+Quick actions: Add Vocabulary, Add Lesson, Upload Asset
+
+⸻
+
+ADMIN SCREEN — CONTENT MANAGER
+
+Tabs:
+
+Vocabulary
+
+Kanji
+
+Grammar
+
+Lessons
+
+Table layout:
+
+Search, filters, JLPT level, status, edit actions
+
+Row actions:
+
+Edit
+
+Publish
+
+Archive
+
+⸻
+
+ADMIN SCREEN — ASSET MANAGER
+
+Grid or table of assets.
+
+Shows thumbnail, id, category, version, status, owner_agent.
+
+Actions:
+
+Upload
+
+Edit Metadata
+
+Approve
+
+Archive
+
+Yama variant management included here.
+
+⸻
+
+ADMIN SCREEN — USER MANAGER
+
+Search users by email or display name.
+
+User detail panel:
+
+Profile info
+
+Progress summary
+
+Role assignment
+
+Moderation actions
+
+⸻
+
+ADMIN ACCESS RULE
+
+Admin routes are separate from learner bottom navigation.
+
+Admin must never appear in primary learner nav.
+
+⸻
+
+PROGRESSION VISUALIZATION
+
+Progress should always be visible.
+
+Examples:
+
+Trail Progress
+
+Region Progress
+
+Elevation Progress
+
+Mastery Progress
+
+Challenge Progress
+
+⸻
+
+REGION DESIGN RULE
+
+Every region must have identity.
+
+Foothills
+
+Forest Trail
+
+Mount N5
+
+Mount N4
+
+Mount N3
+
+Mount N2
+
+Mount N1
+
+Master Summit
+
+Each region requires:
+
+Unique visuals
+
+Unique landmarks
+
+Unique atmosphere
+
+⸻
+
+ACCESSIBILITY RULES
+
+Must support:
+
+Screen Readers
+
+Keyboard Navigation
+
+Reduced Motion
+
+Color Blind Users
+
+High Contrast
+
+Large Text
+
+⸻
+
+PERFORMANCE RULES
+
+UI must remain responsive.
+
+Target:
+
+Interaction <100ms
+
+Animations 60fps
+
+No visual lag
+
+⸻
+
+NOTIFICATION RULES
+
+Notifications must:
+
+Provide value
+
+Be actionable
+
+Be respectful
+
+Never create guilt.
+
+⸻
+
+STREAK RULE
+
+Streaks are secondary.
+
+Learning is primary.
+
+Never pressure users because of streaks.
+
+Never use fear-of-loss messaging.
+
+⸻
+
+PREMIUM EXPERIENCE RULE
+
+Premium users gain:
+
+Convenience
+
+Customization
+
+Advanced features
+
+Never educational advantages.
+
+Learning quality remains equal.
+
+⸻
+
+FORBIDDEN UX PATTERNS
+
+Dark patterns
+
+Fake urgency
+
+Artificial scarcity
+
+Guilt messaging
+
+Manipulative streak systems
+
+Confusing navigation
+
+Infinite popups
+
+Forced engagement loops
+
+Reward spam
+
+⸻
+
+SUCCESS CRITERIA
+
+Users should consistently feel:
+
+Capable
+
+Motivated
+
+Curious
+
+Progressing
+
+Improving
+
+Exploring
+
+Learning
+
+⸻
+
+NOBORU UX PRINCIPLE
+
+Every screen is another step upward.
+
+Every interaction should help users continue climbing.
+
+The interface should feel like a carefully maintained mountain trail:
+
+Clear.
+
+Reliable.
+
+Beautiful.
+
+Purposeful.
+
+Easy to follow.
+
+Rewarding to explore.
+
+END OF uiux.mdc

@@ -1,0 +1,21 @@
+{
+  "id": "mockup_product_collection_v1",
+  "name": "Product Mockup Collection",
+  "version": "v1",
+  "category": "marketing",
+  "owner_agent": "Frontend Agent",
+  "created_at": "2026-06-08",
+  "updated_at": "2026-06-08",
+  "status": "approved",
+  "tags": ["mockup", "ui-reference", "product-design"],
+  "usage_locations": [
+    "uiux.mdc",
+    "design-system.md",
+    "development-reference"
+  ],
+  "files": [
+    "mockup_product_dark_v1.png",
+    "mockup_product_light_v1.png",
+    "mockup_supplementary_dark_v1.png"
+  ]
+}

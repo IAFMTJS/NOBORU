@@ -1,0 +1,19 @@
+{
+  "id": "yama_main_light_v1",
+  "name": "Yama Main Light",
+  "version": "v1",
+  "category": "mascots",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-08",
+  "updated_at": "2026-06-08",
+  "status": "approved",
+  "tags": ["yama", "mascot", "canonical", "light-mode", "kitsune"],
+  "usage_locations": [
+    "onboarding",
+    "home-dashboard",
+    "loading-screens",
+    "marketing",
+    "achievements"
+  ],
+  "design_notes": "Canonical MVP Yama. White kitsune, red scarf with mountain logo, red forehead sigil, golden swirl markings. No backpack or temple bell."
+}

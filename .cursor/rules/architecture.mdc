@@ -1,0 +1,729 @@
+architecture.mdc
+
+NOBORU ARCHITECTURE RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs all architectural decisions within the Noboru codebase.
+
+Every feature, service, module, component, and database interaction must follow this document.
+
+If another rule conflicts with this rule, this rule takes precedence unless overridden by docs/MASTER_PROMPT.md.
+
+⸻
+
+PURPOSE
+
+The purpose of this rule is to ensure:
+
+* Scalability
+* Maintainability
+* Reliability
+* Predictability
+* Testability
+* Long-term sustainability
+
+Noboru is expected to grow for years.
+
+Architecture must support long-term evolution.
+
+⸻
+
+PRIME DIRECTIVE
+
+Build systems.
+
+Not pages.
+
+Build domains.
+
+Not features.
+
+Build reusable architecture.
+
+Not temporary implementations.
+
+Every implementation must fit into a larger system.
+
+⸻
+
+ARCHITECTURAL PRINCIPLES
+
+Principle 1
+
+Separation of Concerns
+
+Each module owns one responsibility.
+
+⸻
+
+Principle 2
+
+Single Source of Truth
+
+Data should only exist in one authoritative location.
+
+⸻
+
+Principle 3
+
+Domain Ownership
+
+Every domain owns its own logic.
+
+⸻
+
+Principle 4
+
+Composition Over Duplication
+
+Reuse systems.
+
+Never copy systems.
+
+⸻
+
+Principle 5
+
+Scalable First
+
+Design for growth.
+
+Not current size.
+
+⸻
+
+Principle 6
+
+Feature Isolation
+
+Features should not directly depend on each other.
+
+⸻
+
+Principle 7
+
+Offline First
+
+All core learning systems must support offline operation.
+
+⸻
+
+APPLICATION LAYERS
+
+The application must follow layered architecture.
+
+⸻
+
+UI Layer
+
+Responsibilities:
+
+* Presentation
+* User interaction
+* Visual feedback
+
+Must NOT:
+
+* Access database directly
+* Contain business logic
+
+⸻
+
+Application Layer
+
+Responsibilities:
+
+* User workflows
+* Feature orchestration
+
+Must NOT:
+
+* Perform database operations directly
+
+⸻
+
+Service Layer
+
+Responsibilities:
+
+* Business logic
+* Rules
+* Validation
+
+Must NOT:
+
+* Render UI
+
+⸻
+
+Repository Layer
+
+Responsibilities:
+
+* Data access
+* Queries
+* Persistence
+
+Must NOT:
+
+* Contain business logic
+
+⸻
+
+Database Layer
+
+Responsibilities:
+
+* Storage
+* Relationships
+* Security
+
+Must NOT:
+
+* Contain frontend concerns
+
+⸻
+
+FEATURE ARCHITECTURE
+
+Every feature must be self-contained.
+
+Required structure:
+
+/features
+feature-name/
+components/
+hooks/
+services/
+repositories/
+types/
+constants/
+utils/
+tests/
+docs/
+
+No feature may bypass this structure.
+
+⸻
+
+FEATURE OWNERSHIP
+
+Each feature owns:
+
+UI
+
+Services
+
+Types
+
+Tests
+
+Documentation
+
+Dependencies
+
+⸻
+
+REQUIRED FEATURE MODULES
+
+Authentication
+
+Profile
+
+Learning
+
+Vocabulary
+
+Kanji
+
+Grammar
+
+Review
+
+Achievements
+
+Leagues
+
+Games
+
+Community
+
+Shop
+
+Settings
+
+Notifications
+
+Admin
+
+Analytics
+
+⸻
+
+SHARED MODULES
+
+Shared functionality belongs in:
+
+/lib
+
+Only place reusable systems there.
+
+⸻
+
+SERVICE ARCHITECTURE
+
+Business logic belongs in services.
+
+Example:
+
+services/
+vocabulary.service.ts
+kanji.service.ts
+achievement.service.ts
+review.service.ts
+
+Services must be reusable.
+
+Services must be testable.
+
+⸻
+
+REPOSITORY ARCHITECTURE
+
+All database access belongs in repositories.
+
+Example:
+
+repositories/
+vocabulary.repository.ts
+kanji.repository.ts
+
+Never query database directly from:
+
+* Components
+* Hooks
+* Pages
+
+⸻
+
+DATABASE ACCESS RULE
+
+Forbidden:
+
+const data = await supabase
+  .from("users")
+
+Inside:
+
+* Components
+* Pages
+* UI logic
+
+Required:
+
+Component
+
+↓
+
+Service
+
+↓
+
+Repository
+
+↓
+
+Database
+
+⸻
+
+STATE MANAGEMENT
+
+Use the smallest possible scope.
+
+Priority:
+
+Local State
+
+↓
+
+Feature State
+
+↓
+
+Global State
+
+Global state should be rare.
+
+⸻
+
+API RULES
+
+Every endpoint must:
+
+Validate input
+
+Validate permissions
+
+Return typed responses
+
+Handle errors
+
+Log failures
+
+⸻
+
+API STRUCTURE
+
+/api
+feature/
+route.ts
+
+Group by domain.
+
+Not by HTTP method.
+
+⸻
+
+TYPE SAFETY
+
+TypeScript strict mode required.
+
+Forbidden:
+
+any
+
+Allowed only with explicit justification.
+
+⸻
+
+DOMAIN MODELS
+
+Every domain requires:
+
+Types
+
+Schemas
+
+Validation
+
+Documentation
+
+Tests
+
+⸻
+
+ERROR HANDLING
+
+Every feature must support:
+
+Loading State
+
+Success State
+
+Error State
+
+Recovery State
+
+Offline State
+
+⸻
+
+OFFLINE FIRST ARCHITECTURE
+
+Core learning features must function offline.
+
+Required:
+
+Vocabulary
+
+Kanji
+
+Grammar
+
+Reviews
+
+Reading
+
+Downloaded Lessons
+
+Progress Tracking
+
+Achievements
+
+⸻
+
+OFFLINE STORAGE
+
+Use:
+
+IndexedDB
+
+Local Cache
+
+Background Sync
+
+Conflict Resolution
+
+⸻
+
+EDUCATIONAL DOMAIN RULE
+
+Educational content is sacred.
+
+Never hardcode educational content into UI.
+
+Content must originate from:
+
+Database
+
+CMS
+
+Content Systems
+
+⸻
+
+CONTENT OWNERSHIP
+
+Vocabulary owns vocabulary data.
+
+Kanji owns kanji data.
+
+Grammar owns grammar data.
+
+Lessons assemble content.
+
+Lessons do not own content.
+
+⸻
+
+GAMIFICATION RULE
+
+Gamification may not own educational progress.
+
+Educational progress is authoritative.
+
+Gamification reads educational progress.
+
+Never the reverse.
+
+⸻
+
+PERFORMANCE RULES
+
+Targets:
+
+Initial Load < 2 Seconds
+
+Route Change < 300ms
+
+User Action < 100ms
+
+Animation 60fps
+
+Lighthouse > 90
+
+⸻
+
+SECURITY RULES
+
+Every user-owned resource:
+
+Requires RLS
+
+Requires authorization
+
+Requires ownership validation
+
+⸻
+
+DEPENDENCY RULES
+
+Allowed:
+
+UI → Services
+
+Services → Repositories
+
+Repositories → Database
+
+Forbidden:
+
+UI → Database
+
+UI → Repository
+
+Database → UI
+
+⸻
+
+TESTING REQUIREMENTS
+
+Every feature requires:
+
+Unit Tests
+
+Integration Tests
+
+Documentation
+
+Error Handling
+
+Type Coverage
+
+⸻
+
+DOCUMENTATION REQUIREMENTS
+
+Every module requires:
+
+Purpose
+
+Responsibilities
+
+Dependencies
+
+Usage
+
+Examples
+
+Known Limitations
+
+⸻
+
+MCP ARCHITECTURE
+
+MCP integrations must be isolated.
+
+Required:
+
+/services/mcp/
+
+All MCP integrations belong here.
+
+No feature may directly depend on MCP.
+
+⸻
+
+ASSET PIPELINE ARCHITECTURE
+
+Assets are managed as a system.
+
+Assets must:
+
+Have metadata
+
+Have ownership
+
+Have versioning
+
+Have registry entries
+
+⸻
+
+FUTURE AI RULE
+
+Future local AI support must be abstracted.
+
+Required:
+
+/services/ai/
+
+Must expose interfaces only.
+
+No implementation required.
+
+Application must function without AI.
+
+⸻
+
+FORBIDDEN ARCHITECTURE PATTERNS
+
+Database queries inside components
+
+Business logic inside pages
+
+Business logic inside hooks
+
+Duplicated services
+
+Duplicated types
+
+Circular dependencies
+
+Untyped responses
+
+Feature coupling
+
+Hardcoded educational content
+
+Direct MCP dependencies
+
+Direct AI dependencies
+
+⸻
+
+ARCHITECTURAL SUCCESS CRITERIA
+
+A new developer should be able to:
+
+Understand project structure quickly.
+
+Locate ownership quickly.
+
+Add features safely.
+
+Refactor safely.
+
+Scale systems safely.
+
+⸻
+
+ARCHITECTURAL FAILURE CRITERIA
+
+If any of the following occur:
+
+Repeated code
+
+Feature coupling
+
+Hidden dependencies
+
+Direct database access from UI
+
+Unclear ownership
+
+Large fragile modules
+
+Undocumented systems
+
+Then architecture is considered degraded.
+
+Refactoring becomes mandatory.
+
+⸻
+
+NOBORU ARCHITECTURE PRINCIPLE
+
+Every system should feel like a well-built mountain trail.
+
+Clear.
+
+Reliable.
+
+Scalable.
+
+Maintainable.
+
+Easy to follow.
+
+Difficult to get lost.
+
+The codebase should guide developers upward just as Noboru guides learners upward.
+
+END OF architecture.mdc
