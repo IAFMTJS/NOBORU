@@ -2,6 +2,17 @@ export type LearningGoal = "anime" | "travel" | "culture" | "work" | "jlpt";
 
 export type JlptPlacement = "none" | "n5" | "n4" | "n3" | "n2" | "n1";
 
+export type ProfileRole =
+  | "learner"
+  | "viewer"
+  | "moderator"
+  | "content_manager"
+  | "asset_manager"
+  | "curriculum_manager"
+  | "analytics_manager"
+  | "administrator"
+  | "super_administrator";
+
 export type ProfileRow = {
   id: string;
   user_id: string;
@@ -14,6 +25,7 @@ export type ProfileRow = {
   timezone: string;
   language: string;
   theme: string;
+  role: ProfileRole;
   onboarding_completed: boolean;
   learning_goal: LearningGoal | null;
   current_level: JlptPlacement | null;

@@ -17,7 +17,10 @@ export const AUTH_REQUIRED_PREFIXES = [
   "/profile",
   "/settings",
   "/onboarding",
+  "/admin",
 ] as const;
+
+export const ADMIN_ROUTE_PREFIXES = ["/admin"] as const;
 
 /** App routes that require completed onboarding. */
 export const ONBOARDING_REQUIRED_PREFIXES = [
@@ -59,6 +62,10 @@ export function isAuthOnlyRoute(pathname: string): boolean {
 
 export function isOnboardingRoute(pathname: string): boolean {
   return pathname === AUTH_ROUTES.onboarding;
+}
+
+export function isAdminRoute(pathname: string): boolean {
+  return matchesRoutePrefix(pathname, ADMIN_ROUTE_PREFIXES);
 }
 
 /** @deprecated Use isAuthRequiredRoute or isOnboardingRequiredRoute */

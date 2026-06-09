@@ -2,18 +2,22 @@
 
 ## Purpose
 
-Spaced repetition review sessions and SRS workflows.
+Spaced repetition review sessions, SRS scheduling, mastery tracking, and weak-area detection.
 
 ## Responsibilities
 
-- Review card presentation
-- SRS rating actions (Phase 2+)
-- Review queue via repository layer
+- Review queue from `review_items`
+- SRS scheduling via `srs.service.ts` (1, 3, 7, 14, 30, 90, 180, 365 day intervals)
+- Review history in `review_history`
+- Weak area grouping by content type
+- Enqueue from completed lessons
+
+## Routes
+
+- `/review` — review center with stats, current card, and recent history
+- `GET /api/review/stats` — mastery and weak-area summary
+- `POST /api/review/submit` — submit Again / Good / Strong ratings
 
 ## Dependencies
 
-- Vocabulary, kanji, grammar progress (read-only, future)
-
-## Known Limitations
-
-Phase 0: placeholder card from constants. Rating buttons are UI-only.
+- Hiragana, katakana, vocabulary, grammar, and kanji content repositories for card display

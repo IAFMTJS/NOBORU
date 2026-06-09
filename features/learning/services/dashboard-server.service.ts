@@ -1,7 +1,9 @@
 import { FOOTHILLS_REGION } from "@/features/onboarding/constants/onboarding.constants";
-import { PLACEHOLDER_HOME_DASHBOARD } from "@/features/learning/constants/placeholder-dashboard";
+import { lessonService } from "@/features/learning/services/lesson.service";
+import { learningPathService } from "@/features/learning/services/learning-path.service";
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
+import { reviewRepository } from "@/features/review/repositories/review.repository";
 import { settingsServerRepository } from "@/features/settings/repositories/settings-server.repository";
 
 const REGION_LABELS: Record<string, { name: string; trail: string }> = {
@@ -27,13 +29,22 @@ class DashboardServerService {
     const settings = await settingsServerRepository.ensureSettings(profile.userId);
     const region = getRegionDisplay(profile.currentRegionSlug);
     const dailyTarget = settings.daily_goal;
+    const [nextLesson, learningPath, reviewQueueCount] = await Promise.all([
+      lessonService.getNextIncompleteLesson(profile.userId),
+      learningPathService.getLearningPath(profile.userId),
+      reviewRepository.countDue(profile.userId),
+    ]);
+
+    const foothills = learningPath.regions.find(
+      (entry) => entry.slug === FOOTHILLS_REGION.slug,
+    );
 
     return {
       greeting: `Konnichiwa, ${profile.displayName}`,
       region,
       level: {
         label: profile.levelLabel,
-        progressPercent: 0,
+        progressPercent: foothills?.progressPercent ?? 0,
       },
       elevation: {
         current: 0,
@@ -46,11 +57,11 @@ class DashboardServerService {
         target: dailyTarget,
       },
       upcomingLesson: {
-        title: "Lesson 1: Hiragana — あ row",
-        href: "/learn",
+        title: nextLesson?.title ?? "Explore the learning path",
+        href: nextLesson ? `/learn/lesson/${nextLesson.id}` : "/learn",
       },
       recentAchievements: [],
-      reviewQueueCount: PLACEHOLDER_HOME_DASHBOARD.reviewQueueCount,
+      reviewQueueCount,
     };
   }
 }

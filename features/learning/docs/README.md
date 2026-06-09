@@ -2,17 +2,27 @@
 
 ## Purpose
 
-Home dashboard, learning paths, and lesson entry points.
+Home dashboard, learning paths, lesson delivery, and progress tracking.
 
 ## Responsibilities
 
-- Home dashboard view model via `dashboard-server.service.ts` (orchestrated in `lib/orchestration/home.orchestrator.ts`)
-- Learn screen placeholder until content phases
+- Home dashboard via `dashboard-server.service.ts` (orchestrated in `lib/orchestration/home.orchestrator.ts`)
+- Learning path via `learning-path.service.ts` (orchestrated in `lib/orchestration/learn.orchestrator.ts`)
+- Lesson assembly and player steps via `lesson.service.ts`
+- Progress persistence via `progress.service.ts` and `user_progress` table
+
+## Routes
+
+- `/learn` — region and unit overview
+- `/learn/[regionSlug]` — lessons in a region
+- `/learn/lesson/[lessonId]` — interactive lesson player
 
 ## Dependencies
 
-- Profile and settings data for personalized home dashboard after onboarding
+- Profile and settings for personalized dashboard
+- Published CMS content (regions, units, lessons, lesson items)
 
 ## Known Limitations
 
-- Lesson content and progress remain placeholders until Phase 4+
+- Recall quizzes use in-lesson distractors only (no global pool yet)
+- Elevation XP from lessons is recorded as progress only; EP awards arrive in Phase 15
