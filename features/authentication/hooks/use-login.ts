@@ -27,7 +27,7 @@ export function useLogin() {
       return;
     }
 
-    const next = searchParams.get("next") ?? AUTH_ROUTES.home;
+    const next = searchParams?.get("next") ?? AUTH_ROUTES.home;
     router.push(next);
     router.refresh();
   }

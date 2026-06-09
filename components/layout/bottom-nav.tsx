@@ -14,7 +14,8 @@ export function BottomNav() {
       <div className="mx-auto flex max-w-lg items-center justify-around px-2 pb-[env(safe-area-inset-bottom)] pt-2">
         {PRIMARY_NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive =
-            pathname === href || pathname.startsWith(`${href}/`);
+            pathname != null &&
+            (pathname === href || pathname.startsWith(`${href}/`));
 
           return (
             <Link
