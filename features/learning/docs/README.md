@@ -2,22 +2,17 @@
 
 ## Purpose
 
-Owns learning path, lessons, and home dashboard learning data.
+Home dashboard, learning paths, and lesson entry points.
 
 ## Responsibilities
 
-- Home dashboard view model via `dashboard.service.ts`
-- Learning path and lesson UI (Phase 2+)
-- Placeholder content in `constants/` until CMS/database is connected
+- Home dashboard view model via `dashboard-server.service.ts` (orchestrated in `lib/orchestration/home.orchestrator.ts`)
+- Learn screen placeholder until content phases
 
 ## Dependencies
 
-- Future: vocabulary, kanji, grammar repositories (read-only)
-
-## Usage
-
-Home page uses `lib/orchestration/home.orchestrator.ts` to fetch dashboard data.
+- Profile and settings data for personalized home dashboard after onboarding
 
 ## Known Limitations
 
-Phase 0 uses `placeholder-dashboard.ts`. No hardcoded content in pages or components.
+- Lesson content and progress remain placeholders until Phase 4+

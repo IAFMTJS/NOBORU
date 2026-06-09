@@ -1,9 +1,22 @@
+export const AUTH_ROUTES = {
+  home: "/home",
+  login: "/login",
+  register: "/register",
+  forgotPassword: "/forgot-password",
+  updatePassword: "/update-password",
+  callback: "/auth/callback",
+  onboarding: "/onboarding",
+} as const;
+
 export {
+  AUTH_REQUIRED_PREFIXES,
   AUTH_ONLY_ROUTE_PREFIXES,
-  AUTH_ROUTES,
+  ONBOARDING_REQUIRED_PREFIXES,
   isAuthOnlyRoute,
+  isAuthRequiredRoute,
+  isOnboardingRequiredRoute,
+  isOnboardingRoute,
   isProtectedRoute,
-  PROTECTED_ROUTE_PREFIXES,
 } from "@/lib/navigation/auth-routes";
 
 export const AUTH_MESSAGES = {

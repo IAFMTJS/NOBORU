@@ -109,6 +109,15 @@ Code follows `.cursor/rules/architecture.mdc`:
 - [x] Settings with theme selection (Light / Dark / System) persisted to DB
 - [x] Layered client/server repositories for auth, profile, and settings
 
+
+## Phase 3 Status — Onboarding
+
+- [x] 7-step onboarding flow at `/onboarding`
+- [x] Welcome, goal, level, daily goal, theme, Meet Yama, Foothills region intro
+- [x] Database fields: `onboarding_completed`, `learning_goal`, `current_level`, `current_region_slug`
+- [x] Middleware redirects incomplete users to onboarding
+- [x] Home dashboard personalized for Foothills after completion
+
 ## Design Reference
 
 UI follows approved mockups in `assets/marketing/` and rules in `.cursor/rules/uiux.mdc`.

@@ -1,3 +1,7 @@
+export type LearningGoal = "anime" | "travel" | "culture" | "work" | "jlpt";
+
+export type JlptPlacement = "none" | "n5" | "n4" | "n3" | "n2" | "n1";
+
 export type ProfileRow = {
   id: string;
   user_id: string;
@@ -10,6 +14,10 @@ export type ProfileRow = {
   timezone: string;
   language: string;
   theme: string;
+  onboarding_completed: boolean;
+  learning_goal: LearningGoal | null;
+  current_level: JlptPlacement | null;
+  current_region_slug: string;
   created_at: string;
   updated_at: string;
 };
@@ -19,6 +27,10 @@ export type ProfileViewModel = {
   email: string;
   displayName: string;
   levelLabel: string;
+  onboardingCompleted: boolean;
+  learningGoal: LearningGoal | null;
+  currentLevel: JlptPlacement | null;
+  currentRegionSlug: string;
   stats: Array<{
     label: string;
     value: string;

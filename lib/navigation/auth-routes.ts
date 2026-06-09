@@ -5,9 +5,22 @@ export const AUTH_ROUTES = {
   forgotPassword: "/forgot-password",
   updatePassword: "/update-password",
   callback: "/auth/callback",
+  onboarding: "/onboarding",
 } as const;
 
-export const PROTECTED_ROUTE_PREFIXES = [
+export const AUTH_REQUIRED_PREFIXES = [
+  "/home",
+  "/learn",
+  "/review",
+  "/games",
+  "/community",
+  "/profile",
+  "/settings",
+  "/onboarding",
+] as const;
+
+/** App routes that require completed onboarding. */
+export const ONBOARDING_REQUIRED_PREFIXES = [
   "/home",
   "/learn",
   "/review",
@@ -23,14 +36,32 @@ export const AUTH_ONLY_ROUTE_PREFIXES = [
   "/forgot-password",
 ] as const;
 
-export function isProtectedRoute(pathname: string): boolean {
-  return PROTECTED_ROUTE_PREFIXES.some(
+export function matchesRoutePrefix(
+  pathname: string,
+  prefixes: readonly string[],
+): boolean {
+  return prefixes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 }
 
+export function isAuthRequiredRoute(pathname: string): boolean {
+  return matchesRoutePrefix(pathname, AUTH_REQUIRED_PREFIXES);
+}
+
+export function isOnboardingRequiredRoute(pathname: string): boolean {
+  return matchesRoutePrefix(pathname, ONBOARDING_REQUIRED_PREFIXES);
+}
+
 export function isAuthOnlyRoute(pathname: string): boolean {
-  return AUTH_ONLY_ROUTE_PREFIXES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+  return matchesRoutePrefix(pathname, AUTH_ONLY_ROUTE_PREFIXES);
+}
+
+export function isOnboardingRoute(pathname: string): boolean {
+  return pathname === AUTH_ROUTES.onboarding;
+}
+
+/** @deprecated Use isAuthRequiredRoute or isOnboardingRequiredRoute */
+export function isProtectedRoute(pathname: string): boolean {
+  return isAuthRequiredRoute(pathname);
 }

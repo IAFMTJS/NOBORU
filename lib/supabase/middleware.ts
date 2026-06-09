@@ -4,7 +4,9 @@ import { createServerClient } from "@supabase/ssr";
 import {
   AUTH_ROUTES,
   isAuthOnlyRoute,
-  isProtectedRoute,
+  isAuthRequiredRoute,
+  isOnboardingRequiredRoute,
+  isOnboardingRoute,
 } from "@/lib/navigation/auth-routes";
 
 export async function updateSession(request: NextRequest) {
@@ -37,7 +39,7 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (!user && isProtectedRoute(pathname)) {
+  if (!user && isAuthRequiredRoute(pathname)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = AUTH_ROUTES.login;
     loginUrl.searchParams.set("next", pathname);
@@ -49,6 +51,30 @@ export async function updateSession(request: NextRequest) {
     homeUrl.pathname = AUTH_ROUTES.home;
     homeUrl.search = "";
     return NextResponse.redirect(homeUrl);
+  }
+
+  if (user && (isOnboardingRequiredRoute(pathname) || isOnboardingRoute(pathname))) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const onboardingCompleted = profile?.onboarding_completed ?? false;
+
+    if (!onboardingCompleted && isOnboardingRequiredRoute(pathname)) {
+      const onboardingUrl = request.nextUrl.clone();
+      onboardingUrl.pathname = AUTH_ROUTES.onboarding;
+      onboardingUrl.search = "";
+      return NextResponse.redirect(onboardingUrl);
+    }
+
+    if (onboardingCompleted && isOnboardingRoute(pathname)) {
+      const homeUrl = request.nextUrl.clone();
+      homeUrl.pathname = AUTH_ROUTES.home;
+      homeUrl.search = "";
+      return NextResponse.redirect(homeUrl);
+    }
   }
 
   return supabaseResponse;
