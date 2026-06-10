@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getPublishedRegionsWithCurriculum } from "@/lib/cache/content-cache";
 
 import type { LessonItemRow } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
@@ -18,35 +19,7 @@ type RegionWithUnits = RegionRow & {
 
 class LearningPathRepository {
   async listPublishedRegionsWithCurriculum(): Promise<RegionWithUnits[]> {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("regions")
-      .select(
-        `
-        *,
-        units (
-          *,
-          lessons (*)
-        )
-      `,
-      )
-      .eq("status", "published")
-      .order("order_index", { ascending: true });
-
-    if (error) throw new Error(error.message);
-
-    return ((data ?? []) as RegionWithUnits[]).map((region) => ({
-      ...region,
-      units: (region.units ?? [])
-        .filter((unit) => unit.status === "published")
-        .sort((a, b) => a.order_index - b.order_index)
-        .map((unit) => ({
-          ...unit,
-          lessons: (unit.lessons ?? [])
-            .filter((lesson) => lesson.status === "published")
-            .sort((a, b) => a.title.localeCompare(b.title)),
-        })),
-    }));
+    return getPublishedRegionsWithCurriculum();
   }
 
   async findPublishedRegionBySlug(slug: string): Promise<RegionWithUnits | null> {
@@ -112,6 +85,17 @@ class LearningPathRepository {
     return data as LessonRow & {
       unit: UnitRow & { region: RegionRow };
     };
+  }
+
+  async countPublishedLessons(): Promise<number> {
+    const supabase = await createClient();
+    const { count, error } = await supabase
+      .from("lessons")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "published");
+
+    if (error) throw new Error(error.message);
+    return count ?? 0;
   }
 
   async listLessonItems(lessonId: string): Promise<LessonItemRow[]> {

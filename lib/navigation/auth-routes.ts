@@ -16,6 +16,7 @@ export const AUTH_REQUIRED_PREFIXES = [
   "/community",
   "/profile",
   "/settings",
+  "/feedback",
   "/onboarding",
   "/admin",
 ] as const;
@@ -31,6 +32,7 @@ export const ONBOARDING_REQUIRED_PREFIXES = [
   "/community",
   "/profile",
   "/settings",
+  "/feedback",
 ] as const;
 
 export const AUTH_ONLY_ROUTE_PREFIXES = [

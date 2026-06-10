@@ -525,6 +525,14 @@ strong
 mastered
 legendary
 
+Indexes:
+
+review_items_user_content_type_idx on (user_id, content_type)
+
+Functions:
+
+get_review_stats(p_user_id uuid) returns json — aggregated counts for review dashboard stats
+
 ⸻
 
 review_history

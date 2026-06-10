@@ -10,7 +10,7 @@ import { profileServerService } from "@/features/profile/services/profile-server
  * Composes feature services without coupling feature modules to each other.
  */
 export async function getHomeDashboard(): Promise<HomeDashboardViewModel> {
-  const profile = await profileServerService.getProfile();
+  const profile = await profileServerService.getProfileCore();
 
   if (!profile) {
     redirect(AUTH_ROUTES.login);

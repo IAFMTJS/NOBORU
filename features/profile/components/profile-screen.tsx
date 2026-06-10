@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { AchievementShowcase } from "@/features/achievements/components/achievement-showcase";
+import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Button } from "@/components/ui/button";
@@ -9,9 +11,10 @@ import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 
 type ProfileScreenProps = {
   profile: ProfileViewModel;
+  achievements: AchievementShowcaseViewModel;
 };
 
-export function ProfileScreen({ profile }: ProfileScreenProps) {
+export function ProfileScreen({ profile, achievements }: ProfileScreenProps) {
   return (
     <PageContainer>
       <ScreenHeader
@@ -30,6 +33,8 @@ export function ProfileScreen({ profile }: ProfileScreenProps) {
         ))}
       </div>
 
+      <AchievementShowcase showcase={achievements} compact />
+
       <Card className="shadow-elevation-1">
         <CardHeader>
           <CardTitle className="text-heading-6">Edit Profile</CardTitle>
@@ -44,6 +49,9 @@ export function ProfileScreen({ profile }: ProfileScreenProps) {
           <CardTitle className="text-heading-6">Account</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/achievements">View All Achievements</Link>
+          </Button>
           <Button variant="outline" className="w-full" asChild>
             <Link href="/progress">View Progress</Link>
           </Button>

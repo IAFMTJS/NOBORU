@@ -1,3 +1,6 @@
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { ReviewState } from "@/features/review/repositories/review.repository";
 
 export type ReviewContentType =
@@ -39,6 +42,16 @@ export type ReviewHistoryEntryViewModel = {
   rating: ReviewRating;
   state: ReviewState;
   reviewedAt: string;
+};
+
+export type ReviewSubmitDeltaViewModel = {
+  dueCount: number;
+  stats: ReviewStatsViewModel;
+  currentCard: ReviewCardViewModel | null;
+  recentHistoryEntry: ReviewHistoryEntryViewModel;
+  elevation: ElevationAwardViewModel | null;
+  achievements: AchievementUnlockViewModel[];
+  quests: QuestCompletionViewModel[];
 };
 
 export type ReviewSessionViewModel = {

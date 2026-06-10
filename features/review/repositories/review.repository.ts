@@ -44,6 +44,13 @@ export type ReviewSummaryRow = {
   content_type: string;
 };
 
+export type ReviewAggregatedStats = {
+  totalCount: number;
+  learningCount: number;
+  masteredCount: number;
+  weakAreas: Array<{ content_type: string; count: number }>;
+};
+
 class ReviewRepository {
   async listDue(userId: string, limit = 20): Promise<ReviewItemRow[]> {
     const supabase = await createClient();
@@ -69,6 +76,68 @@ class ReviewRepository {
 
     if (error) throw new Error(error.message);
     return count ?? 0;
+  }
+
+  async getAggregatedStats(userId: string): Promise<ReviewAggregatedStats> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("get_review_stats", {
+      p_user_id: userId,
+    });
+
+    if (error) {
+      return this.getAggregatedStatsFallback(userId);
+    }
+
+    const payload = data as {
+      total_count: number;
+      learning_count: number;
+      mastered_count: number;
+      weak_areas: Array<{ content_type: string; count: number }> | null;
+    };
+
+    return {
+      totalCount: payload.total_count ?? 0,
+      learningCount: payload.learning_count ?? 0,
+      masteredCount: payload.mastered_count ?? 0,
+      weakAreas: payload.weak_areas ?? [],
+    };
+  }
+
+  private async getAggregatedStatsFallback(
+    userId: string,
+  ): Promise<ReviewAggregatedStats> {
+    const rows = await this.listSummary(userId);
+    const weakAreaCounts = new Map<string, number>();
+    let learningCount = 0;
+    let masteredCount = 0;
+
+    for (const row of rows) {
+      if (row.state === "learning" || row.state === "new") {
+        learningCount += 1;
+      }
+      if (row.state === "mastered" || row.state === "legendary") {
+        masteredCount += 1;
+      }
+      const isWeak =
+        row.state === "learning" ||
+        row.state === "new" ||
+        row.mastery_score < 60;
+      if (isWeak) {
+        weakAreaCounts.set(
+          row.content_type,
+          (weakAreaCounts.get(row.content_type) ?? 0) + 1,
+        );
+      }
+    }
+
+    return {
+      totalCount: rows.length,
+      learningCount,
+      masteredCount,
+      weakAreas: Array.from(weakAreaCounts.entries()).map(
+        ([content_type, count]) => ({ content_type, count }),
+      ),
+    };
   }
 
   async listSummary(userId: string): Promise<ReviewSummaryRow[]> {
@@ -120,6 +189,29 @@ class ReviewRepository {
         content_id: joined.content_id,
       };
     });
+  }
+
+  async upsertReviewItemsBatch(
+    userId: string,
+    items: Array<{ contentType: string; contentId: string }>,
+  ): Promise<void> {
+    if (items.length === 0) return;
+
+    const supabase = await createClient();
+    const { error } = await supabase.from("review_items").upsert(
+      items.map((item) => ({
+        user_id: userId,
+        content_type: item.contentType,
+        content_id: item.contentId,
+        state: "new",
+        next_review_at: new Date().toISOString(),
+        interval_days: 0,
+        streak_count: 0,
+      })),
+      { onConflict: "user_id,content_type,content_id", ignoreDuplicates: true },
+    );
+
+    if (error) throw new Error(error.message);
   }
 
   async upsertReviewItem(

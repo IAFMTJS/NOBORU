@@ -69,7 +69,8 @@ The MVP **is** a complete learning ecosystem capable of teaching Japanese throug
 | Gamification | Elevation (EP), daily quests, MVP achievements |
 | Profile & Settings | Avatar, stats, theme, audio, notifications, account |
 | Admin | Content management for vocabulary, kanji, grammar, lessons, users |
-| Platform | Offline support, dark/light mode, PWA |
+| Platform | Offline support, dark/light mode, PWA, lesson audio |
+| Learning UX | Visual trail path, immersive interactive lessons (typed recall, drills beyond MCQ) |
 
 #### MVP Success Metrics
 

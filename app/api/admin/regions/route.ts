@@ -1,13 +1,16 @@
 import { jsonError, jsonOk } from "@/lib/api/responses";
+import { parsePaginationFromRequest } from "@/lib/api/pagination";
 import { requireContentAdminSession } from "@/lib/admin/require-content-admin";
+import { revalidatePublishedContent } from "@/lib/cache/revalidate-content";
 import { curriculumAdminService } from "@/features/learning/services/curriculum-admin.service";
 import type { RegionInput } from "@/features/learning/types/curriculum.types";
 
-export async function GET() {
+export async function GET(request: Request) {
   const { error } = await requireContentAdminSession();
   if (error) return error;
   try {
-    return jsonOk(await curriculumAdminService.listRegions());
+    const pagination = parsePaginationFromRequest(request);
+    return jsonOk(await curriculumAdminService.listRegions(pagination));
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 500);
   }
@@ -18,7 +21,9 @@ export async function POST(request: Request) {
   if (error) return error;
   try {
     const body = (await request.json()) as RegionInput;
-    return jsonOk(await curriculumAdminService.createRegion(body), 201);
+    const data = await curriculumAdminService.createRegion(body);
+    revalidatePublishedContent();
+    return jsonOk(data, 201);
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 400);
   }

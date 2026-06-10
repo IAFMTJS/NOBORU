@@ -9,6 +9,7 @@ import {
   Languages,
   LayoutDashboard,
   Map,
+  MessageSquare,
   Trophy,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/admin/content/grammar", label: "Grammar", icon: BookOpen, exact: false },
   { href: "/admin/content/lessons", label: "Lessons", icon: Flag, exact: false },
   { href: "/admin/content/regions", label: "Regions", icon: Map, exact: false },
+  { href: "/admin/content/feedback", label: "Feedback", icon: MessageSquare, exact: false },
   { href: "/admin/content/achievements", label: "Achievements", icon: Trophy, exact: false },
 ] as const;
 

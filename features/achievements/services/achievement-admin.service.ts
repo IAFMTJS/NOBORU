@@ -2,6 +2,7 @@ import {
   isAchievementRarity,
   isContentStatus,
 } from "@/lib/content/types";
+import type { PaginatedResult, PaginationOptions } from "@/lib/api/pagination";
 import { achievementRepository } from "@/features/achievements/repositories/achievement.repository";
 import type {
   AchievementInput,
@@ -21,8 +22,10 @@ function validate(input: AchievementInput): string | null {
 }
 
 class AchievementAdminService {
-  list(): Promise<AchievementRow[]> {
-    return achievementRepository.list();
+  list(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<AchievementRow>> {
+    return achievementRepository.list(pagination);
   }
 
   getById(id: string): Promise<AchievementRow | null> {

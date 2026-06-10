@@ -1,17 +1,9 @@
-import { ReviewSession } from "@/features/review/components/review-session";
-import { reviewServerService } from "@/features/review/services/review-server.service";
-import { profileServerService } from "@/features/profile/services/profile-server.service";
-import { redirect } from "next/navigation";
-
-import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
-
-export default async function ReviewPage() {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  const session = await reviewServerService.getSession(profile.userId);
-  return <ReviewSession initialSession={session} />;
-}
+import { ReviewSessionLoader } from "@/features/review/components/review-session-loader";
+import { reviewServerService } from "@/features/review/services/review-server.service";
+import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
+
+export default async function ReviewPage() {
+  const userId = await requireAuthenticatedUserId();
+  const session = await reviewServerService.getSession(userId);
+  return <ReviewSessionLoader userId={userId} initialSession={session} />;
+}

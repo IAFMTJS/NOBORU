@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { StoryReader } from "@/features/reading/components/story-reader";
+import { StoryPageShell } from "@/features/reading/components/story-page-shell";
 import { getStoryDetail } from "@/lib/orchestration/learn.orchestrator";
 
 type StoryPageProps = {
@@ -15,5 +15,5 @@ export default async function StoryPage({ params }: StoryPageProps) {
     notFound();
   }
 
-  return <StoryReader story={story} />;
+  return <StoryPageShell story={story} />;
 }

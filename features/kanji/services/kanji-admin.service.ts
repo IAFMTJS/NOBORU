@@ -1,4 +1,5 @@
 import { isContentStatus, isJlptLevel } from "@/lib/content/types";
+import type { PaginatedResult, PaginationOptions } from "@/lib/api/pagination";
 import { kanjiRepository } from "@/features/kanji/repositories/kanji.repository";
 import type {
   KanjiInput,
@@ -19,8 +20,8 @@ function validate(input: KanjiInput): string | null {
 }
 
 class KanjiAdminService {
-  list(): Promise<KanjiRow[]> {
-    return kanjiRepository.list();
+  list(pagination: PaginationOptions = {}): Promise<PaginatedResult<KanjiRow>> {
+    return kanjiRepository.list(pagination);
   }
 
   getById(id: string): Promise<KanjiWithReadings | null> {

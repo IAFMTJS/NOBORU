@@ -1,4 +1,5 @@
 import { isContentStatus, isJlptLevel } from "@/lib/content/types";
+import type { PaginatedResult, PaginationOptions } from "@/lib/api/pagination";
 import { grammarRepository } from "@/features/grammar/repositories/grammar.repository";
 import type { GrammarInput, GrammarRow } from "@/features/grammar/types/grammar.types";
 
@@ -15,8 +16,8 @@ function validate(input: GrammarInput): string | null {
 }
 
 class GrammarAdminService {
-  list(): Promise<GrammarRow[]> {
-    return grammarRepository.list();
+  list(pagination: PaginationOptions = {}): Promise<PaginatedResult<GrammarRow>> {
+    return grammarRepository.list(pagination);
   }
 
   getById(id: string): Promise<GrammarRow | null> {

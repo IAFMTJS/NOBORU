@@ -1,24 +1,53 @@
 {
+  "id": "/",
   "name": "Noboru",
   "short_name": "Noboru",
-  "description": "Your climb. Your language. Your journey.",
+  "description": "Climb Japanese from Foothills through N5 with trail lessons, spaced review, audio, and offline PWA support.",
   "start_url": "/home",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#0F1115",
   "theme_color": "#0F1115",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icons/icon_app_light_v1.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icons/icon_app_dark_v1.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon_app_light_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Continue Learning",
+      "short_name": "Learn",
+      "url": "/learn"
+    },
+    {
+      "name": "Review Queue",
+      "short_name": "Review",
+      "url": "/review"
+    },
+    {
+      "name": "Home Base",
+      "short_name": "Home",
+      "url": "/home"
     }
   ]
 }

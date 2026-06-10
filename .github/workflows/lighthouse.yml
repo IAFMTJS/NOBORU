@@ -1,0 +1,57 @@
+name: Lighthouse CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "app/**"
+      - "features/**"
+      - "components/**"
+      - "lib/**"
+      - "public/**"
+      - "package.json"
+      - "next.config.ts"
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run start &
+      - name: Wait for server
+        run: npx wait-on http://127.0.0.1:3000 --timeout 120000
+      - name: Run Lighthouse on public routes
+        run: |
+          npx lighthouse http://127.0.0.1:3000/login \
+            --only-categories=performance,accessibility,best-practices \
+            --chrome-flags="--headless --no-sandbox" \
+            --output=json \
+            --output-path=./lighthouse-login.json \
+            --quiet
+          npx lighthouse http://127.0.0.1:3000/register \
+            --only-categories=performance,accessibility,best-practices \
+            --chrome-flags="--headless --no-sandbox" \
+            --output=json \
+            --output-path=./lighthouse-register.json \
+            --quiet
+          npx lighthouse http://127.0.0.1:3000/ \
+            --only-categories=performance,accessibility,best-practices \
+            --chrome-flags="--headless --no-sandbox" \
+            --output=json \
+            --output-path=./lighthouse-root.json \
+            --quiet
+      - name: Enforce Lighthouse score floors
+        run: node scripts/check-lighthouse-scores.mjs lighthouse-login.json lighthouse-register.json lighthouse-root.json
+        env:
+          LIGHTHOUSE_MIN_SCORE: "90"
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: lighthouse-*.json

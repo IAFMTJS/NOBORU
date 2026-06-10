@@ -1,4 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import {
+  buildPaginatedResult,
+  normalizePagination,
+  type PaginationOptions,
+  type PaginatedResult,
+} from "@/lib/api/pagination";
 
 import type {
   AchievementInput,
@@ -6,15 +12,24 @@ import type {
 } from "@/features/achievements/types/achievement.types";
 
 class AchievementRepository {
-  async list(): Promise<AchievementRow[]> {
+  async list(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<AchievementRow>> {
+    const { page, limit, offset } = normalizePagination(pagination);
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("achievements")
-      .select("*")
-      .order("updated_at", { ascending: false });
+      .select("*", { count: "exact" })
+      .order("updated_at", { ascending: false })
+      .range(offset, offset + limit - 1);
 
     if (error) throw new Error(error.message);
-    return (data ?? []) as AchievementRow[];
+    return buildPaginatedResult(
+      (data ?? []) as AchievementRow[],
+      count ?? 0,
+      page,
+      limit,
+    );
   }
 
   async findById(id: string): Promise<AchievementRow | null> {
@@ -27,6 +42,31 @@ class AchievementRepository {
 
     if (error) throw new Error(error.message);
     return data as AchievementRow | null;
+  }
+
+  async findBySlug(slug: string): Promise<AchievementRow | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("achievements")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    return data as AchievementRow | null;
+  }
+
+  async listPublished(): Promise<AchievementRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("achievements")
+      .select("*")
+      .eq("status", "published")
+      .order("rarity", { ascending: true })
+      .order("name", { ascending: true });
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as AchievementRow[];
   }
 
   async create(input: AchievementInput): Promise<AchievementRow> {

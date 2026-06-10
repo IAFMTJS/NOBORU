@@ -5,9 +5,12 @@ import type {
 } from "@/features/kanji/types/kanji.types";
 
 class KanjiProgressService {
-  async getN5List(userId: string): Promise<KanjiListViewModel> {
+  async getListByJlpt(
+    userId: string,
+    jlptLevel: "n5" | "n4",
+  ): Promise<KanjiListViewModel> {
     const [characters, learnedIds] = await Promise.all([
-      kanjiRepository.listPublishedByJlpt("n5"),
+      kanjiRepository.listPublishedByJlpt(jlptLevel),
       kanjiRepository.listLearnedKanjiIds(userId),
     ]);
 
@@ -31,6 +34,14 @@ class KanjiProgressService {
           ? 0
           : Math.round((learnedCount / entries.length) * 100),
     };
+  }
+
+  async getN5List(userId: string): Promise<KanjiListViewModel> {
+    return this.getListByJlpt(userId, "n5");
+  }
+
+  async getN4List(userId: string): Promise<KanjiListViewModel> {
+    return this.getListByJlpt(userId, "n4");
   }
 
   async getKanjiDetail(

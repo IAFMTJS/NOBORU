@@ -257,6 +257,149 @@ Run migration: `npx supabase db push` (includes `20260608320000_listening_system
 
 Run migration: `npx supabase db push` (includes `20260608340000_elevation_system.sql`)
 
+## Phase 16 Status — Achievement System
+
+- [x] Migration: `user_achievements`, `user_streaks`, MVP achievement seeds
+- [x] Achievement engine with slug-based trigger evaluation
+- [x] Unlock tracking with idempotent inserts and EP awards
+- [x] Study streak tracking for 7-day achievement
+- [x] Integration hooks on lessons, reviews, reading, and listening
+- [x] Showcase on home, profile, progress dashboard, and `/achievements`
+- [x] Unlock feedback on lesson complete and review submit
+- [x] `GET /api/achievements`
+
+Run migration: `npx supabase db push` (includes `20260610300000_achievement_system.sql`)
+
+## Phase 18 Status — Daily Quest System
+
+- [x] Migration: `quest_templates`, `user_daily_quests`, MVP daily seeds
+- [x] Migration: weekly quest period, `user_weekly_quests`, MVP weekly seeds
+- [x] 4 daily quests assigned per user per day (timezone-aware)
+- [x] 2 weekly quests assigned per user per week (timezone-aware)
+- [x] Auto-tracking for vocabulary, lessons, reviews, and EP earned
+- [x] Auto-completion with EP rewards via elevation
+- [x] Quest cards integrated into home expedition hero trail layout
+- [x] Daily and weekly quest panels on progress dashboard
+- [x] Smart deep links to next lesson and review queue
+- [x] Quest completion feedback on lesson complete and review submit
+- [x] `GET /api/quests` and `GET /api/quests/daily`
+
+Run migrations: `npx supabase db push --include-all` (includes `20260610400000_daily_quest_system.sql` and `20260610500000_weekly_quest_system.sql`)
+
+## Phase 19 Status — Yama System
+
+- [x] Yama feature module with contextual messaging service
+- [x] Yama appearances on home expedition hero with trail-aware copy
+- [x] Yama loading states across app route loading boundaries
+- [x] Yama encouragement during interactive drill feedback
+- [x] Yama reactions on achievement and quest unlock feedback
+- [x] Yama celebration on lesson complete and level-up
+- [x] Yama encouragement on review ratings and empty review queue
+- [x] Yama milestone hint on in-progress trail nodes
+
+No migration required for Phase 19.
+
+## Phase 20 Status — Offline System & PWA
+
+- [x] Enhanced web app manifest with shortcuts and standalone display
+- [x] Service worker for app shell and static asset caching
+- [x] PWA install prompt on home and settings
+- [x] IndexedDB caches for lessons, reviews, audio, and sync queue
+- [x] Offline lesson player with queued progress mutations
+- [x] Offline review session with local queue advancement
+- [x] Offline audio cache for previously played lesson audio
+- [x] Sync engine via `POST /api/sync/batch`
+- [x] Conflict resolution with educational progress priority
+- [x] Offline status banner and settings sync panel
+
+No migration required for Phase 20.
+
+## Phase 21 Status — N5 Trials
+
+- [x] Migration: trial templates, steps, user progress, and attempts
+- [x] Regional challenges for foothills, forest trail, and Mount N5
+- [x] N5 Sentinel boss trial and Final N5 capstone trial
+- [x] Timed multi-step trial player with typed, choice, and matching drills
+- [x] Performance tracking with attempts, best scores, and grades
+- [x] Completion rewards via elevation EP (grade-based multiplier)
+- [x] Review recommendations on failure
+- [x] Trial hub, region panels, and games entry point
+- [x] `GET /api/trials`, `GET /api/trials/[slug]`, `POST /api/trials/[slug]/complete`
+
+Run migration: `npx supabase db push --include-all` (includes `20260610600000_n5_trial_system.sql`)
+
+## Phase 22 Status — N4 Expansion
+
+- [x] Migration: Mount N4 region with N4 vocabulary, grammar, and kanji seeds
+- [x] Five curriculum units with trail lessons and mixed practice check
+- [x] JLPT-aware vocabulary, grammar, and kanji hubs (`?jlpt=n4`)
+- [x] Mount N4 region page with content quick links
+- [x] Dashboard region labels for Mount N4 ascent trail
+
+Run migration: `npx supabase db push --include-all` (includes `20260610700000_n4_expansion.sql`)
+
+### Phase 22 follow-ups
+
+- [x] N4 reading stories, dialogues, and trail lessons
+- [x] N4 listening exercises, challenge, and trail lessons
+- [x] N4 Proving Ground, Keeper, and Final trials
+- [x] Mount N4 region unlock after Final N5 Trial
+- [x] JLPT-aware reading/listening hubs (`?jlpt=n4`)
+
+Run migration: `npx supabase db push --include-all` (includes `20260610800000_n4_reading_listening_trials.sql`)
+
+## Phase 23 Status — Performance Hardening
+
+- [x] Vitest test runner with unit tests for region unlock, trail state, trials, audio prefetch, analytics validation
+- [x] CI test step and Lighthouse score floors (90+) on public routes
+- [x] Lesson player bundle split for celebration/feedback modules
+- [x] Lesson audio prefetch pipeline via IndexedDB cache
+- [x] PWA service worker v2 with runtime audio stale-while-revalidate
+- [x] Product analytics pipeline (`POST /api/analytics/events`) with lesson and PWA events
+- [x] Accessibility hardening: `lang="ja"` on Japanese text, reduced-motion skeleton pulses
+- [x] Security hardening: admin route guard in middleware, frame/options headers
+- [x] Next.js config tuning (`poweredByHeader`, AVIF/WebP images, package import optimization)
+
+## Phase 24 Status — Public Beta
+
+- [x] Beta release flagging via `NEXT_PUBLIC_BETA_MODE` and version label
+- [x] In-app beta banner with feedback shortcut
+- [x] Feedback collection module (`POST /api/feedback`) with categories for trail, lesson, audio, PWA, and content
+- [x] Settings and community beta CTAs to `/feedback`
+- [x] Post-lesson feedback prompt on completion
+- [x] Admin feedback inbox at `/admin/content/feedback`
+- [x] Curriculum polish for Mount N5/N4 region descriptions
+- [x] Bug fix: region-aware JLPT level in embedded story/dialogue/listening lesson steps
+- [x] Trail map accessibility labels on lesson nodes
+- [x] Analytics event `feedback_submitted`
+- [x] Unit tests for feedback validation and region JLPT mapping
+
+Run migration: `npx supabase db push --include-all` (includes `20260610900000_beta_feedback_system.sql`)
+
+## Phase 25 Status — Official Launch
+
+- [x] Official release configuration (`NEXT_PUBLIC_APP_VERSION=1.0.0`, beta opt-in via `NEXT_PUBLIC_BETA_MODE=true`)
+- [x] Public health endpoint (`GET /api/health`) for monitoring and deploy smoke checks
+- [x] Admin launch readiness dashboard with MVP criteria checklist
+- [x] Persisted product analytics (`analytics_events` table + admin 7-day summary)
+- [x] Analytics instrumentation for review submit, trial complete, and trail continue clicks
+- [x] Production metadata: Open Graph, sitemap, robots.txt, manifest, and settings About section
+- [x] Auth protection for `/feedback`
+- [x] Unit tests for launch readiness and release channel
+
+Run migration: `npx supabase db push --include-all` (includes `20260611000000_official_launch_analytics.sql`)
+
+## Phase 17 Status — Immersive Learning & Trail Experience
+
+- [x] Visual trail map with locked, available, in-progress, and completed nodes
+- [x] Trail map on `/learn`, region pages, and home expedition hero
+- [x] Expedition-oriented home layout with primary continue-climbing CTA
+- [x] Typed recall drills for hiragana, katakana, vocabulary, and kanji
+- [x] Matching drill for multi-item lessons
+- [x] Immediate drill feedback with step-level lesson progress
+- [x] Audio playback in teach steps (respects user `sound_enabled`)
+- [x] Ruby/furigana presentation for vocabulary and examples
+
 ## Design Reference
 
 UI follows approved mockups in `assets/marketing/` and rules in `.cursor/rules/uiux.mdc`.

@@ -15,7 +15,8 @@ export type ElevationSourceType =
   | "listening_complete"
   | "achievement"
   | "quest"
-  | "game";
+  | "game"
+  | "trial";
 
 /** EP required to advance from `level` to `level + 1`. */
 export function epRequiredForNextLevel(level: number): number {

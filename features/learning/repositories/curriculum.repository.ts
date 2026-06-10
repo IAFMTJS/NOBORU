@@ -1,4 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import {
+  buildPaginatedResult,
+  normalizePagination,
+  type PaginationOptions,
+  type PaginatedResult,
+} from "@/lib/api/pagination";
 
 import type {
   LessonInput,
@@ -9,14 +15,23 @@ import type {
 } from "@/features/learning/types/curriculum.types";
 
 class CurriculumRepository {
-  async listRegions(): Promise<RegionRow[]> {
+  async listRegions(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<RegionRow>> {
+    const { page, limit, offset } = normalizePagination(pagination);
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("regions")
-      .select("*")
-      .order("order_index", { ascending: true });
+      .select("*", { count: "exact" })
+      .order("order_index", { ascending: true })
+      .range(offset, offset + limit - 1);
     if (error) throw new Error(error.message);
-    return (data ?? []) as RegionRow[];
+    return buildPaginatedResult(
+      (data ?? []) as RegionRow[],
+      count ?? 0,
+      page,
+      limit,
+    );
   }
 
   async findRegionById(id: string): Promise<RegionRow | null> {
@@ -85,14 +100,23 @@ class CurriculumRepository {
     return (data ?? []) as UnitRow[];
   }
 
-  async listLessons(): Promise<LessonRow[]> {
+  async listLessons(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<LessonRow>> {
+    const { page, limit, offset } = normalizePagination(pagination);
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("lessons")
-      .select("*")
-      .order("updated_at", { ascending: false });
+      .select("*", { count: "exact" })
+      .order("updated_at", { ascending: false })
+      .range(offset, offset + limit - 1);
     if (error) throw new Error(error.message);
-    return (data ?? []) as LessonRow[];
+    return buildPaginatedResult(
+      (data ?? []) as LessonRow[],
+      count ?? 0,
+      page,
+      limit,
+    );
   }
 
   async findLessonById(id: string): Promise<LessonRow | null> {

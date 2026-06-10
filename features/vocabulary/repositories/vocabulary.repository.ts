@@ -1,4 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
+import {
+  buildPaginatedResult,
+  normalizePagination,
+  type PaginationOptions,
+  type PaginatedResult,
+} from "@/lib/api/pagination";
 
 import type { JlptLevel } from "@/lib/content/types";
 import type {
@@ -9,11 +16,17 @@ import type {
 } from "@/features/vocabulary/types/vocabulary.types";
 
 class VocabularyRepository {
-  async list(filters: VocabularyListFilters = {}): Promise<VocabularyRow[]> {
+  async list(
+    filters: VocabularyListFilters = {},
+  ): Promise<PaginatedResult<VocabularyRow>> {
+    const { page, limit, offset } = normalizePagination({
+      page: filters.page,
+      limit: filters.limit,
+    });
     const supabase = await createClient();
     let query = supabase
       .from("vocabulary")
-      .select("*")
+      .select("*", { count: "exact" })
       .order("updated_at", { ascending: false });
 
     if (filters.status) {
@@ -30,13 +43,18 @@ class VocabularyRepository {
       );
     }
 
-    const { data, error } = await query;
+    const { data, error, count } = await query.range(offset, offset + limit - 1);
 
     if (error) {
       throw new Error(error.message);
     }
 
-    return (data ?? []) as VocabularyRow[];
+    return buildPaginatedResult(
+      (data ?? []) as VocabularyRow[],
+      count ?? 0,
+      page,
+      limit,
+    );
   }
 
   async listPublishedByJlpt(jlptLevel: JlptLevel): Promise<VocabularyRow[]> {
@@ -70,6 +88,18 @@ class VocabularyRepository {
     return data as VocabularyRow | null;
   }
 
+  async findByIds(ids: string[]): Promise<VocabularyRow[]> {
+    if (ids.length === 0) return [];
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("vocabulary")
+      .select("*")
+      .in("id", ids);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as VocabularyRow[];
+  }
+
   async listPublishedExamplesByVocabularyId(
     vocabularyId: string,
   ): Promise<VocabularyExampleRow[]> {
@@ -88,48 +118,27 @@ class VocabularyRepository {
     return (data ?? []) as VocabularyExampleRow[];
   }
 
-  async listLearnedVocabularyIds(userId: string): Promise<string[]> {
+  async listPublishedExamplesByVocabularyIds(
+    vocabularyIds: string[],
+  ): Promise<VocabularyExampleRow[]> {
+    if (vocabularyIds.length === 0) return [];
     const supabase = await createClient();
-    const { data: progress, error: progressError } = await supabase
-      .from("user_progress")
-      .select("lesson_id")
-      .eq("user_id", userId)
-      .eq("status", "completed");
+    const { data, error } = await supabase
+      .from("vocabulary_examples")
+      .select("*")
+      .in("vocabulary_id", vocabularyIds)
+      .eq("status", "published")
+      .order("order_index", { ascending: true });
 
-    if (progressError) throw new Error(progressError.message);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as VocabularyExampleRow[];
+  }
 
-    const lessonIds = (progress ?? []).map((row) => row.lesson_id as string);
-    const learned = new Set<string>();
-
-    const { data: reviewRows, error: reviewError } = await supabase
-      .from("review_items")
-      .select("content_id")
-      .eq("user_id", userId)
-      .eq("content_type", "vocabulary");
-
-    if (reviewError) throw new Error(reviewError.message);
-
-    for (const row of reviewRows ?? []) {
-      learned.add(row.content_id as string);
-    }
-
-    if (lessonIds.length === 0) {
-      return Array.from(learned);
-    }
-
-    const { data: items, error: itemsError } = await supabase
-      .from("lesson_items")
-      .select("content_id")
-      .eq("content_type", "vocabulary")
-      .in("lesson_id", lessonIds);
-
-    if (itemsError) throw new Error(itemsError.message);
-
-    for (const item of items ?? []) {
-      learned.add(item.content_id as string);
-    }
-
-    return Array.from(learned);
+  async listLearnedVocabularyIds(userId: string): Promise<string[]> {
+    return learnedContentRepository.getLearnedIdsByContentType(
+      userId,
+      "vocabulary",
+    );
   }
 
   async create(input: Record<string, unknown>): Promise<VocabularyRow> {

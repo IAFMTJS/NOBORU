@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /login
+Allow: /register
+Disallow: /admin
+Disallow: /api
+Disallow: /home
+Disallow: /learn
+Disallow: /review
+Disallow: /profile
+Disallow: /settings
+
+Sitemap: https://noboru.app/sitemap.xml

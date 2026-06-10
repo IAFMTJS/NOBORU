@@ -48,6 +48,19 @@ class ReadingRepository {
     return (data ?? []) as StoryRow[];
   }
 
+  async listPublishedStoriesByJlpt(jlptLevel: "n5" | "n4"): Promise<StoryRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("stories")
+      .select("*")
+      .eq("status", "published")
+      .eq("jlpt_level", jlptLevel)
+      .order("title");
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as StoryRow[];
+  }
+
   async findStoryBySlug(slug: string): Promise<StoryRow | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -111,6 +124,21 @@ class ReadingRepository {
       .from("dialogue_scenarios")
       .select("*")
       .eq("status", "published")
+      .order("title");
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as DialogueScenarioRow[];
+  }
+
+  async listPublishedDialoguesByJlpt(
+    jlptLevel: "n5" | "n4",
+  ): Promise<DialogueScenarioRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("dialogue_scenarios")
+      .select("*")
+      .eq("status", "published")
+      .eq("jlpt_level", jlptLevel)
       .order("title");
 
     if (error) throw new Error(error.message);

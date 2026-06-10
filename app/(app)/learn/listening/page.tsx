@@ -1,7 +1,18 @@
 import { ListeningHub } from "@/features/listening/components/listening-hub";
-import { getListeningHub } from "@/lib/orchestration/learn.orchestrator";
+import {
+  getListeningHub,
+  resolveJlptLevel,
+} from "@/lib/orchestration/learn.orchestrator";
 
-export default async function ListeningHubPage() {
-  const hub = await getListeningHub();
-  return <ListeningHub hub={hub} />;
+type ListeningHubPageProps = {
+  searchParams: Promise<{ jlpt?: string }>;
+};
+
+export default async function ListeningHubPage({
+  searchParams,
+}: ListeningHubPageProps) {
+  const params = await searchParams;
+  const jlptLevel = resolveJlptLevel(params.jlpt);
+  const hub = await getListeningHub(jlptLevel);
+  return <ListeningHub hub={hub} jlptLevel={jlptLevel} />;
 }

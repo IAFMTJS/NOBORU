@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+      - name: Verify health route module
+        run: node -e "require('fs').accessSync('app/api/health/route.ts')"
+      - name: Check lesson route bundle size
+        run: |
+          node -e "
+          const fs = require('fs');
+          const manifestPath = '.next/app-build-manifest.json';
+          if (!fs.existsSync(manifestPath)) {
+            console.warn('Build manifest not found; skipping bundle check.');
+            process.exit(0);
+          }
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          const pages = manifest.pages ?? {};
+          const lessonKey = Object.keys(pages).find((key) => key.includes('/learn/lesson/[lessonId]/page'));
+          if (!lessonKey) {
+            console.warn('Lesson route not found in build manifest; skipping bundle check.');
+            process.exit(0);
+          }
+          const maxFirstLoadKb = 450;
+          const chunkFiles = pages[lessonKey] ?? [];
+          let totalBytes = 0;
+          for (const file of chunkFiles) {
+            const filePath = '.next/' + file;
+            if (fs.existsSync(filePath)) {
+              totalBytes += fs.statSync(filePath).size;
+            }
+          }
+          const totalKb = Math.round(totalBytes / 1024);
+          console.log('Lesson route static chunks:', totalKb, 'KB');
+          if (totalKb > maxFirstLoadKb) {
+            console.error('Lesson route chunks exceed threshold:', totalKb, 'KB >', maxFirstLoadKb, 'KB');
+            process.exit(1);
+          }
+          "

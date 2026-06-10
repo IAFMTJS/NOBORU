@@ -1,5 +1,6 @@
 import { jsonError, jsonOk, notFound } from "@/lib/api/responses";
 import { requireContentAdminSession } from "@/lib/admin/require-content-admin";
+import { revalidatePublishedContent } from "@/lib/cache/revalidate-content";
 import { curriculumAdminService } from "@/features/learning/services/curriculum-admin.service";
 import type { LessonInput } from "@/features/learning/types/curriculum.types";
 
@@ -11,7 +12,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   const { id } = await params;
   try {
     const body = (await request.json()) as LessonInput;
-    return jsonOk(await curriculumAdminService.updateLesson(id, body));
+    const data = await curriculumAdminService.updateLesson(id, body);
+    revalidatePublishedContent();
+    return jsonOk(data);
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 400);
   }
@@ -23,6 +26,7 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
   const { id } = await params;
   try {
     await curriculumAdminService.removeLesson(id);
+    revalidatePublishedContent();
     return jsonOk({ id });
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 400);

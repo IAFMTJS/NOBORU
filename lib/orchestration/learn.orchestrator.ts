@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { lessonService } from "@/features/learning/services/lesson.service";
 import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
@@ -39,33 +38,21 @@ import type {
   LessonSessionViewModel,
   RegionPathViewModel,
 } from "@/features/learning/types/lesson.types";
-import { profileServerService } from "@/features/profile/services/profile-server.service";
+import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
+import { isJlptLevel, type JlptLevel } from "@/lib/content/types";
+
+function resolveJlptLevel(value?: string | null): "n5" | "n4" {
+  return isJlptLevel(value ?? "") && value === "n4" ? "n4" : "n5";
+}
 
 export async function getLearningPath(): Promise<LearningPathViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  if (!profile.onboardingCompleted) {
-    redirect(AUTH_ROUTES.onboarding);
-  }
-
-  return learningPathService.getLearningPath(profile.userId);
+  const userId = await requireAuthenticatedUserId();
+  return learningPathService.getLearningPath(userId);
 }
 
 export async function getRegionPath(regionSlug: string): Promise<RegionPathViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  const region = await learningPathService.getRegionPath(
-    profile.userId,
-    regionSlug,
-  );
+  const userId = await requireAuthenticatedUserId();
+  const region = await learningPathService.getRegionPath(userId, regionSlug);
 
   if (!region) {
     redirect("/learn");
@@ -77,13 +64,8 @@ export async function getRegionPath(regionSlug: string): Promise<RegionPathViewM
 export async function getLessonSession(
   lessonId: string,
 ): Promise<LessonSessionViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  const session = await lessonService.getLessonSession(lessonId, profile.userId);
+  const userId = await requireAuthenticatedUserId();
+  const session = await lessonService.getLessonSession(lessonId, userId);
 
   if (!session) {
     redirect("/learn");
@@ -93,153 +75,116 @@ export async function getLessonSession(
 }
 
 export async function getHiraganaChart(): Promise<HiraganaChartViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return hiraganaProgressService.getChart(profile.userId);
+  const userId = await requireAuthenticatedUserId();
+  return hiraganaProgressService.getChart(userId);
 }
 
 export async function getKatakanaChart(): Promise<KatakanaChartViewModel> {
-  const profile = await profileServerService.getProfile();
+  const userId = await requireAuthenticatedUserId();
+  return katakanaProgressService.getChart(userId);
+}
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return katakanaProgressService.getChart(profile.userId);
+export async function getVocabularyList(
+  jlptLevel: "n5" | "n4" = "n5",
+): Promise<VocabularyListViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return vocabularyProgressService.getListByJlpt(userId, jlptLevel);
 }
 
 export async function getN5VocabularyList(): Promise<VocabularyListViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return vocabularyProgressService.getN5List(profile.userId);
+  return getVocabularyList("n5");
 }
 
 export async function getVocabularyDetail(
   wordId: string,
 ): Promise<VocabularyDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
+  const userId = await requireAuthenticatedUserId();
+  return vocabularyProgressService.getWordDetail(userId, wordId);
+}
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return vocabularyProgressService.getWordDetail(profile.userId, wordId);
+export async function getGrammarList(
+  jlptLevel: "n5" | "n4" = "n5",
+): Promise<GrammarListViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return grammarProgressService.getListByJlpt(userId, jlptLevel);
 }
 
 export async function getN5GrammarList(): Promise<GrammarListViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return grammarProgressService.getN5List(profile.userId);
+  return getGrammarList("n5");
 }
 
 export async function getGrammarDetail(
   grammarId: string,
 ): Promise<GrammarDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
+  const userId = await requireAuthenticatedUserId();
+  return grammarProgressService.getGrammarDetail(userId, grammarId);
+}
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return grammarProgressService.getGrammarDetail(profile.userId, grammarId);
+export async function getKanjiList(
+  jlptLevel: "n5" | "n4" = "n5",
+): Promise<KanjiListViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return kanjiProgressService.getListByJlpt(userId, jlptLevel);
 }
 
 export async function getN5KanjiList(): Promise<KanjiListViewModel> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return kanjiProgressService.getN5List(profile.userId);
+  return getKanjiList("n5");
 }
 
 export async function getKanjiDetail(
   kanjiId: string,
 ): Promise<KanjiDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return kanjiProgressService.getKanjiDetail(profile.userId, kanjiId);
+  const userId = await requireAuthenticatedUserId();
+  return kanjiProgressService.getKanjiDetail(userId, kanjiId);
 }
 
-export async function getReadingHub(): Promise<ReadingHubViewModel> {
-  const profile = await profileServerService.getProfile();
+export async function getReadingHub(
+  jlptLevel: "n5" | "n4" = "n5",
+): Promise<ReadingHubViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return readingProgressService.getHubByJlpt(userId, jlptLevel);
+}
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return readingProgressService.getHub(profile.userId);
+export async function getN5ReadingHub(): Promise<ReadingHubViewModel> {
+  return getReadingHub("n5");
 }
 
 export async function getStoryDetail(slug: string): Promise<StoryDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return readingProgressService.getStoryDetail(profile.userId, slug);
+  const userId = await requireAuthenticatedUserId();
+  return readingProgressService.getStoryDetail(userId, slug);
 }
 
 export async function getDialogueDetail(
   slug: string,
 ): Promise<DialogueDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return readingProgressService.getDialogueDetail(profile.userId, slug);
+  const userId = await requireAuthenticatedUserId();
+  return readingProgressService.getDialogueDetail(userId, slug);
 }
 
-export async function getListeningHub(): Promise<ListeningHubViewModel> {
-  const profile = await profileServerService.getProfile();
+export async function getListeningHub(
+  jlptLevel: "n5" | "n4" = "n5",
+): Promise<ListeningHubViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return listeningProgressService.getHubByJlpt(userId, jlptLevel);
+}
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return listeningProgressService.getHub(profile.userId);
+export async function getN5ListeningHub(): Promise<ListeningHubViewModel> {
+  return getListeningHub("n5");
 }
 
 export async function getListeningExerciseDetail(
   slug: string,
 ): Promise<ListeningExerciseDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return listeningProgressService.getExerciseDetail(profile.userId, slug);
+  const userId = await requireAuthenticatedUserId();
+  return listeningProgressService.getExerciseDetail(userId, slug);
 }
 
 export async function getListeningChallengeDetail(
   slug: string,
 ): Promise<ListeningChallengeDetailViewModel | null> {
-  const profile = await profileServerService.getProfile();
-
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
-
-  return listeningProgressService.getChallengeDetail(profile.userId, slug);
+  const userId = await requireAuthenticatedUserId();
+  return listeningProgressService.getChallengeDetail(userId, slug);
 }
+
+export { resolveJlptLevel };
+export type { JlptLevel };

@@ -8,8 +8,9 @@ import {
   reviewRepository,
   type ReviewItemRow,
 } from "@/features/review/repositories/review.repository";
+import { achievementService } from "@/features/achievements/services/achievement.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
-import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import { questService } from "@/features/quests/services/quest.service";
 import {
   formatNextReviewLabel,
   formatReviewStateLabel,
@@ -21,6 +22,7 @@ import type {
   ReviewRating,
   ReviewSessionViewModel,
   ReviewStatsViewModel,
+  ReviewSubmitDeltaViewModel,
   WeakAreaViewModel,
 } from "@/features/review/types/review.types";
 import { REVIEW_CONTENT_LABELS } from "@/features/review/types/review.types";
@@ -28,96 +30,109 @@ import { REVIEW_CONTENT_LABELS } from "@/features/review/types/review.types";
 class ReviewEnqueueService {
   async enqueueFromLesson(userId: string, lessonId: string): Promise<void> {
     const items = await learningPathRepository.listLessonItems(lessonId);
+    const reviewItems = items
+      .filter(
+        (item) =>
+          item.content_type === "hiragana" ||
+          item.content_type === "katakana" ||
+          item.content_type === "vocabulary" ||
+          item.content_type === "grammar" ||
+          item.content_type === "kanji",
+      )
+      .map((item) => ({
+        contentType: item.content_type,
+        contentId: item.content_id,
+      }));
 
-    for (const item of items) {
-      if (
-        item.content_type === "hiragana" ||
-        item.content_type === "katakana" ||
-        item.content_type === "vocabulary" ||
-        item.content_type === "grammar" ||
-        item.content_type === "kanji"
-      ) {
-        await reviewRepository.upsertReviewItem(
-          userId,
-          item.content_type,
-          item.content_id,
-        );
-      }
-    }
+    await reviewRepository.upsertReviewItemsBatch(userId, reviewItems);
   }
 }
 
 class ReviewServerService {
   async getSession(userId: string): Promise<ReviewSessionViewModel> {
-    const [dueCount, dueItems, stats, recentHistoryRows] = await Promise.all([
-      reviewRepository.countDue(userId),
-      reviewRepository.listDue(userId, 1),
+    const [stats, dueItems, recentHistoryRows] = await Promise.all([
       this.getStats(userId),
+      reviewRepository.listDue(userId, 1),
       reviewRepository.listRecentHistory(userId, 5),
+    ]);
+
+    const contentLookup = await this.resolveContentBatch([
+      ...recentHistoryRows.map((entry) => ({
+        contentType: entry.content_type as ReviewContentType,
+        contentId: entry.content_id,
+      })),
+      ...(dueItems[0]
+        ? [
+            {
+              contentType: dueItems[0].content_type as ReviewContentType,
+              contentId: dueItems[0].content_id,
+            },
+          ]
+        : []),
     ]);
 
     const current = dueItems[0];
     const currentCard = current
-      ? await this.buildCard(current)
+      ? this.buildCard(current, contentLookup)
       : null;
-    const recentHistory = await Promise.all(
-      recentHistoryRows.map((entry) => this.buildHistoryEntry(entry)),
+    const recentHistory = recentHistoryRows.map((entry) =>
+      this.buildHistoryEntry(entry, contentLookup),
     );
 
     return {
-      dueCount,
+      dueCount: stats.dueCount,
       stats,
       currentCard,
       recentHistory,
     };
   }
 
-  async getStats(userId: string): Promise<ReviewStatsViewModel> {
-    const [dueCount, rows] = await Promise.all([
-      reviewRepository.countDue(userId),
-      reviewRepository.listSummary(userId),
+  async getOfflineBundle(userId: string, limit = 25) {
+    const [session, dueItems] = await Promise.all([
+      this.getSession(userId),
+      reviewRepository.listDue(userId, limit),
     ]);
 
-    const weakAreaCounts = new Map<ReviewContentType, number>();
-    let learningCount = 0;
-    let masteredCount = 0;
+    const contentLookup = await this.resolveContentBatch(
+      dueItems.map((item) => ({
+        contentType: item.content_type as ReviewContentType,
+        contentId: item.content_id,
+      })),
+    );
 
-    for (const row of rows) {
-      const contentType = row.content_type as ReviewContentType;
-      const isWeak =
-        row.state === "learning" ||
-        row.state === "new" ||
-        row.mastery_score < 60;
+    const dueCards = dueItems.map((item) => this.buildCard(item, contentLookup));
 
-      if (row.state === "learning" || row.state === "new") {
-        learningCount += 1;
-      }
+    return {
+      userId,
+      session,
+      dueCards,
+      cachedAt: new Date().toISOString(),
+    };
+  }
 
-      if (row.state === "mastered" || row.state === "legendary") {
-        masteredCount += 1;
-      }
+  async getStats(userId: string): Promise<ReviewStatsViewModel> {
+    const [dueCount, aggregated] = await Promise.all([
+      reviewRepository.countDue(userId),
+      reviewRepository.getAggregatedStats(userId),
+    ]);
 
-      if (isWeak && contentType in REVIEW_CONTENT_LABELS) {
-        weakAreaCounts.set(
-          contentType,
-          (weakAreaCounts.get(contentType) ?? 0) + 1,
-        );
-      }
-    }
-
-    const weakAreas: WeakAreaViewModel[] = Array.from(weakAreaCounts.entries())
-      .map(([contentType, count]) => ({
-        contentType,
-        label: REVIEW_CONTENT_LABELS[contentType],
-        count,
+    const weakAreas: WeakAreaViewModel[] = aggregated.weakAreas
+      .filter(
+        (area): area is { content_type: ReviewContentType; count: number } =>
+          area.content_type in REVIEW_CONTENT_LABELS,
+      )
+      .map((area) => ({
+        contentType: area.content_type,
+        label: REVIEW_CONTENT_LABELS[area.content_type],
+        count: area.count,
       }))
       .sort((left, right) => right.count - left.count);
 
     return {
       dueCount,
-      learningCount,
-      masteredCount,
-      totalCount: rows.length,
+      learningCount: aggregated.learningCount,
+      masteredCount: aggregated.masteredCount,
+      totalCount: aggregated.totalCount,
       weakAreas,
     };
   }
@@ -126,19 +141,75 @@ class ReviewServerService {
     userId: string,
     reviewItemId: string,
     rating: ReviewRating,
-  ): Promise<ReviewSessionViewModel & { elevation: ElevationAwardViewModel | null }> {
-    await reviewRepository.submitRating(userId, reviewItemId, rating);
-    const [session, elevation] = await Promise.all([
-      this.getSession(userId),
+  ): Promise<ReviewSubmitDeltaViewModel> {
+    const ratedItem = await reviewRepository.submitRating(
+      userId,
+      reviewItemId,
+      rating,
+    );
+
+    const [dueItems, elevation, achievements, stats] = await Promise.all([
+      reviewRepository.listDue(userId, 1),
       elevationService.awardReviewRating(userId, reviewItemId, rating),
+      achievementService.afterStudyActivity(userId),
+      this.getStats(userId),
     ]);
-    return { ...session, elevation };
+
+    const quests = await questService.recordActivities(userId, [
+      { type: "review_item", amount: 1 },
+      ...(elevation
+        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+        : []),
+    ]);
+
+    const contentLookup = await this.resolveContentBatch([
+      {
+        contentType: ratedItem.content_type as ReviewContentType,
+        contentId: ratedItem.content_id,
+      },
+      ...(dueItems[0]
+        ? [
+            {
+              contentType: dueItems[0].content_type as ReviewContentType,
+              contentId: dueItems[0].content_id,
+            },
+          ]
+        : []),
+    ]);
+
+    const historyEntry = this.buildHistoryEntry(
+      {
+        id: `${ratedItem.id}-${ratedItem.review_count}`,
+        content_type: ratedItem.content_type,
+        content_id: ratedItem.content_id,
+        rating,
+        new_state: ratedItem.state,
+        created_at: new Date().toISOString(),
+      },
+      contentLookup,
+    );
+
+    const currentCard = dueItems[0]
+      ? this.buildCard(dueItems[0], contentLookup)
+      : null;
+
+    return {
+      dueCount: stats.dueCount,
+      stats,
+      currentCard,
+      recentHistoryEntry: historyEntry,
+      elevation,
+      achievements,
+      quests,
+    };
   }
 
-  private async buildCard(item: ReviewItemRow): Promise<ReviewCardViewModel | null> {
-    const content = await this.resolveContent(
-      item.content_type as ReviewContentType,
-      item.content_id,
+  private buildCard(
+    item: ReviewItemRow,
+    contentLookup: Map<string, { term: string; reading: string; meaning: string }>,
+  ): ReviewCardViewModel | null {
+    const content = contentLookup.get(
+      `${item.content_type}:${item.content_id}`,
     );
 
     if (!content) return null;
@@ -155,17 +226,19 @@ class ReviewServerService {
     };
   }
 
-  private async buildHistoryEntry(entry: {
-    id: string;
-    content_type: string;
-    content_id: string;
-    rating: ReviewRating;
-    new_state: ReviewItemRow["state"];
-    created_at: string;
-  }): Promise<ReviewHistoryEntryViewModel> {
-    const content = await this.resolveContent(
-      entry.content_type as ReviewContentType,
-      entry.content_id,
+  private buildHistoryEntry(
+    entry: {
+      id: string;
+      content_type: string;
+      content_id: string;
+      rating: ReviewRating;
+      new_state: ReviewItemRow["state"];
+      created_at: string;
+    },
+    contentLookup: Map<string, { term: string; reading: string; meaning: string }>,
+  ): ReviewHistoryEntryViewModel {
+    const content = contentLookup.get(
+      `${entry.content_type}:${entry.content_id}`,
     );
 
     return {
@@ -176,6 +249,86 @@ class ReviewServerService {
       state: entry.new_state,
       reviewedAt: entry.created_at,
     };
+  }
+
+  private async resolveContentBatch(
+    entries: Array<{ contentType: ReviewContentType; contentId: string }>,
+  ): Promise<Map<string, { term: string; reading: string; meaning: string }>> {
+    const uniqueByType = new Map<ReviewContentType, Set<string>>();
+    for (const entry of entries) {
+      const ids = uniqueByType.get(entry.contentType) ?? new Set<string>();
+      ids.add(entry.contentId);
+      uniqueByType.set(entry.contentType, ids);
+    }
+
+    const [
+      hiraganaRows,
+      katakanaRows,
+      vocabularyRows,
+      grammarRows,
+      kanjiRows,
+    ] = await Promise.all([
+      hiraganaRepository.findByIds(
+        Array.from(uniqueByType.get("hiragana") ?? []),
+      ),
+      katakanaRepository.findByIds(
+        Array.from(uniqueByType.get("katakana") ?? []),
+      ),
+      vocabularyRepository.findByIds(
+        Array.from(uniqueByType.get("vocabulary") ?? []),
+      ),
+      grammarRepository.findByIds(
+        Array.from(uniqueByType.get("grammar") ?? []),
+      ),
+      kanjiRepository.findByIds(Array.from(uniqueByType.get("kanji") ?? [])),
+    ]);
+
+    const lookup = new Map<string, { term: string; reading: string; meaning: string }>();
+
+    for (const row of hiraganaRows) {
+      lookup.set(`hiragana:${row.id}`, {
+        term: row.character,
+        reading: row.romaji,
+        meaning: row.row_label,
+      });
+    }
+    for (const row of katakanaRows) {
+      lookup.set(`katakana:${row.id}`, {
+        term: row.character,
+        reading: row.romaji,
+        meaning: row.row_label,
+      });
+    }
+    for (const row of vocabularyRows) {
+      lookup.set(`vocabulary:${row.id}`, {
+        term: row.kanji ?? row.kana,
+        reading: row.kanji ? row.kana : (row.part_of_speech ?? ""),
+        meaning: row.meaning,
+      });
+    }
+    for (const row of grammarRows) {
+      lookup.set(`grammar:${row.id}`, {
+        term: row.title,
+        reading: row.meaning,
+        meaning: row.explanation ?? row.meaning,
+      });
+    }
+    for (const row of kanjiRows) {
+      lookup.set(`kanji:${row.id}`, {
+        term: row.character,
+        reading: [
+          ...row.readings
+            .filter((reading) => reading.reading_type === "onyomi")
+            .map((reading) => reading.reading),
+          ...row.readings
+            .filter((reading) => reading.reading_type === "kunyomi")
+            .map((reading) => reading.reading),
+        ].join(" · "),
+        meaning: row.meaning,
+      });
+    }
+
+    return lookup;
   }
 
   private async resolveContent(

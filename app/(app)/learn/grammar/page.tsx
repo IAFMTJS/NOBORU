@@ -1,7 +1,18 @@
 import { GrammarList } from "@/features/grammar/components/grammar-list";
-import { getN5GrammarList } from "@/lib/orchestration/learn.orchestrator";
+import {
+  getGrammarList,
+  resolveJlptLevel,
+} from "@/lib/orchestration/learn.orchestrator";
 
-export default async function GrammarListPage() {
-  const list = await getN5GrammarList();
-  return <GrammarList list={list} />;
+type GrammarListPageProps = {
+  searchParams: Promise<{ jlpt?: string }>;
+};
+
+export default async function GrammarListPage({
+  searchParams,
+}: GrammarListPageProps) {
+  const params = await searchParams;
+  const jlptLevel = resolveJlptLevel(params.jlpt);
+  const list = await getGrammarList(jlptLevel);
+  return <GrammarList list={list} jlptLevel={jlptLevel} />;
 }

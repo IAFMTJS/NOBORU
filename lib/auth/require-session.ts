@@ -1,30 +1,18 @@
-import { createClient } from "@/lib/supabase/server";
 import { unauthorized } from "@/lib/api/responses";
+import {
+  getCachedAuthSession,
+  getCachedProfile,
+  getCachedAuthenticatedContext,
+} from "@/lib/cache/request-cache";
 
-export type AuthSession = {
-  userId: string;
-  email: string;
-};
+export type { AuthSession } from "@/lib/auth/get-auth-session";
 
-export async function getAuthSession(): Promise<AuthSession | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    return null;
-  }
-
-  return {
-    userId: user.id,
-    email: user.email ?? "",
-  };
+export async function getAuthSession() {
+  return getCachedAuthSession();
 }
 
 export async function requireAuthSession() {
-  const session = await getAuthSession();
+  const session = await getCachedAuthSession();
 
   if (!session) {
     return { session: null, error: unauthorized() };
@@ -32,3 +20,5 @@ export async function requireAuthSession() {
 
   return { session, error: null };
 }
+
+export { getCachedProfile, getCachedAuthenticatedContext };

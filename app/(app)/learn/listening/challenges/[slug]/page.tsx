@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { ListeningChallengePlayer } from "@/features/listening/components/listening-challenge-player";
+import { ListeningChallengePageShell } from "@/features/listening/components/listening-challenge-page-shell";
 import { getListeningChallengeDetail } from "@/lib/orchestration/learn.orchestrator";
 
 type ChallengePageProps = {
@@ -15,5 +15,5 @@ export default async function ListeningChallengePage({ params }: ChallengePagePr
     notFound();
   }
 
-  return <ListeningChallengePlayer challenge={challenge} />;
+  return <ListeningChallengePageShell challenge={challenge} />;
 }

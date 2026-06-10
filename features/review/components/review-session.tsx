@@ -15,48 +15,81 @@ import {
 } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
+import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { formatReviewStateLabel } from "@/features/review/services/srs.service";
+import { AchievementUnlockFeedback } from "@/features/achievements/components/achievement-unlock-feedback";
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import { QuestCompleteFeedback } from "@/features/quests/components/quest-complete-feedback";
+import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
+import type { OfflineReviewBundle } from "@/lib/offline/types";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type { ReviewSessionViewModel } from "@/features/review/types/review.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
 
 type ReviewSessionProps = {
   initialSession: ReviewSessionViewModel;
+  offlineBundle: OfflineReviewBundle;
+  onBundleChange: (bundle: OfflineReviewBundle) => void;
 };
 
-export function ReviewSession({ initialSession }: ReviewSessionProps) {
+export function ReviewSession({
+  initialSession,
+  offlineBundle,
+  onBundleChange,
+}: ReviewSessionProps) {
   const [session, setSession] = useState(initialSession);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [lastElevation, setLastElevation] = useState<ElevationAwardViewModel | null>(
     null,
   );
+  const [lastAchievements, setLastAchievements] = useState<
+    AchievementUnlockViewModel[]
+  >([]);
+  const [lastQuests, setLastQuests] = useState<QuestCompletionViewModel[]>([]);
+  const [lastReviewFeedback, setLastReviewFeedback] = useState<
+    ReturnType<typeof yamaService.resolveReviewFeedback> | null
+  >(null);
 
   async function submitRating(rating: ReviewRating) {
     if (!session.currentCard) return;
     setSubmitting(true);
+    setError(null);
     try {
-      const response = await fetch("/api/review/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          reviewItemId: session.currentCard.id,
-          rating,
-        }),
-      });
-      const result = (await response.json()) as {
-        success: boolean;
-        data?: ReviewSessionViewModel & {
-          elevation?: ElevationAwardViewModel | null;
-        };
-        error?: string;
-      };
-      if (!result.success || !result.data) {
-        throw new Error(result.error ?? "Review failed.");
-      }
-      setSession(result.data);
-      setLastElevation(result.data.elevation ?? null);
+      const result = await offlineClient.submitReview(
+        offlineBundle,
+        session.currentCard.id,
+        rating,
+      );
+      setSession((previous) => ({
+        dueCount: result.delta.dueCount,
+        stats: result.delta.stats,
+        currentCard: result.delta.currentCard,
+        recentHistory: [
+          result.delta.recentHistoryEntry,
+          ...previous.recentHistory,
+        ].slice(0, 5),
+      }));
+      onBundleChange(result.bundle);
+      setLastElevation(result.delta.elevation ?? null);
+      setLastAchievements(result.delta.achievements ?? []);
+      setLastQuests(result.delta.quests ?? []);
+      setLastReviewFeedback(yamaService.resolveReviewFeedback(rating));
       setRevealed(false);
+      void analyticsService.track({
+        name: "review_submitted",
+        properties: {
+          rating,
+          contentType: session.currentCard.contentType,
+          queuedOffline: result.queuedOffline,
+        },
+      });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Review failed.");
     } finally {
       setSubmitting(false);
     }
@@ -71,15 +104,36 @@ export function ReviewSession({ initialSession }: ReviewSessionProps) {
 
       <ReviewStatsPanel stats={session.stats} />
 
+      {error ? (
+        <p className="text-body-sm text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+
       {lastElevation ? (
         <Badge variant="secondary">+{lastElevation.epAwarded} EP earned</Badge>
       ) : null}
 
+      <AchievementUnlockFeedback achievements={lastAchievements} />
+      <QuestCompleteFeedback completions={lastQuests} />
+
+      {lastReviewFeedback ? (
+        <YamaPresence presence={lastReviewFeedback} size="sm" />
+      ) : null}
+
       {!session.currentCard ? (
-        <EmptyState
-          title="No reviews due"
-          description="Complete lessons to build your review queue. Scheduled reviews will appear here."
-        />
+        <div className="space-y-4">
+          <YamaPresence
+            presence={yamaService.resolveReviewEmpty()}
+            size="md"
+            layout="vertical"
+            className="items-center"
+          />
+          <EmptyState
+            title="No reviews due"
+            description="Complete lessons to build your review queue. Scheduled reviews will appear here."
+          />
+        </div>
       ) : (
         <Card className="shadow-elevation-1">
           <CardHeader>

@@ -13,21 +13,27 @@ import {
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { JlptLevel } from "@/lib/content/types";
+import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { GrammarListViewModel } from "@/features/grammar/types/grammar.types";
 
 type GrammarListProps = {
   list: GrammarListViewModel;
+  jlptLevel?: JlptLevel;
 };
 
-export function GrammarList({ list }: GrammarListProps) {
+export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
+  const hub = getJlptContentHub(jlptLevel);
+  const levelLabel = jlptLevel.toUpperCase();
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="N5 Grammar"
-        subtitle="Master sentence patterns on Mount N5."
+        title={hub.grammarTitle}
+        subtitle={hub.grammarSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/mount-n5">Back</Link>
+            <Link href={`/learn/${hub.regionSlug}`}>Back</Link>
           </Button>
         }
       />
@@ -36,7 +42,7 @@ export function GrammarList({ list }: GrammarListProps) {
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
-            {list.learnedCount} of {list.totalCount} N5 grammar points learned
+            {list.learnedCount} of {list.totalCount} {levelLabel} grammar points learned
           </CardDescription>
         </CardHeader>
         <CardContent>

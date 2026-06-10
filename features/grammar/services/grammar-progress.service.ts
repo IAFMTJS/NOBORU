@@ -5,9 +5,12 @@ import type {
 } from "@/features/grammar/types/grammar.types";
 
 class GrammarProgressService {
-  async getN5List(userId: string): Promise<GrammarListViewModel> {
+  async getListByJlpt(
+    userId: string,
+    jlptLevel: "n5" | "n4",
+  ): Promise<GrammarListViewModel> {
     const [points, learnedIds] = await Promise.all([
-      grammarRepository.listPublishedByJlpt("n5"),
+      grammarRepository.listPublishedByJlpt(jlptLevel),
       grammarRepository.listLearnedGrammarIds(userId),
     ]);
 
@@ -30,6 +33,14 @@ class GrammarProgressService {
           ? 0
           : Math.round((learnedCount / entries.length) * 100),
     };
+  }
+
+  async getN5List(userId: string): Promise<GrammarListViewModel> {
+    return this.getListByJlpt(userId, "n5");
+  }
+
+  async getN4List(userId: string): Promise<GrammarListViewModel> {
+    return this.getListByJlpt(userId, "n4");
   }
 
   async getGrammarDetail(

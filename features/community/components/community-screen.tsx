@@ -1,18 +1,41 @@
+import Link from "next/link";
+
+import { PageContainer } from "@/components/layout/page-container";
+import { ScreenHeader } from "@/components/layout/screen-header";
+import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BETA_RELEASE } from "@/lib/release/beta.constants";
+import { OFFICIAL_RELEASE } from "@/lib/release/release.constants";
 
 export function CommunityScreen() {
   return (
-    <div className="p-4">
-      <header className="mb-4">
-        <h1 className="text-2xl font-semibold">Community</h1>
-        <p className="text-sm text-muted-foreground">Social features and challenges.</p>
-      </header>
+    <PageContainer>
+      <ScreenHeader
+        title="Community"
+        subtitle="Social features and challenges are still on the ascent."
+      />
+
+      <Card className="mb-4 border-primary/20 shadow-elevation-1">
+        <CardHeader>
+          <CardTitle className="text-heading-6">
+            {BETA_RELEASE.enabled ? "Beta climbers welcome" : OFFICIAL_RELEASE.label}
+          </CardTitle>
+          <CardDescription>
+            Community leagues arrive soon. Share feedback on lessons, audio, and install
+            flow while we keep improving the climb.
+          </CardDescription>
+        </CardHeader>
+        <Button asChild>
+          <Link href="/feedback">Share feedback</Link>
+        </Button>
+      </Card>
+
       <Card>
         <CardHeader>
-          <CardTitle>Coming Soon</CardTitle>
+          <CardTitle className="text-heading-6">Coming Soon</CardTitle>
           <CardDescription>Community features are post-MVP.</CardDescription>
         </CardHeader>
       </Card>
-    </div>
+    </PageContainer>
   );
 }

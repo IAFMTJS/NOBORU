@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { ListeningExercisePlayer } from "@/features/listening/components/listening-exercise-player";
+import { ListeningExercisePageShell } from "@/features/listening/components/listening-exercise-page-shell";
 import { getListeningExerciseDetail } from "@/lib/orchestration/learn.orchestrator";
 
 type ExercisePageProps = {
@@ -15,5 +15,5 @@ export default async function ListeningExercisePage({ params }: ExercisePageProp
     notFound();
   }
 
-  return <ListeningExercisePlayer exercise={exercise} />;
+  return <ListeningExercisePageShell exercise={exercise} />;
 }

@@ -13,6 +13,7 @@ import type {
   KatakanaLessonContent,
   KanjiLessonContent,
   LessonContent,
+  LessonMatchingStep,
   LessonRecallStep,
   LessonReadingStep,
   LessonSessionViewModel,
@@ -30,6 +31,9 @@ import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import { listeningProgressService } from "@/features/listening/services/listening-progress.service";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
+import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { learningPathService } from "@/features/learning/services/learning-path.service";
+import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -60,6 +64,61 @@ function getRecallAnswer(content: LessonContent): string {
     default:
       return "";
   }
+}
+
+function groupExamplesByParentId<T extends { vocabulary_id?: string; kanji_id?: string; grammar_id?: string }>(
+  examples: T[],
+  key: "vocabulary_id" | "kanji_id" | "grammar_id",
+): Map<string, T[]> {
+  const grouped = new Map<string, T[]>();
+  for (const example of examples) {
+    const parentId = example[key];
+    if (!parentId) continue;
+    const bucket = grouped.get(parentId) ?? [];
+    bucket.push(example);
+    grouped.set(parentId, bucket);
+  }
+  return grouped;
+}
+
+function getMatchingPrompt(content: LessonContent): string {
+  switch (content.type) {
+    case "vocabulary":
+      return content.kanji ?? content.kana;
+    case "hiragana":
+    case "katakana":
+    case "kanji":
+      return content.character;
+    default:
+      return "";
+  }
+}
+
+function buildMatchingStep(contents: LessonContent[]): LessonMatchingStep | null {
+  const matchable = contents.filter(
+    (content) =>
+      content.type === "vocabulary" ||
+      content.type === "hiragana" ||
+      content.type === "katakana" ||
+      content.type === "kanji",
+  );
+
+  if (matchable.length < 3) return null;
+
+  const selected = matchable.slice(0, Math.min(4, matchable.length));
+  const pairs = selected.map((content) => ({
+    id: content.id,
+    prompt: getMatchingPrompt(content),
+    answer: getRecallAnswer(content),
+  }));
+
+  return {
+    kind: "matching",
+    prompt: "Match each item to its meaning or reading",
+    pairs,
+    index: 1,
+    total: 1,
+  };
 }
 
 class LessonService {
@@ -192,6 +251,181 @@ class LessonService {
     return null;
   }
 
+  private async loadContentsBatch(
+    items: Array<{ content_type: string; content_id: string }>,
+  ): Promise<(LessonContent | null)[]> {
+    const vocabularyIds = items
+      .filter((item) => item.content_type === "vocabulary")
+      .map((item) => item.content_id);
+    const kanjiIds = items
+      .filter((item) => item.content_type === "kanji")
+      .map((item) => item.content_id);
+    const grammarIds = items
+      .filter((item) => item.content_type === "grammar")
+      .map((item) => item.content_id);
+    const hiraganaIds = items
+      .filter((item) => item.content_type === "hiragana")
+      .map((item) => item.content_id);
+    const katakanaIds = items
+      .filter((item) => item.content_type === "katakana")
+      .map((item) => item.content_id);
+
+    const specialTypes = new Set([
+      "reading",
+      "story",
+      "dialogue",
+      "listening",
+      "listening_challenge",
+    ]);
+    const specialItems = items.filter((item) =>
+      specialTypes.has(item.content_type),
+    );
+
+    const [
+      vocabularyRows,
+      vocabularyExamples,
+      kanjiRows,
+      kanjiExamples,
+      grammarRows,
+      grammarExamples,
+      hiraganaRows,
+      katakanaRows,
+      specialContents,
+    ] = await Promise.all([
+      vocabularyRepository.findByIds(vocabularyIds),
+      vocabularyRepository.listPublishedExamplesByVocabularyIds(vocabularyIds),
+      kanjiRepository.findByIds(kanjiIds),
+      kanjiRepository.listPublishedExamplesByKanjiIds(kanjiIds),
+      grammarRepository.findByIds(grammarIds),
+      grammarRepository.listPublishedExamplesByGrammarIds(grammarIds),
+      hiraganaRepository.findByIds(hiraganaIds),
+      katakanaRepository.findByIds(katakanaIds),
+      Promise.all(
+        specialItems.map((item) =>
+          this.loadContent(item.content_type, item.content_id),
+        ),
+      ),
+    ]);
+
+    const vocabularyById = new Map(vocabularyRows.map((row) => [row.id, row]));
+    const vocabularyExamplesById = groupExamplesByParentId(
+      vocabularyExamples,
+      "vocabulary_id",
+    );
+    const kanjiById = new Map(kanjiRows.map((row) => [row.id, row]));
+    const kanjiExamplesById = groupExamplesByParentId(
+      kanjiExamples,
+      "kanji_id",
+    );
+    const grammarById = new Map(grammarRows.map((row) => [row.id, row]));
+    const grammarExamplesById = groupExamplesByParentId(
+      grammarExamples,
+      "grammar_id",
+    );
+    const hiraganaById = new Map(hiraganaRows.map((row) => [row.id, row]));
+    const katakanaById = new Map(katakanaRows.map((row) => [row.id, row]));
+    const specialByKey = new Map(
+      specialItems.map((item, index) => [
+        `${item.content_type}:${item.content_id}`,
+        specialContents[index] ?? null,
+      ]),
+    );
+
+    return items.map((item) => {
+      if (item.content_type === "vocabulary") {
+        const row = vocabularyById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        const examples = vocabularyExamplesById.get(row.id) ?? [];
+        return {
+          type: "vocabulary",
+          id: row.id,
+          kana: row.kana,
+          kanji: row.kanji,
+          meaning: row.meaning,
+          partOfSpeech: row.part_of_speech,
+          audioUrl: row.audio_url,
+          examples: examples.map((example) => ({
+            japaneseText: example.japanese_text,
+            romaji: example.romaji,
+            english: example.english,
+          })),
+        } satisfies VocabularyLessonContent;
+      }
+
+      if (item.content_type === "kanji") {
+        const row = kanjiById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        const examples = kanjiExamplesById.get(row.id) ?? [];
+        return {
+          type: "kanji",
+          id: row.id,
+          character: row.character,
+          meaning: row.meaning,
+          strokeCount: row.stroke_count,
+          onyomi: row.readings
+            .filter((reading) => reading.reading_type === "onyomi")
+            .map((reading) => reading.reading),
+          kunyomi: row.readings
+            .filter((reading) => reading.reading_type === "kunyomi")
+            .map((reading) => reading.reading),
+          examples: examples.map((example) => ({
+            japaneseText: example.japanese_text,
+            romaji: example.romaji,
+            english: example.english,
+          })),
+        } satisfies KanjiLessonContent;
+      }
+
+      if (item.content_type === "grammar") {
+        const row = grammarById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        const examples = grammarExamplesById.get(row.id) ?? [];
+        return {
+          type: "grammar",
+          id: row.id,
+          title: row.title,
+          meaning: row.meaning,
+          explanation: row.explanation,
+          examples: examples.map((example) => ({
+            japaneseText: example.japanese_text,
+            romaji: example.romaji,
+            english: example.english,
+          })),
+        } satisfies GrammarLessonContent;
+      }
+
+      if (item.content_type === "hiragana") {
+        const row = hiraganaById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        return {
+          type: "hiragana",
+          id: row.id,
+          character: row.character,
+          romaji: row.romaji,
+          rowLabel: row.row_label,
+        } satisfies HiraganaLessonContent;
+      }
+
+      if (item.content_type === "katakana") {
+        const row = katakanaById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        return {
+          type: "katakana",
+          id: row.id,
+          character: row.character,
+          romaji: row.romaji,
+          rowLabel: row.row_label,
+        } satisfies KatakanaLessonContent;
+      }
+
+      if (specialTypes.has(item.content_type)) {
+        return specialByKey.get(`${item.content_type}:${item.content_id}`) ?? null;
+      }
+
+      return null;
+    });
+  }
+
   private buildRecallStep(
     content: LessonContent,
     allAnswers: string[],
@@ -202,11 +436,13 @@ class LessonService {
       const options = buildRecallOptions(content.meaning, allAnswers);
       return {
         kind: "recall",
+        mode: "typed",
         contentType: "vocabulary",
-        prompt: "What does this word mean?",
-        display: content.kanji ? `${content.kana} · ${content.kanji}` : content.kana,
+        prompt: "Type the meaning of this word",
+        display: content.kanji ?? content.kana,
         options,
         correctIndex: options.indexOf(content.meaning),
+        acceptedAnswers: buildAcceptedAnswers(content.meaning),
         index,
         total,
       };
@@ -216,11 +452,13 @@ class LessonService {
       const options = buildRecallOptions(content.meaning, allAnswers);
       return {
         kind: "recall",
+        mode: "typed",
         contentType: "kanji",
-        prompt: "What is the meaning of this kanji?",
+        prompt: "Type the meaning of this kanji",
         display: content.character,
         options,
         correctIndex: options.indexOf(content.meaning),
+        acceptedAnswers: buildAcceptedAnswers(content.meaning),
         index,
         total,
       };
@@ -230,11 +468,13 @@ class LessonService {
       const options = buildRecallOptions(content.romaji, allAnswers);
       return {
         kind: "recall",
+        mode: "typed",
         contentType: "hiragana",
-        prompt: "What is the romaji reading?",
+        prompt: "Type the romaji reading",
         display: content.character,
         options,
         correctIndex: options.indexOf(content.romaji),
+        acceptedAnswers: buildAcceptedAnswers(content.romaji),
         index,
         total,
       };
@@ -244,11 +484,13 @@ class LessonService {
       const options = buildRecallOptions(content.romaji, allAnswers);
       return {
         kind: "recall",
+        mode: "typed",
         contentType: "katakana",
-        prompt: "What is the romaji reading?",
+        prompt: "Type the romaji reading",
         display: content.character,
         options,
         correctIndex: options.indexOf(content.romaji),
+        acceptedAnswers: buildAcceptedAnswers(content.romaji),
         index,
         total,
       };
@@ -258,6 +500,7 @@ class LessonService {
       const options = buildRecallOptions(content.meaning, allAnswers);
       return {
         kind: "recall",
+        mode: "choice",
         contentType: "grammar",
         prompt: "What does this grammar point mean?",
         display: content.title,
@@ -270,6 +513,7 @@ class LessonService {
 
     return {
       kind: "recall",
+      mode: "choice",
       contentType: "hiragana",
       prompt: "What is the romaji reading?",
       display: "?",
@@ -387,7 +631,13 @@ class LessonService {
       const recallSteps = practiceContents.map((content, index) =>
         this.buildRecallStep(content, answers, index + 1, practiceContents.length),
       );
-      return [intro, ...recallSteps, complete];
+      const matchingStep = buildMatchingStep(practiceContents);
+      return [
+        intro,
+        ...recallSteps,
+        ...(matchingStep ? [matchingStep] : []),
+        complete,
+      ];
     }
 
     const answers = contents.map(getRecallAnswer);
@@ -400,10 +650,12 @@ class LessonService {
     const recallSteps: LessonRecallStep[] = contents.map((content, index) =>
       this.buildRecallStep(content, answers, index + 1, contents.length),
     );
+    const matchingStep = buildMatchingStep(contents);
 
     return [
       intro,
       ...teachSteps.flatMap((teach, index) => [teach, recallSteps[index]]),
+      ...(matchingStep ? [matchingStep] : []),
       complete,
     ];
   }
@@ -415,13 +667,17 @@ class LessonService {
     const lesson = await learningPathRepository.findPublishedLessonById(lessonId);
     if (!lesson) return null;
 
-    const items = await learningPathRepository.listLessonItems(lessonId);
-    const contents: LessonContent[] = [];
+    const regionAccessible = await learningPathService.isRegionAccessible(
+      userId,
+      lesson.unit.region.slug,
+    );
+    if (!regionAccessible) return null;
 
-    for (const item of items) {
-      const content = await this.loadContent(item.content_type, item.content_id);
-      if (content) contents.push(content);
-    }
+    const items = await learningPathRepository.listLessonItems(lessonId);
+    const loaded = await this.loadContentsBatch(items);
+    const contents = loaded.filter(
+      (content): content is LessonContent => content !== null,
+    );
 
     const progress =
       (await progressRepository.findByUserAndLesson(userId, lessonId)) ?? null;
@@ -448,11 +704,16 @@ class LessonService {
   ): Promise<LessonSummaryViewModel | null> {
     const regions = await learningPathRepository.listPublishedRegionsWithCurriculum();
     const progressRows = await progressRepository.listByUserId(userId);
+    const passedTrialSlugs = await learningPathService.getPassedTrialSlugs(userId);
     const progressByLesson = new Map(
       progressRows.map((row) => [row.lesson_id, row]),
     );
 
     for (const region of regions) {
+      if (resolveRegionAccess(region.slug, passedTrialSlugs).availability === "locked") {
+        continue;
+      }
+
       for (const unit of region.units) {
         for (const lesson of unit.lessons) {
           const progress = progressByLesson.get(lesson.id);

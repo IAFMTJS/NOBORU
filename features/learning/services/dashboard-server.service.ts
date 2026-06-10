@@ -1,17 +1,32 @@
 import { FOOTHILLS_REGION } from "@/features/onboarding/constants/onboarding.constants";
-import { lessonService } from "@/features/learning/services/lesson.service";
-import { learningPathService } from "@/features/learning/services/learning-path.service";
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
+import { achievementService } from "@/features/achievements/services/achievement.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
-import { progressDashboardService } from "@/features/progress/services/progress-dashboard.service";
+import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
+import { learningPathService } from "@/features/learning/services/learning-path.service";
+import { questService } from "@/features/quests/services/quest.service";
+import { yamaService } from "@/features/yama/services/yama.service";
 import { reviewRepository } from "@/features/review/repositories/review.repository";
-import { settingsServerRepository } from "@/features/settings/repositories/settings-server.repository";
+import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
+import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
 const REGION_LABELS: Record<string, { name: string; trail: string }> = {
   foothills: {
     name: FOOTHILLS_REGION.name,
     trail: FOOTHILLS_REGION.trail,
+  },
+  "forest-trail": {
+    name: "Forest Trail",
+    trail: "Canopy Path",
+  },
+  "mount-n5": {
+    name: "Mount N5",
+    trail: "Summit Trail",
+  },
+  "mount-n4": {
+    name: "Mount N4",
+    trail: "Ascent Trail",
   },
 };
 
@@ -28,20 +43,51 @@ class DashboardServerService {
   async getHomeDashboard(
     profile: ProfileViewModel,
   ): Promise<HomeDashboardViewModel> {
-    const settings = await settingsServerRepository.ensureSettings(profile.userId);
     const region = getRegionDisplay(profile.currentRegionSlug);
-    const dailyTarget = settings.daily_goal;
-    const [nextLesson, learningPath, reviewQueueCount, progressDashboard, elevation] =
+
+    const [regions, progressRows, reviewQueueCount, elevation, recentAchievements, quests, passedTrialSlugs] =
       await Promise.all([
-        lessonService.getNextIncompleteLesson(profile.userId),
-        learningPathService.getLearningPath(profile.userId),
+        learningPathRepository.listPublishedRegionsWithCurriculum(),
+        getCachedProgressRows(profile.userId),
         reviewRepository.countDue(profile.userId),
-        progressDashboardService.getDashboard(profile.userId),
         elevationService.getSummary(profile.userId),
+        achievementService.listRecentUnlocked(profile.userId),
+        questService.getQuestDashboard(profile.userId),
+        learningPathService.getPassedTrialSlugs(profile.userId),
       ]);
 
-    const foothills = learningPath.regions.find(
-      (entry) => entry.slug === FOOTHILLS_REGION.slug,
+    const learningPath = learningPathService.buildLearningPath(
+      regions,
+      progressRows,
+      passedTrialSlugs,
+    );
+
+    const currentRegionPath =
+      learningPath.regions.find(
+        (entry) => entry.slug === profile.currentRegionSlug,
+      ) ?? learningPath.regions[0];
+
+    const trailNodes = currentRegionPath
+      ? flattenRegionTrailLessons(currentRegionPath.units, {
+          regionLocked: currentRegionPath.availability === "locked",
+        })
+      : [];
+    const trailStartIndex = Math.max(
+      0,
+      trailNodes.findIndex((node) => node.state !== "completed"),
+    );
+    const trailPreview = trailNodes.slice(trailStartIndex, trailStartIndex + 5);
+
+    const yama = yamaService.resolveHomePresence(
+      {
+        dailyQuestsCompleted: quests.daily.completedCount,
+        dailyQuestsTotal: quests.daily.totalCount,
+        regionProgressPercent: currentRegionPath?.progressPercent ?? 0,
+        hasInProgressTrailNode: trailPreview.some(
+          (node) => node.state === "in_progress",
+        ),
+      },
+      profile.userId.length,
     );
 
     return {
@@ -49,7 +95,7 @@ class DashboardServerService {
       region,
       level: {
         label: profile.levelLabel,
-        progressPercent: foothills?.progressPercent ?? 0,
+        progressPercent: currentRegionPath?.progressPercent ?? 0,
       },
       elevation: {
         level: elevation.currentLevel,
@@ -62,19 +108,19 @@ class DashboardServerService {
           ? `Level ${elevation.nextReward.level}: ${elevation.nextReward.title}`
           : "Summit reached",
       },
-      dailyQuest: {
-        title: "Today's Quest",
-        description: `Climb for ${dailyTarget} minutes`,
-        current: 0,
-        target: dailyTarget,
-      },
+      quests,
+      yama,
+      trailPreview,
       upcomingLesson: {
-        title: nextLesson?.title ?? "Explore the learning path",
-        href: nextLesson ? `/learn/lesson/${nextLesson.id}` : "/learn",
+        title: learningPath.nextLesson?.title ?? "Explore the learning path",
+        href: learningPath.nextLessonHref ?? "/learn",
       },
-      recentAchievements: [],
+      recentAchievements: recentAchievements.map((achievement) => ({
+        id: achievement.id,
+        title: achievement.name,
+        rarity: achievement.rarity,
+      })),
       reviewQueueCount,
-      overallMasteryPercent: progressDashboard.overallMasteryPercent,
     };
   }
 }

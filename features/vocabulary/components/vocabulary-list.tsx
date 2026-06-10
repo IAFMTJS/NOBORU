@@ -13,21 +13,27 @@ import {
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { JlptLevel } from "@/lib/content/types";
+import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
 
 type VocabularyListProps = {
   list: VocabularyListViewModel;
+  jlptLevel?: JlptLevel;
 };
 
-export function VocabularyList({ list }: VocabularyListProps) {
+export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) {
+  const hub = getJlptContentHub(jlptLevel);
+  const levelLabel = jlptLevel.toUpperCase();
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="N5 Vocabulary"
-        subtitle="Track every word on your Mount N5 climb."
+        title={hub.vocabularyTitle}
+        subtitle={hub.vocabularySubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/mount-n5">Back</Link>
+            <Link href={`/learn/${hub.regionSlug}`}>Back</Link>
           </Button>
         }
       />
@@ -36,7 +42,7 @@ export function VocabularyList({ list }: VocabularyListProps) {
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
-            {list.learnedCount} of {list.totalCount} N5 words learned
+            {list.learnedCount} of {list.totalCount} {levelLabel} words learned
           </CardDescription>
         </CardHeader>
         <CardContent>

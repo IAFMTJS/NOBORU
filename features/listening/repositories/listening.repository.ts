@@ -36,6 +36,21 @@ class ListeningRepository {
     return (data ?? []).map((row) => mapExerciseRow(row as ListeningExerciseRow));
   }
 
+  async listPublishedExercisesByJlpt(
+    jlptLevel: "n5" | "n4",
+  ): Promise<ListeningExerciseRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("listening_exercises")
+      .select("*")
+      .eq("status", "published")
+      .eq("jlpt_level", jlptLevel)
+      .order("title");
+
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => mapExerciseRow(row as ListeningExerciseRow));
+  }
+
   async findExerciseBySlug(slug: string): Promise<ListeningExerciseRow | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -75,6 +90,21 @@ class ListeningRepository {
     return (data ?? []) as ListeningChallengeRow[];
   }
 
+  async listPublishedChallengesByJlpt(
+    jlptLevel: "n5" | "n4",
+  ): Promise<ListeningChallengeRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("listening_challenges")
+      .select("*")
+      .eq("status", "published")
+      .eq("jlpt_level", jlptLevel)
+      .order("title");
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as ListeningChallengeRow[];
+  }
+
   async findChallengeBySlug(slug: string): Promise<ListeningChallengeRow | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -106,6 +136,17 @@ class ListeningRepository {
       .from("listening_challenge_items")
       .select("*")
       .eq("challenge_id", challengeId)
+      .order("order_index");
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as ListeningChallengeItemRow[];
+  }
+
+  async listAllChallengeItems(): Promise<ListeningChallengeItemRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("listening_challenge_items")
+      .select("challenge_id, exercise_id, order_index")
       .order("order_index");
 
     if (error) throw new Error(error.message);

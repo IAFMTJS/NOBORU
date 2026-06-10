@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
 import { ProfileScreen } from "@/features/profile/components/profile-screen";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
+import { getAchievementShowcase } from "@/lib/orchestration/achievements.orchestrator";
 
 export default async function ProfilePage() {
   const profile = await profileServerService.getProfile();
@@ -11,5 +12,7 @@ export default async function ProfilePage() {
     redirect(AUTH_ROUTES.login);
   }
 
-  return <ProfileScreen profile={profile} />;
+  const achievements = await getAchievementShowcase();
+
+  return <ProfileScreen profile={profile} achievements={achievements} />;
 }

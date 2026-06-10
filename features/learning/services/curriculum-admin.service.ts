@@ -1,4 +1,5 @@
 import { isContentStatus } from "@/lib/content/types";
+import type { PaginatedResult, PaginationOptions } from "@/lib/api/pagination";
 import { curriculumRepository } from "@/features/learning/repositories/curriculum.repository";
 import type {
   LessonInput,
@@ -27,8 +28,10 @@ function validateLesson(input: LessonInput): string | null {
 }
 
 class CurriculumAdminService {
-  listRegions(): Promise<RegionRow[]> {
-    return curriculumRepository.listRegions();
+  listRegions(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<RegionRow>> {
+    return curriculumRepository.listRegions(pagination);
   }
 
   getRegionById(id: string): Promise<RegionRow | null> {
@@ -55,8 +58,10 @@ class CurriculumAdminService {
     return curriculumRepository.listUnits();
   }
 
-  listLessons(): Promise<LessonRow[]> {
-    return curriculumRepository.listLessons();
+  listLessons(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<LessonRow>> {
+    return curriculumRepository.listLessons(pagination);
   }
 
   getLessonById(id: string): Promise<LessonRow | null> {

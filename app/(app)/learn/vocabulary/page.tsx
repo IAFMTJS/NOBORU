@@ -1,7 +1,18 @@
 import { VocabularyList } from "@/features/vocabulary/components/vocabulary-list";
-import { getN5VocabularyList } from "@/lib/orchestration/learn.orchestrator";
+import {
+  getVocabularyList,
+  resolveJlptLevel,
+} from "@/lib/orchestration/learn.orchestrator";
 
-export default async function VocabularyListPage() {
-  const list = await getN5VocabularyList();
-  return <VocabularyList list={list} />;
+type VocabularyListPageProps = {
+  searchParams: Promise<{ jlpt?: string }>;
+};
+
+export default async function VocabularyListPage({
+  searchParams,
+}: VocabularyListPageProps) {
+  const params = await searchParams;
+  const jlptLevel = resolveJlptLevel(params.jlpt);
+  const list = await getVocabularyList(jlptLevel);
+  return <VocabularyList list={list} jlptLevel={jlptLevel} />;
 }

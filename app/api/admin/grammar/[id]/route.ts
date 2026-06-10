@@ -1,5 +1,6 @@
 import { jsonError, jsonOk, notFound } from "@/lib/api/responses";
 import { requireContentAdminSession } from "@/lib/admin/require-content-admin";
+import { revalidatePublishedContent } from "@/lib/cache/revalidate-content";
 import { grammarAdminService } from "@/features/grammar/services/grammar-admin.service";
 import type { GrammarInput } from "@/features/grammar/types/grammar.types";
 
@@ -24,7 +25,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   const { id } = await params;
   try {
     const body = (await request.json()) as GrammarInput;
-    return jsonOk(await grammarAdminService.update(id, body));
+    const data = await grammarAdminService.update(id, body);
+    revalidatePublishedContent();
+    return jsonOk(data);
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 400);
   }
@@ -36,6 +39,7 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
   const { id } = await params;
   try {
     await grammarAdminService.remove(id);
+    revalidatePublishedContent();
     return jsonOk({ id });
   } catch (caught) {
     return jsonError(caught instanceof Error ? caught.message : "Failed.", 400);

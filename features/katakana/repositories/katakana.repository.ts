@@ -1,18 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
+import { getPublishedKatakanaChart } from "@/lib/cache/content-cache";
+import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
 
 import type { KatakanaRow } from "@/features/katakana/types/katakana.types";
 
 class KatakanaRepository {
   async listPublished(): Promise<KatakanaRow[]> {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("katakana")
-      .select("*")
-      .eq("status", "published")
-      .order("order_index", { ascending: true });
-
-    if (error) throw new Error(error.message);
-    return (data ?? []) as KatakanaRow[];
+    return getPublishedKatakanaChart();
   }
 
   async findById(id: string): Promise<KatakanaRow | null> {
@@ -27,48 +21,20 @@ class KatakanaRepository {
     return data as KatakanaRow | null;
   }
 
-  async listLearnedKatakanaIds(userId: string): Promise<string[]> {
+  async findByIds(ids: string[]): Promise<KatakanaRow[]> {
+    if (ids.length === 0) return [];
     const supabase = await createClient();
-    const { data: progress, error: progressError } = await supabase
-      .from("user_progress")
-      .select("lesson_id")
-      .eq("user_id", userId)
-      .eq("status", "completed");
+    const { data, error } = await supabase
+      .from("katakana")
+      .select("*")
+      .in("id", ids);
 
-    if (progressError) throw new Error(progressError.message);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as KatakanaRow[];
+  }
 
-    const lessonIds = (progress ?? []).map((row) => row.lesson_id as string);
-    const learned = new Set<string>();
-
-    const { data: reviewRows, error: reviewError } = await supabase
-      .from("review_items")
-      .select("content_id")
-      .eq("user_id", userId)
-      .eq("content_type", "katakana");
-
-    if (reviewError) throw new Error(reviewError.message);
-
-    for (const row of reviewRows ?? []) {
-      learned.add(row.content_id as string);
-    }
-
-    if (lessonIds.length === 0) {
-      return Array.from(learned);
-    }
-
-    const { data: items, error: itemsError } = await supabase
-      .from("lesson_items")
-      .select("content_id")
-      .eq("content_type", "katakana")
-      .in("lesson_id", lessonIds);
-
-    if (itemsError) throw new Error(itemsError.message);
-
-    for (const item of items ?? []) {
-      learned.add(item.content_id as string);
-    }
-
-    return Array.from(learned);
+  async listLearnedKatakanaIds(userId: string): Promise<string[]> {
+    return learnedContentRepository.getLearnedIdsByContentType(userId, "katakana");
   }
 }
 

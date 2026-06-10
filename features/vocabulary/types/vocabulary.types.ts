@@ -77,4 +77,6 @@ export type VocabularyListFilters = {
   status?: ContentStatus;
   jlptLevel?: JlptLevel;
   search?: string;
+  page?: number;
+  limit?: number;
 };

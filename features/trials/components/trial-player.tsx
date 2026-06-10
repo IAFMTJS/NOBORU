@@ -1,0 +1,216 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useMemo, useState } from "react";
+
+import { PageContainer } from "@/components/layout/page-container";
+import { ScreenHeader } from "@/components/layout/screen-header";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { analyticsService } from "@/features/analytics/services/analytics.service";
+import { TRIAL_GRADE_LABELS, TRIAL_KIND_LABELS } from "@/features/trials/constants/trial.constants";
+import { TrialStepCard } from "@/features/trials/components/trial-step-card";
+import { TrialTimer } from "@/features/trials/components/trial-timer";
+import type {
+  TrialCompleteViewModel,
+  TrialSessionViewModel,
+} from "@/features/trials/types/trial.types";
+import { YamaCelebration } from "@/features/yama/components/yama-celebration";
+import { yamaService } from "@/features/yama/services/yama.service";
+
+type TrialPlayerProps = {
+  session: TrialSessionViewModel;
+};
+
+export function TrialPlayer({ session }: TrialPlayerProps) {
+  const [stepIndex, setStepIndex] = useState(0);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [startedAt] = useState(() => new Date().toISOString());
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<TrialCompleteViewModel | null>(null);
+  const [timeExpired, setTimeExpired] = useState(false);
+
+  const currentStep = session.steps[stepIndex];
+  const progressPercent = Math.round(
+    ((stepIndex + (finished ? 1 : 0)) / session.steps.length) * 100,
+  );
+
+  const finishTrial = useCallback(async () => {
+    if (submitting || finished) return;
+    setSubmitting(true);
+    setError(null);
+    setFinished(true);
+
+    const elapsedSeconds = Math.max(
+      1,
+      Math.round((Date.now() - new Date(startedAt).getTime()) / 1000),
+    );
+
+    try {
+      const response = await fetch(`/api/trials/${session.slug}/complete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correctCount,
+          totalCount: session.steps.length,
+          timeSpentSeconds: elapsedSeconds,
+          startedAt,
+        }),
+      });
+      const payload = (await response.json()) as {
+        success: boolean;
+        data?: TrialCompleteViewModel;
+        error?: string;
+      };
+      if (!payload.success || !payload.data) {
+        throw new Error(payload.error ?? "Failed to save trial results.");
+      }
+      setResult(payload.data);
+      void analyticsService.track({
+        name: "trial_completed",
+        properties: {
+          trialSlug: session.slug,
+          passed: payload.data.passed,
+          scorePercent: payload.data.scorePercent,
+          grade: payload.data.grade,
+        },
+      });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Failed to save trial results.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [correctCount, finished, session.slug, session.steps.length, startedAt, submitting]);
+
+  const handleExpired = useCallback(() => {
+    setTimeExpired(true);
+    void finishTrial();
+  }, [finishTrial]);
+
+  function handleAnswer(correct: boolean) {
+    if (finished) return;
+    const nextCorrect = correctCount + (correct ? 1 : 0);
+    setCorrectCount(nextCorrect);
+
+    const nextIndex = stepIndex + 1;
+    if (nextIndex >= session.steps.length) {
+      void finishTrial();
+      return;
+    }
+    setStepIndex(nextIndex);
+  }
+
+  const celebrationPresence = useMemo(() => {
+    if (!result?.passed) {
+      return yamaService.resolveDrillFeedback("incorrect");
+    }
+    if (result.grade === "legendary" || result.grade === "mastery") {
+      return yamaService.resolveCelebration("level_up");
+    }
+    return yamaService.resolveCelebration("lesson_complete");
+  }, [result]);
+
+  if (result) {
+    return (
+      <PageContainer>
+        <ScreenHeader title={session.title} subtitle={`${session.bossName} Trial`} />
+        <Card className={result.passed ? "border-success/30" : "border-destructive/30"}>
+          <CardHeader>
+            <CardTitle>{result.passed ? "Trial Cleared" : "Trial Incomplete"}</CardTitle>
+            <CardDescription>
+              Score {result.scorePercent}% · Pass mark {session.passScore}%
+              {result.grade ? ` · ${TRIAL_GRADE_LABELS[result.grade]}` : ""}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <YamaCelebration
+              presence={celebrationPresence}
+              title={result.passed ? "Summit foothold secured" : "Review and climb again"}
+            />
+            {result.epAwarded ? (
+              <Badge variant="secondary">+{result.epAwarded} EP</Badge>
+            ) : null}
+            {!result.passed && result.reviewRecommendations.length > 0 ? (
+              <div className="space-y-2 rounded-lg border border-border p-3">
+                <p className="text-body-sm font-medium">Review recommendations</p>
+                <ul className="list-disc space-y-1 pl-5 text-body-sm text-muted-foreground">
+                  {result.reviewRecommendations.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            <Button className="w-full" asChild>
+              <Link href="/trials">Back to Trials</Link>
+            </Button>
+            {!result.passed ? (
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/review">Open Review Queue</Link>
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
+      </PageContainer>
+    );
+  }
+
+  return (
+    <PageContainer>
+      <ScreenHeader
+        title={session.title}
+        subtitle={`${TRIAL_KIND_LABELS[session.kind]} · ${session.bossName}`}
+        action={
+          session.timeLimitSeconds ? (
+            <TrialTimer
+              timeLimitSeconds={session.timeLimitSeconds}
+              running={started && !finished}
+              onExpired={handleExpired}
+            />
+          ) : null
+        }
+      />
+
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <CardDescription>{session.description}</CardDescription>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline">Pass {session.passScore}%</Badge>
+            <Badge variant="outline">{session.steps.length} challenges</Badge>
+            <Badge variant="outline">+{session.epReward} EP on first pass</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ProgressBar value={progressPercent} label="Trial progress" showValue />
+          {error ? (
+            <p className="text-body-sm text-destructive" role="alert">
+              {error}
+            </p>
+          ) : null}
+          {timeExpired ? (
+            <p className="text-body-sm text-warning-foreground" role="status">
+              Time expired. Saving your progress…
+            </p>
+          ) : null}
+          {!started ? (
+            <Button className="w-full" onClick={() => setStarted(true)}>
+              Begin Trial
+            </Button>
+          ) : currentStep ? (
+            <TrialStepCard step={currentStep} onAnswer={handleAnswer} />
+          ) : null}
+        </CardContent>
+      </Card>
+    </PageContainer>
+  );
+}

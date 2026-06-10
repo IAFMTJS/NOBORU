@@ -13,21 +13,26 @@ import {
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { JlptLevel } from "@/lib/content/types";
+import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { ListeningHubViewModel } from "@/features/listening/types/listening.types";
 
 type ListeningHubProps = {
   hub: ListeningHubViewModel;
+  jlptLevel?: JlptLevel;
 };
 
-export function ListeningHub({ hub }: ListeningHubProps) {
+export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
+  const contentHub = getJlptContentHub(jlptLevel);
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="Listening"
-        subtitle="Audio lessons and listening challenges for N5."
+        title={contentHub.listeningTitle}
+        subtitle={contentHub.listeningSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/mount-n5">Back</Link>
+            <Link href={`/learn/${contentHub.regionSlug}`}>Back</Link>
           </Button>
         }
       />

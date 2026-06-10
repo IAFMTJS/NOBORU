@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { DialoguePlayer } from "@/features/reading/components/dialogue-player";
+import { DialoguePageShell } from "@/features/reading/components/dialogue-page-shell";
 import { getDialogueDetail } from "@/lib/orchestration/learn.orchestrator";
 
 type DialoguePageProps = {
@@ -15,5 +15,5 @@ export default async function DialoguePage({ params }: DialoguePageProps) {
     notFound();
   }
 
-  return <DialoguePlayer dialogue={dialogue} />;
+  return <DialoguePageShell dialogue={dialogue} />;
 }

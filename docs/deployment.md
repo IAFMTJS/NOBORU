@@ -286,11 +286,18 @@ public/
 | Service | Purpose |
 |---------|---------|
 | Vercel Analytics | Web vitals, performance |
+| Vercel Speed Insights | Real-user monitoring (active in `app/layout.tsx`) |
 | PostHog | Product analytics |
 | Sentry | Error tracking |
 | Supabase Dashboard | Database health, auth metrics |
 
-### Alerting Thresholds
+### Performance Monitoring
+
+- **Public routes:** optional Lighthouse CI workflow (`.github/workflows/lighthouse.yml`) targets `/login` and `/register` on pull requests.
+- **Authenticated routes:** use Vercel Speed Insights RUM in production; local Lighthouse runs require an auth fixture and are not part of CI yet.
+- **Bundle analysis:** run `npm run analyze` locally to open the webpack bundle analyzer (`ANALYZE=true` during `next build`).
+
+---
 
 - Build failure → immediate notification
 - Error rate spike → investigate within 1 hour

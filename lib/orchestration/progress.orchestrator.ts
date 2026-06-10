@@ -1,20 +1,27 @@
-import { redirect } from "next/navigation";
-
-import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
+import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
+import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
+import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { progressDashboardService } from "@/features/progress/services/progress-dashboard.service";
 import type { ProgressDashboardViewModel } from "@/features/progress/types/progress-dashboard.types";
-import { profileServerService } from "@/features/profile/services/profile-server.service";
+import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 
 export async function getProgressDashboard(): Promise<ProgressDashboardViewModel> {
-  const profile = await profileServerService.getProfile();
+  const userId = await requireAuthenticatedUserId();
 
-  if (!profile) {
-    redirect(AUTH_ROUTES.login);
-  }
+  const [progressRows, regions, passedTrialSlugs] = await Promise.all([
+    getCachedProgressRows(userId),
+    learningPathRepository.listPublishedRegionsWithCurriculum(),
+    learningPathService.getPassedTrialSlugs(userId),
+  ]);
 
-  if (!profile.onboardingCompleted) {
-    redirect(AUTH_ROUTES.onboarding);
-  }
+  const learningPath = learningPathService.buildLearningPath(
+    regions,
+    progressRows,
+    passedTrialSlugs,
+  );
 
-  return progressDashboardService.getDashboard(profile.userId);
+  return progressDashboardService.getDashboard(userId, {
+    progressRows,
+    learningPath,
+  });
 }

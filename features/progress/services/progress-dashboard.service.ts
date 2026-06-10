@@ -1,10 +1,15 @@
+import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
 import { elevationService } from "@/features/elevation/services/elevation.service";
+import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 import { grammarProgressService } from "@/features/grammar/services/grammar-progress.service";
 import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
 import { katakanaProgressService } from "@/features/katakana/services/katakana-progress.service";
 import { kanjiProgressService } from "@/features/kanji/services/kanji-progress.service";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import { progressRepository } from "@/features/learning/repositories/learning-path.repository";
+import {
+  learningPathRepository,
+  progressRepository,
+} from "@/features/learning/repositories/learning-path.repository";
 import { listeningProgressService } from "@/features/listening/services/listening-progress.service";
 import type {
   DomainMasteryViewModel,
@@ -14,6 +19,8 @@ import type {
 } from "@/features/progress/types/progress-dashboard.types";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { reviewServerService } from "@/features/review/services/review-server.service";
+import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
+import type { UserProgressRow } from "@/features/learning/types/progress.types";
 import { vocabularyProgressService } from "@/features/vocabulary/services/vocabulary-progress.service";
 
 function buildDomain(
@@ -39,8 +46,61 @@ function averageDomainMastery(domains: DomainMasteryViewModel[]): number {
   return Math.round(sum / active.length);
 }
 
+type DashboardPreload = {
+  learningPath?: LearningPathViewModel;
+  progressRows?: UserProgressRow[];
+};
+
 class ProgressDashboardService {
-  async getDashboard(userId: string): Promise<ProgressDashboardViewModel> {
+  async getOverallMasteryPercent(userId: string): Promise<number> {
+    const [
+      hiragana,
+      katakana,
+      vocabulary,
+      grammar,
+      kanji,
+      reading,
+      listening,
+    ] = await Promise.all([
+      hiraganaProgressService.getChart(userId),
+      katakanaProgressService.getChart(userId),
+      vocabularyProgressService.getN5List(userId),
+      grammarProgressService.getN5List(userId),
+      kanjiProgressService.getN5List(userId),
+      readingProgressService.getHub(userId),
+      listeningProgressService.getHub(userId),
+    ]);
+
+    const domains: DomainMasteryViewModel[] = [
+      buildDomain("hiragana", "Hiragana", hiragana.learnedCount, hiragana.totalCount),
+      buildDomain("katakana", "Katakana", katakana.learnedCount, katakana.totalCount),
+      buildDomain(
+        "vocabulary",
+        "Vocabulary",
+        vocabulary.learnedCount,
+        vocabulary.totalCount,
+      ),
+      buildDomain("grammar", "Grammar", grammar.learnedCount, grammar.totalCount),
+      buildDomain("kanji", "Kanji", kanji.learnedCount, kanji.totalCount),
+      buildDomain("reading", "Reading", reading.completedCount, reading.totalCount),
+      buildDomain(
+        "listening",
+        "Listening",
+        listening.completedCount,
+        listening.totalCount,
+      ),
+    ];
+
+    return averageDomainMastery(domains);
+  }
+
+  async getDashboard(
+    userId: string,
+    preload?: DashboardPreload,
+  ): Promise<ProgressDashboardViewModel> {
+    const needsProgressRows = !preload?.progressRows;
+    const needsLearningPath = !preload?.learningPath;
+
     const [
       hiragana,
       katakana,
@@ -61,8 +121,12 @@ class ProgressDashboardService {
       kanjiProgressService.getN5List(userId),
       readingProgressService.getHub(userId),
       listeningProgressService.getHub(userId),
-      learningPathService.getLearningPath(userId),
-      progressRepository.listByUserId(userId),
+      needsLearningPath
+        ? learningPathService.getLearningPath(userId)
+        : Promise.resolve(preload!.learningPath!),
+      needsProgressRows
+        ? getCachedProgressRows(userId)
+        : Promise.resolve(preload!.progressRows!),
       reviewServerService.getStats(userId),
       elevationService.getSummary(userId),
     ]);
@@ -148,22 +212,33 @@ class ProgressDashboardService {
   async getProfileSummaryStats(userId: string): Promise<
     Array<{ label: string; value: string }>
   > {
-    const dashboard = await this.getDashboard(userId);
+    const [elevation, progressRows, lessonsTotal] = await Promise.all([
+      elevationRepository.ensureElevation(userId),
+      getCachedProgressRows(userId),
+      learningPathRepository.countPublishedLessons(),
+    ]);
+
+    const lessonsCompleted = progressRows.filter(
+      (row) => row.status === "completed",
+    ).length;
+
     return [
       {
         label: "Level",
-        value: String(dashboard.elevation.currentLevel),
+        value: String(elevation.current_level),
       },
       {
         label: "Lessons",
-        value: `${dashboard.learningStats.lessonsCompleted}/${dashboard.learningStats.lessonsTotal}`,
+        value: `${lessonsCompleted}/${lessonsTotal}`,
       },
       {
         label: "EP",
-        value: dashboard.elevation.totalEp.toLocaleString(),
+        value: elevation.total_ep.toLocaleString(),
       },
     ];
   }
 }
 
 export const progressDashboardService = new ProgressDashboardService();
+
+export type { DashboardPreload };

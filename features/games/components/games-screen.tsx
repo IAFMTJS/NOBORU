@@ -1,18 +1,44 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+
+import { PageContainer } from "@/components/layout/page-container";
+import { ScreenHeader } from "@/components/layout/screen-header";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export function GamesScreen() {
   return (
-    <div className="p-4">
-      <header className="mb-4">
-        <h1 className="text-2xl font-semibold">Games</h1>
-        <p className="text-sm text-muted-foreground">Educational mini-games.</p>
-      </header>
-      <Card>
+    <PageContainer>
+      <ScreenHeader
+        title="Games"
+        subtitle="Educational challenges that reinforce mastery"
+      />
+      <Card className="border-primary/20 shadow-elevation-1">
         <CardHeader>
-          <CardTitle>Coming Soon</CardTitle>
-          <CardDescription>Games module will be built in a later phase.</CardDescription>
+          <CardTitle>Trials</CardTitle>
+          <CardDescription>
+            Timed regional and N5 boss challenges using interactive recall drills.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button className="w-full" asChild>
+            <Link href="/trials">Open Trials</Link>
+          </Button>
+        </CardContent>
+      </Card>
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <CardTitle>Mini-Games</CardTitle>
+          <CardDescription>
+            Sprint modes and seasonal events arrive in a later phase.
+          </CardDescription>
         </CardHeader>
       </Card>
-    </div>
+    </PageContainer>
   );
 }

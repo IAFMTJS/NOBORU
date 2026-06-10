@@ -1,6 +1,6 @@
 import { BottomNav } from "@/components/layout/bottom-nav";
-
-export const dynamic = "force-dynamic";
+import { BetaBanner } from "@/features/feedback/components/beta-banner";
+import { OfflineProvider } from "@/features/offline/components/offline-provider";
 
 export default function AppLayout({
   children,
@@ -8,9 +8,12 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-dvh bg-background">
-      <main className="mx-auto min-h-dvh max-w-lg pb-24">{children}</main>
-      <BottomNav />
-    </div>
+    <OfflineProvider>
+      <div className="min-h-dvh bg-background">
+        <BetaBanner />
+        <main className="mx-auto min-h-dvh max-w-lg pb-24">{children}</main>
+        <BottomNav />
+      </div>
+    </OfflineProvider>
   );
 }

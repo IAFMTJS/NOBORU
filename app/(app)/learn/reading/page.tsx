@@ -1,7 +1,18 @@
 import { ReadingHub } from "@/features/reading/components/reading-hub";
-import { getReadingHub } from "@/lib/orchestration/learn.orchestrator";
+import {
+  getReadingHub,
+  resolveJlptLevel,
+} from "@/lib/orchestration/learn.orchestrator";
 
-export default async function ReadingHubPage() {
-  const hub = await getReadingHub();
-  return <ReadingHub hub={hub} />;
+type ReadingHubPageProps = {
+  searchParams: Promise<{ jlpt?: string }>;
+};
+
+export default async function ReadingHubPage({
+  searchParams,
+}: ReadingHubPageProps) {
+  const params = await searchParams;
+  const jlptLevel = resolveJlptLevel(params.jlpt);
+  const hub = await getReadingHub(jlptLevel);
+  return <ReadingHub hub={hub} jlptLevel={jlptLevel} />;
 }

@@ -1,6 +1,14 @@
 import { reviewEnqueueService } from "@/features/review/services/review-server.service";
+import { achievementService } from "@/features/achievements/services/achievement.service";
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import {
+  countNewVocabularyInLesson,
+  questService,
+} from "@/features/quests/services/quest.service";
+import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
+import { vocabularyRepository } from "@/features/vocabulary/repositories/vocabulary.repository";
 import {
   learningPathRepository,
   progressRepository,
@@ -38,7 +46,11 @@ class ProgressService {
   }
 
   async completeLesson(input: CompleteProgressInput): Promise<
-    UserProgressRow & { elevation: ElevationAwardViewModel | null }
+    UserProgressRow & {
+      elevation: ElevationAwardViewModel | null;
+      achievements: AchievementUnlockViewModel[];
+      quests: QuestCompletionViewModel[];
+    }
   > {
     const lesson = await learningPathRepository.findPublishedLessonById(
       input.lessonId,
@@ -52,6 +64,13 @@ class ProgressService {
       input.lessonId,
     );
     const isFirstCompletion = existing?.status !== "completed";
+
+    const newVocabularyCount = await countNewVocabularyInLesson(
+      input.userId,
+      input.lessonId,
+      learningPathRepository.listLessonItems.bind(learningPathRepository),
+      vocabularyRepository.listLearnedVocabularyIds.bind(vocabularyRepository),
+    );
 
     const score = Math.max(0, Math.min(100, Math.round(input.score)));
 
@@ -70,15 +89,30 @@ class ProgressService {
 
     await reviewEnqueueService.enqueueFromLesson(input.userId, input.lessonId);
 
-    const elevation = await elevationService.awardLessonCompletion(
-      input.userId,
-      input.lessonId,
-      lesson.title,
-      lesson.xp_reward,
-      isFirstCompletion,
-    );
+    const [elevation, achievements] = await Promise.all([
+      elevationService.awardLessonCompletion(
+        input.userId,
+        input.lessonId,
+        lesson.title,
+        lesson.xp_reward,
+        isFirstCompletion,
+      ),
+      achievementService.afterStudyActivity(input.userId),
+    ]);
 
-    return { ...result, elevation };
+    const questEvents = [
+      { type: "lesson_complete" as const, amount: 1 },
+      ...(newVocabularyCount > 0
+        ? [{ type: "vocabulary_learned" as const, amount: newVocabularyCount }]
+        : []),
+      ...(elevation
+        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+        : []),
+    ];
+
+    const quests = await questService.recordActivities(input.userId, questEvents);
+
+    return { ...result, elevation, achievements, quests };
   }
 }
 

@@ -13,14 +13,24 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { ElevationSummary } from "@/features/elevation/components/elevation-summary";
+import { AchievementShowcase } from "@/features/achievements/components/achievement-showcase";
+import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
+import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
+import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 import type { ProgressDashboardViewModel } from "@/features/progress/types/progress-dashboard.types";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
 
 type ProgressDashboardProps = {
   dashboard: ProgressDashboardViewModel;
+  achievements: AchievementShowcaseViewModel;
+  quests: QuestDashboardViewModel;
 };
 
-export function ProgressDashboard({ dashboard }: ProgressDashboardProps) {
+export function ProgressDashboard({
+  dashboard,
+  achievements,
+  quests,
+}: ProgressDashboardProps) {
   return (
     <PageContainer>
       <ScreenHeader
@@ -50,6 +60,10 @@ export function ProgressDashboard({ dashboard }: ProgressDashboardProps) {
       </Card>
 
       <ElevationSummary summary={dashboard.elevation} />
+
+      <TrailQuestCards daily={quests.daily} weekly={quests.weekly} />
+
+      <AchievementShowcase showcase={achievements} compact />
 
       <Card className="shadow-elevation-1">
         <CardHeader>

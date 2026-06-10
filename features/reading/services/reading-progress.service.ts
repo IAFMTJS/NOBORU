@@ -1,5 +1,8 @@
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import { achievementService } from "@/features/achievements/services/achievement.service";
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import { questService } from "@/features/quests/services/quest.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import type {
   DialogueDetailViewModel,
@@ -65,10 +68,13 @@ function buildDialogueNodes(
 }
 
 class ReadingProgressService {
-  async getHub(userId: string): Promise<ReadingHubViewModel> {
+  async getHubByJlpt(
+    userId: string,
+    jlptLevel: "n5" | "n4",
+  ): Promise<ReadingHubViewModel> {
     const [stories, dialogues, progressRows] = await Promise.all([
-      readingRepository.listPublishedStories(),
-      readingRepository.listPublishedDialogues(),
+      readingRepository.listPublishedStoriesByJlpt(jlptLevel),
+      readingRepository.listPublishedDialoguesByJlpt(jlptLevel),
       readingRepository.listProgressByUserId(userId),
     ]);
 
@@ -116,6 +122,10 @@ class ReadingProgressService {
       progressPercent:
         totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100),
     };
+  }
+
+  async getHub(userId: string): Promise<ReadingHubViewModel> {
+    return this.getHubByJlpt(userId, "n5");
   }
 
   async getStoryDetail(
@@ -178,7 +188,10 @@ class ReadingProgressService {
     userId: string,
     storyId: string,
     score: number,
-  ): Promise<ElevationAwardViewModel | null> {
+  ): Promise<{
+    elevation: ElevationAwardViewModel | null;
+    achievements: AchievementUnlockViewModel[];
+  }> {
     const existing = await readingRepository.findProgress(userId, "story", storyId);
     const isFirstCompletion = existing?.status !== "completed";
     const story = await readingRepository.findStoryById(storyId);
@@ -192,22 +205,41 @@ class ReadingProgressService {
       score: normalizedScore,
     });
 
-    if (!isFirstCompletion || !story) return null;
+    if (!isFirstCompletion || !story) {
+      return {
+        elevation: null,
+        achievements: await achievementService.afterStudyActivity(userId),
+      };
+    }
 
-    return elevationService.awardComprehensionComplete(
-      userId,
-      "reading_complete",
-      storyId,
-      story.title,
-      true,
-    );
+    const [elevation, achievements] = await Promise.all([
+      elevationService.awardComprehensionComplete(
+        userId,
+        "reading_complete",
+        storyId,
+        story.title,
+        true,
+      ),
+      achievementService.afterStudyActivity(userId),
+    ]);
+
+    if (elevation) {
+      await questService.recordActivities(userId, [
+        { type: "ep_earned", amount: elevation.epAwarded },
+      ]);
+    }
+
+    return { elevation, achievements };
   }
 
   async saveDialogueProgress(
     userId: string,
     dialogueId: string,
     score: number,
-  ): Promise<ElevationAwardViewModel | null> {
+  ): Promise<{
+    elevation: ElevationAwardViewModel | null;
+    achievements: AchievementUnlockViewModel[];
+  }> {
     const existing = await readingRepository.findProgress(
       userId,
       "dialogue",
@@ -225,15 +257,31 @@ class ReadingProgressService {
       score: normalizedScore,
     });
 
-    if (!isFirstCompletion || !dialogue) return null;
+    if (!isFirstCompletion || !dialogue) {
+      return {
+        elevation: null,
+        achievements: await achievementService.afterStudyActivity(userId),
+      };
+    }
 
-    return elevationService.awardComprehensionComplete(
-      userId,
-      "reading_complete",
-      dialogueId,
-      dialogue.title,
-      true,
-    );
+    const [elevation, achievements] = await Promise.all([
+      elevationService.awardComprehensionComplete(
+        userId,
+        "reading_complete",
+        dialogueId,
+        dialogue.title,
+        true,
+      ),
+      achievementService.afterStudyActivity(userId),
+    ]);
+
+    if (elevation) {
+      await questService.recordActivities(userId, [
+        { type: "ep_earned", amount: elevation.epAwarded },
+      ]);
+    }
+
+    return { elevation, achievements };
   }
 
   async markInProgress(

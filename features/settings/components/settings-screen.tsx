@@ -12,6 +12,10 @@ import {
   AUTH_ROUTES,
 } from "@/features/authentication/constants/auth.constants";
 import { useLogout } from "@/features/authentication/hooks/use-logout";
+import { OfflineSyncPanel } from "@/features/offline/components/offline-sync-panel";
+import { PwaInstallPrompt } from "@/features/offline/components/pwa-install-prompt";
+import { BETA_RELEASE } from "@/lib/release/beta.constants";
+import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 import { ThemeSelector } from "@/features/settings/components/theme-selector";
 import { useThemeSetting } from "@/features/settings/hooks/use-theme-setting";
 import type { SettingsViewModel } from "@/features/settings/types/settings.types";
@@ -19,9 +23,10 @@ import { ChevronLeft } from "lucide-react";
 
 type SettingsScreenProps = {
   settings: SettingsViewModel;
+  userId: string;
 };
 
-export function SettingsScreen({ settings }: SettingsScreenProps) {
+export function SettingsScreen({ settings, userId }: SettingsScreenProps) {
   const { theme, updateTheme, loading, error } = useThemeSetting(
     settings.theme,
   );
@@ -41,6 +46,46 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
           </Link>
         }
       />
+
+      <PwaInstallPrompt />
+      <OfflineSyncPanel userId={userId} />
+
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <CardTitle className="text-heading-6">Support</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <ListRow
+            primary="Send feedback"
+            secondary="Report bugs, trail UX, audio, or PWA issues"
+            onClick={() => {
+              window.location.href = "/feedback";
+            }}
+          />
+          {BETA_RELEASE.enabled ? (
+            <p className="text-caption text-muted-foreground">
+              Public beta {BETA_RELEASE.version}
+            </p>
+          ) : null}
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <CardTitle className="text-heading-6">About</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <ListRow
+            primary={RELEASE.name}
+            secondary={
+              BETA_RELEASE.enabled
+                ? `Beta ${BETA_RELEASE.version}`
+                : `${OFFICIAL_RELEASE.label} v${RELEASE.version}`
+            }
+          />
+          <ListRow primary="Launch date" secondary={RELEASE.launchedAt} />
+        </CardContent>
+      </Card>
 
       <Card className="shadow-elevation-1">
         <CardHeader>

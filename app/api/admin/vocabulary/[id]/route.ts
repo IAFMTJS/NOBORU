@@ -1,5 +1,6 @@
 import { jsonError, jsonOk, notFound } from "@/lib/api/responses";
 import { requireContentAdminSession } from "@/lib/admin/require-content-admin";
+import { revalidatePublishedContent } from "@/lib/cache/revalidate-content";
 import { vocabularyAdminService } from "@/features/vocabulary/services/vocabulary-admin.service";
 import type { VocabularyInput } from "@/features/vocabulary/types/vocabulary.types";
 
@@ -32,6 +33,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   try {
     const body = (await request.json()) as VocabularyInput;
     const data = await vocabularyAdminService.update(id, body);
+    revalidatePublishedContent();
     return jsonOk(data);
   } catch (caught) {
     return jsonError(
@@ -49,6 +51,7 @@ export async function DELETE(_request: Request, { params }: RouteParams) {
 
   try {
     await vocabularyAdminService.remove(id);
+    revalidatePublishedContent();
     return jsonOk({ id });
   } catch (caught) {
     return jsonError(

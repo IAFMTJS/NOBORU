@@ -654,11 +654,73 @@ Achievements unlock correctly.
 
 PHASE 17
 
+IMMERSIVE LEARNING & TRAIL EXPERIENCE
+
+Goal:
+
+Make learning feel active, visual, and expedition-like — not a wall of text cards.
+
+Noboru is not a Duolingo clone, but lessons and the learning path must match the clarity and interactivity users expect from modern language apps while keeping the mountain-climb identity.
+
+⸻
+
+DELIVERABLES
+
+Learning Path Visual Trail
+
+Node-based region/unit/lesson map with locked, available, in-progress, and completed states
+
+Clear “continue climbing” entry point from home and `/learn`
+
+Trail progress visible at a glance (not list-only cards)
+
+Home Dashboard Visual Refresh
+
+Expedition-oriented home layout: region, trail, elevation, quests, and continue-learning as primary visuals
+
+Reduce text-heavy card walls; prioritize one primary action per screen
+
+Interactive Lesson Engine (beyond teach → multiple choice)
+
+Typed recall for hiragana, katakana, vocabulary, and kanji where appropriate
+
+Additional drill types: matching, ordering, tap-to-build, and fill-in-blank
+
+Immediate feedback animations and step-level progress within lessons
+
+Audio in Lessons
+
+Vocabulary and kanji pronunciation playback during teach and recall steps
+
+Replay control and respect for user audio settings
+
+Lesson Immersion
+
+Contextual examples, ruby/furigana presentation, and reading support during drills
+
+Story/dialogue/listening steps integrated into the same immersive player flow
+
+⸻
+
+DEFINITION OF DONE
+
+Users can type or interactively answer — not only pick from multiple choice after passive Japanese display
+
+Learning path reads as a visual climb/trail, not a plain text list
+
+Home feels like starting an expedition, not browsing a dashboard of cards
+
+Audio plays reliably during core vocabulary and character lessons
+
+⸻
+
+PHASE 18
+
 DAILY QUEST SYSTEM
 
 Goal:
 
-Provide structure.
+Provide structure and tie daily goals to the visual trail experience.
 
 ⸻
 
@@ -672,21 +734,25 @@ Quest Tracking
 
 Quest Rewards
 
+Quest cards integrated into home trail layout (Phase 17)
+
+Quest objectives deep-link into lessons, reviews, and interactive drills
+
 ⸻
 
 DEFINITION OF DONE
 
-Users receive daily objectives.
+Users receive daily objectives that feel connected to their climb, not isolated checklist items.
 
 ⸻
 
-PHASE 18
+PHASE 19
 
 YAMA SYSTEM
 
 Goal:
 
-Bring Noboru to life.
+Bring Noboru to life across home, lessons, and milestones.
 
 ⸻
 
@@ -700,31 +766,45 @@ Loading States
 
 Milestone Interactions
 
+Yama encouragement during interactive lesson feedback
+
+Celebration moments on trail node completion and level-up
+
 ⸻
 
 DEFINITION OF DONE
 
-Yama integrated throughout app.
+Yama integrated throughout app, including lesson and path progression moments.
 
 ⸻
 
-PHASE 19
+PHASE 20
 
-OFFLINE SYSTEM
+OFFLINE SYSTEM & PWA
 
 Goal:
 
-Offline-first learning.
+Offline-first learning with a native-feeling installable app.
 
 ⸻
 
 DELIVERABLES
+
+PWA Foundation
+
+Web app manifest, icons, and install prompt
+
+Service worker for app shell and asset caching
+
+Standalone/mobile home-screen experience
 
 Offline Lessons
 
 Offline Reviews
 
 Offline Progress
+
+Offline Audio Cache for downloaded or previously played lesson audio
 
 Sync Engine
 
@@ -736,15 +816,17 @@ DEFINITION OF DONE
 
 Core learning works offline.
 
+App is installable as a PWA and feels like a real mobile product, not only a responsive website.
+
 ⸻
 
-PHASE 20
+PHASE 21
 
 N5 TRIALS
 
 Goal:
 
-Validate learning.
+Validate learning through immersive, high-stakes challenges.
 
 ⸻
 
@@ -758,21 +840,25 @@ Performance Tracking
 
 Completion Rewards
 
+Trial formats use Phase 17 interactive drill types (typed input, mixed challenges)
+
+Timed and multi-step trial flows with strong visual feedback
+
 ⸻
 
 DEFINITION OF DONE
 
-Users can complete N5 region.
+Users can complete N5 region through challenges that test real recall and comprehension.
 
 ⸻
 
-PHASE 21
+PHASE 22
 
 N4 EXPANSION
 
 Goal:
 
-Begin scaling content.
+Begin scaling content on the same immersive trail and lesson systems.
 
 ⸻
 
@@ -786,27 +872,29 @@ N4 Grammar
 
 N4 Kanji
 
+N4 trail nodes and lessons using interactive lesson engine from Phase 17
+
 ⸻
 
 DEFINITION OF DONE
 
-N4 path exists.
+N4 path exists with the same visual trail and interactive lesson standards as N5.
 
 ⸻
 
-PHASE 22
+PHASE 23
 
 PERFORMANCE HARDENING
 
 Goal:
 
-Production readiness.
+Production readiness for interactive lessons, audio, and PWA delivery.
 
 ⸻
 
 DELIVERABLES
 
-Optimization
+Optimization (lesson player, trail map, audio loading, PWA cache)
 
 Accessibility Audit
 
@@ -816,15 +904,17 @@ Testing Coverage
 
 Analytics Validation
 
+Lighthouse and mobile interaction targets for home, learn path, and lesson flows
+
 ⸻
 
 DEFINITION OF DONE
 
-Production quality reached.
+Production quality reached for immersive learning, audio, and PWA surfaces.
 
 ⸻
 
-PHASE 23
+PHASE 24
 
 PUBLIC BETA
 
@@ -844,15 +934,17 @@ Bug Fixes
 
 Curriculum Improvements
 
+UX validation on trail clarity, lesson interactivity, audio, and PWA install flow
+
 ⸻
 
 DEFINITION OF DONE
 
-Stable beta users actively learning.
+Stable beta users actively learning through the visual trail and interactive lesson formats.
 
 ⸻
 
-PHASE 24
+PHASE 25
 
 OFFICIAL LAUNCH
 
@@ -874,7 +966,15 @@ Review Engine Stable
 
 Offline Stable
 
+PWA Installable
+
 Achievement System Stable
+
+Immersive Lesson Engine Stable (typed and interactive drills live)
+
+Visual Learning Trail Stable
+
+Lesson Audio Stable
 
 Admin Tools Stable
 
@@ -916,6 +1016,8 @@ MVP SUCCESS METRICS
 
 Lesson Completion
 
+Interactive Lesson Engagement (typed/input drill completion rate)
+
 Review Completion
 
 Vocabulary Retention
@@ -923,6 +1025,10 @@ Vocabulary Retention
 Kanji Retention
 
 N5 Completion Rate
+
+Learning Path Continuation (users returning via trail / continue-climbing)
+
+PWA Install Rate
 
 User Satisfaction
 

@@ -1,20 +1,42 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ASSET_REGISTRY } from "@/lib/assets/registry";
+import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 
 import "./globals.css";
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Noboru",
-  description: "Your climb. Your language. Your journey.",
+  title: {
+    default: RELEASE.name,
+    template: `%s · ${RELEASE.name}`,
+  },
+  description: RELEASE.isBeta
+    ? "Noboru public beta — climb Japanese from Foothills through N5."
+    : OFFICIAL_RELEASE.message,
   manifest: "/manifest.json",
+  metadataBase: process.env.NEXT_PUBLIC_APP_URL
+    ? new URL(process.env.NEXT_PUBLIC_APP_URL)
+    : undefined,
+  openGraph: {
+    title: RELEASE.name,
+    description: OFFICIAL_RELEASE.message,
+    type: "website",
+  },  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Noboru",
+  },
+  applicationName: "Noboru",
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
     icon: [
       {
@@ -37,7 +59,6 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -55,6 +76,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

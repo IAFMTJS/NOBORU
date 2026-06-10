@@ -1,4 +1,5 @@
 import { isContentStatus, isJlptLevel } from "@/lib/content/types";
+import type { PaginatedResult, PaginationOptions } from "@/lib/api/pagination";
 import {
   mapVocabularyInputToRow,
   vocabularyRepository,
@@ -30,7 +31,9 @@ function validateInput(input: VocabularyInput): string | null {
 }
 
 class VocabularyAdminService {
-  list(filters: VocabularyListFilters = {}): Promise<VocabularyRow[]> {
+  list(
+    filters: VocabularyListFilters = {},
+  ): Promise<PaginatedResult<VocabularyRow>> {
     return vocabularyRepository.list(filters);
   }
 

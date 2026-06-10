@@ -13,21 +13,26 @@ import {
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { JlptLevel } from "@/lib/content/types";
+import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { ReadingHubViewModel } from "@/features/reading/types/reading.types";
 
 type ReadingHubProps = {
   hub: ReadingHubViewModel;
+  jlptLevel?: JlptLevel;
 };
 
-export function ReadingHub({ hub }: ReadingHubProps) {
+export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
+  const contentHub = getJlptContentHub(jlptLevel);
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="Reading"
-        subtitle="Stories and dialogs for N5 comprehension."
+        title={contentHub.readingTitle}
+        subtitle={contentHub.readingSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/mount-n5">Back</Link>
+            <Link href={`/learn/${contentHub.regionSlug}`}>Back</Link>
           </Button>
         }
       />

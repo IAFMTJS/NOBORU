@@ -13,6 +13,7 @@ type MascotImageProps = {
   width?: number;
   height?: number;
   priority?: boolean;
+  sizes?: string;
 };
 
 export function MascotImage({
@@ -22,6 +23,7 @@ export function MascotImage({
   width,
   height,
   priority,
+  sizes = "(max-width: 512px) 80px, 160px",
 }: MascotImageProps) {
   const { resolvedTheme } = useTheme();
   const src = getMascotPath(resolvedTheme);
@@ -34,6 +36,7 @@ export function MascotImage({
       width={width}
       height={height}
       priority={priority}
+      sizes={fill ? sizes : undefined}
       className={cn(className)}
     />
   );

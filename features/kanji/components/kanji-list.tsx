@@ -13,21 +13,27 @@ import {
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { JlptLevel } from "@/lib/content/types";
+import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { KanjiListViewModel } from "@/features/kanji/types/kanji.types";
 
 type KanjiListProps = {
   list: KanjiListViewModel;
+  jlptLevel?: JlptLevel;
 };
 
-export function KanjiList({ list }: KanjiListProps) {
+export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
+  const hub = getJlptContentHub(jlptLevel);
+  const levelLabel = jlptLevel.toUpperCase();
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="N5 Kanji Academy"
-        subtitle="Track every kanji on your Mount N5 climb."
+        title={hub.kanjiTitle}
+        subtitle={hub.kanjiSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/mount-n5">Back</Link>
+            <Link href={`/learn/${hub.regionSlug}`}>Back</Link>
           </Button>
         }
       />
@@ -36,7 +42,7 @@ export function KanjiList({ list }: KanjiListProps) {
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
-            {list.learnedCount} of {list.totalCount} N5 kanji learned
+            {list.learnedCount} of {list.totalCount} {levelLabel} kanji learned
           </CardDescription>
         </CardHeader>
         <CardContent>

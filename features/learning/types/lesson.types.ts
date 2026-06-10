@@ -1,5 +1,6 @@
 import type { ContentStatus } from "@/lib/content/types";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
+import type { RegionAvailability } from "@/lib/learning/region-unlock";
 import type {
   DialogueLessonContent,
   StoryLessonContent,
@@ -135,13 +136,31 @@ export type LessonTeachStep = {
   total: number;
 };
 
+export type LessonRecallMode = "choice" | "typed";
+
 export type LessonRecallStep = {
   kind: "recall";
+  mode: LessonRecallMode;
   contentType: LessonContentType;
   prompt: string;
   display: string;
   options: string[];
   correctIndex: number;
+  acceptedAnswers?: string[];
+  index: number;
+  total: number;
+};
+
+export type LessonMatchingPair = {
+  id: string;
+  prompt: string;
+  answer: string;
+};
+
+export type LessonMatchingStep = {
+  kind: "matching";
+  prompt: string;
+  pairs: LessonMatchingPair[];
   index: number;
   total: number;
 };
@@ -182,6 +201,7 @@ export type LessonStep =
   | LessonIntroStep
   | LessonTeachStep
   | LessonRecallStep
+  | LessonMatchingStep
   | LessonReadingStep
   | LessonStoryStep
   | LessonDialogueStep
@@ -233,6 +253,8 @@ export type RegionPathViewModel = {
   lessonCount: number;
   completedCount: number;
   progressPercent: number;
+  availability: RegionAvailability;
+  lockReason: string | null;
   units: UnitSummaryViewModel[];
 };
 

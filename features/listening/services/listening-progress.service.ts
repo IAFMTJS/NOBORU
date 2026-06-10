@@ -1,4 +1,7 @@
 import { elevationService } from "@/features/elevation/services/elevation.service";
+import { achievementService } from "@/features/achievements/services/achievement.service";
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import { questService } from "@/features/quests/services/quest.service";
 import { listeningRepository } from "@/features/listening/repositories/listening.repository";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type {
@@ -42,10 +45,13 @@ async function loadChallengeExercises(
 }
 
 class ListeningProgressService {
-  async getHub(userId: string): Promise<ListeningHubViewModel> {
+  async getHubByJlpt(
+    userId: string,
+    jlptLevel: "n5" | "n4",
+  ): Promise<ListeningHubViewModel> {
     const [exercises, challenges, progressRows] = await Promise.all([
-      listeningRepository.listPublishedExercises(),
-      listeningRepository.listPublishedChallenges(),
+      listeningRepository.listPublishedExercisesByJlpt(jlptLevel),
+      listeningRepository.listPublishedChallengesByJlpt(jlptLevel),
       listeningRepository.listProgressByUserId(userId),
     ]);
 
@@ -67,21 +73,28 @@ class ListeningProgressService {
       },
     );
 
-    const challengeEntries: ListeningChallengeListEntryViewModel[] = await Promise.all(
-      challenges.map(async (challenge) => {
-        const items = await listeningRepository.listChallengeItems(challenge.id);
+    const challengeItemCounts = new Map<string, number>();
+    const allChallengeItems = await listeningRepository.listAllChallengeItems();
+    for (const item of allChallengeItems) {
+      challengeItemCounts.set(
+        item.challenge_id,
+        (challengeItemCounts.get(item.challenge_id) ?? 0) + 1,
+      );
+    }
+
+    const challengeEntries: ListeningChallengeListEntryViewModel[] =
+      challenges.map((challenge) => {
         const progress = progressByKey.get(`challenge:${challenge.id}`);
         return {
           id: challenge.id,
           title: challenge.title,
           slug: challenge.slug,
           description: challenge.description,
-          exerciseCount: items.length,
+          exerciseCount: challengeItemCounts.get(challenge.id) ?? 0,
           completed: progress?.status === "completed",
           score: progress?.score ?? 0,
         };
-      }),
-    );
+      });
 
     const totalCount = exerciseEntries.length + challengeEntries.length;
     const completedCount =
@@ -96,6 +109,10 @@ class ListeningProgressService {
       progressPercent:
         totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100),
     };
+  }
+
+  async getHub(userId: string): Promise<ListeningHubViewModel> {
+    return this.getHubByJlpt(userId, "n5");
   }
 
   async getExerciseDetail(
@@ -169,7 +186,10 @@ class ListeningProgressService {
     userId: string,
     exerciseId: string,
     score: number,
-  ): Promise<ElevationAwardViewModel | null> {
+  ): Promise<{
+    elevation: ElevationAwardViewModel | null;
+    achievements: AchievementUnlockViewModel[];
+  }> {
     const existing = await listeningRepository.findProgress(
       userId,
       "exercise",
@@ -186,22 +206,41 @@ class ListeningProgressService {
       score: Math.max(0, Math.min(100, Math.round(score))),
     });
 
-    if (!isFirstCompletion || !exercise) return null;
+    if (!isFirstCompletion || !exercise) {
+      return {
+        elevation: null,
+        achievements: await achievementService.afterStudyActivity(userId),
+      };
+    }
 
-    return elevationService.awardComprehensionComplete(
-      userId,
-      "listening_complete",
-      exerciseId,
-      exercise.title,
-      true,
-    );
+    const [elevation, achievements] = await Promise.all([
+      elevationService.awardComprehensionComplete(
+        userId,
+        "listening_complete",
+        exerciseId,
+        exercise.title,
+        true,
+      ),
+      achievementService.afterStudyActivity(userId),
+    ]);
+
+    if (elevation) {
+      await questService.recordActivities(userId, [
+        { type: "ep_earned", amount: elevation.epAwarded },
+      ]);
+    }
+
+    return { elevation, achievements };
   }
 
   async saveChallengeProgress(
     userId: string,
     challengeId: string,
     score: number,
-  ): Promise<ElevationAwardViewModel | null> {
+  ): Promise<{
+    elevation: ElevationAwardViewModel | null;
+    achievements: AchievementUnlockViewModel[];
+  }> {
     const existing = await listeningRepository.findProgress(
       userId,
       "challenge",
@@ -218,15 +257,31 @@ class ListeningProgressService {
       score: Math.max(0, Math.min(100, Math.round(score))),
     });
 
-    if (!isFirstCompletion || !challenge) return null;
+    if (!isFirstCompletion || !challenge) {
+      return {
+        elevation: null,
+        achievements: await achievementService.afterStudyActivity(userId),
+      };
+    }
 
-    return elevationService.awardComprehensionComplete(
-      userId,
-      "listening_complete",
-      challengeId,
-      challenge.title,
-      true,
-    );
+    const [elevation, achievements] = await Promise.all([
+      elevationService.awardComprehensionComplete(
+        userId,
+        "listening_complete",
+        challengeId,
+        challenge.title,
+        true,
+      ),
+      achievementService.afterStudyActivity(userId),
+    ]);
+
+    if (elevation) {
+      await questService.recordActivities(userId, [
+        { type: "ep_earned", amount: elevation.epAwarded },
+      ]);
+    }
+
+    return { elevation, achievements };
   }
 
   async loadExerciseLessonContent(exerciseId: string) {

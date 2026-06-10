@@ -39,5 +39,6 @@ EP is never deducted. Re-completing lessons does not re-award EP.
 
 ## Known Limitations
 
-- Daily quests and achievement EP deferred to Phase 16
+- Daily quest EP wired in Phase 18 (`questService` → `elevationService.awardEp`)
+- Achievement EP is wired in Phase 16 (`achievementService` → `elevationService.awardEp`)
 - Cosmetics and Yama variants not yet implemented

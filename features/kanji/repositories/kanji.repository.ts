@@ -1,4 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
+import {
+  buildPaginatedResult,
+  normalizePagination,
+  type PaginationOptions,
+  type PaginatedResult,
+} from "@/lib/api/pagination";
 
 import type { JlptLevel } from "@/lib/content/types";
 import type {
@@ -18,14 +25,23 @@ function splitReadings(value?: string): string[] {
 }
 
 class KanjiRepository {
-  async list(): Promise<KanjiRow[]> {
+  async list(
+    pagination: PaginationOptions = {},
+  ): Promise<PaginatedResult<KanjiRow>> {
+    const { page, limit, offset } = normalizePagination(pagination);
     const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("kanji")
-      .select("*")
-      .order("updated_at", { ascending: false });
+      .select("*", { count: "exact" })
+      .order("updated_at", { ascending: false })
+      .range(offset, offset + limit - 1);
     if (error) throw new Error(error.message);
-    return (data ?? []) as KanjiRow[];
+    return buildPaginatedResult(
+      (data ?? []) as KanjiRow[],
+      count ?? 0,
+      page,
+      limit,
+    );
   }
 
   async listPublishedByJlpt(jlptLevel: JlptLevel): Promise<KanjiRow[]> {
@@ -63,6 +79,38 @@ class KanjiRepository {
     };
   }
 
+  async findByIds(ids: string[]): Promise<KanjiWithReadings[]> {
+    if (ids.length === 0) return [];
+    const supabase = await createClient();
+    const { data: kanjiRows, error } = await supabase
+      .from("kanji")
+      .select("*")
+      .in("id", ids);
+
+    if (error) throw new Error(error.message);
+    if (!kanjiRows || kanjiRows.length === 0) return [];
+
+    const { data: readings, error: readingsError } = await supabase
+      .from("kanji_readings")
+      .select("*")
+      .in("kanji_id", ids);
+
+    if (readingsError) throw new Error(readingsError.message);
+
+    const readingsByKanji = new Map<string, KanjiReadingRow[]>();
+    for (const reading of readings ?? []) {
+      const kanjiId = (reading as KanjiReadingRow).kanji_id;
+      const list = readingsByKanji.get(kanjiId) ?? [];
+      list.push(reading as KanjiReadingRow);
+      readingsByKanji.set(kanjiId, list);
+    }
+
+    return (kanjiRows as KanjiRow[]).map((kanji) => ({
+      ...kanji,
+      readings: readingsByKanji.get(kanji.id) ?? [],
+    }));
+  }
+
   async listPublishedExamplesByKanjiId(
     kanjiId: string,
   ): Promise<KanjiExampleRow[]> {
@@ -78,48 +126,24 @@ class KanjiRepository {
     return (data ?? []) as KanjiExampleRow[];
   }
 
-  async listLearnedKanjiIds(userId: string): Promise<string[]> {
+  async listPublishedExamplesByKanjiIds(
+    kanjiIds: string[],
+  ): Promise<KanjiExampleRow[]> {
+    if (kanjiIds.length === 0) return [];
     const supabase = await createClient();
-    const { data: progress, error: progressError } = await supabase
-      .from("user_progress")
-      .select("lesson_id")
-      .eq("user_id", userId)
-      .eq("status", "completed");
+    const { data, error } = await supabase
+      .from("kanji_examples")
+      .select("*")
+      .in("kanji_id", kanjiIds)
+      .eq("status", "published")
+      .order("order_index", { ascending: true });
 
-    if (progressError) throw new Error(progressError.message);
+    if (error) throw new Error(error.message);
+    return (data ?? []) as KanjiExampleRow[];
+  }
 
-    const lessonIds = (progress ?? []).map((row) => row.lesson_id as string);
-    const learned = new Set<string>();
-
-    const { data: reviewRows, error: reviewError } = await supabase
-      .from("review_items")
-      .select("content_id")
-      .eq("user_id", userId)
-      .eq("content_type", "kanji");
-
-    if (reviewError) throw new Error(reviewError.message);
-
-    for (const row of reviewRows ?? []) {
-      learned.add(row.content_id as string);
-    }
-
-    if (lessonIds.length === 0) {
-      return Array.from(learned);
-    }
-
-    const { data: items, error: itemsError } = await supabase
-      .from("lesson_items")
-      .select("content_id")
-      .eq("content_type", "kanji")
-      .in("lesson_id", lessonIds);
-
-    if (itemsError) throw new Error(itemsError.message);
-
-    for (const item of items ?? []) {
-      learned.add(item.content_id as string);
-    }
-
-    return Array.from(learned);
+  async listLearnedKanjiIds(userId: string): Promise<string[]> {
+    return learnedContentRepository.getLearnedIdsByContentType(userId, "kanji");
   }
 
   private async syncReadings(
