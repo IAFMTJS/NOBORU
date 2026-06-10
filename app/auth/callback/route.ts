@@ -1,4 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
+import {
+  ensureUserRecords,
+  resolveDisplayName,
+} from "@/lib/supabase/ensure-user-records";
 import { NextResponse } from "next/server";
 
 import { AUTH_ROUTES } from "@/lib/navigation/auth-routes";
@@ -13,6 +17,30 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          await ensureUserRecords(supabase, {
+            userId: user.id,
+            displayName: resolveDisplayName(user.user_metadata),
+          });
+        } catch (bootstrapError) {
+          console.error(
+            "[auth/callback] Failed to ensure user records:",
+            bootstrapError instanceof Error
+              ? bootstrapError.message
+              : bootstrapError,
+          );
+
+          const loginUrl = new URL(AUTH_ROUTES.login, origin);
+          loginUrl.searchParams.set("error", "account_setup_failed");
+          return NextResponse.redirect(loginUrl.toString());
+        }
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

@@ -8,6 +8,8 @@ import {
   reviewRepository,
   type ReviewItemRow,
 } from "@/features/review/repositories/review.repository";
+import { elevationService } from "@/features/elevation/services/elevation.service";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import {
   formatNextReviewLabel,
   formatReviewStateLabel,
@@ -124,9 +126,13 @@ class ReviewServerService {
     userId: string,
     reviewItemId: string,
     rating: ReviewRating,
-  ): Promise<ReviewSessionViewModel> {
+  ): Promise<ReviewSessionViewModel & { elevation: ElevationAwardViewModel | null }> {
     await reviewRepository.submitRating(userId, reviewItemId, rating);
-    return this.getSession(userId);
+    const [session, elevation] = await Promise.all([
+      this.getSession(userId),
+      elevationService.awardReviewRating(userId, reviewItemId, rating),
+    ]);
+    return { ...session, elevation };
   }
 
   private async buildCard(item: ReviewItemRow): Promise<ReviewCardViewModel | null> {

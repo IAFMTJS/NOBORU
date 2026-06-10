@@ -1,4 +1,5 @@
 import { createClient as createServerClient } from "@/lib/supabase/server";
+import { ensureSettings } from "@/lib/supabase/ensure-user-records";
 
 import type { UserSettingsRow } from "@/features/settings/types/settings.types";
 
@@ -25,20 +26,14 @@ class SettingsServerRepository {
     }
 
     const supabase = await createServerClient();
-    const { data, error } = await supabase
-      .from("user_settings")
-      .insert({
-        user_id: userId,
-        preferred_theme: "dark",
-      })
-      .select("*")
-      .single();
+    await ensureSettings(supabase, { userId });
 
-    if (error) {
-      throw new Error(error.message);
+    const created = await this.findByUserId(userId);
+    if (!created) {
+      throw new Error("Failed to create user settings.");
     }
 
-    return data as UserSettingsRow;
+    return created;
   }
 }
 

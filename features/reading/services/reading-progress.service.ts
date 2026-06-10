@@ -1,3 +1,5 @@
+import { elevationService } from "@/features/elevation/services/elevation.service";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import type {
   DialogueDetailViewModel,
@@ -176,7 +178,11 @@ class ReadingProgressService {
     userId: string,
     storyId: string,
     score: number,
-  ): Promise<void> {
+  ): Promise<ElevationAwardViewModel | null> {
+    const existing = await readingRepository.findProgress(userId, "story", storyId);
+    const isFirstCompletion = existing?.status !== "completed";
+    const story = await readingRepository.findStoryById(storyId);
+
     const normalizedScore = Math.max(0, Math.min(100, Math.round(score)));
     await readingRepository.upsertProgress({
       userId,
@@ -185,13 +191,31 @@ class ReadingProgressService {
       status: "completed",
       score: normalizedScore,
     });
+
+    if (!isFirstCompletion || !story) return null;
+
+    return elevationService.awardComprehensionComplete(
+      userId,
+      "reading_complete",
+      storyId,
+      story.title,
+      true,
+    );
   }
 
   async saveDialogueProgress(
     userId: string,
     dialogueId: string,
     score: number,
-  ): Promise<void> {
+  ): Promise<ElevationAwardViewModel | null> {
+    const existing = await readingRepository.findProgress(
+      userId,
+      "dialogue",
+      dialogueId,
+    );
+    const isFirstCompletion = existing?.status !== "completed";
+    const dialogue = await readingRepository.findDialogueById(dialogueId);
+
     const normalizedScore = Math.max(0, Math.min(100, Math.round(score)));
     await readingRepository.upsertProgress({
       userId,
@@ -200,6 +224,16 @@ class ReadingProgressService {
       status: "completed",
       score: normalizedScore,
     });
+
+    if (!isFirstCompletion || !dialogue) return null;
+
+    return elevationService.awardComprehensionComplete(
+      userId,
+      "reading_complete",
+      dialogueId,
+      dialogue.title,
+      true,
+    );
   }
 
   async markInProgress(

@@ -9,7 +9,12 @@ export type HomeDashboardViewModel = {
     progressPercent: number;
   };
   elevation: {
-    current: number;
+    level: number;
+    totalEp: number;
+    currentEp: number;
+    epToNextLevel: number;
+    progressPercent: number;
+    activeTitle: string | null;
     nextMilestone: string;
   };
   dailyQuest: {
@@ -27,4 +32,5 @@ export type HomeDashboardViewModel = {
     title: string;
   }>;
   reviewQueueCount: number;
+  overallMasteryPercent: number;
 };

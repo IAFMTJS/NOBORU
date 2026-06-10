@@ -1,4 +1,5 @@
 import { createClient as createServerClient } from "@/lib/supabase/server";
+import { ensureProfile } from "@/lib/supabase/ensure-user-records";
 
 import type { ProfileRow } from "@/features/profile/types/profile.types";
 
@@ -25,20 +26,14 @@ class ProfileServerRepository {
     }
 
     const supabase = await createServerClient();
-    const { data, error } = await supabase
-      .from("profiles")
-      .insert({
-        user_id: userId,
-        display_name: displayName,
-      })
-      .select("*")
-      .single();
+    await ensureProfile(supabase, { userId, displayName });
 
-    if (error) {
-      throw new Error(error.message);
+    const created = await this.findByUserId(userId);
+    if (!created) {
+      throw new Error("Failed to create profile.");
     }
 
-    return data as ProfileRow;
+    return created;
   }
 }
 

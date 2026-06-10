@@ -15,8 +15,13 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
     progressPercent: 41,
   },
   elevation: {
-    current: 1240,
-    nextMilestone: "N3 Gate",
+    level: 1,
+    totalEp: 1240,
+    currentEp: 40,
+    epToNextLevel: 100,
+    progressPercent: 40,
+    activeTitle: "Base Camper",
+    nextMilestone: "Level 2: Trail Walker",
   },
   dailyQuest: {
     title: "Today's Quest",
@@ -33,4 +38,5 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
     { id: "week-climber", title: "Week Climber" },
   ],
   reviewQueueCount: 8,
+  overallMasteryPercent: 0,
 };

@@ -32,6 +32,6 @@ Purpose: N5 reading comprehension through stories, dialogs, and questions.
 
 ## Known Limitations
 
-- No audio narration yet (Phase 13 listening)
+- Audio narration for stories is planned via `audio_url` on future content rows
 - Dialogues use linear or simple branching flows only
 - Reading progress is separate from SRS review queue

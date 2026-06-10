@@ -1,4 +1,5 @@
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import { ensureSettings } from "@/lib/supabase/ensure-user-records";
 
 import type {
   ThemePreference,
@@ -11,6 +12,8 @@ class SettingsRepository {
     theme: ThemePreference,
   ): Promise<UserSettingsRow> {
     const supabase = createBrowserClient();
+    await ensureSettings(supabase, { userId, preferredTheme: theme });
+
     const { data, error } = await supabase
       .from("user_settings")
       .update({ preferred_theme: theme })

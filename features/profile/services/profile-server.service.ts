@@ -1,6 +1,7 @@
 import { authServerRepository } from "@/features/authentication/repositories/auth-server.repository";
 import { PLACEHOLDER_PROFILE_STATS } from "@/features/profile/constants/placeholder-profile";
 import { profileServerRepository } from "@/features/profile/repositories/profile-server.repository";
+import { progressDashboardService } from "@/features/progress/services/progress-dashboard.service";
 import type {
   JlptPlacement,
   ProfileViewModel,
@@ -25,6 +26,7 @@ function mapProfileToViewModel(
     current_region_slug: string;
   },
   email: string,
+  stats: ProfileViewModel["stats"],
 ): ProfileViewModel {
   const levelLabel = profile.current_level
     ? LEVEL_LABELS[profile.current_level]
@@ -39,7 +41,7 @@ function mapProfileToViewModel(
     learningGoal: profile.learning_goal,
     currentLevel: profile.current_level,
     currentRegionSlug: profile.current_region_slug,
-    stats: PLACEHOLDER_PROFILE_STATS.stats.map((stat) => ({ ...stat })),
+    stats,
   };
 }
 
@@ -60,7 +62,11 @@ class ProfileServerService {
       displayName,
     );
 
-    return mapProfileToViewModel(profile, user.email ?? "");
+    const stats = profile.onboarding_completed
+      ? await progressDashboardService.getProfileSummaryStats(profile.user_id)
+      : PLACEHOLDER_PROFILE_STATS.stats.map((stat) => ({ ...stat }));
+
+    return mapProfileToViewModel(profile, user.email ?? "", stats);
   }
 
   async isOnboardingComplete(userId: string): Promise<boolean> {

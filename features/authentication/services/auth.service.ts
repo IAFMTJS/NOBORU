@@ -1,4 +1,5 @@
 import { authRepository } from "@/features/authentication/repositories/auth.repository";
+import { userRecordsRepository } from "@/features/authentication/repositories/user-records.repository";
 import {
   AUTH_MESSAGES,
   AUTH_VALIDATION,
@@ -41,6 +42,18 @@ class AuthService {
       return { success: false, error: error.message };
     }
 
+    try {
+      await userRecordsRepository.ensureForCurrentUser();
+    } catch (caught) {
+      return {
+        success: false,
+        error:
+          caught instanceof Error
+            ? caught.message
+            : "Unable to initialize your account.",
+      };
+    }
+
     return { success: true };
   }
 
@@ -74,6 +87,20 @@ class AuthService {
         requiresEmailConfirmation: true,
         message: AUTH_MESSAGES.emailConfirmation,
       };
+    }
+
+    if (data.session) {
+      try {
+        await userRecordsRepository.ensureForCurrentUser();
+      } catch (caught) {
+        return {
+          success: false,
+          error:
+            caught instanceof Error
+              ? caught.message
+              : "Unable to initialize your account.",
+        };
+      }
     }
 
     return { success: true };

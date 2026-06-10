@@ -19,12 +19,15 @@ import type {
   LessonStep,
   LessonStoryStep,
   LessonDialogueStep,
+  LessonListeningStep,
+  LessonListeningChallengeStep,
   LessonSummaryViewModel,
   LessonTeachStep,
   ReadingLessonContent,
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
+import { listeningProgressService } from "@/features/listening/services/listening-progress.service";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 
@@ -178,6 +181,14 @@ class LessonService {
       return readingProgressService.loadDialogueLessonContent(contentId);
     }
 
+    if (contentType === "listening") {
+      return listeningProgressService.loadExerciseLessonContent(contentId);
+    }
+
+    if (contentType === "listening_challenge") {
+      return listeningProgressService.loadChallengeLessonContent(contentId);
+    }
+
     return null;
   }
 
@@ -328,6 +339,32 @@ class LessonService {
         content: dialogueContent,
       };
       return [intro, dialogueStep, complete];
+    }
+
+    if (lesson.type === "listening") {
+      const listeningContent = contents.find((content) => content.type === "listening");
+      if (!listeningContent || listeningContent.type !== "listening") {
+        return [intro, complete];
+      }
+      const listeningStep: LessonListeningStep = {
+        kind: "listening",
+        content: listeningContent,
+      };
+      return [intro, listeningStep, complete];
+    }
+
+    if (lesson.type === "listening_challenge") {
+      const challengeContent = contents.find(
+        (content) => content.type === "listening_challenge",
+      );
+      if (!challengeContent || challengeContent.type !== "listening_challenge") {
+        return [intro, complete];
+      }
+      const challengeStep: LessonListeningChallengeStep = {
+        kind: "listening_challenge",
+        content: challengeContent,
+      };
+      return [intro, challengeStep, complete];
     }
 
     if (lesson.type === "practice") {

@@ -1,4 +1,6 @@
 import { reviewEnqueueService } from "@/features/review/services/review-server.service";
+import { elevationService } from "@/features/elevation/services/elevation.service";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import {
   learningPathRepository,
   progressRepository,
@@ -35,13 +37,21 @@ class ProgressService {
     });
   }
 
-  async completeLesson(input: CompleteProgressInput): Promise<UserProgressRow> {
+  async completeLesson(input: CompleteProgressInput): Promise<
+    UserProgressRow & { elevation: ElevationAwardViewModel | null }
+  > {
     const lesson = await learningPathRepository.findPublishedLessonById(
       input.lessonId,
     );
     if (!lesson) {
       throw new Error("Lesson not found.");
     }
+
+    const existing = await progressRepository.findByUserAndLesson(
+      input.userId,
+      input.lessonId,
+    );
+    const isFirstCompletion = existing?.status !== "completed";
 
     const score = Math.max(0, Math.min(100, Math.round(input.score)));
 
@@ -60,7 +70,15 @@ class ProgressService {
 
     await reviewEnqueueService.enqueueFromLesson(input.userId, input.lessonId);
 
-    return result;
+    const elevation = await elevationService.awardLessonCompletion(
+      input.userId,
+      input.lessonId,
+      lesson.title,
+      lesson.xp_reward,
+      isFirstCompletion,
+    );
+
+    return { ...result, elevation };
   }
 }
 

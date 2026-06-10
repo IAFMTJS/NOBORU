@@ -16,6 +16,7 @@ import {
 import { EmptyState } from "@/components/ui/empty-state";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
 import { formatReviewStateLabel } from "@/features/review/services/srs.service";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type { ReviewSessionViewModel } from "@/features/review/types/review.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
 
@@ -27,6 +28,9 @@ export function ReviewSession({ initialSession }: ReviewSessionProps) {
   const [session, setSession] = useState(initialSession);
   const [submitting, setSubmitting] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [lastElevation, setLastElevation] = useState<ElevationAwardViewModel | null>(
+    null,
+  );
 
   async function submitRating(rating: ReviewRating) {
     if (!session.currentCard) return;
@@ -42,13 +46,16 @@ export function ReviewSession({ initialSession }: ReviewSessionProps) {
       });
       const result = (await response.json()) as {
         success: boolean;
-        data?: ReviewSessionViewModel;
+        data?: ReviewSessionViewModel & {
+          elevation?: ElevationAwardViewModel | null;
+        };
         error?: string;
       };
       if (!result.success || !result.data) {
         throw new Error(result.error ?? "Review failed.");
       }
       setSession(result.data);
+      setLastElevation(result.data.elevation ?? null);
       setRevealed(false);
     } finally {
       setSubmitting(false);
@@ -63,6 +70,10 @@ export function ReviewSession({ initialSession }: ReviewSessionProps) {
       />
 
       <ReviewStatsPanel stats={session.stats} />
+
+      {lastElevation ? (
+        <Badge variant="secondary">+{lastElevation.epAwarded} EP earned</Badge>
+      ) : null}
 
       {!session.currentCard ? (
         <EmptyState

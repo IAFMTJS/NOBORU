@@ -2,12 +2,23 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 import {
+  ensureUserRecords,
+  resolveDisplayName,
+} from "@/lib/supabase/ensure-user-records";
+import {
   AUTH_ROUTES,
   isAuthOnlyRoute,
   isAuthRequiredRoute,
   isOnboardingRequiredRoute,
   isOnboardingRoute,
 } from "@/lib/navigation/auth-routes";
+
+function redirectToLoginWithError(request: NextRequest, errorCode: string) {
+  const loginUrl = request.nextUrl.clone();
+  loginUrl.pathname = AUTH_ROUTES.login;
+  loginUrl.searchParams.set("error", errorCode);
+  return NextResponse.redirect(loginUrl);
+}
 
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -63,6 +74,23 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(homeUrl);
   }
 
+  if (user && isAuthRequiredRoute(pathname)) {
+    try {
+      await ensureUserRecords(supabase, {
+        userId: user.id,
+        displayName: resolveDisplayName(user.user_metadata),
+      });
+    } catch (bootstrapError) {
+      console.error(
+        "[middleware] Failed to ensure user records:",
+        bootstrapError instanceof Error
+          ? bootstrapError.message
+          : bootstrapError,
+      );
+      return redirectToLoginWithError(request, "account_setup_failed");
+    }
+  }
+
   if (user && (isOnboardingRequiredRoute(pathname) || isOnboardingRoute(pathname))) {
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
@@ -72,10 +100,18 @@ export async function updateSession(request: NextRequest) {
 
     if (profileError) {
       console.error("[middleware] Failed to load profile:", profileError.message);
-      return supabaseResponse;
+      return redirectToLoginWithError(request, "profile_load_failed");
     }
 
-    const onboardingCompleted = profile?.onboarding_completed ?? false;
+    if (!profile) {
+      console.error(
+        "[middleware] Profile missing after bootstrap for user:",
+        user.id,
+      );
+      return redirectToLoginWithError(request, "profile_missing");
+    }
+
+    const onboardingCompleted = profile.onboarding_completed;
 
     if (!onboardingCompleted && isOnboardingRequiredRoute(pathname)) {
       const onboardingUrl = request.nextUrl.clone();

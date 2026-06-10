@@ -1,4 +1,8 @@
 import { createClient as createBrowserClient } from "@/lib/supabase/client";
+import {
+  ensureProfile,
+  resolveDisplayName,
+} from "@/lib/supabase/ensure-user-records";
 
 import type { ProfileRow } from "@/features/profile/types/profile.types";
 
@@ -8,6 +12,8 @@ class ProfileRepository {
     displayName: string,
   ): Promise<ProfileRow> {
     const supabase = createBrowserClient();
+    await ensureProfile(supabase, { userId, displayName });
+
     const { data, error } = await supabase
       .from("profiles")
       .update({ display_name: displayName })
@@ -35,7 +41,10 @@ class ProfileRepository {
       throw new Error("You must be signed in to update your profile.");
     }
 
-    return this.updateDisplayNameClient(user.id, displayName);
+    return this.updateDisplayNameClient(
+      user.id,
+      displayName,
+    );
   }
 }
 

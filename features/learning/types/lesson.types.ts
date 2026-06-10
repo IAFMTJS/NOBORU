@@ -4,6 +4,10 @@ import type {
   DialogueLessonContent,
   StoryLessonContent,
 } from "@/features/reading/types/reading.types";
+import type {
+  ListeningChallengeLessonContent,
+  ListeningLessonContent,
+} from "@/features/listening/types/listening.types";
 
 export type LessonContentType =
   | "vocabulary"
@@ -13,7 +17,9 @@ export type LessonContentType =
   | "katakana"
   | "reading"
   | "story"
-  | "dialogue";
+  | "dialogue"
+  | "listening"
+  | "listening_challenge";
 
 export type LessonItemRow = {
   id: string;
@@ -110,7 +116,9 @@ export type LessonContent =
   | KatakanaLessonContent
   | ReadingLessonContent
   | StoryLessonContent
-  | DialogueLessonContent;
+  | DialogueLessonContent
+  | ListeningLessonContent
+  | ListeningChallengeLessonContent;
 
 export type LessonIntroStep = {
   kind: "intro";
@@ -155,6 +163,16 @@ export type LessonDialogueStep = {
   content: DialogueLessonContent;
 };
 
+export type LessonListeningStep = {
+  kind: "listening";
+  content: ListeningLessonContent;
+};
+
+export type LessonListeningChallengeStep = {
+  kind: "listening_challenge";
+  content: ListeningChallengeLessonContent;
+};
+
 export type LessonCompleteStep = {
   kind: "complete";
   xpReward: number;
@@ -167,6 +185,8 @@ export type LessonStep =
   | LessonReadingStep
   | LessonStoryStep
   | LessonDialogueStep
+  | LessonListeningStep
+  | LessonListeningChallengeStep
   | LessonCompleteStep;
 
 export type LessonSessionViewModel = {

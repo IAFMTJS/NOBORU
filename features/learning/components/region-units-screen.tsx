@@ -75,6 +75,9 @@ export function RegionUnitsScreen({ region }: RegionUnitsScreenProps) {
               <Button variant="outline" className="w-full" asChild>
                 <Link href="/learn/reading">Open Reading</Link>
               </Button>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/learn/listening">Open Listening</Link>
+              </Button>
             </div>
           ) : null}
         </CardContent>

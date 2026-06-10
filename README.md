@@ -224,6 +224,39 @@ Run migration: `npx supabase db push` (includes `20260608280000_review_engine.sq
 
 Run migration: `npx supabase db push` (includes `20260608300000_reading_system.sql`)
 
+## Phase 13 Status — Listening System
+
+- [x] Migration: `listening_exercises`, `listening_challenges`, `listening_challenge_items`, `listening_progress`
+- [x] N5 seed: 4 audio lessons, 1 multi-part listening challenge
+- [x] Listening hub at `/learn/listening` with exercises and challenges
+- [x] Audio playback with hosted URL or browser TTS fallback
+- [x] Mount N5 unit: Listening Practice (lesson + challenge types)
+- [x] `POST /api/listening/progress` for listening mastery tracking
+
+Run migration: `npx supabase db push` (includes `20260608320000_listening_system.sql`)
+
+## Phase 14 Status — Progress Tracking
+
+- [x] Mastery dashboard at `/progress` with overall and domain mastery
+- [x] Region and unit progress breakdown with links to each trail
+- [x] Learning statistics (lessons, scores, reading, listening)
+- [x] Review statistics integrated from review engine
+- [x] Profile stats wired to live progress data
+- [x] Home dashboard link to full progress view
+- [x] `GET /api/progress/dashboard` for typed progress summary
+
+## Phase 15 Status — Elevation System
+
+- [x] Migration: `user_elevation`, `elevation_events`, `level_rewards`
+- [x] EP awarded on lesson completion, review ratings, reading, and listening
+- [x] Level system (1–100) with increasing thresholds
+- [x] Level rewards seeded (titles at levels 1, 2, 5, 10, 20, 50)
+- [x] Elevation summary on home, progress dashboard, and profile
+- [x] EP feedback on lesson complete and review submit
+- [x] `GET /api/elevation/summary`
+
+Run migration: `npx supabase db push` (includes `20260608340000_elevation_system.sql`)
+
 ## Design Reference
 
 UI follows approved mockups in `assets/marketing/` and rules in `.cursor/rules/uiux.mdc`.

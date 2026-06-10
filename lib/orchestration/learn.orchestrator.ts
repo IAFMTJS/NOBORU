@@ -9,6 +9,12 @@ import { vocabularyProgressService } from "@/features/vocabulary/services/vocabu
 import { grammarProgressService } from "@/features/grammar/services/grammar-progress.service";
 import { kanjiProgressService } from "@/features/kanji/services/kanji-progress.service";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
+import { listeningProgressService } from "@/features/listening/services/listening-progress.service";
+import type {
+  ListeningChallengeDetailViewModel,
+  ListeningExerciseDetailViewModel,
+  ListeningHubViewModel,
+} from "@/features/listening/types/listening.types";
 import type { HiraganaChartViewModel } from "@/features/hiragana/types/hiragana.types";
 import type { KatakanaChartViewModel } from "@/features/katakana/types/katakana.types";
 import type {
@@ -202,4 +208,38 @@ export async function getDialogueDetail(
   }
 
   return readingProgressService.getDialogueDetail(profile.userId, slug);
+}
+
+export async function getListeningHub(): Promise<ListeningHubViewModel> {
+  const profile = await profileServerService.getProfile();
+
+  if (!profile) {
+    redirect(AUTH_ROUTES.login);
+  }
+
+  return listeningProgressService.getHub(profile.userId);
+}
+
+export async function getListeningExerciseDetail(
+  slug: string,
+): Promise<ListeningExerciseDetailViewModel | null> {
+  const profile = await profileServerService.getProfile();
+
+  if (!profile) {
+    redirect(AUTH_ROUTES.login);
+  }
+
+  return listeningProgressService.getExerciseDetail(profile.userId, slug);
+}
+
+export async function getListeningChallengeDetail(
+  slug: string,
+): Promise<ListeningChallengeDetailViewModel | null> {
+  const profile = await profileServerService.getProfile();
+
+  if (!profile) {
+    redirect(AUTH_ROUTES.login);
+  }
+
+  return listeningProgressService.getChallengeDetail(profile.userId, slug);
 }

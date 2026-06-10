@@ -58,14 +58,20 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <ProgressBar
-            value={data.level.progressPercent}
-            label="Trail progress"
+            value={data.elevation.progressPercent}
+            label="Elevation progress"
             showValue
           />
           <p className="text-body-sm text-muted-foreground">
-            Elevation {data.elevation.current.toLocaleString()} · Next:{" "}
-            {data.elevation.nextMilestone}
+            Level {data.elevation.level} · {data.elevation.totalEp.toLocaleString()} EP ·{" "}
+            {data.elevation.activeTitle ?? "Climber"}
           </p>
+          <p className="text-caption text-muted-foreground">
+            Next: {data.elevation.nextMilestone}
+          </p>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/progress">View Full Progress</Link>
+          </Button>
         </CardContent>
       </Card>
 

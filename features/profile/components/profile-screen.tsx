@@ -43,7 +43,10 @@ export function ProfileScreen({ profile }: ProfileScreenProps) {
         <CardHeader>
           <CardTitle className="text-heading-6">Account</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-2">
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/progress">View Progress</Link>
+          </Button>
           <Button variant="outline" className="w-full" asChild>
             <Link href="/settings">Settings</Link>
           </Button>

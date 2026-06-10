@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type {
   LessonRecallStep,
   LessonReadingStep,
@@ -22,6 +23,8 @@ import type {
   LessonStep,
   LessonTeachStep,
 } from "@/features/learning/types/lesson.types";
+import { ListeningChallengePlayer } from "@/features/listening/components/listening-challenge-player";
+import { ListeningExercisePlayer } from "@/features/listening/components/listening-exercise-player";
 import { DialoguePlayer } from "@/features/reading/components/dialogue-player";
 import { StoryReader } from "@/features/reading/components/story-reader";
 
@@ -300,6 +303,9 @@ export function LessonPlayer({ session }: LessonPlayerProps) {
   const [recallAnswered, setRecallAnswered] = useState(false);
   const [embeddedComplete, setEmbeddedComplete] = useState(false);
   const [completedScore, setCompletedScore] = useState(session.score);
+  const [elevationAward, setElevationAward] = useState<ElevationAwardViewModel | null>(
+    null,
+  );
 
   const checkStepCount = useMemo(
     () =>
@@ -308,7 +314,9 @@ export function LessonPlayer({ session }: LessonPlayerProps) {
           step.kind === "recall" ||
           step.kind === "reading" ||
           step.kind === "story" ||
-          step.kind === "dialogue",
+          step.kind === "dialogue" ||
+          step.kind === "listening" ||
+          step.kind === "listening_challenge",
       ).length,
     [session.steps],
   );
@@ -360,12 +368,13 @@ export function LessonPlayer({ session }: LessonPlayerProps) {
       const result = (await response.json()) as {
         success: boolean;
         error?: string;
-        data?: { score: number };
+        data?: { score: number; elevation?: ElevationAwardViewModel | null };
       };
       if (!result.success) {
         throw new Error(result.error ?? "Unable to save progress.");
       }
       setCompletedScore(result.data?.score ?? score);
+      setElevationAward(result.data?.elevation ?? null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to save progress.");
     } finally {
@@ -534,15 +543,76 @@ export function LessonPlayer({ session }: LessonPlayerProps) {
         </>
       ) : null}
 
+      {currentStep.kind === "listening" ? (
+        <>
+          <ListeningExercisePlayer
+            embedded
+            exercise={{
+              ...currentStep.content,
+              jlptLevel: "n5",
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= 60) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "listening_challenge" ? (
+        <>
+          <ListeningChallengePlayer
+            embedded
+            challenge={{
+              id: currentStep.content.id,
+              title: currentStep.content.title,
+              slug: currentStep.content.slug,
+              description: currentStep.content.description,
+              jlptLevel: "n5",
+              exercises: currentStep.content.exercises,
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= 60) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
+            Continue
+          </Button>
+        </>
+      ) : null}
+
       {currentStep.kind === "complete" ? (
         <Card className="border-success/30 shadow-elevation-1">
           <CardHeader>
             <CardTitle>Lesson Complete</CardTitle>
             <CardDescription>
               Score {completedScore}% · {session.xpReward} XP earned
+              {elevationAward
+                ? ` · +${elevationAward.epAwarded} EP`
+                : ""}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            {elevationAward?.leveledUp ? (
+              <Badge variant="secondary">
+                Level up! Now level {elevationAward.currentLevel}
+              </Badge>
+            ) : null}
+            {elevationAward?.rewardsUnlocked.map((reward) => (
+              <Badge key={reward.level} variant="outline">
+                Unlocked: {reward.title}
+              </Badge>
+            ))}
             <Button className="w-full" asChild>
               <Link href={`/learn/${session.regionSlug}`}>Back to Region</Link>
             </Button>
