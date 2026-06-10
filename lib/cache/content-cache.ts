@@ -1,6 +1,6 @@
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
-import { createClientUncached } from "@/lib/supabase/create-client-uncached";
+import { createClient } from "@/lib/supabase/server";
 import type {
   LessonRow,
   RegionRow,
@@ -18,7 +18,7 @@ type RegionWithUnits = RegionRow & {
 };
 
 async function fetchPublishedRegionsWithCurriculum(): Promise<RegionWithUnits[]> {
-  const supabase = await createClientUncached();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("regions")
     .select(
@@ -50,7 +50,7 @@ async function fetchPublishedRegionsWithCurriculum(): Promise<RegionWithUnits[]>
 }
 
 async function fetchPublishedHiragana(): Promise<HiraganaRow[]> {
-  const supabase = await createClientUncached();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("hiragana")
     .select("*")
@@ -62,7 +62,7 @@ async function fetchPublishedHiragana(): Promise<HiraganaRow[]> {
 }
 
 async function fetchPublishedKatakana(): Promise<KatakanaRow[]> {
-  const supabase = await createClientUncached();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("katakana")
     .select("*")
@@ -73,22 +73,13 @@ async function fetchPublishedKatakana(): Promise<KatakanaRow[]> {
   return (data ?? []) as KatakanaRow[];
 }
 
-export const getPublishedRegionsWithCurriculum = unstable_cache(
+/** Request-scoped dedupe. Do not use unstable_cache here — it cannot access cookies(). */
+export const getPublishedRegionsWithCurriculum = cache(
   fetchPublishedRegionsWithCurriculum,
-  ["published-regions-curriculum"],
-  { revalidate: 3600, tags: ["published-curriculum"] },
 );
 
-export const getPublishedHiraganaChart = unstable_cache(
-  fetchPublishedHiragana,
-  ["published-hiragana-chart"],
-  { revalidate: 3600, tags: ["published-hiragana"] },
-);
+export const getPublishedHiraganaChart = cache(fetchPublishedHiragana);
 
-export const getPublishedKatakanaChart = unstable_cache(
-  fetchPublishedKatakana,
-  ["published-katakana-chart"],
-  { revalidate: 3600, tags: ["published-katakana"] },
-);
+export const getPublishedKatakanaChart = cache(fetchPublishedKatakana);
 
 export type { RegionWithUnits };
