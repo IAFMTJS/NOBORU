@@ -17,8 +17,6 @@ const STICKER_SOURCES = [
   "achievements",
   "brand",
   "mascots",
-  "ui/ui_trail_spine_dark_v1",
-  "ui/ui_trail_spine_light_v1",
 ];
 
 const SKIP_MASCOT_PREFIXES = ["yama_main_"];

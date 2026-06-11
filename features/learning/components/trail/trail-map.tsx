@@ -1,18 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Check, Lock, Mountain, Play } from "lucide-react";
 
+import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { MotionDiv } from "@/components/motion/motion-div";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import {
-  TRAIL_SPINE_FRAME_CLASS,
-  TRAIL_SPINE_IMAGE_CLASS,
-} from "@/lib/assets/image-presentation";
-import { getTrailSpinePath } from "@/lib/assets/registry";
+  getTrailNodePositions,
+  trailMapMinHeightRem,
+} from "@/lib/design-system/trail-path-anchors";
 import { trailNodeReveal } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
 import type { TrailNodeState, TrailNodeViewModel } from "@/features/learning/utils/trail-state";
@@ -22,23 +21,23 @@ const MARKER_STYLES: Record<
   { ring: string; fill: string; icon: typeof Check }
 > = {
   completed: {
-    ring: "border-success bg-success/15 text-success",
+    ring: "border-success bg-success/20 text-success shadow-[0_0_12px_rgba(47,191,113,0.35)]",
     fill: "bg-success text-success-foreground",
     icon: Check,
   },
   in_progress: {
-    ring: "border-primary bg-primary/15 text-primary shadow-elevation-1",
+    ring: "border-primary bg-primary/20 text-primary shadow-[0_0_14px_rgba(214,64,69,0.45)]",
     fill: "bg-primary text-primary-foreground",
     icon: Play,
   },
   available: {
-    ring: "border-primary/50 bg-card/90 text-primary",
-    fill: "bg-primary/85 text-primary-foreground",
+    ring: "border-primary/70 bg-card/90 text-primary shadow-elevation-1",
+    fill: "bg-primary/90 text-primary-foreground",
     icon: Mountain,
   },
   locked: {
-    ring: "border-border bg-muted/50 text-muted-foreground",
-    fill: "bg-muted-foreground/50 text-background",
+    ring: "border-border/80 bg-background/70 text-muted-foreground",
+    fill: "bg-muted-foreground/60 text-background",
     icon: Lock,
   },
 };
@@ -52,89 +51,89 @@ const STATE_LABELS: Record<TrailNodeState, string> = {
 
 function TrailPathNode({
   node,
-  side,
+  position,
   compact,
 }: {
   node: TrailNodeViewModel;
-  side: "left" | "right";
+  position: { x: number; y: number };
   compact?: boolean;
 }) {
   const styles = MARKER_STYLES[node.state];
   const Icon = styles.icon;
+  const labelSide = position.x < 48 ? "right" : "left";
   const ariaLabel = `${STATE_LABELS[node.state]}: ${node.label}${
     node.subtitle ? `, ${node.subtitle}` : ""
   }`;
 
-  const card = (
-    <div
-      className={cn(
-        "max-w-[calc(50%-1.75rem)] rounded-xl border bg-card/90 p-2.5 backdrop-blur-sm transition-colors",
-        styles.ring,
-        node.href ? "hover:bg-accent/30" : "cursor-not-allowed opacity-70",
-        compact && "p-2",
-      )}
-    >
-      <p className={cn("truncate font-medium", compact ? "text-caption" : "text-body-sm")}>
-        {node.label}
-      </p>
-      {node.subtitle ? (
-        <p className="truncate text-caption text-muted-foreground">{node.subtitle}</p>
-      ) : null}
-    </div>
-  );
-
   const marker = (
     <div
       className={cn(
-        "relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2",
+        "relative z-10 flex shrink-0 items-center justify-center rounded-full border-2 backdrop-blur-sm",
+        compact ? "h-8 w-8" : "h-9 w-9",
         styles.ring,
       )}
     >
       <div
         className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-full",
+          "flex items-center justify-center rounded-full",
+          compact ? "h-5 w-5" : "h-6 w-6",
           styles.fill,
         )}
       >
-        <Icon className="h-3.5 w-3.5" aria-hidden />
+        <Icon className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} aria-hidden />
       </div>
     </div>
   );
 
-  const row = (
+  const card = (
     <div
       className={cn(
-        "relative flex min-h-[3.25rem] items-center",
-        side === "left" ? "justify-start" : "justify-end",
+        "max-w-[7.5rem] rounded-lg border bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
+        styles.ring,
+        node.href ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
+        compact && "max-w-[6.5rem] p-1.5",
       )}
     >
-      {side === "left" ? (
-        <>
-          {card}
-          <div className="w-4 shrink-0" />
-          {marker}
-        </>
-      ) : (
-        <>
-          {marker}
-          <div className="w-4 shrink-0" />
-          {card}
-        </>
+      <p
+        className={cn(
+          "line-clamp-2 font-medium leading-tight",
+          compact ? "text-[0.65rem]" : "text-caption",
+        )}
+      >
+        {node.label}
+      </p>
+      {!compact && node.subtitle ? (
+        <p className="mt-0.5 truncate text-[0.65rem] text-muted-foreground">
+          {node.subtitle}
+        </p>
+      ) : null}
+    </div>
+  );
+
+  const content = (
+    <div
+      className={cn(
+        "absolute flex -translate-y-1/2 items-center gap-1.5",
+        labelSide === "right" ? "flex-row" : "flex-row-reverse",
       )}
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        transform: `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`,
+      }}
+    >
+      {marker}
+      {card}
     </div>
   );
 
   if (!node.href) {
-    return (
-      <div aria-label={ariaLabel} className="relative">
-        {row}
-      </div>
-    );
+    return <div aria-label={ariaLabel}>{content}</div>;
   }
 
   return (
-    <Link href={node.href} className="relative block" aria-label={ariaLabel}>
-      {row}
+    <Link href={node.href} className="block" aria-label={ariaLabel}>
+      {content}
     </Link>
   );
 }
@@ -161,7 +160,8 @@ export function TrailMap({ nodes, compact = false, title, description }: TrailMa
   }
 
   const activeNode = nodes.find((node) => node.state === "in_progress");
-  const spineSrc = getTrailSpinePath(resolvedTheme);
+  const positions = getTrailNodePositions(nodes.length);
+  const minHeight = trailMapMinHeightRem(nodes.length, compact);
 
   return (
     <div className="space-y-3">
@@ -179,31 +179,28 @@ export function TrailMap({ nodes, compact = false, title, description }: TrailMa
           size="sm"
         />
       ) : null}
-      <div className="relative overflow-hidden rounded-2xl border border-primary/15 bg-card/50 py-4 shadow-elevation-1 dark:shadow-elevation-2">
-        <div className={TRAIL_SPINE_FRAME_CLASS} aria-hidden>
-          <Image
-            src={spineSrc}
-            alt=""
-            fill
-            className={TRAIL_SPINE_IMAGE_CLASS}
-            sizes="160px"
-          />
-        </div>
+      <div
+        className="relative overflow-hidden rounded-2xl border border-primary/20 shadow-elevation-1 dark:shadow-elevation-2"
+        style={{ minHeight: `${minHeight}rem` }}
+      >
+        <TrailMapArtwork theme={resolvedTheme} />
         <div
-          className="pointer-events-none absolute inset-y-4 left-1/2 w-0.5 -translate-x-1/2 bg-gradient-to-b from-primary/10 via-primary/40 to-primary/10"
-          aria-hidden
-        />
-        <div className="relative space-y-1 px-2" role="list" aria-label="Trail lessons">
+          className="relative px-1 py-3 sm:px-2"
+          role="list"
+          aria-label="Trail lessons"
+          style={{ minHeight: `${minHeight}rem` }}
+        >
           {nodes.map((node, index) => (
             <MotionDiv
               key={node.id}
               role="listitem"
+              className="pointer-events-auto"
               {...trailNodeReveal}
               transition={{ delay: index * 0.04 }}
             >
               <TrailPathNode
                 node={node}
-                side={index % 2 === 0 ? "left" : "right"}
+                position={positions[index]}
                 compact={compact}
               />
             </MotionDiv>

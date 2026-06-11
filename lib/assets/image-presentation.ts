@@ -11,8 +11,10 @@ export function stickerImageClass(className?: string) {
 export const REGION_HERO_IMAGE_CLASS =
   "object-cover object-[center_42%] scale-105";
 
-/** Vertical trail spine art — transparent PNG centered in frame. */
-export const TRAIL_SPINE_FRAME_CLASS =
-  "pointer-events-none absolute inset-y-0 left-1/2 w-[38%] min-w-[7rem] max-w-[12rem] -translate-x-1/2 overflow-hidden opacity-40";
+/** Full illustrated trail map scene — dark/light artwork fills the frame. */
+export const TRAIL_MAP_IMAGE_CLASS =
+  "object-cover object-[center_38%]";
 
-export const TRAIL_SPINE_IMAGE_CLASS = "object-contain object-center";
+/** Keeps lesson labels readable over bright/dark trail art. */
+export const TRAIL_MAP_SCRIM_CLASS =
+  "absolute inset-0 bg-gradient-to-b from-background/25 via-background/5 to-background/45";

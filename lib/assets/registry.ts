@@ -117,10 +117,15 @@ export function getRegionArtPath(slug: string) {
   return REGION_SLUG_TO_ASSET[slug] ?? null;
 }
 
-export function getTrailSpinePath(theme: "light" | "dark" | string | undefined) {
+export function getTrailMapArtPath(theme: "light" | "dark" | string | undefined) {
   return theme === "light"
     ? ASSET_REGISTRY.ui.trailSpineLight
     : ASSET_REGISTRY.ui.trailSpineDark;
+}
+
+/** @deprecated Use getTrailMapArtPath */
+export function getTrailSpinePath(theme: "light" | "dark" | string | undefined) {
+  return getTrailMapArtPath(theme);
 }
 
 export function getWordmarkPath(theme: "light" | "dark" | string | undefined) {

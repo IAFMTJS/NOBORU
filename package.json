@@ -16,7 +16,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "assets:webp": "node scripts/convert-assets-to-webp.mjs",
-    "assets:stickers": "node scripts/process-sticker-assets.mjs"
+    "assets:stickers": "node scripts/process-sticker-assets.mjs",
+    "assets:scenes": "node scripts/convert-scene-assets.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

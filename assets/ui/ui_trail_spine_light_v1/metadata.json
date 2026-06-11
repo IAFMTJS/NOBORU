@@ -2,7 +2,9 @@
     "id":  "ui_trail_spine_light_v1",
     "updated_at":  "2026-06-11",
     "usage_locations":  [
-                            "phase-a-visuals"
+                            "trail-map",
+                            "learning-path-screen",
+                            "expedition-hero"
                         ],
     "version":  "v1",
     "category":  "ui",
