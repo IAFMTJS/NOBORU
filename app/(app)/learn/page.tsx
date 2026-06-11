@@ -1,7 +1,7 @@
-import { LearningPathScreen } from "@/features/learning/components/learning-path-screen";
-import { getLearningPath } from "@/lib/orchestration/learn.orchestrator";
+import { TrailFirstLearnScreen } from "@/features/learning/components/trail-first-learn-screen";
+import { getLearningPathWithContext } from "@/lib/orchestration/learn.orchestrator";
 
 export default async function LearnPage() {
-  const path = await getLearningPath();
-  return <LearningPathScreen path={path} />;
+  const { path, currentRegionSlug } = await getLearningPathWithContext();
+  return <TrailFirstLearnScreen path={path} initialRegionSlug={currentRegionSlug} />;
 }

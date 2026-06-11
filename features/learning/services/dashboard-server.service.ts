@@ -2,6 +2,7 @@ import { FOOTHILLS_REGION } from "@/features/onboarding/constants/onboarding.con
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
+import { streakService } from "@/features/achievements/services/streak.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
@@ -11,6 +12,7 @@ import { gameContentRepository } from "@/features/games/repositories/game-conten
 import { reviewRepository } from "@/features/review/repositories/review.repository";
 import { settingsServerService } from "@/features/settings/services/settings-server.service";
 import { trialService } from "@/features/trials/services/trial.service";
+import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
@@ -59,6 +61,7 @@ class DashboardServerService {
       trials,
       gamesUnlocked,
       settings,
+      currentStreak,
     ] = await Promise.all([
       learningPathRepository.listPublishedRegionsWithCurriculum(),
       getCachedProgressRows(profile.userId),
@@ -70,6 +73,7 @@ class DashboardServerService {
       trialService.listTrials(profile.userId),
       gameContentRepository.hasUnlockedGames(profile.userId),
       settingsServerService.getSettings(),
+      streakService.getCurrentStreak(profile.userId),
     ]);
 
     const learningPath = learningPathService.buildLearningPath(
@@ -107,9 +111,20 @@ class DashboardServerService {
     );
 
     const readyTrial = trials.find((trial) => trial.availability === "available");
+    const regionForNextLesson = learningPath.nextLesson
+      ? (learningPath.regions.find((entry) =>
+          entry.units.some((unit) =>
+            unit.lessons.some((lesson) => lesson.id === learningPath.nextLesson?.id),
+          ),
+        ) ?? currentRegionPath)
+      : currentRegionPath;
+    const lessonPosition =
+      learningPath.nextLesson && regionForNextLesson
+        ? getLessonPositionInRegion(regionForNextLesson, learningPath.nextLesson.id)
+        : null;
 
     return {
-      greeting: `Konnichiwa, ${profile.displayName}`,
+      greeting: `Kon'nichiwa, ${profile.displayName}`,
       region,
       level: {
         label: profile.levelLabel,
@@ -132,6 +147,13 @@ class DashboardServerService {
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
         href: learningPath.nextLessonHref ?? "/learn",
+        lessonNumber: lessonPosition?.index ?? null,
+        lessonCount: regionForNextLesson?.lessonCount ?? 0,
+        estimatedDuration: learningPath.nextLesson?.estimatedDuration ?? null,
+      },
+      stats: {
+        currentStreak,
+        totalXp: elevation.totalEp,
       },
       recentAchievements: recentAchievements.map((achievement) => ({
         id: achievement.id,

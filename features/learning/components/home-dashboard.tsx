@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
 import { AchievementBadge } from "@/features/achievements/components/achievement-badge";
 import { ExpeditionHero } from "@/features/learning/components/trail/expedition-hero";
 import { PwaInstallPrompt } from "@/features/offline/components/pwa-install-prompt";
@@ -22,37 +21,25 @@ type HomeDashboardProps = {
 export function HomeDashboard({ data }: HomeDashboardProps) {
   return (
     <PageContainer>
-      <ScreenHeader
-        subtitle="Your expedition base camp"
-        title="Home"
-      />
-
       <ExpeditionHero
         greeting={data.greeting}
         regionSlug={data.region.slug}
         regionName={data.region.name}
         trailName={data.region.trail}
-        levelLabel={data.level.label}
         regionProgressPercent={data.level.progressPercent}
-        elevationLevel={data.elevation.level}
-        elevationEp={data.elevation.totalEp}
-        elevationProgressPercent={data.elevation.progressPercent}
-        epToNextLevel={data.elevation.epToNextLevel}
-        activeTitle={data.elevation.activeTitle}
         continueLessonTitle={data.upcomingLesson.title}
         continueHref={data.upcomingLesson.href}
-        reviewQueueCount={data.reviewQueueCount}
-        readyTrial={data.readyTrial}
-        gamesAvailable={data.gamesAvailable}
-        dailyGoal={data.dailyGoal}
-        trailPreview={data.trailPreview}
+        lessonNumber={data.upcomingLesson.lessonNumber}
+        lessonCount={data.upcomingLesson.lessonCount}
+        estimatedDuration={data.upcomingLesson.estimatedDuration}
         quests={data.quests}
         yama={data.yama}
+        stats={data.stats}
       />
 
       <PwaInstallPrompt />
 
-      <Card>
+      <Card className="mt-4">
         <CardHeader className="pb-3">
           <CardTitle className="text-heading-6">Recent Achievements</CardTitle>
         </CardHeader>
@@ -79,9 +66,11 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
               ))}
             </div>
           )}
-          <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
-            <Link href="/review">Review Queue ({data.reviewQueueCount})</Link>
-          </Button>
+          {data.reviewQueueCount > 0 ? (
+            <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
+              <Link href="/review">Review Queue ({data.reviewQueueCount})</Link>
+            </Button>
+          ) : null}
         </CardContent>
       </Card>
     </PageContainer>

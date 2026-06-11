@@ -110,8 +110,9 @@ All mockups live in `assets/marketing/` (design reference — not served in prod
 | `mockup_product_dark_v1.png` | Home, Path Map, Lesson, Review, Vocabulary, Grammar, Progress, Profile (dark) |
 | `mockup_product_light_v1.png` | Same 8 screens (light) |
 | `mockup_supplementary_dark_v1.png` | Onboarding welcome, Login, Kanji list, Settings, Admin (dark) |
+| `mockup_home_learn_flow_dark_v1.png` | Home base camp, trail-first Learn, node detail, region picker, all regions (dark) |
 
-**Total unique screen types mocked: 13**
+**Total unique screen types mocked: 18**
 
 Registry: `mockup_product_collection_v1` in [asset-registry.md](./asset-registry.md).
 
@@ -125,8 +126,8 @@ Registry: `mockup_product_collection_v1` in [asset-registry.md](./asset-registry
 
 | Screen | Mockup shows | App shows today |
 |--------|--------------|-----------------|
-| Path Map | Illustrated vertical mountain trail, nodes on path | Lucide-icon list (`trail-map.tsx`) |
-| Home | Level card with large Yama, quest card with red accent border | `ExpeditionHero` gradient card — structurally close, less illustrated |
+| Path Map | Illustrated vertical mountain trail, nodes on path | Trail-first Learn with minimal nodes + detail sheet (`trail-first-learn-screen.tsx`) |
+| Home | Base camp greeting, continue card, quests, streak/XP stats | `ExpeditionHero` base camp layout — aligned to `mockup_home_learn_flow_dark_v1` |
 | Progress | Circular gauge (64%), streak bar chart | Linear `ProgressBar` only |
 | Profile achievements | Circular illustrated badges | Text `AchievementBadge` pills |
 | Kanji list | Large kanji left, mastery % with arrow | `ListRow` template (shared with vocab/grammar) |
@@ -161,7 +162,7 @@ Mockups emphasize **streak counters and bar charts** (e.g. 34-day streak on Prog
 | Login | Yes | Fair — under-branded vs onboarding | P1 |
 | Register / reset | No | Fair — generic | P2 |
 | Home | Yes | Good structure, fair atmosphere | P1 |
-| Learn / path map | Yes | Weak visually — biggest gap | **P0** |
+| Learn / path map | Yes (+ `mockup_home_learn_flow_dark_v1`) | Good — trail-first default, region sheets | P1 (polish) |
 | Region detail | No | Fair — text only | P1 |
 | Lesson player | Yes | Good — focused drills | P2 (motion polish) |
 | Review | Yes | Good — calm SRS | P2 (button styling vs mockup) |

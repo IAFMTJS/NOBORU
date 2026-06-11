@@ -29,6 +29,13 @@ export type HomeDashboardViewModel = {
   upcomingLesson: {
     title: string;
     href: string;
+    lessonNumber: number | null;
+    lessonCount: number;
+    estimatedDuration: number | null;
+  };
+  stats: {
+    currentStreak: number;
+    totalXp: number;
   };
   recentAchievements: Array<{
     id: string;

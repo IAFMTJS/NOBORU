@@ -59,6 +59,7 @@ lib/assets/registry.ts         # Canonical path constants
 | `icon_app_light_v1` | App Icon Light | icons | v1 | approved | light |
 | `icon_app_dark_v1` | App Icon Dark | icons | v1 | approved | dark |
 | `mockup_product_collection_v1` | Product Mockup Collection | marketing | v1 | approved | both |
+| `mockup_home_learn_flow_dark_v1` | Home & Learn Flow Redesign | marketing | v1 | approved | dark |
 
 ---
 
@@ -248,8 +249,44 @@ lib/assets/registry.ts         # Canonical path constants
 | `mockup_product_dark_v1.png` | Primary product mockup — dark mode |
 | `mockup_product_light_v1.png` | Primary product mockup — light mode |
 | `mockup_supplementary_dark_v1.png` | Supplementary screens — dark mode |
+| `mockup_home_learn_flow_dark_v1.png` | Home base camp + trail-first Learn flow (5 screens) |
 
 **Note:** Marketing mockups are design references — not served in production UI. They guide screen layout, spacing, and component placement.
+
+---
+
+### mockup_home_learn_flow_dark_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `mockup_home_learn_flow_dark_v1` |
+| **Name** | Home & Learn Flow Redesign |
+| **Category** | marketing |
+| **Version** | v1 |
+| **Status** | approved |
+| **Owner Agent** | Frontend Agent |
+| **Created** | 2026-06-11 |
+| **Updated** | 2026-06-11 |
+
+**Source path:** `assets/marketing/mockup_home_learn_flow_dark_v1.png`
+
+**Tags:** `mockup`, `ui-reference`, `home`, `learn`, `trail-map`, `dark-mode`
+
+**Usage locations:**
+
+- Home base camp (`features/learning/components/trail/expedition-hero.tsx`)
+- Trail-first Learn tab (`features/learning/components/trail-first-learn-screen.tsx`)
+- [phase-a-visuals-plan.md](./phase-a-visuals-plan.md)
+
+**Screens covered:**
+
+| Panel | Description |
+|-------|-------------|
+| Home | Base camp greeting, continue card, today's quests, streak/XP stats |
+| Learn | Full-screen trail map as default view |
+| Node detail | Lesson focus sheet on node tap |
+| Region select | Bottom sheet region picker |
+| Trail overview | All regions progress list |
 
 ---
 

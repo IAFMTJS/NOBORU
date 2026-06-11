@@ -142,6 +142,13 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
   upcomingLesson: {
     title: "Lesson 23: ~て form",
     href: "/learn",
+    lessonNumber: 7,
+    lessonCount: 20,
+    estimatedDuration: 4,
+  },
+  stats: {
+    currentStreak: 12,
+    totalXp: 1250,
   },
   recentAchievements: [
     { id: "first-step", slug: "first-step", title: "First Step", rarity: "common" },

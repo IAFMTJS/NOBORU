@@ -53,10 +53,14 @@ function TrailPathNode({
   node,
   position,
   compact,
+  minimal,
+  onNodeSelect,
 }: {
   node: TrailNodeViewModel;
   position: { x: number; y: number };
   compact?: boolean;
+  minimal?: boolean;
+  onNodeSelect?: (node: TrailNodeViewModel) => void;
 }) {
   const styles = MARKER_STYLES[node.state];
   const Icon = styles.icon;
@@ -64,33 +68,35 @@ function TrailPathNode({
   const ariaLabel = `${STATE_LABELS[node.state]}: ${node.label}${
     node.subtitle ? `, ${node.subtitle}` : ""
   }`;
+  const interactive = Boolean(onNodeSelect) || Boolean(node.href);
 
   const marker = (
     <div
       className={cn(
         "relative z-10 flex shrink-0 items-center justify-center rounded-full border-2 backdrop-blur-sm",
-        compact ? "h-8 w-8" : "h-9 w-9",
+        compact || minimal ? "h-8 w-8" : "h-9 w-9",
         styles.ring,
+        interactive && onNodeSelect ? "cursor-pointer" : null,
       )}
     >
       <div
         className={cn(
           "flex items-center justify-center rounded-full",
-          compact ? "h-5 w-5" : "h-6 w-6",
+          compact || minimal ? "h-5 w-5" : "h-6 w-6",
           styles.fill,
         )}
       >
-        <Icon className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} aria-hidden />
+        <Icon className={compact || minimal ? "h-3 w-3" : "h-3.5 w-3.5"} aria-hidden />
       </div>
     </div>
   );
 
-  const card = (
+  const card = minimal ? null : (
     <div
       className={cn(
         "max-w-[7.5rem] rounded-lg border bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
         styles.ring,
-        node.href ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
+        interactive ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
         compact && "max-w-[6.5rem] p-1.5",
       )}
     >
@@ -115,17 +121,33 @@ function TrailPathNode({
       className={cn(
         "absolute flex -translate-y-1/2 items-center gap-1.5",
         labelSide === "right" ? "flex-row" : "flex-row-reverse",
+        minimal && "justify-center",
       )}
       style={{
         left: `${position.x}%`,
         top: `${position.y}%`,
-        transform: `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`,
+        transform: minimal
+          ? `translate(-50%, -50%)`
+          : `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`,
       }}
     >
       {marker}
       {card}
     </div>
   );
+
+  if (onNodeSelect) {
+    return (
+      <button
+        type="button"
+        className="block border-0 bg-transparent p-0 text-left"
+        aria-label={ariaLabel}
+        onClick={() => onNodeSelect(node)}
+      >
+        {content}
+      </button>
+    );
+  }
 
   if (!node.href) {
     return <div aria-label={ariaLabel}>{content}</div>;
@@ -141,11 +163,20 @@ function TrailPathNode({
 type TrailMapProps = {
   nodes: TrailNodeViewModel[];
   compact?: boolean;
+  minimal?: boolean;
   title?: string;
   description?: string;
+  onNodeSelect?: (node: TrailNodeViewModel) => void;
 };
 
-export function TrailMap({ nodes, compact = false, title, description }: TrailMapProps) {
+export function TrailMap({
+  nodes,
+  compact = false,
+  minimal = false,
+  title,
+  description,
+  onNodeSelect,
+}: TrailMapProps) {
   const { resolvedTheme } = useTheme();
 
   if (nodes.length === 0) {
@@ -161,7 +192,7 @@ export function TrailMap({ nodes, compact = false, title, description }: TrailMa
 
   const activeNode = nodes.find((node) => node.state === "in_progress");
   const positions = getTrailNodePositions(nodes.length);
-  const minHeight = trailMapMinHeightRem(nodes.length, compact);
+  const minHeight = trailMapMinHeightRem(nodes.length, compact || minimal);
 
   return (
     <div className="space-y-3">
@@ -173,7 +204,7 @@ export function TrailMap({ nodes, compact = false, title, description }: TrailMa
           ) : null}
         </div>
       ) : null}
-      {activeNode ? (
+      {activeNode && !minimal ? (
         <YamaPresence
           presence={yamaService.resolveTrailProgress(activeNode.id.length)}
           size="sm"
@@ -202,6 +233,8 @@ export function TrailMap({ nodes, compact = false, title, description }: TrailMa
                 node={node}
                 position={positions[index]}
                 compact={compact}
+                minimal={minimal}
+                onNodeSelect={onNodeSelect}
               />
             </MotionDiv>
           ))}

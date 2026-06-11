@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { Flame, Star } from "lucide-react";
 
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
-import { Badge } from "@/components/ui/badge";
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,39 +13,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { CircularProgress } from "@/components/ui/circular-progress";
 import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
-import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { cn } from "@/lib/utils";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
-import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
 
 type ExpeditionHeroProps = {
   greeting: string;
   regionSlug: string;
   regionName: string;
   trailName: string;
-  levelLabel: string;
   regionProgressPercent: number;
-  elevationLevel: number;
-  elevationEp: number;
-  elevationProgressPercent: number;
-  epToNextLevel: number;
-  activeTitle: string | null;
   continueLessonTitle: string;
   continueHref: string;
-  reviewQueueCount: number;
-  readyTrial: { title: string; href: string } | null;
-  gamesAvailable: boolean;
-  dailyGoal: {
-    targetMinutes: number;
-    progressPercent: number;
-    label: string;
-  };
-  trailPreview: TrailNodeViewModel[];
+  lessonNumber: number | null;
+  lessonCount: number;
+  estimatedDuration: number | null;
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
+  stats: {
+    currentStreak: number;
+    totalXp: number;
+  };
 };
 
 export function ExpeditionHero({
@@ -52,121 +43,122 @@ export function ExpeditionHero({
   regionSlug,
   regionName,
   trailName,
-  levelLabel,
   regionProgressPercent,
-  elevationLevel,
-  elevationEp,
-  elevationProgressPercent,
-  epToNextLevel,
-  activeTitle,
   continueLessonTitle,
   continueHref,
-  reviewQueueCount,
-  readyTrial,
-  gamesAvailable,
-  dailyGoal,
-  trailPreview,
+  lessonNumber,
+  lessonCount,
+  estimatedDuration,
   quests,
   yama,
+  stats,
 }: ExpeditionHeroProps) {
   const region = getRegionVisuals(regionSlug);
+  const lessonLabel =
+    lessonNumber && lessonCount > 0
+      ? `Lesson ${lessonNumber} of ${lessonCount}`
+      : null;
 
   return (
-    <Card
-      className={cn(
-        "overflow-hidden border bg-gradient-to-br shadow-elevation-2 dark:shadow-elevation-3",
-        region.gradient,
-        region.border,
-      )}
-    >
-      <CardHeader className="pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2">
-            <CardDescription>{greeting}</CardDescription>
-            <CardTitle className="text-heading-3">Continue Your Climb</CardTitle>
-            <div className="space-y-1">
-              <p className="text-body-sm font-medium">
-                {regionName} · {trailName}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className={region.badge}>{levelLabel}</Badge>
-                <Badge variant="outline">
-                  Level {elevationLevel} · {elevationEp.toLocaleString()} EP
-                </Badge>
-                {activeTitle ? (
-                  <Badge variant="outline">{activeTitle}</Badge>
-                ) : null}
-              </div>
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <h1 className="text-heading-4">{greeting}</h1>
+        <p className="text-body-sm text-muted-foreground">
+          Ready for today&apos;s climb?
+        </p>
+      </div>
+
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-2xl border shadow-elevation-2 dark:shadow-elevation-3",
+          region.border,
+        )}
+      >
+        <RegionHeroImage
+          regionSlug={regionSlug}
+          alt={`${regionName} base camp`}
+          className="h-40 rounded-none sm:h-44"
+        />
+        <div className="absolute bottom-3 right-3 max-w-[7rem]">
+          <YamaPresence presence={yama} size="md" layout="vertical" priority />
+        </div>
+      </div>
+
+      <Card
+        className={cn(
+          "overflow-hidden border bg-gradient-to-br shadow-elevation-1",
+          region.gradient,
+          region.border,
+        )}
+      >
+        <CardHeader className="pb-3">
+          <CardTitle className="text-heading-5">Continue Your Climb</CardTitle>
+          <CardDescription>
+            {regionName} · {continueLessonTitle}
+          </CardDescription>
+          {lessonLabel ? (
+            <p className="text-caption text-muted-foreground">{lessonLabel}</p>
+          ) : (
+            <p className="text-caption text-muted-foreground">{trailName}</p>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-4">
+            <CircularProgress
+              value={regionProgressPercent}
+              size={88}
+              strokeWidth={8}
+              sublabel={trailName}
+              className="shrink-0"
+            />
+            <div className="min-w-0 space-y-1">
+              <p className="text-body-sm font-medium">{continueLessonTitle}</p>
+              {estimatedDuration ? (
+                <p className="text-caption text-muted-foreground">
+                  ~{estimatedDuration} min on the trail
+                </p>
+              ) : null}
             </div>
           </div>
-          <div className="max-w-[11rem] shrink-0">
-            <YamaPresence
-              presence={yama}
-              size="lg"
-              layout="vertical"
-              priority
-            />
+          <Button size="lg" className="w-full" asChild>
+            <AnalyticsLink
+              href={continueHref}
+              eventName="trail_continue_clicked"
+              eventProperties={{
+                source: "home_expedition",
+                lessonTitle: continueLessonTitle,
+              }}
+            >
+              Continue Climbing
+            </AnalyticsLink>
+          </Button>
+        </CardContent>
+      </Card>
+
+      <TrailQuestCards daily={quests.daily} />
+
+      <div className="grid grid-cols-2 gap-3 rounded-xl border border-border/80 bg-card/60 p-3">
+        <div className="flex items-center gap-2">
+          <Flame className="h-4 w-4 text-warning" aria-hidden />
+          <div>
+            <p className="text-body-sm font-medium">{stats.currentStreak} day streak</p>
+            <p className="text-caption text-muted-foreground">Steady ascent</p>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <ProgressBar
-          value={regionProgressPercent}
-          label="Region trail progress"
-          showValue
-        />
-        <ProgressBar
-          value={elevationProgressPercent}
-          label={`Level ${elevationLevel} elevation · ${epToNextLevel.toLocaleString()} EP to next`}
-          showValue
-        />
-        <ProgressBar
-          value={dailyGoal.progressPercent}
-          label={`Daily climb · ${dailyGoal.targetMinutes} min goal · ${dailyGoal.label}`}
-          showValue
-        />
-        {reviewQueueCount > 0 ? (
-          <Button variant="secondary" size="lg" className="w-full" asChild>
-            <Link href="/review?limit=5">
-              Quick Review · {reviewQueueCount} due
-            </Link>
-          </Button>
-        ) : null}
-        <Button size="lg" className="w-full" asChild>
-          <AnalyticsLink
-            href={continueHref}
-            eventName="trail_continue_clicked"
-            eventProperties={{
-              source: "home_expedition",
-              lessonTitle: continueLessonTitle,
-            }}
-          >
-            Continue Climbing · {continueLessonTitle}
-          </AnalyticsLink>
-        </Button>
-        <div className="flex flex-wrap gap-2">
-          {readyTrial ? (
-            <Button variant="outline" size="sm" className="flex-1" asChild>
-              <Link href={readyTrial.href}>Trial ready · {readyTrial.title}</Link>
-            </Button>
-          ) : null}
-          {gamesAvailable ? (
-            <Button variant="outline" size="sm" className="flex-1" asChild>
-              <Link href="/games/word-match">Quick sprint</Link>
-            </Button>
-          ) : null}
+        <div className="flex items-center gap-2">
+          <Star className="h-4 w-4 text-primary" aria-hidden />
+          <div>
+            <p className="text-body-sm font-medium">
+              {stats.totalXp.toLocaleString()} XP
+            </p>
+            <p className="text-caption text-muted-foreground">Elevation earned</p>
+          </div>
         </div>
-        {trailPreview.length > 0 ? (
-          <TrailMap
-            nodes={trailPreview}
-            compact
-            title="Trail ahead"
-            description="Your next steps on the mountain"
-          />
-        ) : null}
-        <TrailQuestCards daily={quests.daily} weekly={quests.weekly} />
-      </CardContent>
-    </Card>
+      </div>
+
+      <Button variant="outline" size="sm" className="w-full" asChild>
+        <Link href="/learn">View full trail</Link>
+      </Button>
+    </div>
   );
 }
-
