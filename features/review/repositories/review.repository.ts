@@ -52,15 +52,28 @@ export type ReviewAggregatedStats = {
 };
 
 class ReviewRepository {
-  async listDue(userId: string, limit = 20): Promise<ReviewItemRow[]> {
+  async listDue(
+    userId: string,
+    limit = 20,
+    options?: { contentType?: string; weakOnly?: boolean },
+  ): Promise<ReviewItemRow[]> {
     const supabase = await createClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("review_items")
       .select("*")
       .eq("user_id", userId)
       .lte("next_review_at", new Date().toISOString())
-      .order("next_review_at", { ascending: true })
-      .limit(limit);
+      .order("next_review_at", { ascending: true });
+
+    if (options?.contentType) {
+      query = query.eq("content_type", options.contentType);
+    }
+
+    if (options?.weakOnly) {
+      query = query.or("state.in.(new,learning),mastery_score.lt.60");
+    }
+
+    const { data, error } = await query.limit(limit);
 
     if (error) throw new Error(error.message);
     return (data ?? []) as ReviewItemRow[];

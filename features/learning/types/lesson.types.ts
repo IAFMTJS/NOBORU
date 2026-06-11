@@ -221,6 +221,10 @@ export type LessonSessionViewModel = {
   progress: ProgressStatus;
   score: number;
   steps: LessonStep[];
+  nextLesson: {
+    title: string;
+    href: string;
+  } | null;
 };
 
 export type LessonSummaryViewModel = {

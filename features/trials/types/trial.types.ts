@@ -1,3 +1,6 @@
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { ContentStatus } from "@/lib/content/types";
 
 export type TrialKind = "regional_challenge" | "boss_trial" | "final_trial";
@@ -138,6 +141,9 @@ export type TrialCompleteViewModel = {
   scorePercent: number;
   grade: TrialGrade | null;
   epAwarded: number | null;
+  elevation: ElevationAwardViewModel | null;
+  achievements: AchievementUnlockViewModel[];
+  quests: QuestCompletionViewModel[];
   reviewRecommendations: string[];
   progress: TrialProgressViewModel;
 };

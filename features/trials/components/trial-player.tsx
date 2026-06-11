@@ -23,6 +23,8 @@ import type {
   TrialCompleteViewModel,
   TrialSessionViewModel,
 } from "@/features/trials/types/trial.types";
+import { AchievementUnlockFeedback } from "@/features/achievements/components/achievement-unlock-feedback";
+import { QuestCompleteFeedback } from "@/features/quests/components/quest-complete-feedback";
 import { YamaCelebration } from "@/features/yama/components/yama-celebration";
 import { yamaService } from "@/features/yama/services/yama.service";
 
@@ -141,6 +143,8 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
             {result.epAwarded ? (
               <Badge variant="secondary">+{result.epAwarded} EP</Badge>
             ) : null}
+            <AchievementUnlockFeedback achievements={result.achievements} />
+            <QuestCompleteFeedback completions={result.quests} />
             {!result.passed && result.reviewRecommendations.length > 0 ? (
               <div className="space-y-2 rounded-lg border border-border p-3">
                 <p className="text-body-sm font-medium">Review recommendations</p>

@@ -19,7 +19,9 @@ import type {
   TrialTemplateRow,
   UserTrialProgressRow,
 } from "@/features/trials/types/trial.types";
+import { achievementService } from "@/features/achievements/services/achievement.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
+import { questService } from "@/features/quests/services/quest.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
@@ -265,11 +267,22 @@ class TrialService {
       lastAttemptAt: completedAt,
     });
 
+    const achievements = await achievementService.afterStudyActivity(userId);
+    const quests = await questService.recordActivities(userId, [
+      { type: "trial_complete", amount: 1 },
+      ...(elevation
+        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+        : []),
+    ]);
+
     return {
       passed,
       scorePercent,
       grade,
       epAwarded: elevation?.epAwarded ?? (epAwarded > 0 ? epAwarded : null),
+      elevation,
+      achievements,
+      quests,
       reviewRecommendations: passed
         ? []
         : buildReviewRecommendations(scorePercent, template.region_slug),

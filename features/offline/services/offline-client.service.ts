@@ -8,6 +8,7 @@ import type {
 } from "@/features/review/types/review.types";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import type { GameSessionViewModel } from "@/features/games/types/game.types";
 import type { LessonSessionViewModel } from "@/features/learning/types/lesson.types";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import {
@@ -282,6 +283,7 @@ class OfflineClientService {
     elevation: ElevationAwardViewModel | null;
     achievements: AchievementUnlockViewModel[];
     quests: QuestCompletionViewModel[];
+    reviewItemsEnqueued: number;
     queuedOffline: boolean;
   }> {
     if (isBrowserOnline()) {
@@ -299,6 +301,7 @@ class OfflineClientService {
             elevation?: ElevationAwardViewModel | null;
             achievements?: AchievementUnlockViewModel[];
             quests?: QuestCompletionViewModel[];
+            reviewItemsEnqueued?: number;
           };
         };
         if (!result.success) {
@@ -309,6 +312,7 @@ class OfflineClientService {
           elevation: result.data?.elevation ?? null,
           achievements: result.data?.achievements ?? [],
           quests: result.data?.quests ?? [],
+          reviewItemsEnqueued: result.data?.reviewItemsEnqueued ?? 0,
           queuedOffline: false,
         };
       } catch (error) {
@@ -335,6 +339,7 @@ class OfflineClientService {
       elevation: null,
       achievements: [],
       quests: [],
+      reviewItemsEnqueued: 0,
       queuedOffline: true,
     };
   }
@@ -462,6 +467,31 @@ class OfflineClientService {
 
   async prefetchAudioBatch(urls: string[]): Promise<void> {
     await Promise.all(urls.map((url) => this.prefetchAudio(url)));
+  }
+
+  async cacheGameSession(
+    slug: string,
+    session: GameSessionViewModel,
+  ): Promise<void> {
+    const db = await getOfflineDb();
+    await db.put(OFFLINE_STORES.meta, {
+      key: `game-session:${slug}`,
+      value: JSON.stringify(session),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async getCachedGameSession(
+    slug: string,
+  ): Promise<GameSessionViewModel | null> {
+    const db = await getOfflineDb();
+    const record = await db.get(OFFLINE_STORES.meta, `game-session:${slug}`);
+    if (!record?.value) return null;
+    try {
+      return JSON.parse(record.value) as GameSessionViewModel;
+    } catch {
+      return null;
+    }
   }
 }
 

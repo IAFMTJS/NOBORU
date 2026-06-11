@@ -48,6 +48,8 @@ function metricForEvent(event: QuestActivityEvent): QuestMetric | null {
       return "learn_vocabulary";
     case "review_item":
       return "review_items";
+    case "trial_complete":
+      return "complete_lessons";
     case "ep_earned":
       return "earn_ep";
     default:

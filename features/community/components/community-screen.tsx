@@ -30,11 +30,17 @@ export function CommunityScreen() {
         </Button>
       </Card>
 
-      <Card>
+      <Card className="shadow-elevation-1">
         <CardHeader>
-          <CardTitle className="text-heading-6">Coming Soon</CardTitle>
-          <CardDescription>Community features are post-MVP.</CardDescription>
+          <CardTitle className="text-heading-6">Leagues (opt-in)</CardTitle>
+          <CardDescription>
+            Weekly leagues will be optional — no streak-loss pressure, just friendly
+            climbing with fellow learners.
+          </CardDescription>
         </CardHeader>
+        <Button variant="outline" disabled className="w-full">
+          Join league — coming soon
+        </Button>
       </Card>
     </PageContainer>
   );

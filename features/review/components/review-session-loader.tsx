@@ -12,11 +12,17 @@ import type { OfflineReviewBundle } from "@/lib/offline/types";
 type ReviewSessionLoaderProps = {
   userId: string;
   initialSession: ReviewSessionViewModel;
+  sessionLimit?: number | null;
+  contentType?: string | null;
+  weakOnly?: boolean;
 };
 
 export function ReviewSessionLoader({
   userId,
   initialSession,
+  sessionLimit = null,
+  contentType = null,
+  weakOnly = false,
 }: ReviewSessionLoaderProps) {
   const online = useOnlineStatus();
   const [session, setSession] = useState(initialSession);
@@ -30,7 +36,17 @@ export function ReviewSessionLoader({
       setError(null);
       try {
         if (online) {
-          const response = await fetch("/api/review/session");
+          const params = new URLSearchParams();
+          if (sessionLimit && sessionLimit > 0) {
+            params.set("limit", String(sessionLimit));
+          }
+          if (contentType) params.set("contentType", contentType);
+          if (weakOnly) params.set("weakOnly", "true");
+          const query = params.toString();
+          const sessionUrl = query
+            ? `/api/review/session?${query}`
+            : "/api/review/session";
+          const response = await fetch(sessionUrl);
           const result = (await response.json()) as {
             success: boolean;
             data?: OfflineReviewBundle;
@@ -68,7 +84,7 @@ export function ReviewSessionLoader({
     return () => {
       cancelled = true;
     };
-  }, [online, userId]);
+  }, [contentType, online, sessionLimit, userId, weakOnly]);
 
   if (error) {
     return (
@@ -89,6 +105,9 @@ export function ReviewSessionLoader({
       initialSession={session}
       offlineBundle={bundle}
       onBundleChange={setBundle}
+      sessionLimit={sessionLimit}
+      contentType={contentType}
+      weakOnly={weakOnly}
     />
   );
 }

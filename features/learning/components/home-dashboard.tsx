@@ -36,9 +36,15 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         regionProgressPercent={data.level.progressPercent}
         elevationLevel={data.elevation.level}
         elevationEp={data.elevation.totalEp}
+        elevationProgressPercent={data.elevation.progressPercent}
+        epToNextLevel={data.elevation.epToNextLevel}
         activeTitle={data.elevation.activeTitle}
         continueLessonTitle={data.upcomingLesson.title}
         continueHref={data.upcomingLesson.href}
+        reviewQueueCount={data.reviewQueueCount}
+        readyTrial={data.readyTrial}
+        gamesAvailable={data.gamesAvailable}
+        dailyGoal={data.dailyGoal}
         trailPreview={data.trailPreview}
         quests={data.quests}
         yama={data.yama}

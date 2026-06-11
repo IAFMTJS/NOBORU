@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +11,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
 
-export function ExploreScreen() {
+type ExploreScreenProps = {
+  gameAvailability: GameAvailabilityViewModel;
+};
+
+export function ExploreScreen({ gameAvailability }: ExploreScreenProps) {
+  const hasMiniGame =
+    gameAvailability.wordMatch.available ||
+    gameAvailability.vocabularyRush.available ||
+    gameAvailability.kanjiHunter.available;
+
   return (
     <PageContainer>
       <ScreenHeader
@@ -37,12 +48,55 @@ export function ExploreScreen() {
         <CardHeader>
           <CardTitle>Mini-Games</CardTitle>
           <CardDescription>
-            Sprint drills and seasonal events arrive on a later stretch of the trail.
+            {hasMiniGame
+              ? "Quick sprints that reinforce what you have already learned."
+              : "Complete your first lessons to unlock matching and rush drills."}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/games">Preview Games Hub</Link>
+        <CardContent className="space-y-2">
+          {hasMiniGame ? (
+            <>
+              {gameAvailability.wordMatch.available ? (
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/games/word-match">
+                    Word Match
+                    <Badge variant="secondary" className="ml-2">
+                      {gameAvailability.wordMatch.poolSize}
+                    </Badge>
+                  </Link>
+                </Button>
+              ) : null}
+              {gameAvailability.vocabularyRush.available ? (
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/games/vocabulary-rush">
+                    Vocabulary Rush
+                    <Badge variant="secondary" className="ml-2">
+                      {gameAvailability.vocabularyRush.poolSize}
+                    </Badge>
+                  </Link>
+                </Button>
+              ) : null}
+              {gameAvailability.kanjiHunter.available ? (
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/games/kanji-hunter">
+                    Kanji Hunter
+                    <Badge variant="secondary" className="ml-2">
+                      {gameAvailability.kanjiHunter.poolSize}
+                    </Badge>
+                  </Link>
+                </Button>
+              ) : null}
+              {gameAvailability.vocabularyRush.available ? (
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/games/vocabulary-rush?weakOnly=true">
+                    Weak Vocabulary Sprint
+                  </Link>
+                </Button>
+              ) : null}
+            </>
+          ) : null}
+          <Button variant="ghost" className="w-full" asChild>
+            <Link href="/games">Open Games Hub</Link>
           </Button>
         </CardContent>
       </Card>

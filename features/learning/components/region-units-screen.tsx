@@ -13,13 +13,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { RegionContentLinks } from "@/features/learning/components/region-content-links";
+import { RegionContinueFooter } from "@/features/learning/components/region-continue-footer";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { buildTrailNodes } from "@/features/learning/utils/trail-state";
+import { getNextLessonInRegion } from "@/features/learning/utils/region-lesson";
 import { RegionTrialsPanel } from "@/features/trials/components/region-trials-panel";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
-import { getJlptQueryString } from "@/lib/learning/jlpt-content.constants";
 import { cn } from "@/lib/utils";
 
 type RegionUnitsScreenProps = {
@@ -27,37 +29,15 @@ type RegionUnitsScreenProps = {
   trials?: TrialListEntryViewModel[];
 };
 
-function RegionContentLinks({ jlptLevel }: { jlptLevel: "n5" | "n4" }) {
-  const query = getJlptQueryString(jlptLevel);
-  const levelLabel = jlptLevel.toUpperCase();
-
-  return (
-    <div className="space-y-2">
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/learn/vocabulary${query}`}>Open {levelLabel} Vocabulary</Link>
-      </Button>
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/learn/grammar${query}`}>Open {levelLabel} Grammar</Link>
-      </Button>
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/learn/kanji${query}`}>Open {levelLabel} Kanji Academy</Link>
-      </Button>
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/learn/reading${query}`}>Open {levelLabel} Reading</Link>
-      </Button>
-      <Button variant="outline" className="w-full" asChild>
-        <Link href={`/learn/listening${query}`}>Open {levelLabel} Listening</Link>
-      </Button>
-    </div>
-  );
-}
-
 export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProps) {
   const regionLocked = region.availability === "locked";
   const visuals = getRegionVisuals(region.slug);
+  const nextLesson = getNextLessonInRegion(region);
+  const jlptLevel =
+    region.slug === "mount-n4" ? ("n4" as const) : region.slug === "mount-n5" ? ("n5" as const) : null;
 
   return (
-    <PageContainer>
+    <PageContainer className="pb-24">
       <ScreenHeader
         title={region.name}
         subtitle={region.description ?? "Region trail"}
@@ -104,6 +84,10 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
         </Card>
       ) : null}
 
+      {!regionLocked ? (
+        <RegionTrialsPanel regionSlug={region.slug} trials={trials} variant="peak" />
+      ) : null}
+
       <Card className="shadow-elevation-1">
         <CardHeader>
           <CardTitle>Region Progress</CardTitle>
@@ -127,35 +111,37 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
               <Link href="/learn/katakana">Open Katakana Chart</Link>
             </Button>
           ) : null}
-          {!regionLocked && region.slug === "mount-n5" ? (
-            <RegionContentLinks jlptLevel="n5" />
-          ) : null}
-          {!regionLocked && region.slug === "mount-n4" ? (
-            <RegionContentLinks jlptLevel="n4" />
+          {!regionLocked && jlptLevel ? (
+            <RegionContentLinks jlptLevel={jlptLevel} variant="chips" />
           ) : null}
         </CardContent>
       </Card>
 
-      {!regionLocked ? <RegionTrialsPanel regionSlug={region.slug} trials={trials} /> : null}
-
       {!regionLocked ? (
-      <div className="space-y-4">
-        {region.units.map((unit) => (
-          <Card key={unit.id} className="shadow-elevation-1">
-            <CardHeader>
-              <CardTitle className="text-heading-6">{unit.name}</CardTitle>
-              <CardDescription>{unit.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TrailMap
-                nodes={buildTrailNodes(unit.lessons)}
-                title={unit.name}
-                description={`${unit.completedCount}/${unit.lessonCount} lessons complete`}
-              />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+        <div className="space-y-4">
+          {region.units.map((unit) => (
+            <Card key={unit.id} className="shadow-elevation-1">
+              <CardHeader>
+                <CardTitle className="text-heading-6">{unit.name}</CardTitle>
+                <CardDescription>{unit.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <TrailMap
+                  nodes={buildTrailNodes(unit.lessons)}
+                  title={unit.name}
+                  description={`${unit.completedCount}/${unit.lessonCount} lessons complete`}
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : null}
+
+      {!regionLocked && nextLesson ? (
+        <RegionContinueFooter
+          lessonTitle={nextLesson.title}
+          href={nextLesson.href}
+        />
       ) : null}
     </PageContainer>
   );

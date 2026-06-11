@@ -177,6 +177,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   const [questCompletions, setQuestCompletions] = useState<
     QuestCompletionViewModel[]
   >([]);
+  const [reviewItemsEnqueued, setReviewItemsEnqueued] = useState(0);
 
   const checkStepCount = useMemo(
     () =>
@@ -243,6 +244,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       setElevationAward(result.elevation);
       setAchievementUnlocks(result.achievements);
       setQuestCompletions(result.quests);
+      setReviewItemsEnqueued(result.reviewItemsEnqueued);
       void analyticsService.track({
         name: "lesson_completed",
         properties: {
@@ -537,6 +539,27 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
               lessonType={session.type}
               score={completedScore}
             />
+            {session.nextLesson ? (
+              <Button className="w-full" asChild>
+                <Link href={session.nextLesson.href}>
+                  Next lesson · {session.nextLesson.title}
+                </Link>
+              </Button>
+            ) : null}
+            {reviewItemsEnqueued > 0 ? (
+              <Button variant="secondary" className="w-full" asChild>
+                <Link
+                  href={
+                    reviewItemsEnqueued > 5
+                      ? "/review"
+                      : `/review?limit=${Math.min(reviewItemsEnqueued, 5)}`
+                  }
+                >
+                  Review {reviewItemsEnqueued} new item
+                  {reviewItemsEnqueued === 1 ? "" : "s"}
+                </Link>
+              </Button>
+            ) : null}
             <Button className="w-full" asChild>
               <Link href={`/learn/${session.regionSlug}`}>Back to Region</Link>
             </Button>

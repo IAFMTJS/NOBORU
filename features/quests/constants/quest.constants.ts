@@ -37,6 +37,7 @@ export type QuestActivityEvent =
   | { type: "lesson_complete"; amount?: number }
   | { type: "vocabulary_learned"; amount: number }
   | { type: "review_item"; amount?: number }
+  | { type: "trial_complete"; amount?: number }
   | { type: "ep_earned"; amount: number };
 
 export function resolveQuestHref(

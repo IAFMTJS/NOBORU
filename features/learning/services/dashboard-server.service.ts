@@ -7,7 +7,10 @@ import { learningPathRepository } from "@/features/learning/repositories/learnin
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { questService } from "@/features/quests/services/quest.service";
 import { yamaService } from "@/features/yama/services/yama.service";
+import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
 import { reviewRepository } from "@/features/review/repositories/review.repository";
+import { settingsServerService } from "@/features/settings/services/settings-server.service";
+import { trialService } from "@/features/trials/services/trial.service";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
@@ -45,16 +48,29 @@ class DashboardServerService {
   ): Promise<HomeDashboardViewModel> {
     const region = getRegionDisplay(profile.currentRegionSlug);
 
-    const [regions, progressRows, reviewQueueCount, elevation, recentAchievements, quests, passedTrialSlugs] =
-      await Promise.all([
-        learningPathRepository.listPublishedRegionsWithCurriculum(),
-        getCachedProgressRows(profile.userId),
-        reviewRepository.countDue(profile.userId),
-        elevationService.getSummary(profile.userId),
-        achievementService.listRecentUnlocked(profile.userId),
-        questService.getQuestDashboard(profile.userId),
-        learningPathService.getPassedTrialSlugs(profile.userId),
-      ]);
+    const [
+      regions,
+      progressRows,
+      reviewQueueCount,
+      elevation,
+      recentAchievements,
+      quests,
+      passedTrialSlugs,
+      trials,
+      gamesUnlocked,
+      settings,
+    ] = await Promise.all([
+      learningPathRepository.listPublishedRegionsWithCurriculum(),
+      getCachedProgressRows(profile.userId),
+      reviewRepository.countDue(profile.userId),
+      elevationService.getSummary(profile.userId),
+      achievementService.listRecentUnlocked(profile.userId),
+      questService.getQuestDashboard(profile.userId),
+      learningPathService.getPassedTrialSlugs(profile.userId),
+      trialService.listTrials(profile.userId),
+      gameContentRepository.hasUnlockedGames(profile.userId),
+      settingsServerService.getSettings(),
+    ]);
 
     const learningPath = learningPathService.buildLearningPath(
       regions,
@@ -90,6 +106,8 @@ class DashboardServerService {
       profile.userId.length,
     );
 
+    const readyTrial = trials.find((trial) => trial.availability === "available");
+
     return {
       greeting: `Konnichiwa, ${profile.displayName}`,
       region,
@@ -122,6 +140,23 @@ class DashboardServerService {
         rarity: achievement.rarity,
       })),
       reviewQueueCount,
+      readyTrial: readyTrial
+        ? {
+            title: readyTrial.title,
+            href: `/trials/${readyTrial.slug}`,
+          }
+        : null,
+      gamesAvailable: gamesUnlocked,
+      dailyGoal: {
+        targetMinutes: settings?.dailyGoalMinutes ?? 15,
+        progressPercent:
+          quests.daily.totalCount === 0
+            ? 0
+            : Math.round(
+                (quests.daily.completedCount / quests.daily.totalCount) * 100,
+              ),
+        label: `${quests.daily.completedCount}/${quests.daily.totalCount} daily quests`,
+      },
     };
   }
 }

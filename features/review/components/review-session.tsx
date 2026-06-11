@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
@@ -14,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { ReviewSessionHub } from "@/features/review/components/review-session-hub";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { formatReviewStateLabel } from "@/features/review/services/srs.service";
@@ -33,12 +35,18 @@ type ReviewSessionProps = {
   initialSession: ReviewSessionViewModel;
   offlineBundle: OfflineReviewBundle;
   onBundleChange: (bundle: OfflineReviewBundle) => void;
+  sessionLimit?: number | null;
+  contentType?: string | null;
+  weakOnly?: boolean;
 };
 
 export function ReviewSession({
   initialSession,
   offlineBundle,
   onBundleChange,
+  sessionLimit = null,
+  contentType = null,
+  weakOnly = false,
 }: ReviewSessionProps) {
   const [session, setSession] = useState(initialSession);
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +62,21 @@ export function ReviewSession({
   const [lastReviewFeedback, setLastReviewFeedback] = useState<
     ReturnType<typeof yamaService.resolveReviewFeedback> | null
   >(null);
+  const [sessionCompletedCount, setSessionCompletedCount] = useState(0);
+  const [sessionFinished, setSessionFinished] = useState(false);
+  const [sessionEpEarned, setSessionEpEarned] = useState(0);
+  const [sessionStarted, setSessionStarted] = useState(
+    Boolean(sessionLimit || contentType || weakOnly),
+  );
+
+  const quickSessionTarget = sessionLimit && sessionLimit > 0 ? sessionLimit : null;
+  const sessionComplete =
+    sessionFinished ||
+    (quickSessionTarget !== null && sessionCompletedCount >= quickSessionTarget) ||
+    (sessionStarted &&
+      quickSessionTarget === null &&
+      sessionCompletedCount > 0 &&
+      !session.currentCard);
 
   async function submitRating(rating: ReviewRating) {
     if (!session.currentCard) return;
@@ -80,6 +103,20 @@ export function ReviewSession({
       setLastQuests(result.delta.quests ?? []);
       setLastReviewFeedback(yamaService.resolveReviewFeedback(rating));
       setRevealed(false);
+      setSessionCompletedCount((current) => current + 1);
+      if (result.delta.elevation) {
+        setSessionEpEarned((current) => current + result.delta.elevation!.epAwarded);
+      }
+      const nextCount = sessionCompletedCount + 1;
+      if (quickSessionTarget !== null && nextCount >= quickSessionTarget) {
+        setSessionFinished(true);
+      } else if (
+        quickSessionTarget === null &&
+        !result.delta.currentCard &&
+        nextCount > 0
+      ) {
+        setSessionFinished(true);
+      }
       void analyticsService.track({
         name: "review_submitted",
         properties: {
@@ -98,11 +135,23 @@ export function ReviewSession({
   return (
     <PageContainer>
       <ScreenHeader
-        title="Review"
-        subtitle={`${session.dueCount} item${session.dueCount === 1 ? "" : "s"} due`}
+        title={quickSessionTarget ? "Quick Review" : "Review"}
+        subtitle={
+          weakOnly && contentType
+            ? `Weak ${contentType} sprint · ${session.dueCount} due overall`
+            : quickSessionTarget
+              ? `${sessionCompletedCount}/${quickSessionTarget} in this sprint · ${session.dueCount} due overall`
+              : `${session.dueCount} item${session.dueCount === 1 ? "" : "s"} due`
+        }
       />
 
-      <ReviewStatsPanel stats={session.stats} />
+      {!sessionStarted && session.currentCard ? (
+        <ReviewSessionHub stats={session.stats} />
+      ) : null}
+
+      {sessionStarted || !session.currentCard ? (
+        <ReviewStatsPanel stats={session.stats} />
+      ) : null}
 
       {error ? (
         <p className="text-body-sm text-destructive" role="alert">
@@ -121,7 +170,44 @@ export function ReviewSession({
         <YamaPresence presence={lastReviewFeedback} size="sm" />
       ) : null}
 
-      {!session.currentCard ? (
+      {sessionComplete ? (
+        <Card className="border-success/30 shadow-elevation-1">
+          <CardHeader>
+            <CardTitle>Sprint complete</CardTitle>
+            <CardDescription>
+              {sessionCompletedCount} review
+              {sessionCompletedCount === 1 ? "" : "s"} finished
+              {sessionEpEarned > 0 ? ` · +${sessionEpEarned} EP` : ""}
+              {session.dueCount > 0
+                ? ` · ${session.dueCount} still due`
+                : ""}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <YamaPresence
+              presence={yamaService.resolveCelebration("lesson_complete")}
+              size="md"
+              layout="vertical"
+              className="items-center"
+            />
+            {session.dueCount > 0 ? (
+              <Button className="w-full" asChild>
+                <Link href="/review">Continue reviewing</Link>
+              </Button>
+            ) : null}
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/learn">Continue Climbing</Link>
+            </Button>
+            <Button variant="ghost" className="w-full" asChild>
+              <Link href="/home">Return Home</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      ) : !sessionStarted && session.currentCard ? (
+        <Button className="w-full" size="lg" onClick={() => setSessionStarted(true)}>
+          Start Review
+        </Button>
+      ) : !session.currentCard ? (
         <div className="space-y-4">
           <YamaPresence
             presence={yamaService.resolveReviewEmpty()}

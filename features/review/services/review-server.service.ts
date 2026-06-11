@@ -28,7 +28,7 @@ import type {
 import { REVIEW_CONTENT_LABELS } from "@/features/review/types/review.types";
 
 class ReviewEnqueueService {
-  async enqueueFromLesson(userId: string, lessonId: string): Promise<void> {
+  async enqueueFromLesson(userId: string, lessonId: string): Promise<number> {
     const items = await learningPathRepository.listLessonItems(lessonId);
     const reviewItems = items
       .filter(
@@ -44,15 +44,19 @@ class ReviewEnqueueService {
         contentId: item.content_id,
       }));
 
+    if (reviewItems.length === 0) return 0;
     await reviewRepository.upsertReviewItemsBatch(userId, reviewItems);
+    return reviewItems.length;
   }
 }
 
 class ReviewServerService {
-  async getSession(userId: string): Promise<ReviewSessionViewModel> {
-    const [stats, dueItems, recentHistoryRows] = await Promise.all([
+  private async buildSessionFromDue(
+    userId: string,
+    dueItems: Awaited<ReturnType<typeof reviewRepository.listDue>>,
+  ): Promise<ReviewSessionViewModel> {
+    const [stats, recentHistoryRows] = await Promise.all([
       this.getStats(userId),
-      reviewRepository.listDue(userId, 1),
       reviewRepository.listRecentHistory(userId, 5),
     ]);
 
@@ -87,11 +91,18 @@ class ReviewServerService {
     };
   }
 
-  async getOfflineBundle(userId: string, limit = 25) {
-    const [session, dueItems] = await Promise.all([
-      this.getSession(userId),
-      reviewRepository.listDue(userId, limit),
-    ]);
+  async getSession(userId: string): Promise<ReviewSessionViewModel> {
+    const dueItems = await reviewRepository.listDue(userId, 1);
+    return this.buildSessionFromDue(userId, dueItems);
+  }
+
+  async getOfflineBundle(
+    userId: string,
+    limit = 25,
+    options?: { contentType?: string; weakOnly?: boolean },
+  ) {
+    const dueItems = await reviewRepository.listDue(userId, limit, options);
+    const session = await this.buildSessionFromDue(userId, dueItems);
 
     const contentLookup = await this.resolveContentBatch(
       dueItems.map((item) => ({

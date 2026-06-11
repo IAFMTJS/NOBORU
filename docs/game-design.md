@@ -190,7 +190,9 @@ KANJI HUNTER
 
 Status:
 
-MVP
+Shipped (MVP — learned-kanji recognition sprint)
+
+Routes: `/games/kanji-hunter` · `features/games/components/kanji-hunter-player.tsx`
 
 ⸻
 
@@ -246,7 +248,9 @@ VOCABULARY RUSH
 
 Status:
 
-MVP
+Shipped (MVP — single difficulty tier; learned-vocab pool only)
+
+Routes: `/games/vocabulary-rush` · `features/games/components/vocabulary-rush-player.tsx`
 
 ⸻
 
@@ -330,7 +334,9 @@ WORD MATCH
 
 Status:
 
-MVP
+Shipped (MVP — Word Match + Kana Match fallback; single difficulty tier)
+
+Routes: `/games/word-match` · `features/games/components/word-match-player.tsx`
 
 ⸻
 

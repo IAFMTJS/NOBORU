@@ -37,4 +37,14 @@ export type HomeDashboardViewModel = {
     rarity: AchievementRarity;
   }>;
   reviewQueueCount: number;
+  readyTrial: {
+    title: string;
+    href: string;
+  } | null;
+  gamesAvailable: boolean;
+  dailyGoal: {
+    targetMinutes: number;
+    progressPercent: number;
+    label: string;
+  };
 };

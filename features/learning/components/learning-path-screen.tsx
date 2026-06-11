@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { RegionContentLinks } from "@/features/learning/components/region-content-links";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
@@ -36,7 +37,15 @@ export function LearningPathScreen({ path }: LearningPathScreenProps) {
         <Card className="border-primary/30 shadow-elevation-1">
           <CardHeader>
             <CardTitle>Continue Climbing</CardTitle>
-            <CardDescription>{path.nextLesson.title}</CardDescription>
+            <CardDescription>
+              {path.nextLesson.title}
+              {path.nextLesson.estimatedDuration
+                ? ` · ~${path.nextLesson.estimatedDuration} min`
+                : ""}
+              {path.nextLesson.xpReward
+                ? ` · +${path.nextLesson.xpReward} XP`
+                : ""}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="w-full" size="lg" asChild>
@@ -108,6 +117,14 @@ export function LearningPathScreen({ path }: LearningPathScreenProps) {
                   title="Trail map"
                   description={`${region.completedCount}/${region.lessonCount} lessons complete`}
                 />
+
+                {!regionLocked &&
+                (region.slug === "mount-n5" || region.slug === "mount-n4") ? (
+                  <RegionContentLinks
+                    jlptLevel={region.slug === "mount-n4" ? "n4" : "n5"}
+                    variant="chips"
+                  />
+                ) : null}
 
                 {regionLocked ? (
                   <Button variant="outline" className="w-full" asChild>

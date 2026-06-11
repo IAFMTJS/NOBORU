@@ -16,7 +16,7 @@ import type { LessonMatchingStep } from "@/features/learning/types/lesson.types"
 
 type MatchingDrillProps = {
   step: LessonMatchingStep;
-  onAnswer: (correct: boolean) => void;
+  onAnswer: (correct: boolean, wrongAttempts?: number) => void;
 };
 
 function shuffleItems<T>(items: T[]): T[] {
@@ -52,7 +52,7 @@ export function MatchingDrill({ step, onAnswer }: MatchingDrillProps) {
 
       if (nextMatched.length === step.pairs.length) {
         setResult("correct");
-        onAnswer(wrongAttempts === 0);
+        onAnswer(wrongAttempts === 0, wrongAttempts);
       }
       return;
     }

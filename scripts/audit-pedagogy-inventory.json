@@ -1,0 +1,1720 @@
+{
+  "generatedAt": "2026-06-11T18:21:52.334Z",
+  "jlptN5Reference": {
+    "vocabulary": {
+      "typical": 800,
+      "conservative": 600,
+      "note": "Official JLPT does not publish a fixed list; ~600–800 common estimates"
+    },
+    "kanji": {
+      "typical": 103,
+      "note": "JLPT N5 kanji list commonly cited ~100–103 characters"
+    },
+    "grammar": {
+      "typical": 80,
+      "note": "Full N5 grammar ~70–90 patterns; particles + basic conjugation"
+    },
+    "hiragana": {
+      "typical": 71,
+      "note": "46 base + dakuten + handakuten + common combos"
+    },
+    "katakana": {
+      "typical": 71,
+      "note": "Mirror of hiragana inventory"
+    }
+  },
+  "contentPublished": {
+    "hiraganaCharacters": 1,
+    "katakanaCharacters": 1,
+    "vocabularyN5": 35,
+    "kanjiN5": 103,
+    "grammarN5": 15,
+    "readingStories": 0,
+    "readingDialogues": 0,
+    "listeningExercises": 4,
+    "listeningChallenges": 1,
+    "trials": 1
+  },
+  "coverageVsJlptN5": {
+    "hiragana": {
+      "published": 1,
+      "target": 71,
+      "percent": 1
+    },
+    "katakana": {
+      "published": 1,
+      "target": 71,
+      "percent": 1
+    },
+    "vocabulary": {
+      "published": 35,
+      "target": 800,
+      "percent": 4
+    },
+    "kanji": {
+      "published": 103,
+      "target": 103,
+      "percent": 100
+    },
+    "grammar": {
+      "published": 15,
+      "target": 80,
+      "percent": 19
+    }
+  },
+  "lessonInventory": {
+    "totalN5PathLessons": 53,
+    "byRegion": {
+      "foothills": 14,
+      "forestTrail": 14,
+      "mountN5": 25
+    },
+    "byType": {
+      "hiragana": 13,
+      "practice": 5,
+      "katakana": 13,
+      "vocabulary": 7,
+      "grammar": 4,
+      "kanji": 11
+    },
+    "estimatedTrailMinutes": 306
+  },
+  "regionPedagogyScores": {
+    "foothills": {
+      "lessons": 14,
+      "avgPedagogy": 4.5
+    },
+    "forest-trail": {
+      "lessons": 14,
+      "avgPedagogy": 4.5
+    },
+    "mount-n5": {
+      "lessons": 25,
+      "avgPedagogy": 4.3
+    }
+  },
+  "lessons": [
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "A Row + ん",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "a",
+        "a",
+        "a",
+        "n",
+        "n",
+        "n"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ka Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ka",
+        "ka",
+        "ka"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Sa Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "sa",
+        "sa",
+        "sa"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ta Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ta",
+        "ta",
+        "ta"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Na Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "na",
+        "na",
+        "na"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ha Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ha",
+        "ha",
+        "ha"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ma Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ma",
+        "ma",
+        "ma"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ya Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ya",
+        "ya",
+        "ya"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Ra Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "ra",
+        "ra",
+        "ra"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Wa Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "wa",
+        "wa",
+        "wa"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Voiced Hiragana",
+      "estimatedDuration": 6,
+      "xpReward": 12,
+      "itemCount": 0,
+      "items": [
+        "voiced",
+        "voiced",
+        "voiced"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Semi-voiced Hiragana",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [
+        "semiVoiced",
+        "semiVoiced",
+        "semiVoiced"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "hiragana",
+      "title": "Combination Hiragana",
+      "estimatedDuration": 6,
+      "xpReward": 12,
+      "itemCount": 0,
+      "items": [
+        "combo",
+        "combo",
+        "combo"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "foothills",
+      "type": "practice",
+      "title": "Hiragana Mastery Check",
+      "description": "Mixed recall across the hiragana you have learned.",
+      "difficulty": 2,
+      "xpReward": 20,
+      "estimatedDuration": 8,
+      "itemCount": "mixed",
+      "scores": {
+        "exposure": 1,
+        "recall": 5,
+        "production": 3,
+        "recognition": 3,
+        "balance": 4,
+        "assessment": 4,
+        "retention": 4,
+        "average": 3.4
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "A Row + ン",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ka Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Sa Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ta Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Na Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ha Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ma Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ya Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Ra Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Wa Row",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Voiced Katakana",
+      "estimatedDuration": 6,
+      "xpReward": 12,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Semi-voiced Katakana",
+      "estimatedDuration": 5,
+      "xpReward": 10,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "katakana",
+      "title": "Combination Katakana",
+      "estimatedDuration": 6,
+      "xpReward": 12,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "forest-trail",
+      "type": "practice",
+      "title": "Katakana Mastery Check",
+      "description": "Mixed recall across the katakana you have learned.",
+      "difficulty": 2,
+      "xpReward": 20,
+      "estimatedDuration": 8,
+      "itemCount": "mixed",
+      "scores": {
+        "exposure": 1,
+        "recall": 5,
+        "production": 3,
+        "recognition": 3,
+        "balance": 4,
+        "assessment": 4,
+        "retention": 4,
+        "average": 3.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "People",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "わたし",
+        "ひと",
+        "ともだち",
+        "せんせい",
+        "がくせい"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Places",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "がっこう",
+        "いえ",
+        "みせ",
+        "えき",
+        "くに"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Time",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "きょう",
+        "あした",
+        "きのう",
+        "じかん",
+        "いま"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Numbers",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "いち",
+        "に",
+        "さん",
+        "よん",
+        "ご"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Food & Drink",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "みず",
+        "ごはん",
+        "にく",
+        "さかな",
+        "くだもの"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Common Verbs",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "いく",
+        "くる",
+        "たべる",
+        "のむ",
+        "みる"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "vocabulary",
+      "title": "Descriptors",
+      "description": "Learn essential N5 vocabulary.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 5,
+      "items": [
+        "おおきい",
+        "ちいさい",
+        "あたらしい",
+        "ふるい",
+        "いい"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 4,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.6
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "practice",
+      "title": "N5 Vocabulary Check",
+      "description": "Mixed recall across the N5 words you have learned.",
+      "difficulty": 2,
+      "xpReward": 20,
+      "estimatedDuration": 8,
+      "itemCount": 7,
+      "items": [
+        "わたし",
+        "がっこう",
+        "きょう",
+        "いち",
+        "みず",
+        "いく",
+        "おおきい"
+      ],
+      "scores": {
+        "exposure": 1,
+        "recall": 5,
+        "production": 3,
+        "recognition": 3,
+        "balance": 4,
+        "assessment": 4,
+        "retention": 4,
+        "average": 3.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "grammar",
+      "title": "Object & Subject",
+      "description": "Learn essential N5 grammar patterns.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 4,
+      "items": [
+        "を (o)",
+        "が (ga)",
+        "に (ni)",
+        "で (de)"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 4,
+        "production": 2,
+        "recognition": 5,
+        "balance": 4,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "grammar",
+      "title": "Connection & Possession",
+      "description": "Learn essential N5 grammar patterns.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 4,
+      "items": [
+        "と (to)",
+        "も (mo)",
+        "へ (e)",
+        "の (no)"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 4,
+        "production": 2,
+        "recognition": 5,
+        "balance": 4,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "grammar",
+      "title": "Questions & Negation",
+      "description": "Learn essential N5 grammar patterns.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 4,
+      "items": [
+        "か (ka)",
+        "ません (masen)",
+        "ましょう (mashou)",
+        "あります・います"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 4,
+        "production": 2,
+        "recognition": 5,
+        "balance": 4,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "grammar",
+      "title": "Describing Things",
+      "description": "Learn essential N5 grammar patterns.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 4,
+      "items": [
+        "い-adjective + です",
+        "な-adjective + です",
+        "くない (kunai)",
+        "が好き (ga suki)"
+      ],
+      "scores": {
+        "exposure": 5,
+        "recall": 4,
+        "production": 2,
+        "recognition": 5,
+        "balance": 4,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "practice",
+      "title": "N5 Grammar Check",
+      "description": "Mixed recall across the N5 grammar you have learned.",
+      "difficulty": 2,
+      "xpReward": 20,
+      "estimatedDuration": 8,
+      "itemCount": 8,
+      "items": [
+        "を (o)",
+        "が (ga)",
+        "に (ni)",
+        "で (de)",
+        "か (ka)",
+        "あります・います",
+        "い-adjective + です",
+        "が好き (ga suki)"
+      ],
+      "scores": {
+        "exposure": 1,
+        "recall": 5,
+        "production": 3,
+        "recognition": 3,
+        "balance": 4,
+        "assessment": 4,
+        "retention": 4,
+        "average": 3.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part I · Lesson 1",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part I · Lesson 2",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part I · Lesson 3",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part II · Lesson 1",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part II · Lesson 2",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part II · Lesson 3",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part III · Lesson 1",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part III · Lesson 2",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part III · Lesson 3",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part IV · Lesson 1",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "kanji",
+      "title": "Kanji Part IV · Lesson 2",
+      "description": "Learn essential N5 kanji.",
+      "difficulty": 1,
+      "xpReward": 12,
+      "estimatedDuration": 6,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 5,
+        "recall": 5,
+        "production": 5,
+        "recognition": 3,
+        "balance": 5,
+        "assessment": 3,
+        "retention": 5,
+        "average": 4.4
+      }
+    },
+    {
+      "region": "mount-n5",
+      "type": "practice",
+      "title": "N5 Kanji Check",
+      "description": "Mixed recall across the N5 kanji you have learned.",
+      "difficulty": 2,
+      "xpReward": 20,
+      "estimatedDuration": 8,
+      "itemCount": 0,
+      "items": [],
+      "scores": {
+        "exposure": 1,
+        "recall": 5,
+        "production": 3,
+        "recognition": 3,
+        "balance": 4,
+        "assessment": 4,
+        "retention": 4,
+        "average": 3.4
+      }
+    }
+  ],
+  "vocabularyWords": [
+    {
+      "kana": "わたし",
+      "kanji": "私",
+      "meaning": "I, me",
+      "pos": "pronoun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ひと",
+      "kanji": "人",
+      "meaning": "person",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ともだち",
+      "kanji": "友達",
+      "meaning": "friend",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "せんせい",
+      "kanji": "先生",
+      "meaning": "teacher",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "がくせい",
+      "kanji": "学生",
+      "meaning": "student",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "がっこう",
+      "kanji": "学校",
+      "meaning": "school",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "いえ",
+      "kanji": "家",
+      "meaning": "house, home",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "みせ",
+      "kanji": "店",
+      "meaning": "shop, store",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "えき",
+      "kanji": "駅",
+      "meaning": "station",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "くに",
+      "kanji": "国",
+      "meaning": "country",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "きょう",
+      "kanji": "今日",
+      "meaning": "today",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "あした",
+      "kanji": "明日",
+      "meaning": "tomorrow",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "きのう",
+      "kanji": "昨日",
+      "meaning": "yesterday",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "じかん",
+      "kanji": "時間",
+      "meaning": "time",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "いま",
+      "kanji": "今",
+      "meaning": "now",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "いち",
+      "kanji": "一",
+      "meaning": "one",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "に",
+      "kanji": "二",
+      "meaning": "two",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "さん",
+      "kanji": "三",
+      "meaning": "three",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "よん",
+      "kanji": "四",
+      "meaning": "four",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ご",
+      "kanji": "五",
+      "meaning": "five",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "みず",
+      "kanji": "水",
+      "meaning": "water",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ごはん",
+      "kanji": "ご飯",
+      "meaning": "rice, meal",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "にく",
+      "kanji": "肉",
+      "meaning": "meat",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "さかな",
+      "kanji": "魚",
+      "meaning": "fish",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "くだもの",
+      "kanji": "果物",
+      "meaning": "fruit",
+      "pos": "noun",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "いく",
+      "kanji": "行く",
+      "meaning": "to go",
+      "pos": "verb",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "くる",
+      "kanji": "来る",
+      "meaning": "to come",
+      "pos": "verb",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "たべる",
+      "kanji": "食べる",
+      "meaning": "to eat",
+      "pos": "verb",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "のむ",
+      "kanji": "飲む",
+      "meaning": "to drink",
+      "pos": "verb",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "みる",
+      "kanji": "見る",
+      "meaning": "to see, watch",
+      "pos": "verb",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "おおきい",
+      "kanji": "大きい",
+      "meaning": "big",
+      "pos": "adjective",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ちいさい",
+      "kanji": "小さい",
+      "meaning": "small",
+      "pos": "adjective",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "あたらしい",
+      "kanji": "新しい",
+      "meaning": "new",
+      "pos": "adjective",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "ふるい",
+      "kanji": "古い",
+      "meaning": "old",
+      "pos": "adjective",
+      "jlpt": "n5"
+    },
+    {
+      "kana": "いい",
+      "kanji": "いい",
+      "meaning": "good",
+      "pos": "adjective",
+      "jlpt": "n5"
+    }
+  ],
+  "grammarPoints": [
+    {
+      "title": "を (o)",
+      "meaning": "Direct object particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "が (ga)",
+      "meaning": "Subject marker particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "に (ni)",
+      "meaning": "Direction, time, and location particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "で (de)",
+      "meaning": "Location of action and means particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "と (to)",
+      "meaning": "And / with particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "も (mo)",
+      "meaning": "Also / too particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "へ (e)",
+      "meaning": "Direction toward particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "の (no)",
+      "meaning": "Possession and modification particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "か (ka)",
+      "meaning": "Question particle",
+      "jlpt": "n5"
+    },
+    {
+      "title": "ません (masen)",
+      "meaning": "Negative polite form",
+      "jlpt": "n5"
+    },
+    {
+      "title": "あります・います",
+      "meaning": "Existence verbs (inanimate / animate)",
+      "jlpt": "n5"
+    },
+    {
+      "title": "い-adjective + です",
+      "meaning": "Polite い-adjective sentences",
+      "jlpt": "n5"
+    },
+    {
+      "title": "な-adjective + です",
+      "meaning": "Polite な-adjective sentences",
+      "jlpt": "n5"
+    },
+    {
+      "title": "くない (kunai)",
+      "meaning": "い-adjective negative",
+      "jlpt": "n5"
+    },
+    {
+      "title": "が好き (ga suki)",
+      "meaning": "Liking something pattern",
+      "jlpt": "n5"
+    }
+  ],
+  "kanjiCharacters": [
+    "一",
+    "七",
+    "万",
+    "三",
+    "上",
+    "下",
+    "中",
+    "九",
+    "二",
+    "五",
+    "人",
+    "今",
+    "休",
+    "何",
+    "先",
+    "入",
+    "八",
+    "六",
+    "円",
+    "出",
+    "分",
+    "前",
+    "北",
+    "十",
+    "千",
+    "午",
+    "半",
+    "南",
+    "友",
+    "口",
+    "古",
+    "右",
+    "名",
+    "四",
+    "国",
+    "土",
+    "外",
+    "多",
+    "大",
+    "天",
+    "女",
+    "子",
+    "学",
+    "安",
+    "小",
+    "少",
+    "山",
+    "川",
+    "左",
+    "年",
+    "店",
+    "後",
+    "手",
+    "新",
+    "日",
+    "時",
+    "月",
+    "木",
+    "本",
+    "来",
+    "東",
+    "校",
+    "母",
+    "民",
+    "水",
+    "火",
+    "父",
+    "生",
+    "用",
+    "田",
+    "男",
+    "白",
+    "百",
+    "目",
+    "真",
+    "社",
+    "空",
+    "立",
+    "耳",
+    "聞",
+    "花",
+    "行",
+    "西",
+    "見",
+    "言",
+    "語",
+    "読",
+    "車",
+    "金",
+    "長",
+    "間",
+    "雨",
+    "電",
+    "食",
+    "高",
+    "魚",
+    "駅",
+    "力",
+    "書",
+    "話",
+    "会",
+    "売",
+    "買"
+  ]
+}

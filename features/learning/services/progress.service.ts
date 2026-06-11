@@ -50,6 +50,7 @@ class ProgressService {
       elevation: ElevationAwardViewModel | null;
       achievements: AchievementUnlockViewModel[];
       quests: QuestCompletionViewModel[];
+      reviewItemsEnqueued: number;
     }
   > {
     const lesson = await learningPathRepository.findPublishedLessonById(
@@ -87,7 +88,10 @@ class ProgressService {
       score,
     });
 
-    await reviewEnqueueService.enqueueFromLesson(input.userId, input.lessonId);
+    const reviewItemsEnqueued = await reviewEnqueueService.enqueueFromLesson(
+      input.userId,
+      input.lessonId,
+    );
 
     const [elevation, achievements] = await Promise.all([
       elevationService.awardLessonCompletion(
@@ -112,7 +116,7 @@ class ProgressService {
 
     const quests = await questService.recordActivities(input.userId, questEvents);
 
-    return { ...result, elevation, achievements, quests };
+    return { ...result, elevation, achievements, quests, reviewItemsEnqueued };
   }
 }
 

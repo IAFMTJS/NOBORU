@@ -153,6 +153,13 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
     },
   ],
   reviewQueueCount: 8,
+  readyTrial: null,
+  gamesAvailable: false,
+  dailyGoal: {
+    targetMinutes: 15,
+    progressPercent: 25,
+    label: "1/4 daily quests",
+  },
   yama: yamaService.resolveHomePresence(
     {
       dailyQuestsCompleted: 1,

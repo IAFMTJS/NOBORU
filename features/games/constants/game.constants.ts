@@ -1,0 +1,53 @@
+export const GAME_SLUGS = {
+  wordMatch: "word-match",
+  vocabularyRush: "vocabulary-rush",
+  kanjiHunter: "kanji-hunter",
+} as const;
+
+export type GameSlug = (typeof GAME_SLUGS)[keyof typeof GAME_SLUGS];
+
+export const MIN_GAME_POOL_SIZE = 4;
+
+export const WORD_MATCH_PAIR_COUNT = 6;
+export const KANA_MATCH_PAIR_COUNT = 8;
+
+export const VOCABULARY_RUSH_QUESTION_COUNT = 10;
+export const VOCABULARY_RUSH_LIVES = 3;
+export const RUSH_TIMER_START_SECONDS = 12;
+export const RUSH_TIMER_MIN_SECONDS = 6;
+export const RUSH_TIMER_STREAK_BONUS_SECONDS = 1;
+
+export const WORD_MATCH_EP = {
+  perfect: 20,
+  good: 15,
+  pass: 10,
+} as const;
+
+export const VOCABULARY_RUSH_EP = {
+  excellent: 25,
+  good: 18,
+  pass: 12,
+  participation: 10,
+} as const;
+
+export function calculateWordMatchEp(wrongAttempts: number): number {
+  if (wrongAttempts === 0) return WORD_MATCH_EP.perfect;
+  if (wrongAttempts <= 2) return WORD_MATCH_EP.good;
+  return WORD_MATCH_EP.pass;
+}
+
+export function calculateVocabularyRushEp(accuracyPercent: number): number {
+  if (accuracyPercent >= 90) return VOCABULARY_RUSH_EP.excellent;
+  if (accuracyPercent >= 70) return VOCABULARY_RUSH_EP.good;
+  if (accuracyPercent >= 50) return VOCABULARY_RUSH_EP.pass;
+  return VOCABULARY_RUSH_EP.participation;
+}
+
+export const KANJI_HUNTER_QUESTION_COUNT = 10;
+export const KANJI_HUNTER_LIVES = 3;
+
+export const KANJI_HUNTER_EP = VOCABULARY_RUSH_EP;
+
+export function calculateKanjiHunterEp(accuracyPercent: number): number {
+  return calculateVocabularyRushEp(accuracyPercent);
+}

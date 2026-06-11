@@ -679,8 +679,10 @@ class LessonService {
       (content): content is LessonContent => content !== null,
     );
 
-    const progress =
-      (await progressRepository.findByUserAndLesson(userId, lessonId)) ?? null;
+    const [progress, nextLesson] = await Promise.all([
+      progressRepository.findByUserAndLesson(userId, lessonId),
+      this.getNextIncompleteLesson(userId),
+    ]);
     const progressStatus: ProgressStatus = progress?.status ?? "not_started";
     const steps = this.buildSteps(lesson, contents);
 
@@ -696,6 +698,13 @@ class LessonService {
       progress: progressStatus,
       score: progress?.score ?? 0,
       steps,
+      nextLesson:
+        nextLesson && nextLesson.id !== lesson.id
+          ? {
+              title: nextLesson.title,
+              href: `/learn/lesson/${nextLesson.id}`,
+            }
+          : null,
     };
   }
 

@@ -17,21 +17,46 @@ import type { TrialListEntryViewModel } from "@/features/trials/types/trial.type
 type RegionTrialsPanelProps = {
   regionSlug: string;
   trials: TrialListEntryViewModel[];
+  variant?: "default" | "peak";
 };
 
-export function RegionTrialsPanel({ regionSlug, trials }: RegionTrialsPanelProps) {
+export function RegionTrialsPanel({
+  regionSlug,
+  trials,
+  variant = "default",
+}: RegionTrialsPanelProps) {
   const regionTrials = trials.filter((trial) => trial.regionSlug === regionSlug);
   if (regionTrials.length === 0) return null;
 
+  const readyTrial = regionTrials.find((trial) => trial.availability === "available");
+  const isPeak = variant === "peak";
+
   return (
-    <Card className="border-primary/20 shadow-elevation-1">
+    <Card
+      className={
+        isPeak && readyTrial
+          ? "border-primary/40 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-2"
+          : "border-primary/20 shadow-elevation-1"
+      }
+    >
       <CardHeader>
-        <CardTitle className="text-heading-6">Region Trials</CardTitle>
+        <CardTitle className="text-heading-6">
+          {isPeak ? "Trial Peak" : "Region Trials"}
+        </CardTitle>
         <CardDescription>
-          Validate mastery with timed recall challenges
+          {isPeak && readyTrial
+            ? `${readyTrial.title} is ready — prove your mastery.`
+            : "Validate mastery with timed recall challenges"}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
+        {isPeak && readyTrial ? (
+          <Button className="w-full" size="lg" asChild>
+            <Link href={`/trials/${readyTrial.slug}`}>
+              Attempt Trial · {readyTrial.title}
+            </Link>
+          </Button>
+        ) : null}
         {regionTrials.map((trial) => (
           <div
             key={trial.id}

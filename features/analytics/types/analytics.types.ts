@@ -3,6 +3,8 @@ export const ANALYTICS_EVENT_NAMES = [
   "lesson_completed",
   "review_submitted",
   "trial_completed",
+  "game_started",
+  "game_completed",
   "pwa_install_prompt_accepted",
   "pwa_install_prompt_dismissed",
   "trail_continue_clicked",

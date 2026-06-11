@@ -48,6 +48,7 @@ Authoritative project documentation. All implementation must reference these doc
 | [content-strategy.md](./content-strategy.md) | Content ownership and CMS |
 | [game-design.md](./game-design.md) | Games and trials |
 | [gamification.md](./gamification.md) | Progression, quests, achievements |
+| [learning-audit-action-plan.md](./learning-audit-action-plan.md) | Gameplay, pedagogy, and competitive audits (working) |
 
 ## Operations
 
