@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { cn } from "@/lib/utils";
 import type {
   DailyQuestsViewModel,
   WeeklyQuestsViewModel,
@@ -31,10 +32,19 @@ function QuestCardList({
         </div>
       </div>
       <div className="space-y-2">
-        {quests.map((quest) => (
+        {quests.map((quest) => {
+          const firstIncomplete = quests.find((q) => !q.completed);
+          const highlight = firstIncomplete?.id === quest.id;
+
+          return (
           <div
             key={quest.id}
-            className="space-y-2 rounded-lg border border-border/80 bg-background/80 p-3"
+            className={cn(
+              "space-y-2 rounded-lg border bg-background/80 p-3",
+              highlight
+                ? "border-primary bg-primary/5 shadow-elevation-1"
+                : "border-border/80",
+            )}
           >
             <div className="flex items-start justify-between gap-2">
               <div className="space-y-1">
@@ -61,7 +71,8 @@ function QuestCardList({
               </Button>
             ) : null}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

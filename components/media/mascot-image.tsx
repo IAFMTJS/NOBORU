@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
+import { stickerImageClass } from "@/lib/assets/image-presentation";
 import { getMascotPath } from "@/lib/assets/registry";
-import { cn } from "@/lib/utils";
 
 type MascotImageProps = {
   alt?: string;
@@ -37,7 +37,7 @@ export function MascotImage({
       height={height}
       priority={priority}
       sizes={fill ? sizes : undefined}
-      className={cn(className)}
+      className={stickerImageClass(className)}
     />
   );
 }

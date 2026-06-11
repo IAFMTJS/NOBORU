@@ -1,3 +1,4 @@
+import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
 import { MascotImage } from "@/components/media/mascot-image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ForgotPasswordForm } from "@/features/authentication/components/forgot-password-form";
@@ -6,6 +7,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="space-y-6">
       <div className="text-center">
+        <NoboruWordmark className="mx-auto mb-4" priority />
         <div className="relative mx-auto mb-4 h-16 w-16">
           <MascotImage alt="Yama" fill className="object-contain" priority />
         </div>

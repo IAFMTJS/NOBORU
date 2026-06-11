@@ -31,12 +31,12 @@ const REGION_LABELS: Record<string, { name: string; trail: string }> = {
 };
 
 function getRegionDisplay(slug: string) {
-  return (
+  const display =
     REGION_LABELS[slug] ?? {
       name: "Foothills",
       trail: "Base Camp Trail",
-    }
-  );
+    };
+  return { slug, ...display };
 }
 
 class DashboardServerService {
@@ -117,6 +117,7 @@ class DashboardServerService {
       },
       recentAchievements: recentAchievements.map((achievement) => ({
         id: achievement.id,
+        slug: achievement.slug,
         title: achievement.name,
         rarity: achievement.rarity,
       })),

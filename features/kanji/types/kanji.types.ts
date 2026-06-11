@@ -23,6 +23,10 @@ export type KanjiListEntry = {
   character: string;
   meaning: string;
   strokeCount: number | null;
+  onyomi?: string[];
+  kunyomi?: string[];
+  readingSummary: string | null;
+  masteryPercent: number;
   learned: boolean;
 };
 

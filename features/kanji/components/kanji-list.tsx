@@ -1,8 +1,9 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { KanjiListRow } from "@/features/kanji/components/kanji-list-row";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import type { KanjiListViewModel } from "@/features/kanji/types/kanji.types";
@@ -38,7 +39,15 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
+      <ContentHubBanner
+        variant="kanji"
+        title={hub.kanjiTitle}
+        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} kanji on your trail`}
+      />
+
+      <JlptLevelPills basePath="/learn/kanji" activeLevel={jlptLevel} />
+
+      <Card>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -54,25 +63,17 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Kanji Catalog</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {list.entries.map((entry) => (
-            <Link key={entry.id} href={`/learn/kanji/${entry.id}`}>
-              <ListRow
-                primary={entry.character}
-                secondary={entry.meaning}
-                trailing={
-                  entry.learned ? (
-                    <Badge variant="secondary">Learned</Badge>
-                  ) : (
-                    <Badge variant="outline">New</Badge>
-                  )
-                }
-              />
-            </Link>
+            <KanjiListRow
+              key={entry.id}
+              entry={entry}
+              href={`/learn/kanji/${entry.id}`}
+            />
           ))}
         </CardContent>
       </Card>

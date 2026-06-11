@@ -13,9 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
+import { getRegionVisuals } from "@/lib/design-system/region-tokens";
+import { cn } from "@/lib/utils";
 
 type LearningPathScreenProps = {
   path: LearningPathViewModel;
@@ -56,9 +59,21 @@ export function LearningPathScreen({ path }: LearningPathScreenProps) {
       <div className="space-y-4">
         {path.regions.map((region) => {
           const regionLocked = region.availability === "locked";
+          const visuals = getRegionVisuals(region.slug);
 
           return (
-            <Card key={region.id} className="shadow-elevation-1">
+            <Card
+              key={region.id}
+              className={cn(
+                "overflow-hidden bg-gradient-to-br to-card",
+                visuals.gradient,
+                visuals.border,
+              )}
+            >
+              <RegionHeroImage
+                regionSlug={region.slug}
+                alt={`${region.name} region`}
+              />
               <CardHeader className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -66,7 +81,9 @@ export function LearningPathScreen({ path }: LearningPathScreenProps) {
                       <CardTitle>{region.name}</CardTitle>
                       {regionLocked ? (
                         <Badge variant="outline">Locked</Badge>
-                      ) : null}
+                      ) : (
+                        <Badge className={visuals.badge}>{visuals.label}</Badge>
+                      )}
                     </div>
                     <CardDescription>{region.description}</CardDescription>
                   </div>

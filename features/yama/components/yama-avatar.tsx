@@ -1,6 +1,6 @@
 "use client";
 
-import { MascotImage } from "@/components/media/mascot-image";
+import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import { YAMA_EXPRESSION_STYLES } from "@/features/yama/constants/yama.constants";
 import type { YamaExpression, YamaSize } from "@/features/yama/types/yama.types";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,8 @@ export function YamaAvatar({
         className,
       )}
     >
-      <MascotImage
+      <YamaExpressionImage
+        expression={expression}
         alt={alt}
         fill
         priority={priority}

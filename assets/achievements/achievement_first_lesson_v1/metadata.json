@@ -1,0 +1,21 @@
+﻿{
+    "id":  "achievement_first_lesson_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "achievements",
+    "tags":  [
+                 "achievement",
+                 "common",
+                 "lesson"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Achievement First Lesson",
+    "files":  [
+                  "achievement_first_lesson_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

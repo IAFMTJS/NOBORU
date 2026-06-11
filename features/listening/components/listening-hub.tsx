@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +39,15 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
+      <ContentHubBanner
+        variant="listening"
+        title={contentHub.listeningTitle}
+        subtitle={`${hub.completedCount} of ${hub.totalCount} listening activities on your trail`}
+      />
+
+      <JlptLevelPills basePath="/learn/listening" activeLevel={jlptLevel} />
+
+      <Card>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -53,7 +63,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Audio Lessons</CardTitle>
           <CardDescription>Listen to a phrase and answer one question.</CardDescription>
@@ -77,7 +87,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Listening Challenges</CardTitle>
           <CardDescription>Complete several listening exercises in a row.</CardDescription>

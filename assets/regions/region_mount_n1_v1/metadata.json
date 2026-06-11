@@ -1,0 +1,21 @@
+﻿{
+    "id":  "region_mount_n1_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "regions",
+    "tags":  [
+                 "region",
+                 "mount-n1",
+                 "hero"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Region Mount N1 Hero",
+    "files":  [
+                  "region_mount_n1_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

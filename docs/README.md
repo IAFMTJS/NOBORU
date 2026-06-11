@@ -24,6 +24,7 @@ Authoritative project documentation. All implementation must reference these doc
 
 | Document | Purpose |
 |----------|---------|
+| [phase-a-visuals-plan.md](./phase-a-visuals-plan.md) | Visual audit, mockup parity, Phase A execution plan |
 | [design-system.md](./design-system.md) | Colors, typography, components |
 | [art-direction.md](./art-direction.md) | Visual identity, Yama, assets |
 | [asset-pipeline.md](./asset-pipeline.md) | Asset creation workflow |

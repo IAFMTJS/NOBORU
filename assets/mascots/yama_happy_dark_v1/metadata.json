@@ -1,0 +1,22 @@
+﻿{
+    "id":  "yama_happy_dark_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "mascots",
+    "tags":  [
+                 "yama",
+                 "expression",
+                 "happy",
+                 "dark-mode"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Yama Happy Dark",
+    "files":  [
+                  "yama_happy_dark_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

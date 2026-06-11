@@ -1,3 +1,5 @@
+"use client";
+
 import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import type { YamaPresenceViewModel, YamaSize } from "@/features/yama/types/yama.types";
 import { cn } from "@/lib/utils";

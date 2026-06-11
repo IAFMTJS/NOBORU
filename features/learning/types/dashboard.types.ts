@@ -6,6 +6,7 @@ import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
 export type HomeDashboardViewModel = {
   greeting: string;
   region: {
+    slug: string;
     name: string;
     trail: string;
   };
@@ -31,6 +32,7 @@ export type HomeDashboardViewModel = {
   };
   recentAchievements: Array<{
     id: string;
+    slug: string;
     title: string;
     rarity: AchievementRarity;
   }>;

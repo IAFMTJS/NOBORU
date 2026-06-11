@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +39,15 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
+      <ContentHubBanner
+        variant="reading"
+        title={contentHub.readingTitle}
+        subtitle={`${hub.completedCount} of ${hub.totalCount} readings on your trail`}
+      />
+
+      <JlptLevelPills basePath="/learn/reading" activeLevel={jlptLevel} />
+
+      <Card>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -53,7 +63,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Stories</CardTitle>
           <CardDescription>Read short passages and answer questions.</CardDescription>
@@ -77,7 +87,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Dialogs</CardTitle>
           <CardDescription>Practice conversations with guided choices.</CardDescription>

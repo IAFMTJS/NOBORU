@@ -1,3 +1,10 @@
+@import "@fontsource/noto-sans-jp/japanese-400.css";
+@import "@fontsource/noto-sans-jp/japanese-500.css";
+@import "@fontsource/noto-sans-jp/japanese-700.css";
+@import "@fontsource/noto-sans-jp/latin-400.css";
+@import "@fontsource/noto-sans-jp/latin-500.css";
+@import "@fontsource/noto-sans-jp/latin-700.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +56,9 @@
     --motion-fast: 150ms;
     --motion-standard: 250ms;
     --motion-complex: 350ms;
+
+    /* Typography — bundled via @fontsource (no Google Fonts fetch at build) */
+    --font-noto-sans-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
   }
 
   .dark {
@@ -83,9 +93,9 @@
     --ring: 358 65% 54%;
 
     --shadow-elevation-1: none;
-    --shadow-elevation-2: none;
-    --shadow-elevation-3: none;
-    --shadow-elevation-4: none;
+    --shadow-elevation-2: 0 0 0 1px hsl(218 14% 22% / 0.9), 0 4px 16px rgb(0 0 0 / 0.28);
+    --shadow-elevation-3: 0 0 0 1px hsl(218 14% 24% / 0.95), 0 8px 24px rgb(0 0 0 / 0.35);
+    --shadow-elevation-4: 0 0 0 1px hsl(218 14% 26%), 0 16px 40px rgb(0 0 0 / 0.4);
   }
 
   * {
@@ -136,6 +146,20 @@
 
   .text-caption {
     @apply text-xs leading-normal text-muted-foreground;
+  }
+
+  .font-japanese {
+    font-family: var(--font-noto-sans-jp), var(--font-inter), system-ui, sans-serif;
+  }
+
+  [lang="ja"],
+  ruby,
+  rt {
+    font-family: var(--font-noto-sans-jp), var(--font-inter), system-ui, sans-serif;
+  }
+
+  .surface-elevated {
+    @apply border border-border/80 bg-card shadow-elevation-1 dark:border-border dark:shadow-elevation-2;
   }
 
   .shadow-elevation-1 {

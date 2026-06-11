@@ -86,18 +86,18 @@ export const YAMA_EXPRESSION_STYLES: Record<
   YamaExpression,
   { imageClass: string; containerClass?: string }
 > = {
-  main: { imageClass: "object-contain" },
-  happy: { imageClass: "object-contain scale-105" },
+  main: { imageClass: "" },
+  happy: { imageClass: "scale-[1.28]" },
   celebrating: {
-    imageClass: "object-contain animate-[yama-celebrate_600ms_ease-out]",
+    imageClass: "animate-[yama-celebrate_600ms_ease-out]",
     containerClass: "motion-reduce:animate-none",
   },
-  encouraging: { imageClass: "object-contain" },
-  supportive: { imageClass: "object-contain opacity-95" },
-  thinking: { imageClass: "object-contain -rotate-3" },
-  studying: { imageClass: "object-contain" },
+  encouraging: { imageClass: "" },
+  supportive: { imageClass: "opacity-95" },
+  thinking: { imageClass: "-rotate-3" },
+  studying: { imageClass: "" },
   loading: {
-    imageClass: "object-contain animate-[yama-float_2s_ease-in-out_infinite]",
+    imageClass: "animate-[yama-float_2s_ease-in-out_infinite]",
     containerClass: "motion-reduce:animate-none",
   },
 };

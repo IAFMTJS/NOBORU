@@ -36,8 +36,10 @@ export function AchievementShowcase({
             {showcase.unlocked.slice(0, 6).map((achievement) => (
               <AchievementBadge
                 key={achievement.id}
+                slug={achievement.slug}
                 name={achievement.name}
                 rarity={achievement.rarity}
+                showLabel
               />
             ))}
             {showcase.unlocked.length === 0 ? (
@@ -72,9 +74,14 @@ export function AchievementShowcase({
             showcase.unlocked.map((achievement) => (
               <div
                 key={achievement.id}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-lg border p-3"
+                className="flex items-start gap-3 rounded-lg border p-3"
               >
-                <div className="space-y-1">
+                <AchievementBadge
+                  slug={achievement.slug}
+                  name={achievement.name}
+                  rarity={achievement.rarity}
+                />
+                <div className="min-w-0 flex-1 space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-body-sm font-medium">{achievement.name}</p>
                     <Badge variant="outline">
@@ -108,9 +115,15 @@ export function AchievementShowcase({
             {showcase.locked.map((achievement) => (
               <div
                 key={achievement.id}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-dashed p-3 opacity-80"
+                className="flex items-start gap-3 rounded-lg border border-dashed p-3 opacity-80"
               >
-                <div className="space-y-1">
+                <AchievementBadge
+                  slug={achievement.slug}
+                  name={achievement.name}
+                  rarity={achievement.rarity}
+                  unlocked={false}
+                />
+                <div className="min-w-0 flex-1 space-y-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-body-sm font-medium">{achievement.name}</p>
                     <Badge variant="outline">

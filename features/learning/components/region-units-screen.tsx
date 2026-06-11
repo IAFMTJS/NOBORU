@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,9 @@ import { buildTrailNodes } from "@/features/learning/utils/trail-state";
 import { RegionTrialsPanel } from "@/features/trials/components/region-trials-panel";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
+import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { getJlptQueryString } from "@/lib/learning/jlpt-content.constants";
+import { cn } from "@/lib/utils";
 
 type RegionUnitsScreenProps = {
   region: RegionPathViewModel;
@@ -51,6 +54,8 @@ function RegionContentLinks({ jlptLevel }: { jlptLevel: "n5" | "n4" }) {
 
 export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProps) {
   const regionLocked = region.availability === "locked";
+  const visuals = getRegionVisuals(region.slug);
+
   return (
     <PageContainer>
       <ScreenHeader
@@ -62,6 +67,23 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
           </Button>
         }
       />
+
+      <div
+        className={cn(
+          "mb-4 overflow-hidden rounded-2xl border bg-gradient-to-br to-card shadow-elevation-1",
+          visuals.gradient,
+          visuals.border,
+        )}
+      >
+        <RegionHeroImage
+          regionSlug={region.slug}
+          alt={`${region.name} region`}
+        />
+        <div className="flex items-center justify-between gap-2 px-4 py-3">
+          <p className="text-body-sm font-medium">{region.name}</p>
+          <Badge className={visuals.badge}>{visuals.label}</Badge>
+        </div>
+      </div>
 
       {regionLocked ? (
         <Card className="border-dashed shadow-elevation-1">

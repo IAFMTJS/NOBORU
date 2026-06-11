@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +40,15 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         }
       />
 
-      <Card className="shadow-elevation-1">
+      <ContentHubBanner
+        variant="vocabulary"
+        title={hub.vocabularyTitle}
+        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} words on your trail`}
+      />
+
+      <JlptLevelPills basePath="/learn/vocabulary" activeLevel={jlptLevel} />
+
+      <Card>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -54,7 +64,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Word List</CardTitle>
         </CardHeader>

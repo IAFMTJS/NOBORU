@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
+import { MotionDiv } from "@/components/motion/motion-div";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ import {
   getLessonAudioPrefetchPlan,
 } from "@/lib/learning/lesson-audio-prefetch";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
+import { fadeInUp } from "@/lib/motion/presets";
 
 function EmbeddedPlayerSkeleton() {
   return (
@@ -301,6 +303,13 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
+      <MotionDiv
+        key={stepIndex}
+        {...fadeInUp}
+        initial="initial"
+        animate="animate"
+        className="space-y-4"
+      >
       {currentStep.kind === "intro" ? (
         <Card className="shadow-elevation-1">
           <CardHeader>
@@ -537,6 +546,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           </CardContent>
         </Card>
       ) : null}
+      </MotionDiv>
     </PageContainer>
   );
 }

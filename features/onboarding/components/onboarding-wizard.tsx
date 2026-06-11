@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
+import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
 import { MascotImage } from "@/components/media/mascot-image";
 import { Button } from "@/components/ui/button";
 import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
@@ -102,14 +103,10 @@ export function OnboardingWizard() {
               <div className="relative mx-auto h-32 w-32">
                 <MascotImage alt="Yama" fill className="object-contain" priority />
               </div>
-              <div className="space-y-1">
-                <h1 className="text-heading-2 tracking-wide">
-                  {ONBOARDING_COPY.welcome.title}
-                </h1>
-                <p className="text-body-sm text-muted-foreground">
-                  {ONBOARDING_COPY.welcome.subtitle}
-                </p>
-              </div>
+              <NoboruWordmark className="mx-auto" priority />
+              <p className="text-body-sm text-muted-foreground">
+                {ONBOARDING_COPY.welcome.subtitle}
+              </p>
               <p className="text-body text-muted-foreground">
                 {ONBOARDING_COPY.welcome.tagline}
               </p>

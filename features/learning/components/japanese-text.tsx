@@ -31,7 +31,7 @@ export function JapaneseText({
       {showRuby ? (
         <ruby
           lang="ja"
-          className={cn("leading-relaxed", SIZE_CLASSES[size])}
+          className={cn("font-japanese leading-relaxed", SIZE_CLASSES[size])}
         >
           {text}
           <rt className="text-caption font-normal text-muted-foreground">
@@ -39,7 +39,7 @@ export function JapaneseText({
           </rt>
         </ruby>
       ) : (
-        <p lang="ja" className={cn("leading-relaxed", SIZE_CLASSES[size])}>
+        <p lang="ja" className={cn("font-japanese leading-relaxed", SIZE_CLASSES[size])}>
           {text}
         </p>
       )}

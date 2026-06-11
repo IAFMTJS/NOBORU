@@ -18,10 +18,12 @@ type VocabularyDetailProps = {
 };
 
 export function VocabularyDetail({ word }: VocabularyDetailProps) {
+  const displayJapanese = word.kanji ?? word.kana;
+
   return (
     <PageContainer>
       <ScreenHeader
-        title={word.kanji ?? word.kana}
+        title={displayJapanese}
         subtitle={word.kana}
         action={
           <Button variant="ghost" size="sm" asChild>
@@ -30,8 +32,8 @@ export function VocabularyDetail({ word }: VocabularyDetailProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
+      <Card className="overflow-hidden border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card">
+        <CardHeader className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             {word.jlptLevel ? (
               <Badge variant="outline">{word.jlptLevel.toUpperCase()}</Badge>
@@ -45,10 +47,13 @@ export function VocabularyDetail({ word }: VocabularyDetailProps) {
               <Badge variant="outline">Not yet learned</Badge>
             )}
           </div>
-          <CardTitle className="text-heading-3">{word.meaning}</CardTitle>
-          {word.kanji ? (
-            <CardDescription>{word.kana}</CardDescription>
-          ) : null}
+          <div className="space-y-1">
+            <p className="font-japanese text-heading-2">{displayJapanese}</p>
+            {word.kanji ? (
+              <CardDescription className="font-japanese">{word.kana}</CardDescription>
+            ) : null}
+            <CardTitle className="text-heading-4">{word.meaning}</CardTitle>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {word.audioUrl ? (
@@ -63,9 +68,9 @@ export function VocabularyDetail({ word }: VocabularyDetailProps) {
               {word.examples.map((example) => (
                 <div
                   key={example.japaneseText}
-                  className="rounded-xl border border-border px-4 py-3"
+                  className="rounded-xl border border-border bg-background/60 px-4 py-3"
                 >
-                  <p className="text-body">{example.japaneseText}</p>
+                  <p className="font-japanese text-body">{example.japaneseText}</p>
                   {example.romaji ? (
                     <p className="text-body-sm text-muted-foreground">
                       {example.romaji}

@@ -1,0 +1,21 @@
+﻿{
+    "id":  "region_master_summit_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "regions",
+    "tags":  [
+                 "region",
+                 "master-summit",
+                 "hero"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Region Master Summit Hero",
+    "files":  [
+                  "region_master_summit_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

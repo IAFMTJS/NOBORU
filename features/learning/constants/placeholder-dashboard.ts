@@ -8,6 +8,7 @@ import { yamaService } from "@/features/yama/services/yama.service";
 export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
   greeting: "Konnichiwa, Climber",
   region: {
+    slug: "mount-n4",
     name: "Mount N4",
     trail: "Forest Trail",
   },
@@ -143,8 +144,13 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
     href: "/learn",
   },
   recentAchievements: [
-    { id: "first-step", title: "First Step", rarity: "common" },
-    { id: "week-climber", title: "Week Climber", rarity: "uncommon" },
+    { id: "first-step", slug: "first-step", title: "First Step", rarity: "common" },
+    {
+      id: "ten-lessons",
+      slug: "ten-lessons",
+      title: "Trail Walker",
+      rarity: "uncommon",
+    },
   ],
   reviewQueueCount: 8,
   yama: yamaService.resolveHomePresence(

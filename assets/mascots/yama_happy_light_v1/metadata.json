@@ -1,0 +1,23 @@
+﻿{
+    "id":  "yama_happy_light_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "mascots",
+    "tags":  [
+                 "yama",
+                 "expression",
+                 "happy",
+                 "light-mode"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Yama Happy Light",
+    "files":  [
+                  "yama_happy_light_v1.png",
+                  "yama_happy_light_v1.webp"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

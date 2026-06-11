@@ -1,0 +1,21 @@
+﻿{
+    "id":  "region_forest_trail_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "regions",
+    "tags":  [
+                 "region",
+                 "forest-trail",
+                 "hero"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Region Forest Trail Hero",
+    "files":  [
+                  "region_forest_trail_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

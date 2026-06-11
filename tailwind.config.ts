@@ -83,6 +83,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        japanese: ["var(--font-noto-sans-jp)", "var(--font-inter)", "system-ui", "sans-serif"],
       },
       fontSize: {
         "heading-1": ["3rem", { lineHeight: "1.1", fontWeight: "600" }],

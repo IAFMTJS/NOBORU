@@ -1,0 +1,22 @@
+﻿{
+    "id":  "ui_auth_atmosphere_dark_v1",
+    "updated_at":  "2026-06-11",
+    "usage_locations":  [
+                            "phase-a-visuals"
+                        ],
+    "version":  "v1",
+    "category":  "ui",
+    "tags":  [
+                 "ui",
+                 "auth",
+                 "background",
+                 "dark-mode"
+             ],
+    "created_at":  "2026-06-11",
+    "name":  "Auth Atmosphere Dark",
+    "files":  [
+                  "ui_auth_atmosphere_dark_v1.png"
+              ],
+    "status":  "approved",
+    "owner_agent":  "Art Director Agent"
+}

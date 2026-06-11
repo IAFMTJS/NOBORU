@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { AchievementBadge } from "@/features/achievements/components/achievement-badge";
@@ -28,6 +29,7 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
 
       <ExpeditionHero
         greeting={data.greeting}
+        regionSlug={data.region.slug}
         regionName={data.region.name}
         trailName={data.region.trail}
         levelLabel={data.level.label}
@@ -44,25 +46,34 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
 
       <PwaInstallPrompt />
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-heading-6">Recent Achievements</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
+        <CardContent>
           {data.recentAchievements.length === 0 ? (
-            <p className="text-body-sm text-muted-foreground">
-              Complete lessons to earn your first badge.
-            </p>
+            <EmptyState
+              yamaExpression="encouraging"
+              title="Your first badge awaits"
+              description="Complete a lesson on the trail and Yama will celebrate with you."
+              actionLabel="Start learning"
+              actionHref="/learn"
+              className="py-8"
+            />
           ) : (
-            data.recentAchievements.map((achievement) => (
-              <AchievementBadge
-                key={achievement.id}
-                name={achievement.title}
-                rarity={achievement.rarity}
-              />
-            ))
+            <div className="flex flex-wrap gap-2">
+              {data.recentAchievements.map((achievement) => (
+                <AchievementBadge
+                  key={achievement.id}
+                  slug={achievement.slug}
+                  name={achievement.title}
+                  rarity={achievement.rarity}
+                  showLabel
+                />
+              ))}
+            </div>
           )}
-          <Button variant="outline" size="sm" className="w-full" asChild>
+          <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
             <Link href="/review">Review Queue ({data.reviewQueueCount})</Link>
           </Button>
         </CardContent>

@@ -15,13 +15,36 @@ class KanjiProgressService {
     ]);
 
     const learnedSet = new Set(learnedIds);
-    const entries = characters.map((character) => ({
-      id: character.id,
-      character: character.character,
-      meaning: character.meaning,
-      strokeCount: character.stroke_count,
-      learned: learnedSet.has(character.id),
-    }));
+    const detailed = await kanjiRepository.findByIds(characters.map((c) => c.id));
+    const detailById = new Map(detailed.map((kanji) => [kanji.id, kanji]));
+
+    const entries = characters.map((character) => {
+      const detail = detailById.get(character.id);
+      const onyomi =
+        detail?.readings
+          .filter((r) => r.reading_type === "onyomi")
+          .map((r) => r.reading)
+          .slice(0, 2) ?? [];
+      const kunyomi =
+        detail?.readings
+          .filter((r) => r.reading_type === "kunyomi")
+          .map((r) => r.reading)
+          .slice(0, 2) ?? [];
+      const readingSummary = [...onyomi, ...kunyomi].join(" · ") || null;
+      const learned = learnedSet.has(character.id);
+
+      return {
+        id: character.id,
+        character: character.character,
+        meaning: character.meaning,
+        strokeCount: character.stroke_count,
+        onyomi,
+        kunyomi,
+        readingSummary,
+        learned,
+        masteryPercent: learned ? 100 : 0,
+      };
+    });
 
     const learnedCount = entries.filter((entry) => entry.learned).length;
 

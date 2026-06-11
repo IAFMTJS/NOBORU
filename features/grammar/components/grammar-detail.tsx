@@ -30,8 +30,8 @@ export function GrammarDetail({ grammar }: GrammarDetailProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
+      <Card className="overflow-hidden border-violet-500/25 bg-gradient-to-br from-violet-500/10 via-card to-card">
+        <CardHeader className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             {grammar.jlptLevel ? (
               <Badge variant="outline">{grammar.jlptLevel.toUpperCase()}</Badge>
@@ -42,10 +42,13 @@ export function GrammarDetail({ grammar }: GrammarDetailProps) {
               <Badge variant="outline">Not yet learned</Badge>
             )}
           </div>
-          <CardTitle className="text-heading-4">{grammar.meaning}</CardTitle>
-          {grammar.explanation ? (
-            <CardDescription>{grammar.explanation}</CardDescription>
-          ) : null}
+          <div className="space-y-1">
+            <p className="font-japanese text-heading-3">{grammar.title}</p>
+            <CardTitle className="text-heading-4">{grammar.meaning}</CardTitle>
+            {grammar.explanation ? (
+              <CardDescription>{grammar.explanation}</CardDescription>
+            ) : null}
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {grammar.examples.length > 0 ? (
@@ -54,9 +57,9 @@ export function GrammarDetail({ grammar }: GrammarDetailProps) {
               {grammar.examples.map((example) => (
                 <div
                   key={example.japaneseText}
-                  className="rounded-xl border border-border px-4 py-3"
+                  className="rounded-xl border border-border bg-background/60 px-4 py-3"
                 >
-                  <p className="text-body">{example.japaneseText}</p>
+                  <p className="font-japanese text-body">{example.japaneseText}</p>
                   {example.romaji ? (
                     <p className="text-body-sm text-muted-foreground">
                       {example.romaji}

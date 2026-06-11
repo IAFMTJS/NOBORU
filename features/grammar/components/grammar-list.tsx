@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +40,15 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
         }
       />
 
-      <Card className="shadow-elevation-1">
+      <ContentHubBanner
+        variant="grammar"
+        title={hub.grammarTitle}
+        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} grammar points on your trail`}
+      />
+
+      <JlptLevelPills basePath="/learn/grammar" activeLevel={jlptLevel} />
+
+      <Card>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -54,7 +64,7 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
         </CardContent>
       </Card>
 
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardTitle className="text-heading-6">Grammar Points</CardTitle>
         </CardHeader>
