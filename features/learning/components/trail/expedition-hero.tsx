@@ -64,8 +64,15 @@ export function ExpeditionHero({
                 Ready for today&apos;s climb?
               </p>
             </div>
-            <div className="absolute bottom-4 left-4 max-w-[6.5rem]">
-              <YamaPresence presence={yama} size="md" layout="vertical" priority />
+            <div className="absolute bottom-4 right-4 left-16 max-w-[11rem] sm:max-w-[13rem]">
+              <YamaPresence
+                presence={yama}
+                size="sm"
+                layout="horizontal"
+                priority
+                className="items-end"
+                bubbleClassName="border-white/15 bg-black/45 text-white/90 backdrop-blur-md"
+              />
             </div>
           </div>
         </div>
@@ -86,10 +93,7 @@ export function ExpeditionHero({
           ) : null}
         </div>
 
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1 space-y-1">
-            <p className="text-body-sm font-medium">{continueLessonTitle}</p>
-          </div>
+        <div className="flex items-center justify-end">
           <CircularProgress
             value={regionProgressPercent}
             size={56}
