@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Check, Lock, Map } from "lucide-react";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
@@ -15,6 +16,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
+import { getRegionArtPath } from "@/lib/assets/registry";
+import { REGION_HERO_IMAGE_CLASS } from "@/lib/assets/image-presentation";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +29,25 @@ type RegionSelectSheetProps = {
   onSelectRegion: (slug: string) => void;
   mode?: "picker" | "overview";
 };
+
+function RegionThumbnail({ slug, alt }: { slug: string; alt: string }) {
+  const src = getRegionArtPath(slug);
+  if (!src) {
+    return <div className="h-12 w-12 shrink-0 rounded-lg bg-muted" />;
+  }
+
+  return (
+    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={REGION_HERO_IMAGE_CLASS}
+        sizes="48px"
+      />
+    </div>
+  );
+}
 
 export function RegionSelectSheet({
   open,
@@ -48,11 +70,54 @@ export function RegionSelectSheet({
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>
         </SheetHeader>
-        <div className="mt-4 space-y-3 pb-4">
+        <div className="mt-4 space-y-2 pb-4">
           {regions.map((region) => {
             const locked = region.availability === "locked";
             const selected = region.slug === selectedSlug;
             const visuals = getRegionVisuals(region.slug);
+
+            if (mode === "picker") {
+              return (
+                <button
+                  key={region.id}
+                  type="button"
+                  disabled={locked}
+                  onClick={() => {
+                    if (!locked) {
+                      onSelectRegion(region.slug);
+                      onOpenChange(false);
+                    }
+                  }}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors",
+                    selected
+                      ? "border-primary/40 bg-primary/5"
+                      : "border-border/60 bg-card",
+                    locked ? "cursor-not-allowed opacity-70" : "hover:bg-accent/20",
+                  )}
+                >
+                  <RegionThumbnail slug={region.slug} alt={`${region.name} region`} />
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-body-sm font-medium">{region.name}</p>
+                      {locked ? (
+                        <Lock className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                      ) : selected ? (
+                        <Check className="h-4 w-4 shrink-0 text-success" aria-hidden />
+                      ) : null}
+                    </div>
+                    <p className="text-caption text-muted-foreground">
+                      {region.completedCount}/{region.lessonCount} lessons
+                    </p>
+                    <ProgressBar
+                      value={region.progressPercent}
+                      className="space-y-0"
+                      indicatorClassName="h-1"
+                    />
+                  </div>
+                </button>
+              );
+            }
 
             return (
               <button
@@ -71,7 +136,7 @@ export function RegionSelectSheet({
                     ? "border-primary bg-primary/5 shadow-elevation-1"
                     : "border-border bg-card",
                   locked ? "cursor-not-allowed opacity-70" : "hover:bg-accent/20",
-                  mode === "overview" && selected && "ring-1 ring-primary/30",
+                  selected && "ring-1 ring-primary/30",
                 )}
               >
                 <RegionHeroImage

@@ -1,23 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ChevronDown, Map } from "lucide-react";
+import { ChevronDown, Map, Settings } from "lucide-react";
 
-import { PageContainer } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
-import { RegionContinueFooter } from "@/features/learning/components/region-continue-footer";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
 import {
   findLessonInRegion,
   getLessonPositionInRegion,
-  getNextLessonInRegion,
 } from "@/features/learning/utils/region-lesson";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
-import { getRegionVisuals } from "@/lib/design-system/region-tokens";
+import { cn } from "@/lib/utils";
 
 type TrailFirstLearnScreenProps = {
   path: LearningPathViewModel;
@@ -63,7 +61,6 @@ export function TrailFirstLearnScreen({
     });
   }, [selectedRegion]);
 
-  const nextLesson = selectedRegion ? getNextLessonInRegion(selectedRegion) : null;
   const selectedLesson = selectedRegion && selectedNode
     ? findLessonInRegion(selectedRegion, selectedNode.id)
     : null;
@@ -71,9 +68,6 @@ export function TrailFirstLearnScreen({
     selectedRegion && selectedNode
       ? getLessonPositionInRegion(selectedRegion, selectedNode.id)
       : null;
-  const regionVisuals = selectedRegion
-    ? getRegionVisuals(selectedRegion.slug)
-    : null;
 
   const handleNodeSelect = (node: TrailNodeViewModel) => {
     setSelectedNode(node);
@@ -82,68 +76,67 @@ export function TrailFirstLearnScreen({
 
   if (!selectedRegion) {
     return (
-      <PageContainer>
+      <div className="p-4">
         <p className="text-body-sm text-muted-foreground">
           No learning regions are available yet.
         </p>
-      </PageContainer>
+      </div>
     );
   }
 
   return (
     <>
-      <PageContainer className="pb-28">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-heading-4">Learn</h1>
-            <p className="text-caption text-muted-foreground">Current trail</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              aria-label="View all regions"
-              onClick={() => setRegionsOverviewOpen(true)}
-            >
-              <Map className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="gap-1"
-              onClick={() => setRegionPickerOpen(true)}
-            >
-              {selectedRegion.name}
-              <ChevronDown className="h-4 w-4 opacity-70" aria-hidden />
-            </Button>
-          </div>
-        </div>
-
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <div>
-            <p className="text-body-sm font-medium">{selectedRegion.name}</p>
-            {regionVisuals ? (
-              <p className="text-caption text-muted-foreground">{regionVisuals.label}</p>
-            ) : null}
-          </div>
-          <p className="text-caption text-muted-foreground">
-            {selectedRegion.completedCount}/{selectedRegion.lessonCount} lessons
-          </p>
-        </div>
+      <div className="relative flex min-h-[calc(100dvh-6rem)] flex-col">
+        <header className="flex shrink-0 items-center justify-between gap-2 px-4 pb-2 pt-4">
+          <h1 className="text-heading-4">Learn</h1>
+          <button
+            type="button"
+            onClick={() => setRegionPickerOpen(true)}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full border border-border/60",
+              "bg-card/80 px-3 py-1.5 text-body-sm font-medium backdrop-blur-sm",
+            )}
+          >
+            {selectedRegion.name}
+            <ChevronDown className="h-4 w-4 opacity-70" aria-hidden />
+          </button>
+          <Button variant="ghost" size="icon" aria-label="Settings" asChild>
+            <Link href="/settings">
+              <Settings className="h-5 w-5" />
+            </Link>
+          </Button>
+        </header>
 
         <TrailMap
           nodes={trailNodes}
           minimal
+          labelsBelow
+          immersive
           onNodeSelect={handleNodeSelect}
+          className="min-h-0 flex-1"
         />
-      </PageContainer>
 
-      {nextLesson ? (
-        <RegionContinueFooter
-          lessonTitle={nextLesson.title}
-          href={nextLesson.href}
-          className="fixed bottom-[4.5rem] left-0 right-0 mx-auto max-w-lg"
-        />
-      ) : null}
+        <button
+          type="button"
+          aria-label="View all regions"
+          onClick={() => setRegionsOverviewOpen(true)}
+          className={cn(
+            "fixed bottom-[5.5rem] left-4 z-20 flex h-11 w-11 items-center justify-center",
+            "rounded-full border border-white/10 bg-black/50 text-white backdrop-blur-md",
+          )}
+        >
+          <Map className="h-5 w-5" aria-hidden />
+        </button>
+
+        <div
+          className={cn(
+            "fixed bottom-[5.5rem] right-4 z-20 rounded-full border border-white/10",
+            "bg-black/50 px-3 py-1.5 text-caption text-white backdrop-blur-md",
+          )}
+        >
+          {selectedRegion.completedCount}/{selectedRegion.lessonCount} lessons
+        </div>
+      </div>
 
       <RegionSelectSheet
         open={regionPickerOpen}

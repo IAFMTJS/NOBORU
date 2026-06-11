@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, Mountain, Zap } from "lucide-react";
+import { Check, Clock, Gem, Lock, Mountain, Play, Zap } from "lucide-react";
 
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { Badge } from "@/components/ui/badge";
@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.types";
 import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import { cn } from "@/lib/utils";
 
 type LessonNodeDetailSheetProps = {
   open: boolean;
@@ -41,6 +41,26 @@ function getStatusLabel(node: TrailNodeViewModel | null): string {
   }
 }
 
+function NodeMarker({ node }: { node: TrailNodeViewModel }) {
+  const locked = node.state === "locked";
+  const completed = node.state === "completed";
+  const Icon = locked ? Lock : completed ? Check : node.state === "in_progress" ? Play : Mountain;
+
+  return (
+    <div
+      className={cn(
+        "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2",
+        completed && "border-success bg-success/20 text-success",
+        node.state === "in_progress" && "border-primary bg-primary/20 text-primary",
+        node.state === "available" && "border-primary/70 bg-primary/10 text-primary",
+        locked && "border-border bg-muted text-muted-foreground",
+      )}
+    >
+      <Icon className="h-5 w-5" aria-hidden />
+    </div>
+  );
+}
+
 export function LessonNodeDetailSheet({
   open,
   onOpenChange,
@@ -62,26 +82,43 @@ export function LessonNodeDetailSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="rounded-t-2xl">
         <SheetHeader className="text-left">
-          <div className="flex items-center gap-2">
-            <Mountain className="h-4 w-4 text-primary" aria-hidden />
-            <SheetTitle>{node.label}</SheetTitle>
+          <div className="flex items-start gap-3">
+            <NodeMarker node={node} />
+            <div className="min-w-0 space-y-1">
+              <SheetTitle>{node.label}</SheetTitle>
+              <p className="text-caption text-muted-foreground">
+                {regionName}
+                {lessonLabel ? ` · ${lessonLabel}` : ""}
+              </p>
+              <Badge
+                variant={locked ? "outline" : node.state === "in_progress" ? "default" : "secondary"}
+              >
+                {getStatusLabel(node)}
+              </Badge>
+            </div>
           </div>
-          <SheetDescription>
-            {regionName}
-            {lessonLabel ? ` · ${lessonLabel}` : ""}
-          </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-4 py-2">
-          <Badge variant={locked ? "outline" : "default"}>{getStatusLabel(node)}</Badge>
-          {lesson?.description ? (
-            <p className="text-body-sm text-muted-foreground">{lesson.description}</p>
-          ) : node.subtitle ? (
-            <p className="text-body-sm text-muted-foreground">{node.subtitle}</p>
+        <div className="space-y-4 py-4">
+          {(lesson?.description || node.subtitle) ? (
+            <div className="rounded-xl border border-border/60 bg-card/90 p-4">
+              <p className="mb-2 text-caption font-medium uppercase tracking-wide text-muted-foreground">
+                Learn
+              </p>
+              <p className="text-body-sm">
+                {lesson?.description ?? node.subtitle}
+              </p>
+            </div>
           ) : null}
-          <div className="flex flex-wrap gap-3 text-body-sm">
+
+          <div className="flex flex-wrap gap-4 text-body-sm">
             <span className="text-muted-foreground">
-              XP <span className="font-medium text-foreground">{node.xpReward}</span>
+              XP{" "}
+              <span className="font-medium text-foreground">{node.xpReward}</span>
+            </span>
+            <span className="inline-flex items-center gap-1 text-muted-foreground">
+              <Gem className="h-3.5 w-3.5" aria-hidden />
+              <span className="font-medium text-foreground">—</span>
             </span>
             {lesson?.estimatedDuration ? (
               <span className="inline-flex items-center gap-1 text-muted-foreground">

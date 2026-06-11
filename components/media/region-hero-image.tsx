@@ -8,12 +8,14 @@ type RegionHeroImageProps = {
   regionSlug: string;
   alt: string;
   className?: string;
+  hideOverlay?: boolean;
 };
 
 export function RegionHeroImage({
   regionSlug,
   alt,
   className,
+  hideOverlay = false,
 }: RegionHeroImageProps) {
   const src = getRegionArtPath(regionSlug);
   if (!src) return null;
@@ -32,7 +34,9 @@ export function RegionHeroImage({
         className={REGION_HERO_IMAGE_CLASS}
         sizes="(max-width: 512px) 100vw, 512px"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/25 to-transparent" />
+      {hideOverlay ? null : (
+        <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/25 to-transparent" />
+      )}
     </div>
   );
 }

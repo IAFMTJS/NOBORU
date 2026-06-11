@@ -54,9 +54,16 @@ export function CircularProgress({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-heading-3">{clamped}%</span>
+        <span
+          className={cn(
+            "font-semibold",
+            size <= 72 ? "text-body-sm" : "text-heading-3",
+          )}
+        >
+          {clamped}%
+        </span>
         {sublabel ? (
-          <span className="text-caption text-muted-foreground">{sublabel}</span>
+          <span className="text-[0.65rem] text-muted-foreground">{sublabel}</span>
         ) : null}
       </div>
       {label ? <p className="text-body-sm font-medium">{label}</p> : null}

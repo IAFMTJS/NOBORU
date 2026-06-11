@@ -1,21 +1,12 @@
-import Link from "next/link";
-import { Flame, Star } from "lucide-react";
+import { Flame, Gem, Star } from "lucide-react";
 
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
-import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { cn } from "@/lib/utils";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 
@@ -29,7 +20,6 @@ type ExpeditionHeroProps = {
   continueHref: string;
   lessonNumber: number | null;
   lessonCount: number;
-  estimatedDuration: number | null;
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
   stats: {
@@ -42,123 +32,104 @@ export function ExpeditionHero({
   greeting,
   regionSlug,
   regionName,
-  trailName,
-  regionProgressPercent,
   continueLessonTitle,
   continueHref,
   lessonNumber,
   lessonCount,
-  estimatedDuration,
+  regionProgressPercent,
   quests,
   yama,
   stats,
 }: ExpeditionHeroProps) {
-  const region = getRegionVisuals(regionSlug);
   const lessonLabel =
     lessonNumber && lessonCount > 0
       ? `Lesson ${lessonNumber} of ${lessonCount}`
       : null;
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <h1 className="text-heading-4">{greeting}</h1>
-        <p className="text-body-sm text-muted-foreground">
-          Ready for today&apos;s climb?
-        </p>
+    <div className="space-y-5">
+      <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-2xl">
+        <div className="relative min-h-[17.5rem]">
+          <RegionHeroImage
+            regionSlug={regionSlug}
+            alt={`${regionName} base camp`}
+            className="absolute inset-0 h-full min-h-[17.5rem] rounded-none"
+            hideOverlay
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-background" />
+          <div className="relative z-10 flex min-h-[17.5rem] flex-col justify-between p-4">
+            <div className="space-y-1 pr-24">
+              <p className="text-body-sm text-white/85">{greeting}</p>
+              <p className="text-heading-3 font-bold text-white">
+                Ready for today&apos;s climb?
+              </p>
+            </div>
+            <div className="absolute bottom-4 left-4 max-w-[6.5rem]">
+              <YamaPresence presence={yama} size="md" layout="vertical" priority />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div
         className={cn(
-          "relative overflow-hidden rounded-2xl border shadow-elevation-2 dark:shadow-elevation-3",
-          region.border,
+          "space-y-4 rounded-2xl border border-border/50 bg-card p-4 shadow-elevation-1",
         )}
       >
-        <RegionHeroImage
-          regionSlug={regionSlug}
-          alt={`${regionName} base camp`}
-          className="h-40 rounded-none sm:h-44"
-        />
-        <div className="absolute bottom-3 right-3 max-w-[7rem]">
-          <YamaPresence presence={yama} size="md" layout="vertical" priority />
-        </div>
-      </div>
-
-      <Card
-        className={cn(
-          "overflow-hidden border bg-gradient-to-br shadow-elevation-1",
-          region.gradient,
-          region.border,
-        )}
-      >
-        <CardHeader className="pb-3">
-          <CardTitle className="text-heading-5">Continue Your Climb</CardTitle>
-          <CardDescription>
+        <div className="space-y-1">
+          <p className="text-body-sm font-semibold">Continue Your Climb</p>
+          <p className="text-caption text-muted-foreground">
             {regionName} · {continueLessonTitle}
-          </CardDescription>
+          </p>
           {lessonLabel ? (
             <p className="text-caption text-muted-foreground">{lessonLabel}</p>
-          ) : (
-            <p className="text-caption text-muted-foreground">{trailName}</p>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
-            <CircularProgress
-              value={regionProgressPercent}
-              size={88}
-              strokeWidth={8}
-              sublabel={trailName}
-              className="shrink-0"
-            />
-            <div className="min-w-0 space-y-1">
-              <p className="text-body-sm font-medium">{continueLessonTitle}</p>
-              {estimatedDuration ? (
-                <p className="text-caption text-muted-foreground">
-                  ~{estimatedDuration} min on the trail
-                </p>
-              ) : null}
-            </div>
-          </div>
-          <Button size="lg" className="w-full" asChild>
-            <AnalyticsLink
-              href={continueHref}
-              eventName="trail_continue_clicked"
-              eventProperties={{
-                source: "home_expedition",
-                lessonTitle: continueLessonTitle,
-              }}
-            >
-              Continue Climbing
-            </AnalyticsLink>
-          </Button>
-        </CardContent>
-      </Card>
-
-      <TrailQuestCards daily={quests.daily} />
-
-      <div className="grid grid-cols-2 gap-3 rounded-xl border border-border/80 bg-card/60 p-3">
-        <div className="flex items-center gap-2">
-          <Flame className="h-4 w-4 text-warning" aria-hidden />
-          <div>
-            <p className="text-body-sm font-medium">{stats.currentStreak} day streak</p>
-            <p className="text-caption text-muted-foreground">Steady ascent</p>
-          </div>
+          ) : null}
         </div>
-        <div className="flex items-center gap-2">
-          <Star className="h-4 w-4 text-primary" aria-hidden />
-          <div>
-            <p className="text-body-sm font-medium">
-              {stats.totalXp.toLocaleString()} XP
-            </p>
-            <p className="text-caption text-muted-foreground">Elevation earned</p>
+
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1 space-y-1">
+            <p className="text-body-sm font-medium">{continueLessonTitle}</p>
           </div>
+          <CircularProgress
+            value={regionProgressPercent}
+            size={56}
+            strokeWidth={5}
+            className="shrink-0"
+          />
         </div>
+
+        <Button size="lg" className="w-full" asChild>
+          <AnalyticsLink
+            href={continueHref}
+            eventName="trail_continue_clicked"
+            eventProperties={{
+              source: "home_expedition",
+              lessonTitle: continueLessonTitle,
+            }}
+          >
+            Continue Climbing
+          </AnalyticsLink>
+        </Button>
       </div>
 
-      <Button variant="outline" size="sm" className="w-full" asChild>
-        <Link href="/learn">View full trail</Link>
-      </Button>
+      <TrailQuestCards daily={quests.daily} variant="compact" />
+
+      <div className="grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-card/80 px-3 py-3">
+        <div className="flex items-center justify-center gap-1.5">
+          <Flame className="h-4 w-4 shrink-0 text-warning" aria-hidden />
+          <span className="text-body-sm font-medium">{stats.currentStreak}</span>
+        </div>
+        <div className="flex items-center justify-center gap-1.5 border-x border-border/50">
+          <Star className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+          <span className="text-body-sm font-medium">
+            {stats.totalXp.toLocaleString()}
+          </span>
+        </div>
+        <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
+          <Gem className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="text-body-sm font-medium">—</span>
+        </div>
+      </div>
     </div>
   );
 }
