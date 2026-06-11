@@ -17,6 +17,6 @@ export const scaleIn = {
 };
 
 export const trailNodeReveal = {
-  initial: { opacity: 0, x: -6 },
-  animate: { opacity: 1, x: 0 },
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
 };

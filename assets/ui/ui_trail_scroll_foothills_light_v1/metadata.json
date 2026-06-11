@@ -1,0 +1,37 @@
+{
+  "id": "ui_trail_scroll_foothills_light_v1",
+  "name": "Trail Scroll Foothills Light",
+  "category": "ui",
+  "version": "v1",
+  "status": "review",
+  "owner_agent": "UI Art Agent",
+  "creation_agent": "UI Art Agent",
+  "approved_by": "Art Director Agent",
+  "created_at": "2026-06-11",
+  "updated_at": "2026-06-12",
+  "tags": [
+    "ui",
+    "trail",
+    "scroll",
+    "foothills",
+    "light-mode",
+    "immersive",
+    "painterly"
+  ],
+  "usage_locations": [
+    "trail-first-learn-screen",
+    "trail-map-immersive"
+  ],
+  "dependencies": [
+    "ui_trail_spine_light_v1"
+  ],
+  "dimensions": {
+    "width": 1536,
+    "height": 5120
+  },
+  "files": [
+    "ui_trail_scroll_foothills_light_v1.png",
+    "ui_trail_scroll_foothills_light_v1.webp"
+  ],
+  "design_notes": "Production Foothills scroll (light). AI-authored painterly environment bands (summit/mid/ascent) gradient-blended with cropped draft bottom plate (trail base only, no summit repeat). Subtle path overlay + 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. No spine tiling. Awaiting Art Director approval per SPEC.md."
+}

@@ -60,6 +60,10 @@ lib/assets/registry.ts         # Canonical path constants
 | `icon_app_dark_v1` | App Icon Dark | icons | v1 | approved | dark |
 | `mockup_product_collection_v1` | Product Mockup Collection | marketing | v1 | approved | both |
 | `mockup_home_learn_flow_dark_v1` | Home & Learn Flow Redesign | marketing | v1 | approved | dark |
+| `ui_trail_spine_dark_v1` | Trail Spine Dark | ui | v1 | approved | dark |
+| `ui_trail_spine_light_v1` | Trail Spine Light | ui | v1 | approved | light |
+| `ui_trail_scroll_foothills_dark_v1` | Trail Scroll Foothills Dark | ui | v1 | review | dark |
+| `ui_trail_scroll_foothills_light_v1` | Trail Scroll Foothills Light | ui | v1 | review | light |
 
 ---
 
@@ -290,21 +294,173 @@ lib/assets/registry.ts         # Canonical path constants
 
 ---
 
+## UI
+
+### ui_trail_spine_dark_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `ui_trail_spine_dark_v1` |
+| **Name** | Trail Spine Dark |
+| **Category** | ui |
+| **Version** | v1 |
+| **Status** | approved |
+| **Owner Agent** | UI Art Agent |
+| **Creation Agent** | UI Art Agent |
+| **Approved By** | Art Director Agent |
+| **Created** | 2026-06-11 |
+| **Updated** | 2026-06-12 |
+
+**Source path:** `assets/ui/ui_trail_spine_dark_v1/`
+
+**Public path:** `/ui/ui_trail_spine_dark_v1.webp`
+
+**Registry key:** `ASSET_REGISTRY.ui.trailSpineDark`
+
+**Tags:** `ui`, `trail`, `dark-mode`
+
+**Usage locations:**
+
+- Trail map (horizontal spine)
+- Learning path screen
+- Expedition hero
+
+**Helper:** `getTrailMapArtPath("dark")` returns this path.
+
+---
+
+### ui_trail_spine_light_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `ui_trail_spine_light_v1` |
+| **Name** | Trail Spine Light |
+| **Category** | ui |
+| **Version** | v1 |
+| **Status** | approved |
+| **Owner Agent** | UI Art Agent |
+| **Creation Agent** | UI Art Agent |
+| **Approved By** | Art Director Agent |
+| **Created** | 2026-06-11 |
+| **Updated** | 2026-06-12 |
+
+**Source path:** `assets/ui/ui_trail_spine_light_v1/`
+
+**Public path:** `/ui/ui_trail_spine_light_v1.webp`
+
+**Registry key:** `ASSET_REGISTRY.ui.trailSpineLight`
+
+**Tags:** `ui`, `trail`, `light-mode`
+
+**Usage locations:**
+
+- Trail map (horizontal spine)
+- Learning path screen
+- Expedition hero
+
+**Helper:** `getTrailMapArtPath("light")` returns this path.
+
+---
+
+### ui_trail_scroll_foothills_dark_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `ui_trail_scroll_foothills_dark_v1` |
+| **Name** | Trail Scroll Foothills Dark |
+| **Category** | ui |
+| **Version** | v1 |
+| **Status** | review |
+| **Owner Agent** | UI Art Agent |
+| **Creation Agent** | UI Art Agent |
+| **Approved By** | *(pending — omit from metadata until Art Director QA)* |
+| **Created** | 2026-06-11 |
+| **Updated** | 2026-06-12 |
+
+**Source path:** `assets/ui/ui_trail_scroll_foothills_dark_v1/`
+
+**Public path:** `/ui/ui_trail_scroll_foothills_dark_v1.webp`
+
+**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsDark`
+
+**Dependencies:** `ui_trail_spine_dark_v1`
+
+**Dimensions:** 1536 × 5120
+
+**Tags:** `ui`, `trail`, `scroll`, `foothills`, `dark-mode`, `immersive`
+
+**Usage locations:**
+
+- Trail-first Learn screen (immersive mode)
+- Trail map immersive scroll
+
+**Pipeline:** `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs`
+
+**Helper:** `getTrailScrollArtPath("foothills", "dark")` returns this path.
+
+**Design notes:** Vertical immersive Foothills scroll (dark). Procedural regeneration: `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs` (Asset Pipeline Agent execution). UI Art Agent creation; Art Director visual QA pending before `approved_by` and promotion to `production`. Hand-authored replacement per SPEC.md when acceptance criteria A–F pass.
+
+---
+
+### ui_trail_scroll_foothills_light_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `ui_trail_scroll_foothills_light_v1` |
+| **Name** | Trail Scroll Foothills Light |
+| **Category** | ui |
+| **Version** | v1 |
+| **Status** | review |
+| **Owner Agent** | UI Art Agent |
+| **Creation Agent** | UI Art Agent |
+| **Approved By** | *(pending — omit from metadata until Art Director QA)* |
+| **Created** | 2026-06-11 |
+| **Updated** | 2026-06-12 |
+
+**Source path:** `assets/ui/ui_trail_scroll_foothills_light_v1/`
+
+**Public path:** `/ui/ui_trail_scroll_foothills_light_v1.webp`
+
+**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsLight`
+
+**Dependencies:** `ui_trail_spine_light_v1`
+
+**Dimensions:** 1536 × 5120
+
+**Tags:** `ui`, `trail`, `scroll`, `foothills`, `light-mode`, `immersive`
+
+**Usage locations:**
+
+- Trail-first Learn screen (immersive mode)
+- Trail map immersive scroll
+
+**Pipeline:** `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs`
+
+**Helper:** `getTrailScrollArtPath("foothills", "light")` returns this path.
+
+**Design notes:** Vertical immersive Foothills scroll (light). Procedural regeneration: `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs` (Asset Pipeline Agent execution). UI Art Agent creation; Art Director visual QA pending before `approved_by` and promotion to `production`. Hand-authored replacement per SPEC.md when acceptance criteria A–F pass.
+
+**Region slugs:** `TRAIL_SCROLL_REGION_SLUGS` in `lib/assets/registry.ts` currently lists `foothills` only. Add new slugs when additional regions receive scroll art.
+
+---
+
 ## Code Registry
 
 `lib/assets/registry.ts` exports canonical public paths:
 
 ```typescript
 export const ASSET_REGISTRY = {
-  mascots: {
-    yamaMainLight: "/mascots/yama_main_light_v1.webp",
-    yamaMainDark: "/mascots/yama_main_dark_v1.webp",
-  },
-  icons: {
-    appLight: "/icons/icon_app_light_v1.webp",
-    appDark: "/icons/icon_app_dark_v1.webp",
+  mascots: { /* ... */ },
+  icons: { /* ... */ },
+  ui: {
+    trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
+    trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
+    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v1.webp",
+    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v1.webp",
   },
 } as const;
+
+export const TRAIL_SCROLL_REGION_SLUGS = ["foothills"] as const;
 ```
 
 **Rule:** UI components must import paths from `ASSET_REGISTRY` — never hardcode asset paths.
@@ -330,7 +486,9 @@ Required fields per [asset-pipeline.md](./asset-pipeline.md):
 }
 ```
 
-Optional fields: `design_notes`, `files`, `dependencies`
+Optional fields: `design_notes`, `files`, `dependencies`, `creation_agent`, `approved_by`, `dimensions`
+
+**Agent chain:** UI domain assets use `owner_agent` (domain owner, e.g. UI Art Agent), `creation_agent` (UI Art Agent for UI art), and `approved_by` (Art Director Agent). Procedural compositing is executed by Asset Pipeline Agent scripts — document in `design_notes`, not as `creation_agent`. Do not set `owner_agent` to Art Director Agent alone — that omits the creating agent.
 
 ### Status Values
 
@@ -369,7 +527,7 @@ From [asset-pipeline.md](./asset-pipeline.md) — not yet registered:
 | Enemies / Bosses | `assets/enemies/`, `assets/bosses/` | Trial boss artwork |
 | Loading | `assets/loading/` | Yama loading states |
 | Events | `assets/events/` | Seasonal event art |
-| UI | `assets/ui/` | Illustrations for empty states |
+| UI | `assets/ui/` | Trail spine, trail scroll, auth atmosphere, empty states |
 
 When new assets are approved:
 

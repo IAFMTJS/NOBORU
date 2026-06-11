@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ChevronDown, Map, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS } from "@/lib/assets/image-presentation";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
@@ -86,21 +87,29 @@ export function TrailFirstLearnScreen({
 
   return (
     <>
-      <div className="relative flex min-h-[calc(100dvh-6rem)] flex-col">
-        <header className="flex shrink-0 items-center justify-between gap-2 px-4 pb-2 pt-4">
-          <h1 className="text-heading-4">Learn</h1>
+      <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-6rem)] min-h-0 flex-col">
+        <div className={TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS} aria-hidden />
+
+        <header className="absolute inset-x-0 top-0 z-30 flex shrink-0 items-center justify-between gap-2 px-4 pb-2 pt-4">
+          <h1 className="text-heading-4 text-foreground">Learn</h1>
           <button
             type="button"
             onClick={() => setRegionPickerOpen(true)}
             className={cn(
-              "inline-flex items-center gap-1 rounded-full border border-border/60",
-              "bg-card/80 px-3 py-1.5 text-body-sm font-medium backdrop-blur-sm",
+              "inline-flex items-center gap-1 rounded-full border border-white/15",
+              "bg-black/45 px-3 py-1.5 text-body-sm font-medium text-white backdrop-blur-md",
             )}
           >
             {selectedRegion.name}
             <ChevronDown className="h-4 w-4 opacity-70" aria-hidden />
           </button>
-          <Button variant="ghost" size="icon" aria-label="Settings" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Settings"
+            className="text-foreground hover:bg-black/20 hover:text-foreground"
+            asChild
+          >
             <Link href="/settings">
               <Settings className="h-5 w-5" />
             </Link>
@@ -109,9 +118,8 @@ export function TrailFirstLearnScreen({
 
         <TrailMap
           nodes={trailNodes}
-          minimal
-          labelsBelow
           immersive
+          regionSlug={selectedRegion.slug}
           onNodeSelect={handleNodeSelect}
           className="min-h-0 flex-1"
         />

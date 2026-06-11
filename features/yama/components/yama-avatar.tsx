@@ -10,11 +10,21 @@ const SIZE_CLASSES: Record<YamaSize, string> = {
   sm: "h-14 w-14",
   md: "h-20 w-20",
   lg: "h-24 w-24",
+  xl: "h-32 w-32 sm:h-36 sm:w-36",
+};
+
+const SIZE_PX: Record<YamaSize, string> = {
+  xs: "40px",
+  sm: "56px",
+  md: "80px",
+  lg: "96px",
+  xl: "(max-width: 512px) 128px, 144px",
 };
 
 type YamaAvatarProps = {
   expression?: YamaExpression;
   size?: YamaSize;
+  fit?: "sticker" | "full";
   alt?: string;
   className?: string;
   priority?: boolean;
@@ -23,6 +33,7 @@ type YamaAvatarProps = {
 export function YamaAvatar({
   expression = "main",
   size = "md",
+  fit = "sticker",
   alt = "Yama",
   className,
   priority,
@@ -42,8 +53,9 @@ export function YamaAvatar({
         expression={expression}
         alt={alt}
         fill
+        fit={fit}
         priority={priority}
-        sizes={size === "lg" ? "96px" : size === "md" ? "80px" : "56px"}
+        sizes={SIZE_PX[size]}
         className={styles.imageClass}
       />
     </div>

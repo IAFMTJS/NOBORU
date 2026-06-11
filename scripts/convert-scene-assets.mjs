@@ -14,6 +14,8 @@ const root = path.resolve(__dirname, "..");
 const SCENE_SOURCES = [
   "ui/ui_trail_spine_dark_v1",
   "ui/ui_trail_spine_light_v1",
+  "ui/ui_trail_scroll_foothills_dark_v1",
+  "ui/ui_trail_scroll_foothills_light_v1",
 ];
 
 async function convertScenePng(pngPath) {

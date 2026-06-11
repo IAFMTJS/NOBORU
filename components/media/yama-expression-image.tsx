@@ -5,12 +5,14 @@ import { useTheme } from "next-themes";
 
 import { stickerImageClass } from "@/lib/assets/image-presentation";
 import { getYamaExpressionPath } from "@/lib/assets/registry";
+import { cn } from "@/lib/utils";
 import type { YamaExpression } from "@/features/yama/types/yama.types";
 
 type YamaExpressionImageProps = {
   expression?: YamaExpression;
   alt?: string;
   className?: string;
+  fit?: "sticker" | "full";
   fill?: boolean;
   width?: number;
   height?: number;
@@ -22,6 +24,7 @@ export function YamaExpressionImage({
   expression = "main",
   alt = "Yama",
   className,
+  fit = "sticker",
   fill,
   width,
   height,
@@ -40,7 +43,11 @@ export function YamaExpressionImage({
       height={height}
       priority={priority}
       sizes={fill ? sizes : undefined}
-      className={stickerImageClass(className)}
+      className={
+        fit === "full"
+          ? cn("object-contain object-bottom scale-100", className)
+          : stickerImageClass(className)
+      }
     />
   );
 }

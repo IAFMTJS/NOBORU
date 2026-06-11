@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 type YamaPresenceProps = {
   presence: YamaPresenceViewModel;
   size?: YamaSize;
+  fit?: "sticker" | "full";
   layout?: "horizontal" | "vertical";
   className?: string;
   bubbleClassName?: string;
@@ -16,6 +17,7 @@ type YamaPresenceProps = {
 export function YamaPresence({
   presence,
   size = "md",
+  fit = "sticker",
   layout = "horizontal",
   className,
   bubbleClassName,
@@ -33,6 +35,7 @@ export function YamaPresence({
       <YamaAvatar
         expression={presence.expression}
         size={size}
+        fit={fit}
         alt=""
         priority={priority}
       />

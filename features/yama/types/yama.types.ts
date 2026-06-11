@@ -8,7 +8,7 @@ export type YamaExpression =
   | "studying"
   | "loading";
 
-export type YamaSize = "xs" | "sm" | "md" | "lg";
+export type YamaSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 export type YamaPresenceViewModel = {
   expression: YamaExpression;

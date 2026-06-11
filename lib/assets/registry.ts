@@ -28,6 +28,8 @@ export const ASSET_REGISTRY = {
   ui: {
     trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
     trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
+    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v1.webp",
+    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v1.webp",
     authAtmosphereDark: "/ui/ui_auth_atmosphere_dark_v1.webp",
     authAtmosphereLight: "/ui/ui_auth_atmosphere_light_v1.webp",
   },
@@ -71,6 +73,22 @@ const REGION_SLUG_TO_ASSET: Record<string, string> = {
   "mount-n2": ASSET_REGISTRY.regions.mountN2,
   "mount-n1": ASSET_REGISTRY.regions.mountN1,
   "master-summit": ASSET_REGISTRY.regions.masterSummit,
+};
+
+/**
+ * Region slugs with dedicated vertical trail scroll art.
+ * Public path pattern: `/ui/ui_trail_scroll_{slug}_{theme}_v1.webp`
+ * Add a slug here when a region receives its own scroll asset pair (dark + light).
+ */
+export const TRAIL_SCROLL_REGION_SLUGS = ["foothills"] as const;
+
+export type TrailScrollRegionSlug = (typeof TRAIL_SCROLL_REGION_SLUGS)[number];
+
+const TRAIL_SCROLL_REGION_SLUG_SET = new Set<string>(TRAIL_SCROLL_REGION_SLUGS);
+
+const TRAIL_SCROLL_FALLBACK: Record<"light" | "dark", string> = {
+  dark: ASSET_REGISTRY.ui.trailScrollFoothillsDark,
+  light: ASSET_REGISTRY.ui.trailScrollFoothillsLight,
 };
 
 const YAMA_EXPRESSION_DARK: Record<string, string> = {
@@ -121,6 +139,36 @@ export function getTrailMapArtPath(theme: "light" | "dark" | string | undefined)
   return theme === "light"
     ? ASSET_REGISTRY.ui.trailSpineLight
     : ASSET_REGISTRY.ui.trailSpineDark;
+}
+
+const TRAIL_SCROLL_PATH_BY_REGION: Record<
+  TrailScrollRegionSlug,
+  Record<"light" | "dark", string>
+> = {
+  foothills: {
+    dark: ASSET_REGISTRY.ui.trailScrollFoothillsDark,
+    light: ASSET_REGISTRY.ui.trailScrollFoothillsLight,
+  },
+};
+
+/** Immersive vertical scroll art for a region + theme. Falls back to Foothills when slug is unknown. */
+export function getTrailScrollArtPath(
+  regionSlug: string | undefined,
+  theme: "light" | "dark" | string | undefined,
+): string | null {
+  const mode = theme === "light" ? "light" : "dark";
+  const slug = regionSlug ?? "foothills";
+  const paths = TRAIL_SCROLL_PATH_BY_REGION[slug as TrailScrollRegionSlug];
+
+  if (paths) {
+    return paths[mode];
+  }
+
+  return TRAIL_SCROLL_FALLBACK[mode];
+}
+
+export function hasTrailScrollArt(regionSlug: string | undefined): boolean {
+  return TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug ?? "foothills");
 }
 
 /** @deprecated Use getTrailMapArtPath */

@@ -57,4 +57,19 @@ describe("buildTrailNodes", () => {
     expect(nodes[1]?.state).toBe("available");
     expect(nodes[2]?.state).toBe("locked");
   });
+
+  it("marks practice lessons as checkpoint nodes with exam subtitle", () => {
+    const nodes = buildTrailNodes([
+      {
+        id: "1",
+        title: "Wave 1 Practice",
+        type: "practice",
+        xpReward: 20,
+        progress: "available",
+      },
+    ]);
+
+    expect(nodes[0]?.nodeKind).toBe("checkpoint");
+    expect(nodes[0]?.subtitle).toBe("Exam · 20 XP");
+  });
 });

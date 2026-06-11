@@ -13,7 +13,6 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         greeting={data.greeting}
         regionSlug={data.region.slug}
         regionName={data.region.name}
-        trailName={data.region.trail}
         regionProgressPercent={data.level.progressPercent}
         continueLessonTitle={data.upcomingLesson.title}
         continueHref={data.upcomingLesson.href}

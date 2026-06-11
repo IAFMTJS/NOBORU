@@ -90,11 +90,18 @@ export function LessonNodeDetailSheet({
                 {regionName}
                 {lessonLabel ? ` · ${lessonLabel}` : ""}
               </p>
-              <Badge
-                variant={locked ? "outline" : node.state === "in_progress" ? "default" : "secondary"}
-              >
-                {getStatusLabel(node)}
-              </Badge>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <Badge
+                  variant={locked ? "outline" : node.state === "in_progress" ? "default" : "secondary"}
+                >
+                  {getStatusLabel(node)}
+                </Badge>
+                {node.nodeKind === "checkpoint" ? (
+                  <Badge variant="outline" className="border-warning/50 text-warning">
+                    Exam
+                  </Badge>
+                ) : null}
+              </div>
             </div>
           </div>
         </SheetHeader>

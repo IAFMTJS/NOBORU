@@ -1,23 +1,26 @@
 ﻿{
-    "id":  "ui_trail_spine_dark_v1",
-    "updated_at":  "2026-06-11",
-    "usage_locations":  [
-                            "trail-map",
-                            "learning-path-screen",
-                            "expedition-hero"
-                        ],
-    "version":  "v1",
-    "category":  "ui",
-    "tags":  [
-                 "ui",
-                 "trail",
-                 "dark-mode"
-             ],
-    "created_at":  "2026-06-11",
-    "name":  "Trail Spine Dark",
-    "files":  [
-                  "ui_trail_spine_dark_v1.png"
-              ],
-    "status":  "approved",
-    "owner_agent":  "Art Director Agent"
+  "id": "ui_trail_spine_dark_v1",
+  "name": "Trail Spine Dark",
+  "category": "ui",
+  "version": "v1",
+  "status": "approved",
+  "owner_agent": "UI Art Agent",
+  "creation_agent": "UI Art Agent",
+  "approved_by": "Art Director Agent",
+  "created_at": "2026-06-11",
+  "updated_at": "2026-06-12",
+  "tags": [
+    "ui",
+    "trail",
+    "dark-mode"
+  ],
+  "usage_locations": [
+    "trail-map",
+    "learning-path-screen",
+    "expedition-hero"
+  ],
+  "files": [
+    "ui_trail_spine_dark_v1.png"
+  ],
+  "design_notes": "Horizontal trail spine source for dark mode. Feeds procedural scroll generation (ui_trail_scroll_foothills_dark_v1)."
 }
