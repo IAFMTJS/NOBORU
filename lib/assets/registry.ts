@@ -44,8 +44,8 @@ export const ASSET_REGISTRY = {
   ui: {
     trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
     trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
-    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v1.webp",
-    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v1.webp",
+    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v2.webp",
+    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v2.webp",
     authAtmosphereDark: "/ui/ui_auth_atmosphere_dark_v1.webp",
     authAtmosphereLight: "/ui/ui_auth_atmosphere_light_v1.webp",
   },
@@ -215,11 +215,17 @@ export function getTrailMapArtPath(
   return getTrailSpineArtPath(theme);
 }
 
+/** Per-region scroll art version (defaults to v1). */
+const TRAIL_SCROLL_VERSION_BY_REGION: Partial<Record<TrailScrollRegionSlug, string>> = {
+  foothills: "v2",
+};
+
 function buildTrailScrollPublicPath(
   regionSlug: TrailScrollRegionSlug,
   theme: "light" | "dark",
 ): string {
-  return `/ui/ui_trail_scroll_${regionSlug}_${theme}_v1.webp`;
+  const version = TRAIL_SCROLL_VERSION_BY_REGION[regionSlug] ?? "v1";
+  return `/ui/ui_trail_scroll_${regionSlug}_${theme}_${version}.webp`;
 }
 
 const TRAIL_SCROLL_PATH_BY_REGION = Object.fromEntries(

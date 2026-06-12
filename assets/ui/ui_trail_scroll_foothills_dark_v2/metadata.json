@@ -1,0 +1,48 @@
+{
+  "id": "ui_trail_scroll_foothills_dark_v2",
+  "name": "Trail Scroll Foothills Dark v2",
+  "category": "ui",
+  "version": "v2",
+  "status": "review",
+  "owner_agent": "UI Art Agent",
+  "creation_agent": "UI Art Agent",
+  "approved_by": null,
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "tags": [
+    "ui",
+    "trail",
+    "scroll",
+    "foothills",
+    "dark-mode",
+    "immersive",
+    "v2"
+  ],
+  "usage_locations": [
+    "trail-first-learn-screen",
+    "trail-map-immersive"
+  ],
+  "dependencies": [
+    "ui_trail_spine_dark_v1"
+  ],
+  "dimensions": {
+    "width": 1536,
+    "height": 5120
+  },
+  "files": [
+    "ui_trail_scroll_foothills_dark_v2.png",
+    "ui_trail_scroll_foothills_dark_v2.webp"
+  ],
+  "composition": {
+    "method": "ai-plate-band-composite",
+    "plates": [
+      "summit",
+      "mid",
+      "base"
+    ],
+    "no_tiling": true,
+    "no_path_overlay": true,
+    "anchor_contract": "TRAIL_MAP_PATH_ANCHORS (SPEC S-curve)"
+  },
+  "design_notes": "Foothills scroll v2 (dark). New AI-authored environment bands (summit/mid/base) cross-faded into single 1536×5120 scroll. Welcoming foothills meadow-to-summit ascent. Painted paths in source plates; node positions use SPEC S-curve anchors."
+}

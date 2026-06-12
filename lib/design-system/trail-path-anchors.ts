@@ -18,41 +18,40 @@ export const IMMERSIVE_TRAIL_PADDING_TOP_REM = 10;
 export const IMMERSIVE_TRAIL_PADDING_BOTTOM_REM = 14;
 
 /**
- * Lantern / bend waypoints on the painted trail (zigzag ascent, summit converge).
- * Calibrated to ui_trail_scroll_foothills_{theme}_v1 gen hero art.
+ * Lantern / bend waypoints calibrated to ui_trail_scroll_foothills_{theme}_v2 painted path.
  */
 export const TRAIL_MAP_PATH_ANCHORS_DARK: ReadonlyArray<{ x: number; y: number }> = [
   { x: 50, y: 93 },
-  { x: 56, y: 88 },
-  { x: 44, y: 83 },
-  { x: 56, y: 78 },
-  { x: 44, y: 73 },
-  { x: 56, y: 68 },
-  { x: 44, y: 63 },
-  { x: 56, y: 58 },
-  { x: 44, y: 53 },
-  { x: 54, y: 46 },
-  { x: 50, y: 38 },
-  { x: 50, y: 28 },
-  { x: 50, y: 16 },
+  { x: 40, y: 88 },
+  { x: 52, y: 83 },
+  { x: 40, y: 77 },
+  { x: 54, y: 71 },
+  { x: 44, y: 65 },
+  { x: 54, y: 59 },
+  { x: 46, y: 53 },
+  { x: 54, y: 47 },
+  { x: 48, y: 40 },
+  { x: 50, y: 32 },
+  { x: 50, y: 22 },
+  { x: 50, y: 12 },
   { x: 50, y: 6 },
 ];
 
 export const TRAIL_MAP_PATH_ANCHORS_LIGHT: ReadonlyArray<{ x: number; y: number }> = [
   { x: 50, y: 93 },
-  { x: 54, y: 88 },
-  { x: 46, y: 83 },
-  { x: 54, y: 78 },
-  { x: 46, y: 73 },
-  { x: 54, y: 68 },
-  { x: 46, y: 63 },
-  { x: 54, y: 58 },
-  { x: 46, y: 53 },
-  { x: 52, y: 46 },
-  { x: 50, y: 38 },
+  { x: 44, y: 88 },
+  { x: 52, y: 83 },
+  { x: 38, y: 77 },
+  { x: 48, y: 71 },
+  { x: 36, y: 65 },
+  { x: 46, y: 59 },
+  { x: 38, y: 53 },
+  { x: 48, y: 46 },
+  { x: 52, y: 38 },
   { x: 50, y: 28 },
   { x: 50, y: 16 },
-  { x: 50, y: 6 },
+  { x: 50, y: 8 },
+  { x: 50, y: 4 },
 ];
 
 /** Default anchors for card layouts and dark immersive scroll. */
