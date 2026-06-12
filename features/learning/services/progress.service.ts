@@ -10,6 +10,11 @@ import {
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import { vocabularyRepository } from "@/features/vocabulary/repositories/vocabulary.repository";
 import {
+  getLessonPassScore,
+  isLessonScorePassing,
+} from "@/features/learning/constants/lesson.constants";
+import { LessonPassThresholdError } from "@/features/learning/errors/lesson.errors";
+import {
   learningPathRepository,
   progressRepository,
 } from "@/features/learning/repositories/learning-path.repository";
@@ -65,6 +70,14 @@ class ProgressService {
       input.lessonId,
     );
     const isFirstCompletion = existing?.status !== "completed";
+    const score = Math.max(0, Math.min(100, Math.round(input.score)));
+
+    if (
+      isFirstCompletion &&
+      !isLessonScorePassing(lesson.type, score)
+    ) {
+      throw new LessonPassThresholdError(score, getLessonPassScore(lesson.type));
+    }
 
     const newVocabularyCount = await countNewVocabularyInLesson(
       input.userId,
@@ -72,8 +85,6 @@ class ProgressService {
       learningPathRepository.listLessonItems.bind(learningPathRepository),
       vocabularyRepository.listLearnedVocabularyIds.bind(vocabularyRepository),
     );
-
-    const score = Math.max(0, Math.min(100, Math.round(input.score)));
 
     await progressRepository.upsertInProgress({
       userId: input.userId,

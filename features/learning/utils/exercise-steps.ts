@@ -1,31 +1,22 @@
 import type {
   GrammarLessonContent,
+  HiraganaLessonContent,
+  KanjiLessonContent,
+  KatakanaLessonContent,
   LessonContent,
+  LessonFillBlankStep,
   LessonMatchingStep,
   LessonRecallStep,
+  LessonSentenceTypedStep,
+  LessonWordBankStep,
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
-
-type LessonFillBlankStep = {
-  kind: "fill_blank";
-  prompt: string;
-  sentenceWithBlank: string;
-  englishHint: string;
-  options: string[];
-  correctIndex: number;
-  index: number;
-  total: number;
-};
-
-type LessonWordBankStep = {
-  kind: "word_bank";
-  prompt: string;
-  englishHint: string;
-  tokens: string[];
-  correctOrder: string[];
-  index: number;
-  total: number;
-};
+import {
+  LESSON_MIXED_RECALL_MAX_ITEMS,
+  LESSON_MIXED_RECALL_MIN_ITEMS,
+} from "@/features/learning/constants/lesson.constants";
+import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
 
 type LessonListeningRecallStep = {
   kind: "listening_recall";
@@ -37,17 +28,6 @@ type LessonListeningRecallStep = {
   index: number;
   total: number;
 };
-
-type LessonSentenceTypedStep = {
-  kind: "sentence_typed";
-  prompt: string;
-  englishHint: string;
-  acceptedAnswers: string[];
-  index: number;
-  total: number;
-};
-import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
-import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
 
 export function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -124,6 +104,7 @@ export function buildRecallStep(
   allAnswers: string[],
   index: number,
   total: number,
+  phase: "standard" | "consolidation" = "standard",
 ): LessonRecallStep {
   if (content.type === "vocabulary") {
     const options = buildRecallOptions(content.meaning, allAnswers);
@@ -131,11 +112,15 @@ export function buildRecallStep(
       kind: "recall",
       mode: "typed",
       contentType: "vocabulary",
-      prompt: "Type the meaning of this word",
+      prompt:
+        phase === "consolidation"
+          ? "Recall · type the meaning of this word"
+          : "Type the meaning of this word",
       display: content.kanji ?? content.kana,
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),
+      phase,
       index,
       total,
     };
@@ -147,11 +132,15 @@ export function buildRecallStep(
       kind: "recall",
       mode: "typed",
       contentType: "kanji",
-      prompt: "Type the meaning of this kanji",
+      prompt:
+        phase === "consolidation"
+          ? "Recall · type the meaning of this kanji"
+          : "Type the meaning of this kanji",
       display: content.character,
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),
+      phase,
       index,
       total,
     };
@@ -163,11 +152,15 @@ export function buildRecallStep(
       kind: "recall",
       mode: "typed",
       contentType: "hiragana",
-      prompt: "Type the romaji reading",
+      prompt:
+        phase === "consolidation"
+          ? "Recall · type the romaji reading"
+          : "Type the romaji reading",
       display: content.character,
       options,
       correctIndex: options.indexOf(content.romaji),
       acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      phase,
       index,
       total,
     };
@@ -179,11 +172,15 @@ export function buildRecallStep(
       kind: "recall",
       mode: "typed",
       contentType: "katakana",
-      prompt: "Type the romaji reading",
+      prompt:
+        phase === "consolidation"
+          ? "Recall · type the romaji reading"
+          : "Type the romaji reading",
       display: content.character,
       options,
       correctIndex: options.indexOf(content.romaji),
       acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      phase,
       index,
       total,
     };
@@ -193,12 +190,20 @@ export function buildRecallStep(
     const options = buildRecallOptions(content.meaning, allAnswers);
     return {
       kind: "recall",
-      mode: "choice",
+      mode: phase === "consolidation" ? "typed" : "choice",
       contentType: "grammar",
-      prompt: "What does this grammar point mean?",
+      prompt:
+        phase === "consolidation"
+          ? "Recall · type what this grammar point means"
+          : "What does this grammar point mean?",
       display: content.title,
       options,
       correctIndex: options.indexOf(content.meaning),
+      acceptedAnswers:
+        phase === "consolidation"
+          ? buildAcceptedAnswers(content.meaning)
+          : undefined,
+      phase,
       index,
       total,
     };
@@ -212,6 +217,7 @@ export function buildRecallStep(
     display: "?",
     options: allAnswers.slice(0, 4),
     correctIndex: 0,
+    phase,
     index,
     total,
   };
@@ -319,10 +325,56 @@ export function buildSentenceTypedStep(
     kind: "sentence_typed",
     prompt: "Type the Japanese sentence",
     englishHint: example.english,
-    acceptedAnswers: buildAcceptedAnswers(example.japaneseText.replace(/[。、！？]+$/g, "")),
+    acceptedAnswers: buildAcceptedAnswers(
+      example.japaneseText.replace(/[。、！？]+$/g, ""),
+    ),
     index,
     total,
   };
+}
+
+export function buildGrammarProductionStep(
+  content: GrammarLessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonFillBlankStep | LessonWordBankStep | LessonSentenceTypedStep | null {
+  const variant = index % 3;
+  if (variant === 0) return buildWordBankStep(content, index, total);
+  if (variant === 1) return buildFillBlankStep(content, allAnswers, index, total);
+  return buildSentenceTypedStep(content, index, total);
+}
+
+function isMixedRecallContent(
+  content: LessonContent,
+): content is
+  | GrammarLessonContent
+  | VocabularyLessonContent
+  | HiraganaLessonContent
+  | KatakanaLessonContent
+  | KanjiLessonContent {
+  return (
+    content.type === "hiragana" ||
+    content.type === "katakana" ||
+    content.type === "vocabulary" ||
+    content.type === "kanji" ||
+    content.type === "grammar"
+  );
+}
+
+export function buildMixedRecallSteps(contents: LessonContent[]): LessonRecallStep[] {
+  const recallable = contents.filter(isMixedRecallContent);
+  if (recallable.length < LESSON_MIXED_RECALL_MIN_ITEMS) return [];
+
+  const selected = shuffle(recallable).slice(
+    0,
+    Math.min(LESSON_MIXED_RECALL_MAX_ITEMS, recallable.length),
+  );
+  const answers = contents.map(getRecallAnswer);
+
+  return selected.map((content, index) =>
+    buildRecallStep(content, answers, index + 1, selected.length, "consolidation"),
+  );
 }
 
 type VarietyBuilder = (

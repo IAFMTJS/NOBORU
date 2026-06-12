@@ -17,6 +17,7 @@ const baseSession: LessonSessionViewModel = {
   status: "published",
   progress: "not_started",
   score: 0,
+  passScore: 70,
   nextLesson: null,
   steps: [
     {

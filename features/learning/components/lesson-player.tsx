@@ -22,12 +22,20 @@ import { analyticsService } from "@/features/analytics/services/analytics.servic
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { yamaService } from "@/features/yama/services/yama.service";
+import {
+  calculateLessonScore,
+  LESSON_EMBEDDED_STEP_PASS_THRESHOLD,
+} from "@/features/learning/constants/lesson.constants";
 import { ApplicationDrill } from "@/features/learning/components/drills/application-drill";
 import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
+import { FillBlankDrill } from "@/features/learning/components/drills/fill-blank-drill";
 import { MatchingDrill } from "@/features/learning/components/drills/matching-drill";
 import { TypedRecallDrill } from "@/features/learning/components/drills/typed-recall-drill";
+import { TypedSentenceDrill } from "@/features/learning/components/drills/typed-sentence-drill";
+import { WordBankDrill } from "@/features/learning/components/drills/word-bank-drill";
 import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { LessonFailScreen } from "@/features/learning/components/lesson-fail-screen";
 import { LessonTeachCard } from "@/features/learning/components/lesson-teach-card";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import type {
@@ -113,6 +121,22 @@ type LessonPlayerProps = {
   soundEnabled?: boolean;
 };
 
+function isScoredLessonStep(step: LessonStep): boolean {
+  return (
+    step.kind === "recall" ||
+    step.kind === "matching" ||
+    step.kind === "reading" ||
+    step.kind === "application" ||
+    step.kind === "fill_blank" ||
+    step.kind === "word_bank" ||
+    step.kind === "sentence_typed" ||
+    step.kind === "story" ||
+    step.kind === "dialogue" ||
+    step.kind === "listening" ||
+    step.kind === "listening_challenge"
+  );
+}
+
 function ReadingCard({
   step,
   onAnswer,
@@ -180,22 +204,14 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     QuestCompletionViewModel[]
   >([]);
   const [reviewItemsEnqueued, setReviewItemsEnqueued] = useState(0);
+  const [lessonFailed, setLessonFailed] = useState(false);
+  const [failedScore, setFailedScore] = useState(0);
 
   const checkStepCount = useMemo(
-    () =>
-      session.steps.filter(
-        (step) =>
-          step.kind === "recall" ||
-          step.kind === "matching" ||
-          step.kind === "reading" ||
-          step.kind === "application" ||
-          step.kind === "story" ||
-          step.kind === "dialogue" ||
-          step.kind === "listening" ||
-          step.kind === "listening_challenge",
-      ).length,
+    () => session.steps.filter(isScoredLessonStep).length,
     [session.steps],
   );
+  const isReviewSession = session.progress === "completed";
 
   const currentStep: LessonStep | undefined = session.steps[stepIndex];
   const progressPercent = Math.round(
@@ -272,15 +288,38 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     const nextStep = session.steps[nextIndex];
 
     if (nextStep?.kind === "complete") {
-      const score =
-        recallTotal === 0
-          ? 100
-          : Math.round((recallCorrect / recallTotal) * 100);
+      const score = calculateLessonScore(recallCorrect, recallTotal);
+
+      if (!isReviewSession && score < session.passScore) {
+        setFailedScore(score);
+        setLessonFailed(true);
+        void analyticsService.track({
+          name: "lesson_failed",
+          properties: {
+            lessonId: session.lessonId,
+            regionSlug: session.regionSlug,
+            score,
+            passScore: session.passScore,
+          },
+        });
+        return;
+      }
+
       void handleComplete(score);
     }
 
     setStepIndex(nextIndex);
-  }, [recallCorrect, recallTotal, session.steps, stepIndex, handleComplete]);
+  }, [
+    recallCorrect,
+    recallTotal,
+    session.lessonId,
+    session.passScore,
+    session.regionSlug,
+    session.steps,
+    stepIndex,
+    handleComplete,
+    isReviewSession,
+  ]);
 
   const handleRecallAnswer = useCallback((correct: boolean) => {
     setRecallTotal((current) => current + 1);
@@ -288,8 +327,44 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     setRecallAnswered(true);
   }, []);
 
+  const handleRetry = useCallback(() => {
+    setLessonFailed(false);
+    setFailedScore(0);
+    setRecallCorrect(0);
+    setRecallTotal(0);
+    setRecallAnswered(false);
+    setEmbeddedComplete(false);
+    setError(null);
+    const firstDrillIndex = session.steps.findIndex(
+      (step, index) => index > 0 && step.kind !== "intro",
+    );
+    setStepIndex(firstDrillIndex >= 0 ? firstDrillIndex : 1);
+  }, [session.steps]);
+
   if (!currentStep) {
     return null;
+  }
+
+  if (lessonFailed) {
+    return (
+      <PageContainer>
+        <ScreenHeader
+          title={session.title}
+          subtitle={`${session.type} lesson · ${session.xpReward} XP`}
+          action={
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={`/learn/${session.regionSlug}`}>Exit</Link>
+            </Button>
+          }
+        />
+        <LessonFailScreen
+          score={failedScore}
+          passScore={session.passScore}
+          regionSlug={session.regionSlug}
+          onRetry={handleRetry}
+        />
+      </PageContainer>
+    );
   }
 
   return (
@@ -328,8 +403,14 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-body-sm text-muted-foreground">
-              {checkStepCount} checks · {currentStep.xpReward} XP reward
+              {checkStepCount} checks · Pass {session.passScore}% ·{" "}
+              {currentStep.xpReward} XP reward
             </p>
+            {!isReviewSession ? (
+              <p className="text-caption text-muted-foreground">
+                You need at least {session.passScore}% to unlock the next trail node.
+              </p>
+            ) : null}
             {session.progress === "completed" ? (
               <Badge variant="secondary">Already completed · {session.score}%</Badge>
             ) : null}
@@ -379,11 +460,60 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
       {currentStep.kind === "recall" ? (
         <>
+          {currentStep.phase === "consolidation" ? (
+            <p className="text-caption text-muted-foreground">
+              Final recall round · no hints
+            </p>
+          ) : null}
           {currentStep.mode === "typed" ? (
             <TypedRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
           ) : (
             <ChoiceRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
           )}
+          <Button
+            className="w-full"
+            onClick={goNext}
+            disabled={!recallAnswered}
+          >
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "fill_blank" ? (
+        <>
+          <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
+          <Button
+            className="w-full"
+            onClick={goNext}
+            disabled={!recallAnswered}
+          >
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "word_bank" ? (
+        <>
+          <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
+          <Button
+            className="w-full"
+            onClick={goNext}
+            disabled={!recallAnswered}
+          >
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "sentence_typed" ? (
+        <>
+          <TypedSentenceDrill
+            prompt={currentStep.prompt}
+            display={currentStep.englishHint}
+            acceptedAnswers={currentStep.acceptedAnswers}
+            onAnswer={handleRecallAnswer}
+          />
           <Button
             className="w-full"
             onClick={goNext}
@@ -438,7 +568,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             }}
             onComplete={(score) => {
               setRecallTotal(1);
-              if (score >= 60) setRecallCorrect(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
               setEmbeddedComplete(true);
             }}
           />
@@ -464,7 +594,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             }}
             onComplete={(score) => {
               setRecallTotal(1);
-              if (score >= 60) setRecallCorrect(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
               setEmbeddedComplete(true);
             }}
           />
@@ -486,7 +616,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             }}
             onComplete={(score) => {
               setRecallTotal(1);
-              if (score >= 60) setRecallCorrect(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
               setEmbeddedComplete(true);
             }}
           />
@@ -512,7 +642,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             }}
             onComplete={(score) => {
               setRecallTotal(1);
-              if (score >= 60) setRecallCorrect(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
               setEmbeddedComplete(true);
             }}
           />
@@ -527,7 +657,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           <CardHeader>
             <CardTitle>Lesson Complete</CardTitle>
             <CardDescription>
-              Score {completedScore}% · {session.xpReward} XP earned
+              Score {completedScore}% · Pass {session.passScore}% · {session.xpReward} XP earned
               {elevationAward
                 ? ` · +${elevationAward.epAwarded} EP`
                 : ""}

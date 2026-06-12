@@ -141,6 +141,8 @@ export type LessonTeachStep = {
 
 export type LessonRecallMode = "choice" | "typed";
 
+export type LessonRecallPhase = "standard" | "consolidation";
+
 export type LessonRecallStep = {
   kind: "recall";
   mode: LessonRecallMode;
@@ -150,6 +152,37 @@ export type LessonRecallStep = {
   options: string[];
   correctIndex: number;
   acceptedAnswers?: string[];
+  phase?: LessonRecallPhase;
+  index: number;
+  total: number;
+};
+
+export type LessonFillBlankStep = {
+  kind: "fill_blank";
+  prompt: string;
+  sentenceWithBlank: string;
+  englishHint: string;
+  options: string[];
+  correctIndex: number;
+  index: number;
+  total: number;
+};
+
+export type LessonWordBankStep = {
+  kind: "word_bank";
+  prompt: string;
+  englishHint: string;
+  tokens: string[];
+  correctOrder: string[];
+  index: number;
+  total: number;
+};
+
+export type LessonSentenceTypedStep = {
+  kind: "sentence_typed";
+  prompt: string;
+  englishHint: string;
+  acceptedAnswers: string[];
   index: number;
   total: number;
 };
@@ -225,6 +258,9 @@ export type LessonStep =
   | LessonIntroStep
   | LessonTeachStep
   | LessonRecallStep
+  | LessonFillBlankStep
+  | LessonWordBankStep
+  | LessonSentenceTypedStep
   | LessonMatchingStep
   | LessonReadingStep
   | LessonStoryStep
@@ -246,6 +282,7 @@ export type LessonSessionViewModel = {
   status: ContentStatus;
   progress: ProgressStatus;
   score: number;
+  passScore: number;
   steps: LessonStep[];
   nextLesson: {
     title: string;

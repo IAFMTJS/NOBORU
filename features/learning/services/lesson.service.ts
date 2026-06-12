@@ -17,7 +17,6 @@ import type {
   KatakanaLessonContent,
   KanjiLessonContent,
   LessonContent,
-  LessonMatchingStep,
   LessonRecallStep,
   LessonReadingStep,
   LessonSessionViewModel,
@@ -37,40 +36,16 @@ import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import { listeningProgressService } from "@/features/listening/services/listening-progress.service";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
-import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
+import {
+  buildGrammarProductionStep,
+  buildMatchingStep,
+  buildMixedRecallSteps,
+  buildRecallStep,
+  getRecallAnswer,
+} from "@/features/learning/utils/exercise-steps";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
-
-function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
-  }
-  return copy;
-}
-
-function buildRecallOptions(correct: string, distractors: string[]): string[] {
-  const unique = Array.from(
-    new Set(distractors.filter((value) => value !== correct)),
-  ).slice(0, 3);
-  return shuffle([correct, ...unique]).slice(0, 4);
-}
-
-function getRecallAnswer(content: LessonContent): string {
-  switch (content.type) {
-    case "hiragana":
-    case "katakana":
-      return content.romaji;
-    case "grammar":
-      return content.meaning;
-    case "vocabulary":
-    case "kanji":
-      return content.meaning;
-    default:
-      return "";
-  }
-}
 
 function groupExamplesByParentId<T extends { vocabulary_id?: string; kanji_id?: string; grammar_id?: string }>(
   examples: T[],
@@ -85,46 +60,6 @@ function groupExamplesByParentId<T extends { vocabulary_id?: string; kanji_id?: 
     grouped.set(parentId, bucket);
   }
   return grouped;
-}
-
-function getMatchingPrompt(content: LessonContent): string {
-  switch (content.type) {
-    case "vocabulary":
-      return content.kanji ?? content.kana;
-    case "hiragana":
-    case "katakana":
-    case "kanji":
-      return content.character;
-    default:
-      return "";
-  }
-}
-
-function buildMatchingStep(contents: LessonContent[]): LessonMatchingStep | null {
-  const matchable = contents.filter(
-    (content) =>
-      content.type === "vocabulary" ||
-      content.type === "hiragana" ||
-      content.type === "katakana" ||
-      content.type === "kanji",
-  );
-
-  if (matchable.length < 3) return null;
-
-  const selected = matchable.slice(0, Math.min(4, matchable.length));
-  const pairs = selected.map((content) => ({
-    id: content.id,
-    prompt: getMatchingPrompt(content),
-    answer: getRecallAnswer(content),
-  }));
-
-  return {
-    kind: "matching",
-    prompt: "Match each item to its meaning or reading",
-    pairs,
-    index: 1,
-    total: 1,
-  };
 }
 
 class LessonService {
@@ -518,102 +453,38 @@ class LessonService {
     };
   }
 
-  private buildRecallStep(
-    content: LessonContent,
-    allAnswers: string[],
-    index: number,
-    total: number,
-  ): LessonRecallStep {
-    if (content.type === "vocabulary") {
-      const options = buildRecallOptions(content.meaning, allAnswers);
-      return {
-        kind: "recall",
-        mode: "typed",
-        contentType: "vocabulary",
-        prompt: "Type the meaning of this word",
-        display: content.kanji ?? content.kana,
-        options,
-        correctIndex: options.indexOf(content.meaning),
-        acceptedAnswers: buildAcceptedAnswers(content.meaning),
-        index,
-        total,
-      };
-    }
+  private buildTeachRecallSequence(
+    contents: LessonContent[],
+    answers: string[],
+    includeGrammarProduction: boolean,
+  ): LessonStep[] {
+    const teachSteps: LessonTeachStep[] = contents.map((content, index) => ({
+      kind: "teach",
+      content,
+      index: index + 1,
+      total: contents.length,
+    }));
 
-    if (content.type === "kanji") {
-      const options = buildRecallOptions(content.meaning, allAnswers);
-      return {
-        kind: "recall",
-        mode: "typed",
-        contentType: "kanji",
-        prompt: "Type the meaning of this kanji",
-        display: content.character,
-        options,
-        correctIndex: options.indexOf(content.meaning),
-        acceptedAnswers: buildAcceptedAnswers(content.meaning),
-        index,
-        total,
-      };
-    }
+    const recallSteps: LessonRecallStep[] = contents.map((content, index) =>
+      buildRecallStep(content, answers, index + 1, contents.length),
+    );
 
-    if (content.type === "hiragana") {
-      const options = buildRecallOptions(content.romaji, allAnswers);
-      return {
-        kind: "recall",
-        mode: "typed",
-        contentType: "hiragana",
-        prompt: "Type the romaji reading",
-        display: content.character,
-        options,
-        correctIndex: options.indexOf(content.romaji),
-        acceptedAnswers: buildAcceptedAnswers(content.romaji),
-        index,
-        total,
-      };
-    }
+    return teachSteps.flatMap((teach, index) => {
+      const content = contents[index];
+      const steps: LessonStep[] = [teach, recallSteps[index]];
 
-    if (content.type === "katakana") {
-      const options = buildRecallOptions(content.romaji, allAnswers);
-      return {
-        kind: "recall",
-        mode: "typed",
-        contentType: "katakana",
-        prompt: "Type the romaji reading",
-        display: content.character,
-        options,
-        correctIndex: options.indexOf(content.romaji),
-        acceptedAnswers: buildAcceptedAnswers(content.romaji),
-        index,
-        total,
-      };
-    }
+      if (includeGrammarProduction && content.type === "grammar") {
+        const productionStep = buildGrammarProductionStep(
+          content,
+          answers,
+          index + 1,
+          contents.length,
+        );
+        if (productionStep) steps.push(productionStep);
+      }
 
-    if (content.type === "grammar") {
-      const options = buildRecallOptions(content.meaning, allAnswers);
-      return {
-        kind: "recall",
-        mode: "choice",
-        contentType: "grammar",
-        prompt: "What does this grammar point mean?",
-        display: content.title,
-        options,
-        correctIndex: options.indexOf(content.meaning),
-        index,
-        total,
-      };
-    }
-
-    return {
-      kind: "recall",
-      mode: "choice",
-      contentType: "hiragana",
-      prompt: "What is the romaji reading?",
-      display: "?",
-      options: allAnswers.slice(0, 4),
-      correctIndex: 0,
-      index,
-      total,
-    };
+      return steps;
+    });
   }
 
   private buildSteps(
@@ -732,33 +603,33 @@ class LessonService {
       );
       const answers = practiceContents.map(getRecallAnswer);
       const recallSteps = practiceContents.map((content, index) =>
-        this.buildRecallStep(content, answers, index + 1, practiceContents.length),
+        buildRecallStep(content, answers, index + 1, practiceContents.length),
       );
       const matchingStep = buildMatchingStep(practiceContents);
+      const mixedRecallSteps = buildMixedRecallSteps(practiceContents);
       return [
         intro,
         ...recallSteps,
         ...(matchingStep ? [matchingStep] : []),
+        ...mixedRecallSteps,
         complete,
       ];
     }
 
     const answers = contents.map(getRecallAnswer);
-    const teachSteps: LessonTeachStep[] = contents.map((content, index) => ({
-      kind: "teach",
-      content,
-      index: index + 1,
-      total: contents.length,
-    }));
-    const recallSteps: LessonRecallStep[] = contents.map((content, index) =>
-      this.buildRecallStep(content, answers, index + 1, contents.length),
+    const teachRecallSteps = this.buildTeachRecallSequence(
+      contents,
+      answers,
+      lesson.type === "grammar",
     );
     const matchingStep = buildMatchingStep(contents);
+    const mixedRecallSteps = buildMixedRecallSteps(contents);
 
     return [
       intro,
-      ...teachSteps.flatMap((teach, index) => [teach, recallSteps[index]]),
+      ...teachRecallSteps,
       ...(matchingStep ? [matchingStep] : []),
+      ...mixedRecallSteps,
       complete,
     ];
   }
@@ -821,6 +692,7 @@ class LessonService {
       status: lesson.status,
       progress: progressStatus,
       score: progress?.score ?? 0,
+      passScore: getLessonPassScore(lesson.type),
       steps,
       nextLesson:
         nextLesson && nextLesson.id !== lesson.id

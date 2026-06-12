@@ -1,6 +1,7 @@
 export const ANALYTICS_EVENT_NAMES = [
   "lesson_started",
   "lesson_completed",
+  "lesson_failed",
   "review_submitted",
   "trial_completed",
   "game_started",
