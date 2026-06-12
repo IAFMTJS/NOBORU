@@ -13,13 +13,11 @@ function segmentStroke(
   if (fromState === "completed" && toState !== "locked") {
     return "var(--success)";
   }
-  if (
-    fromState === "in_progress" ||
-    toState === "in_progress" ||
-    fromState === "available" ||
-    toState === "available"
-  ) {
-    return "var(--primary)";
+  if (fromState === "in_progress" || toState === "in_progress") {
+    return "hsl(var(--primary))";
+  }
+  if (fromState === "available" || toState === "available") {
+    return "hsl(var(--warning))";
   }
   return "rgba(255,255,255,0.22)";
 }

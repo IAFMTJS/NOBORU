@@ -82,6 +82,34 @@ export function GamesScreen({ availability }: GamesScreenProps) {
 
           <div className="rounded-lg border border-border p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-body-sm font-medium">Memory Dungeon</p>
+              {availability.memoryDungeon.available ? (
+                <Badge variant="secondary">
+                  {availability.memoryDungeon.roomCount} rooms ·{" "}
+                  {availability.memoryDungeon.poolSize} pairs
+                </Badge>
+              ) : (
+                <Badge variant="outline">Locked</Badge>
+              )}
+            </div>
+            <p className="text-caption text-muted-foreground">
+              Flip hidden pairs across vocabulary and kanji rooms in a dungeon crawl.
+            </p>
+            <Button
+              className="w-full"
+              disabled={!availability.memoryDungeon.available}
+              asChild={availability.memoryDungeon.available}
+            >
+              {availability.memoryDungeon.available ? (
+                <Link href="/games/memory-dungeon">Play Memory Dungeon</Link>
+              ) : (
+                <span>Learn more on the trail to unlock</span>
+              )}
+            </Button>
+          </div>
+
+          <div className="rounded-lg border border-border p-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-body-sm font-medium">Kanji Hunter</p>
               {availability.kanjiHunter.available ? (
                 <Badge variant="secondary">

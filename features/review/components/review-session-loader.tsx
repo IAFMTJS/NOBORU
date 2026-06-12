@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 
 import { YamaLoading } from "@/components/ui/yama-loading";
 import { ReviewSession } from "@/features/review/components/review-session";
-import type { ReviewSessionViewModel } from "@/features/review/types/review.types";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import type { OfflineReviewBundle } from "@/lib/offline/types";
 
 type ReviewSessionLoaderProps = {
   userId: string;
-  initialSession: ReviewSessionViewModel;
+  initialBundle: OfflineReviewBundle;
   sessionLimit?: number | null;
   contentType?: string | null;
   weakOnly?: boolean;
@@ -19,47 +18,27 @@ type ReviewSessionLoaderProps = {
 
 export function ReviewSessionLoader({
   userId,
-  initialSession,
+  initialBundle,
   sessionLimit = null,
   contentType = null,
   weakOnly = false,
 }: ReviewSessionLoaderProps) {
   const online = useOnlineStatus();
-  const [session, setSession] = useState(initialSession);
-  const [bundle, setBundle] = useState<OfflineReviewBundle | null>(null);
+  const [bundle, setBundle] = useState(initialBundle);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setBundle(initialBundle);
+  }, [initialBundle]);
 
   useEffect(() => {
     let cancelled = false;
 
-    async function hydrate() {
+    async function syncOfflineCache() {
       setError(null);
       try {
         if (online) {
-          const params = new URLSearchParams();
-          if (sessionLimit && sessionLimit > 0) {
-            params.set("limit", String(sessionLimit));
-          }
-          if (contentType) params.set("contentType", contentType);
-          if (weakOnly) params.set("weakOnly", "true");
-          const query = params.toString();
-          const sessionUrl = query
-            ? `/api/review/session?${query}`
-            : "/api/review/session";
-          const response = await fetch(sessionUrl);
-          const result = (await response.json()) as {
-            success: boolean;
-            data?: OfflineReviewBundle;
-            error?: string;
-          };
-          if (!result.success || !result.data) {
-            throw new Error(result.error ?? "Failed to load review session.");
-          }
-          await offlineClient.cacheReviewBundle(result.data);
-          if (!cancelled) {
-            setBundle(result.data);
-            setSession(result.data.session);
-          }
+          await offlineClient.cacheReviewBundle(initialBundle);
           return;
         }
 
@@ -69,7 +48,6 @@ export function ReviewSessionLoader({
         }
         if (!cancelled) {
           setBundle(cached);
-          setSession(cached.session);
         }
       } catch (caught) {
         if (!cancelled) {
@@ -80,11 +58,11 @@ export function ReviewSessionLoader({
       }
     }
 
-    void hydrate();
+    void syncOfflineCache();
     return () => {
       cancelled = true;
     };
-  }, [contentType, online, sessionLimit, userId, weakOnly]);
+  }, [initialBundle, online, userId]);
 
   if (error) {
     return (
@@ -102,7 +80,7 @@ export function ReviewSessionLoader({
 
   return (
     <ReviewSession
-      initialSession={session}
+      initialSession={bundle.session}
       offlineBundle={bundle}
       onBundleChange={setBundle}
       sessionLimit={sessionLimit}

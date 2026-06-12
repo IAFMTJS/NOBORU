@@ -1,24 +1,16 @@
 import { jsonError, jsonOk } from "@/lib/api/responses";
 import { requireAuthSession } from "@/lib/auth/require-session";
-import { GAME_SLUGS, type GameSlug } from "@/features/games/constants/game.constants";
+import { isPlayableGameSlug } from "@/features/games/constants/game.constants";
 import { gameService } from "@/features/games/services/game.service";
 
 type RouteParams = { params: Promise<{ slug: string }> };
-
-function isGameSlug(value: string): value is GameSlug {
-  return (
-    value === GAME_SLUGS.wordMatch ||
-    value === GAME_SLUGS.vocabularyRush ||
-    value === GAME_SLUGS.kanjiHunter
-  );
-}
 
 export async function GET(request: Request, { params }: RouteParams) {
   const { session, error } = await requireAuthSession();
   if (error || !session) return error ?? jsonError("Unauthorized.", 401);
 
   const { slug } = await params;
-  if (!isGameSlug(slug)) {
+  if (!isPlayableGameSlug(slug)) {
     return jsonError("Unknown game.", 404);
   }
 

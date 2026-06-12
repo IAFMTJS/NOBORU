@@ -15,9 +15,9 @@ export const REGION_HERO_IMAGE_CLASS =
 export const TRAIL_MAP_IMAGE_CLASS =
   "object-cover object-[center_38%]";
 
-/** Immersive Learn — bleed edge-to-edge, crop landscape art to fill portrait tiles. */
+/** Immersive Learn — preserve full scroll art so node anchors match painted path. */
 export const TRAIL_MAP_IMMERSIVE_IMAGE_CLASS =
-  "object-cover object-center scale-[1.08]";
+  "object-contain object-top";
 
 /** Keeps lesson labels readable over bright/dark trail art. */
 export const TRAIL_MAP_SCRIM_CLASS =

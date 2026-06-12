@@ -16,10 +16,26 @@ export const ASSET_REGISTRY = {
     yamaThinkingLight: "/mascots/yama_thinking_light_v1.webp",
     yamaLoadingDark: "/mascots/yama_loading_dark_v2.webp",
     yamaLoadingLight: "/mascots/yama_loading_light_v1.webp",
+    yamaVictoriousDark: "/mascots/yama_victorious_dark_v1.webp",
+    yamaVictoriousLight: "/mascots/yama_victorious_light_v1.webp",
+    yamaConfusedDark: "/mascots/yama_confused_dark_v1.webp",
+    yamaConfusedLight: "/mascots/yama_confused_light_v1.webp",
   },
   icons: {
     appLight: "/icons/icon_app_light_v1.webp",
     appDark: "/icons/icon_app_dark_v1.webp",
+    navHome: "/icons/icon_nav_home_v1.webp",
+    navLearn: "/icons/icon_nav_learn_v1.webp",
+    navReview: "/icons/icon_nav_review_v1.webp",
+    navExplore: "/icons/icon_nav_explore_v1.webp",
+    navProfile: "/icons/icon_nav_profile_v1.webp",
+  },
+  games: {
+    wordMatch: "/games/game_word_match_v1.webp",
+    vocabularyRush: "/games/game_vocabulary_rush_v1.webp",
+    kanjiHunter: "/games/game_kanji_hunter_v1.webp",
+    memoryDungeon: "/games/game_memory_dungeon_v1.webp",
+    readingChallenge: "/games/game_reading_challenge_v1.webp",
   },
   brand: {
     wordmarkDark: "/brand/brand_wordmark_dark_v1.webp",
@@ -41,6 +57,10 @@ export const ASSET_REGISTRY = {
     kanjiScholar: "/achievements/achievement_kanji_scholar_v1.webp",
     steadyClimber: "/achievements/achievement_steady_climber_v1.webp",
     n5Summit: "/achievements/achievement_n5_summit_v1.webp",
+    memoryMaster: "/achievements/achievement_memory_master_v1.webp",
+    gameChampion: "/achievements/achievement_game_champion_v1.webp",
+    perfectRecall: "/achievements/achievement_perfect_recall_v1.webp",
+    dungeonDelver: "/achievements/achievement_dungeon_delver_v1.webp",
   },
   regions: {
     foothills: "/regions/region_foothills_v1.webp",
@@ -62,6 +82,26 @@ const ACHIEVEMENT_SLUG_TO_ASSET: Record<string, string> = {
   "fifty-kanji": ASSET_REGISTRY.achievements.kanjiScholar,
   "seven-day-streak": ASSET_REGISTRY.achievements.steadyClimber,
   "n5-completed": ASSET_REGISTRY.achievements.n5Summit,
+  "memory-master": ASSET_REGISTRY.achievements.memoryMaster,
+  "game-champion": ASSET_REGISTRY.achievements.gameChampion,
+  "perfect-recall": ASSET_REGISTRY.achievements.perfectRecall,
+  "dungeon-delver": ASSET_REGISTRY.achievements.dungeonDelver,
+};
+
+const GAME_SLUG_TO_ASSET: Record<string, string> = {
+  "word-match": ASSET_REGISTRY.games.wordMatch,
+  "vocabulary-rush": ASSET_REGISTRY.games.vocabularyRush,
+  "kanji-hunter": ASSET_REGISTRY.games.kanjiHunter,
+  "memory-dungeon": ASSET_REGISTRY.games.memoryDungeon,
+  "reading-challenge": ASSET_REGISTRY.games.readingChallenge,
+};
+
+const NAV_TAB_TO_ASSET: Record<string, string> = {
+  home: ASSET_REGISTRY.icons.navHome,
+  learn: ASSET_REGISTRY.icons.navLearn,
+  review: ASSET_REGISTRY.icons.navReview,
+  explore: ASSET_REGISTRY.icons.navExplore,
+  profile: ASSET_REGISTRY.icons.navProfile,
 };
 
 const REGION_SLUG_TO_ASSET: Record<string, string> = {
@@ -78,18 +118,21 @@ const REGION_SLUG_TO_ASSET: Record<string, string> = {
 /**
  * Region slugs with dedicated vertical trail scroll art.
  * Public path pattern: `/ui/ui_trail_scroll_{slug}_{theme}_v1.webp`
- * Add a slug here when a region receives its own scroll asset pair (dark + light).
  */
-export const TRAIL_SCROLL_REGION_SLUGS = ["foothills"] as const;
+export const TRAIL_SCROLL_REGION_SLUGS = [
+  "foothills",
+  "forest-trail",
+  "mount-n5",
+  "mount-n4",
+  "mount-n3",
+  "mount-n2",
+  "mount-n1",
+  "master-summit",
+] as const;
 
 export type TrailScrollRegionSlug = (typeof TRAIL_SCROLL_REGION_SLUGS)[number];
 
 const TRAIL_SCROLL_REGION_SLUG_SET = new Set<string>(TRAIL_SCROLL_REGION_SLUGS);
-
-const TRAIL_SCROLL_FALLBACK: Record<"light" | "dark", string> = {
-  dark: ASSET_REGISTRY.ui.trailScrollFoothillsDark,
-  light: ASSET_REGISTRY.ui.trailScrollFoothillsLight,
-};
 
 const YAMA_EXPRESSION_DARK: Record<string, string> = {
   main: ASSET_REGISTRY.mascots.yamaMainDark,
@@ -100,6 +143,8 @@ const YAMA_EXPRESSION_DARK: Record<string, string> = {
   thinking: ASSET_REGISTRY.mascots.yamaThinkingDark,
   studying: ASSET_REGISTRY.mascots.yamaThinkingDark,
   loading: ASSET_REGISTRY.mascots.yamaLoadingDark,
+  victorious: ASSET_REGISTRY.mascots.yamaVictoriousDark,
+  confused: ASSET_REGISTRY.mascots.yamaConfusedDark,
 };
 
 const YAMA_EXPRESSION_LIGHT: Record<string, string> = {
@@ -111,6 +156,8 @@ const YAMA_EXPRESSION_LIGHT: Record<string, string> = {
   thinking: ASSET_REGISTRY.mascots.yamaThinkingLight,
   studying: ASSET_REGISTRY.mascots.yamaThinkingLight,
   loading: ASSET_REGISTRY.mascots.yamaLoadingLight,
+  victorious: ASSET_REGISTRY.mascots.yamaVictoriousLight,
+  confused: ASSET_REGISTRY.mascots.yamaConfusedLight,
 };
 
 export function getMascotPath(theme: "light" | "dark" | string | undefined) {
@@ -131,44 +178,65 @@ export function getAchievementArtPath(slug: string) {
   return ACHIEVEMENT_SLUG_TO_ASSET[slug] ?? null;
 }
 
+export function getGameArtPath(slug: string) {
+  return GAME_SLUG_TO_ASSET[slug] ?? null;
+}
+
+export function getNavIconPath(tab: string) {
+  return NAV_TAB_TO_ASSET[tab] ?? null;
+}
+
 export function getRegionArtPath(slug: string) {
   return REGION_SLUG_TO_ASSET[slug] ?? null;
 }
 
-export function getTrailMapArtPath(theme: "light" | "dark" | string | undefined) {
+export function getTrailMapArtPath(
+  theme: "light" | "dark" | string | undefined,
+  regionSlug?: string,
+) {
+  const regionArt = regionSlug ? getRegionArtPath(regionSlug) : null;
+  if (regionArt) {
+    return regionArt;
+  }
+
   return theme === "light"
     ? ASSET_REGISTRY.ui.trailSpineLight
     : ASSET_REGISTRY.ui.trailSpineDark;
 }
 
-const TRAIL_SCROLL_PATH_BY_REGION: Record<
-  TrailScrollRegionSlug,
-  Record<"light" | "dark", string>
-> = {
-  foothills: {
-    dark: ASSET_REGISTRY.ui.trailScrollFoothillsDark,
-    light: ASSET_REGISTRY.ui.trailScrollFoothillsLight,
-  },
-};
+function buildTrailScrollPublicPath(
+  regionSlug: TrailScrollRegionSlug,
+  theme: "light" | "dark",
+): string {
+  return `/ui/ui_trail_scroll_${regionSlug}_${theme}_v1.webp`;
+}
 
-/** Immersive vertical scroll art for a region + theme. Falls back to Foothills when slug is unknown. */
+const TRAIL_SCROLL_PATH_BY_REGION = Object.fromEntries(
+  TRAIL_SCROLL_REGION_SLUGS.map((slug) => [
+    slug,
+    {
+      dark: buildTrailScrollPublicPath(slug, "dark"),
+      light: buildTrailScrollPublicPath(slug, "light"),
+    },
+  ]),
+) as Record<TrailScrollRegionSlug, Record<"light" | "dark", string>>;
+
+/** Immersive vertical scroll art for a region + theme. Returns null when no dedicated scroll exists. */
 export function getTrailScrollArtPath(
   regionSlug: string | undefined,
   theme: "light" | "dark" | string | undefined,
 ): string | null {
-  const mode = theme === "light" ? "light" : "dark";
-  const slug = regionSlug ?? "foothills";
-  const paths = TRAIL_SCROLL_PATH_BY_REGION[slug as TrailScrollRegionSlug];
-
-  if (paths) {
-    return paths[mode];
+  if (!regionSlug || !TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug)) {
+    return null;
   }
 
-  return TRAIL_SCROLL_FALLBACK[mode];
+  const mode = theme === "light" ? "light" : "dark";
+  const paths = TRAIL_SCROLL_PATH_BY_REGION[regionSlug as TrailScrollRegionSlug];
+  return paths?.[mode] ?? null;
 }
 
 export function hasTrailScrollArt(regionSlug: string | undefined): boolean {
-  return TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug ?? "foothills");
+  return regionSlug ? TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug) : false;
 }
 
 /** @deprecated Use getTrailMapArtPath */

@@ -34,6 +34,10 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Noboru",
   },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+  },
   applicationName: "Noboru",
   formatDetection: {
     telephone: false,

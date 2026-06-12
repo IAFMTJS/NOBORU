@@ -1,7 +1,8 @@
 /**
  * Composes production trail scroll art from unique AI environment plates.
  * No spine tiling, no repeated segments — each band is a distinct source plate
- * blended with gradient masks. Path + lanterns calibrated to TRAIL_MAP_PATH_ANCHORS.
+ * blended with gradient masks. The painted path must live in the source art;
+ * do not draw a second procedural path overlay (nodes align to art, not SVG).
  */
 import { mkdir, writeFile, access } from "node:fs/promises";
 import path from "node:path";
@@ -36,7 +37,7 @@ const SCROLL_SPECS = [
   {
     region: "foothills",
     theme: "dark",
-    bottomPlate: "assets/ui/_scroll_plates/ui_trail_scroll_foothills_dark_v1_draft.png",
+    bottomPlate: "assets/ui/_pipeline/_scroll_plates/ui_trail_scroll_foothills_dark_v1_draft.png",
     bands: [
       { file: "ui_trail_scroll_dark_seg_summit.png", top: 0, height: 2200, fadeBottom: 620, crop: "top" },
       { file: "ui_trail_scroll_dark_seg_midhigh.png", top: 1580, height: 2000, fadeTop: 560, fadeBottom: 580, crop: "center" },
@@ -58,7 +59,7 @@ const SCROLL_SPECS = [
   {
     region: "foothills",
     theme: "light",
-    bottomPlate: "assets/ui/_scroll_plates/ui_trail_scroll_foothills_light_v1_draft.png",
+    bottomPlate: "assets/ui/_pipeline/_scroll_plates/ui_trail_scroll_foothills_light_v1_draft.png",
     bands: [
       { file: "ui_trail_scroll_light_seg_summit.png", top: 0, height: 2200, fadeBottom: 620, crop: "top" },
       { file: "ui_trail_scroll_light_seg_midhigh.png", top: 1580, height: 2000, fadeTop: 560, fadeBottom: 580, crop: "center" },
@@ -228,7 +229,7 @@ function buildPathOverlaySvg(spec) {
 async function resolveAsset(relativePath) {
   const base = path.basename(relativePath);
   const candidates = [
-    path.join(root, "assets", "ui", "_scroll_plates", base),
+    path.join(root, "assets", "ui", "_pipeline", "_scroll_plates", base),
     path.join(cursorAssets, base),
     path.join(root, relativePath),
   ];
@@ -300,14 +301,9 @@ async function composeScroll(spec) {
   const bottomPlate = await loadBottomPlate(spec.bottomPlate, bottomHeight);
   composites.push({ input: bottomPlate, top: bottomTop, left: 0 });
 
-  const pathOverlay = buildPathOverlaySvg(spec);
-
   const sky = buildSkySvg(spec);
   const result = await sharp(sky)
-    .composite([
-      ...composites,
-      { input: pathOverlay, top: 0, left: 0 },
-    ])
+    .composite(composites)
     .png()
     .toBuffer();
 
@@ -329,7 +325,7 @@ async function composeScroll(spec) {
     dependencies: [`ui_trail_spine_${spec.theme}_v1`],
     dimensions: { width: WIDTH, height: HEIGHT },
     files: [`${outBase}.png`, `${outBase}.webp`],
-    design_notes: `Production Foothills scroll (${spec.theme}). AI-authored painterly environment bands (summit/mid/ascent) gradient-blended with cropped draft bottom plate (trail base only, no summit repeat). Subtle path overlay + 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. No spine tiling. Awaiting Art Director approval per SPEC.md.`,
+    design_notes: `Production Foothills scroll (${spec.theme}). AI-authored painterly environment bands (summit/mid/ascent) gradient-blended with cropped draft bottom plate (trail base only, no summit repeat). Path must be painted into source plates — no procedural path overlay. Node positions align to TRAIL_MAP_PATH_ANCHORS in code. No spine tiling. Awaiting Art Director approval per SPEC.md.`,
   };
 
   await writeFile(path.join(outDir, "metadata.json"), `${JSON.stringify(metadata, null, 2)}\n`);

@@ -4,14 +4,21 @@ import {
   buildVocabularyRushSession,
   rushTimerForStreak,
 } from "@/features/games/services/vocabulary-rush.service";
+import type { VocabularyRow } from "@/features/vocabulary/types/vocabulary.types";
 
-const vocabulary = Array.from({ length: 12 }, (_, index) => ({
+const vocabulary: VocabularyRow[] = Array.from({ length: 12 }, (_, index) => ({
   id: `v-${index}`,
   kana: `かな${index}`,
   kanji: null,
   meaning: `meaning ${index}`,
   part_of_speech: "noun",
-  status: "published" as const,
+  jlpt_level: "n5",
+  frequency_rank: index + 1,
+  difficulty: 1,
+  audio_url: null,
+  status: "published",
+  created_at: "2026-01-01T00:00:00.000Z",
+  updated_at: "2026-01-01T00:00:00.000Z",
 }));
 
 describe("vocabulary-rush.service", () => {

@@ -130,6 +130,7 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
                   nodes={buildTrailNodes(unit.lessons)}
                   title={unit.name}
                   description={`${unit.completedCount}/${unit.lessonCount} lessons complete`}
+                  regionSlug={region.slug}
                 />
               </CardContent>
             </Card>

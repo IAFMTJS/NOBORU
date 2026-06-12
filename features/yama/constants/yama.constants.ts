@@ -59,6 +59,19 @@ export const YAMA_REVIEW_MESSAGES = {
   ],
 } as const;
 
+export const YAMA_EXPLORE_MESSAGES = [
+  "Side trails keep your recall sharp. Pick a challenge!",
+  "Games and trials reinforce what you've learned on the path.",
+  "Every mini-game is another foothold on the mountain.",
+  "Ready for a sprint? Try a rush drill or enter the trials.",
+] as const;
+
+export const YAMA_PROFILE_MESSAGES = [
+  "This is your climber's log. Every stat tells part of your story.",
+  "Your achievements mark the milestones you've earned so far.",
+  "Steady progress adds up — keep building your trail record.",
+] as const;
+
 export const YAMA_CELEBRATION_MESSAGES = {
   lesson_complete: [
     "Lesson complete. Another foothold secured.",
@@ -100,4 +113,9 @@ export const YAMA_EXPRESSION_STYLES: Record<
     imageClass: "animate-[yama-float_2s_ease-in-out_infinite]",
     containerClass: "motion-reduce:animate-none",
   },
+  victorious: {
+    imageClass: "animate-[yama-celebrate_600ms_ease-out] scale-[1.15]",
+    containerClass: "motion-reduce:animate-none",
+  },
+  confused: { imageClass: "-rotate-6 scale-[0.98]" },
 };

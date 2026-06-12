@@ -4,21 +4,35 @@ import {
   buildWordMatchSession,
   resolveWordMatchMode,
 } from "@/features/games/services/word-match.service";
+import type { HiraganaRow } from "@/features/hiragana/types/hiragana.types";
+import type { VocabularyRow } from "@/features/vocabulary/types/vocabulary.types";
 
-const vocabulary = Array.from({ length: 6 }, (_, index) => ({
+const vocabulary: VocabularyRow[] = Array.from({ length: 6 }, (_, index) => ({
   id: `v-${index}`,
   kana: `かな${index}`,
   kanji: null,
   meaning: `meaning ${index}`,
   part_of_speech: "noun",
-  status: "published" as const,
+  jlpt_level: "n5",
+  frequency_rank: index + 1,
+  difficulty: 1,
+  audio_url: null,
+  status: "published",
+  created_at: "2026-01-01T00:00:00.000Z",
+  updated_at: "2026-01-01T00:00:00.000Z",
 }));
 
-const hiragana = Array.from({ length: 8 }, (_, index) => ({
+const hiragana: HiraganaRow[] = Array.from({ length: 8 }, (_, index) => ({
   id: `h-${index}`,
   character: "あ",
   romaji: "a",
+  row_name: "a",
   row_label: "a-row",
+  order_index: index,
+  variant_type: "base",
+  status: "published",
+  created_at: "2026-01-01T00:00:00.000Z",
+  updated_at: "2026-01-01T00:00:00.000Z",
 }));
 
 describe("word-match.service", () => {

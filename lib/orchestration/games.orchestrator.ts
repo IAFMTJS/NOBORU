@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { gameService } from "@/features/games/services/game.service";
-import type { GameSlug } from "@/features/games/constants/game.constants";
+import type { PlayableGameSlug } from "@/features/games/constants/game.constants";
 import type {
   GameAvailabilityViewModel,
   GameSessionViewModel,
@@ -22,7 +22,7 @@ export async function getGameAvailability(): Promise<GameAvailabilityViewModel> 
 }
 
 export async function getGameSession(
-  slug: GameSlug,
+  slug: PlayableGameSlug,
   options?: { weakOnly?: boolean },
 ): Promise<GameSessionViewModel> {
   const userId = await requireOnboardedUserId();

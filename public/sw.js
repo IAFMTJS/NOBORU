@@ -1,4 +1,4 @@
-const CACHE_VERSION = "noboru-v2";
+const CACHE_VERSION = "noboru-v3";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-app-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -41,10 +41,19 @@ self.addEventListener("fetch", (event) => {
 
   if (request.method !== "GET") return;
 
+  const isAudioRequest =
+    request.destination === "audio" ||
+    /\.(mp3|m4a|aac|wav|ogg|opus)(\?|$)/i.test(url.pathname);
+
   if (url.origin !== self.location.origin) {
-    if (request.destination === "audio") {
+    if (isAudioRequest) {
       event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
     }
+    return;
+  }
+
+  if (isAudioRequest) {
+    event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
     return;
   }
 

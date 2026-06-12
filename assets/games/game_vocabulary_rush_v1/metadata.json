@@ -1,0 +1,22 @@
+{
+  "id": "game_vocabulary_rush_v1",
+  "name": "Game Vocabulary Rush",
+  "version": "v1",
+  "category": "games",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "status": "approved",
+  "tags": [
+    "game",
+    "mini-game",
+    "vocabulary-rush"
+  ],
+  "usage_locations": [
+    "explore",
+    "games-hub"
+  ],
+  "files": [
+    "game_vocabulary_rush_v1.png"
+  ]
+}

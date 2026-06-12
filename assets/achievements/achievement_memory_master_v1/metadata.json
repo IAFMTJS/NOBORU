@@ -1,0 +1,22 @@
+{
+  "id": "achievement_memory_master_v1",
+  "name": "Achievement Memory Master",
+  "version": "v1",
+  "category": "achievements",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "status": "approved",
+  "tags": [
+    "achievement",
+    "rare",
+    "memory-dungeon"
+  ],
+  "usage_locations": [
+    "achievements",
+    "profile"
+  ],
+  "files": [
+    "achievement_memory_master_v1.png"
+  ]
+}

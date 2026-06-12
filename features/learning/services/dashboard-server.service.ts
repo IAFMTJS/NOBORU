@@ -146,7 +146,7 @@ class DashboardServerService {
       trailPreview,
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
-        href: learningPath.nextLessonHref ?? "/learn",
+        href: "/learn",
         lessonNumber: lessonPosition?.index ?? null,
         lessonCount: regionForNextLesson?.lessonCount ?? 0,
         estimatedDuration: learningPath.nextLesson?.estimatedDuration ?? null,

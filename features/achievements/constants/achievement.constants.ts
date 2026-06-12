@@ -8,6 +8,10 @@ export const ACHIEVEMENT_SLUGS = {
   fiftyKanji: "fifty-kanji",
   sevenDayStreak: "seven-day-streak",
   n5Completed: "n5-completed",
+  memoryMaster: "memory-master",
+  gameChampion: "game-champion",
+  perfectRecall: "perfect-recall",
+  dungeonDelver: "dungeon-delver",
 } as const;
 
 export type AchievementSlug =

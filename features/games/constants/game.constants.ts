@@ -2,9 +2,24 @@ export const GAME_SLUGS = {
   wordMatch: "word-match",
   vocabularyRush: "vocabulary-rush",
   kanjiHunter: "kanji-hunter",
+  memoryDungeon: "memory-dungeon",
+  readingChallenge: "reading-challenge",
 } as const;
 
 export type GameSlug = (typeof GAME_SLUGS)[keyof typeof GAME_SLUGS];
+
+export const PLAYABLE_GAME_SLUGS = [
+  GAME_SLUGS.wordMatch,
+  GAME_SLUGS.vocabularyRush,
+  GAME_SLUGS.kanjiHunter,
+  GAME_SLUGS.memoryDungeon,
+] as const;
+
+export type PlayableGameSlug = (typeof PLAYABLE_GAME_SLUGS)[number];
+
+export function isPlayableGameSlug(value: string): value is PlayableGameSlug {
+  return (PLAYABLE_GAME_SLUGS as readonly string[]).includes(value);
+}
 
 export const MIN_GAME_POOL_SIZE = 4;
 
@@ -50,4 +65,20 @@ export const KANJI_HUNTER_EP = VOCABULARY_RUSH_EP;
 
 export function calculateKanjiHunterEp(accuracyPercent: number): number {
   return calculateVocabularyRushEp(accuracyPercent);
+}
+
+export const MEMORY_DUNGEON_ROOM1_PAIRS = 6;
+export const MEMORY_DUNGEON_ROOM2_PAIRS = 4;
+export const MEMORY_DUNGEON_ROOM3_PAIRS = 4;
+
+export const MEMORY_DUNGEON_EP = {
+  perfect: 22,
+  good: 17,
+  pass: 12,
+} as const;
+
+export function calculateMemoryDungeonEp(wrongAttempts: number): number {
+  if (wrongAttempts === 0) return MEMORY_DUNGEON_EP.perfect;
+  if (wrongAttempts <= 3) return MEMORY_DUNGEON_EP.good;
+  return MEMORY_DUNGEON_EP.pass;
 }

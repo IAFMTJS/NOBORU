@@ -1,8 +1,10 @@
 import {
   YAMA_CELEBRATION_MESSAGES,
   YAMA_DRILL_MESSAGES,
+  YAMA_EXPLORE_MESSAGES,
   YAMA_HOME_MESSAGES,
   YAMA_LOADING_MESSAGES,
+  YAMA_PROFILE_MESSAGES,
   YAMA_REVIEW_MESSAGES,
 } from "@/features/yama/constants/yama.constants";
 import type {
@@ -153,6 +155,21 @@ class YamaService {
     return withPresence(
       "studying",
       pickMessage(YAMA_CELEBRATION_MESSAGES.trail_node, seed),
+    );
+  }
+
+  resolveExplorePresence(seed = 0): YamaPresenceViewModel {
+    return withPresence("happy", pickMessage(YAMA_EXPLORE_MESSAGES, seed));
+  }
+
+  resolveProfilePresence(seed = 0): YamaPresenceViewModel {
+    return withPresence("main", pickMessage(YAMA_PROFILE_MESSAGES, seed));
+  }
+
+  resolveGameVictory(seed = 0): YamaPresenceViewModel {
+    return withPresence(
+      "victorious",
+      pickMessage(YAMA_CELEBRATION_MESSAGES.quest, seed),
     );
   }
 }

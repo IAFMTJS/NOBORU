@@ -65,11 +65,26 @@ describe("buildTrailNodes", () => {
         title: "Wave 1 Practice",
         type: "practice",
         xpReward: 20,
-        progress: "available",
+        progress: "not_started",
       },
     ]);
 
     expect(nodes[0]?.nodeKind).toBe("checkpoint");
     expect(nodes[0]?.subtitle).toBe("Exam · 20 XP");
+  });
+
+  it("marks application lessons with apply subtitle", () => {
+    const nodes = buildTrailNodes([
+      {
+        id: "1",
+        title: "Words on the Trail",
+        type: "application",
+        xpReward: 18,
+        progress: "not_started",
+      },
+    ]);
+
+    expect(nodes[0]?.nodeKind).toBe("application");
+    expect(nodes[0]?.subtitle).toBe("Apply · 18 XP");
   });
 });

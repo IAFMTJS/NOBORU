@@ -31,6 +31,10 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
   const [finished, setFinished] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastCompleteAttempt, setLastCompleteAttempt] = useState<{
+    correctCount: number;
+    wrongAttempts: number;
+  } | null>(null);
   const [result, setResult] = useState<GameCompleteViewModel | null>(null);
   const [startedAt] = useState(() => Date.now());
 
@@ -40,10 +44,9 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
 
   const finishGame = useCallback(
     async (correctCount: number, wrongAttempts: number) => {
-      if (submitting || finished) return;
+      if (submitting) return;
       setSubmitting(true);
       setError(null);
-      setFinished(true);
 
       try {
         const response = await fetch(`/api/games/${session.slug}/complete`, {
@@ -61,9 +64,10 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
           data?: GameCompleteViewModel;
           error?: string;
         };
-        if (!payload.success || !payload.data) {
+        if (!response.ok || !payload.success || !payload.data) {
           throw new Error(payload.error ?? "Failed to save game results.");
         }
+        setFinished(true);
         setResult(payload.data);
         void analyticsService.track({
           name: "game_completed",
@@ -82,7 +86,7 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
         setSubmitting(false);
       }
     },
-    [finished, session.mode, session.slug, session.step.pairs.length, startedAt, submitting],
+    [session.mode, session.slug, session.step.pairs.length, startedAt, submitting],
   );
 
   function handleStart() {
@@ -97,7 +101,12 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
   }
 
   function handleAnswer(_correct: boolean, wrongAttempts = 0) {
-    void finishGame(session.step.pairs.length, wrongAttempts);
+    const attempt = {
+      correctCount: session.step.pairs.length,
+      wrongAttempts,
+    };
+    setLastCompleteAttempt(attempt);
+    void finishGame(attempt.correctCount, attempt.wrongAttempts);
   }
 
   if (result) {
@@ -122,9 +131,27 @@ export function WordMatchPlayer({ session }: WordMatchPlayerProps) {
       />
 
       {error ? (
-        <p className="text-body-sm text-destructive" role="alert">
-          {error}
-        </p>
+        <Card className="border-destructive/30 bg-destructive/5 shadow-elevation-1">
+          <CardContent className="space-y-3 p-4">
+            <p className="text-body-sm text-destructive" role="alert">
+              {error}
+            </p>
+            {lastCompleteAttempt ? (
+              <Button
+                className="w-full"
+                disabled={submitting}
+                onClick={() =>
+                  void finishGame(
+                    lastCompleteAttempt.correctCount,
+                    lastCompleteAttempt.wrongAttempts,
+                  )
+                }
+              >
+                {submitting ? "Saving…" : "Retry saving results"}
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
       ) : null}
 
       {!started ? (

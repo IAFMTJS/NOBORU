@@ -28,10 +28,32 @@ export type KanjiHunterSessionViewModel = {
   timerStartSeconds: number;
 };
 
+export type MemoryDungeonPair = {
+  pairId: string;
+  faceA: string;
+  faceB: string;
+};
+
+export type MemoryDungeonRoom = {
+  id: string;
+  title: string;
+  description: string;
+  pairs: MemoryDungeonPair[];
+};
+
+export type MemoryDungeonSessionViewModel = {
+  slug: typeof GAME_SLUGS.memoryDungeon;
+  modeLabel: string;
+  rooms: MemoryDungeonRoom[];
+  totalPairs: number;
+  roomCount: number;
+};
+
 export type GameSessionViewModel =
   | WordMatchSessionViewModel
   | VocabularyRushSessionViewModel
-  | KanjiHunterSessionViewModel;
+  | KanjiHunterSessionViewModel
+  | MemoryDungeonSessionViewModel;
 
 export type GameCompleteInput = {
   correctCount: number;
@@ -52,4 +74,5 @@ export type GameAvailabilityViewModel = {
   wordMatch: { available: boolean; mode: GameMode | null; poolSize: number };
   vocabularyRush: { available: boolean; poolSize: number };
   kanjiHunter: { available: boolean; poolSize: number };
+  memoryDungeon: { available: boolean; poolSize: number; roomCount: number };
 };

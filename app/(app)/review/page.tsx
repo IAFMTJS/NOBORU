@@ -1,6 +1,7 @@
 import { ReviewSessionLoader } from "@/features/review/components/review-session-loader";
 import { reviewServerService } from "@/features/review/services/review-server.service";
 import type { ReviewContentType } from "@/features/review/types/review.types";
+import { OFFLINE_REVIEW_CACHE_LIMIT } from "@/lib/offline/constants";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 
 type ReviewPageProps = {
@@ -23,7 +24,7 @@ function parseSessionLimit(value: string | undefined): number | null {
   if (!value) return null;
   const parsed = Number.parseInt(value, 10);
   if (!Number.isFinite(parsed) || parsed <= 0) return null;
-  return Math.min(parsed, 25);
+  return Math.min(parsed, OFFLINE_REVIEW_CACHE_LIMIT);
 }
 
 function parseContentType(value: string | undefined): ReviewContentType | null {
@@ -39,14 +40,23 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
     await searchParams;
   const sessionLimit = parseSessionLimit(limitParam);
   const contentType = parseContentType(contentTypeParam);
-  const session = await reviewServerService.getSession(userId);
+  const weakOnlyEnabled = weakOnly === "true";
+  const initialBundle = await reviewServerService.getOfflineBundle(
+    userId,
+    sessionLimit ?? OFFLINE_REVIEW_CACHE_LIMIT,
+    {
+      contentType: contentType ?? undefined,
+      weakOnly: weakOnlyEnabled,
+    },
+  );
+
   return (
     <ReviewSessionLoader
       userId={userId}
-      initialSession={session}
+      initialBundle={initialBundle}
       sessionLimit={sessionLimit}
       contentType={contentType}
-      weakOnly={weakOnly === "true"}
+      weakOnly={weakOnlyEnabled}
     />
   );
 }

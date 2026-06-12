@@ -1,5 +1,9 @@
+import { applicationRepository } from "@/features/application/repositories/application.repository";
+import type { ApplicationLessonContent } from "@/features/application/types/application.types";
 import { grammarRepository } from "@/features/grammar/repositories/grammar.repository";
+import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
 import { hiraganaRepository } from "@/features/hiragana/repositories/hiragana.repository";
+import { katakanaProgressService } from "@/features/katakana/services/katakana-progress.service";
 import { katakanaRepository } from "@/features/katakana/repositories/katakana.repository";
 import { vocabularyRepository } from "@/features/vocabulary/repositories/vocabulary.repository";
 import { kanjiRepository } from "@/features/kanji/repositories/kanji.repository";
@@ -22,6 +26,8 @@ import type {
   LessonDialogueStep,
   LessonListeningStep,
   LessonListeningChallengeStep,
+  LessonApplicationStep,
+  LessonKnowledgeInventoryStep,
   LessonSummaryViewModel,
   LessonTeachStep,
   ReadingLessonContent,
@@ -248,6 +254,22 @@ class LessonService {
       return listeningProgressService.loadChallengeLessonContent(contentId);
     }
 
+    if (contentType === "application") {
+      const row = await applicationRepository.findById(contentId);
+      if (!row || row.status !== "published") return null;
+      return {
+        type: "application",
+        id: row.id,
+        title: row.title,
+        direction: row.direction,
+        prompt: row.prompt,
+        japaneseText: row.japanese_text,
+        displayHint: row.display_hint,
+        acceptedAnswers: row.accepted_answers,
+        script: row.script,
+      } satisfies ApplicationLessonContent;
+    }
+
     return null;
   }
 
@@ -270,6 +292,10 @@ class LessonService {
       .filter((item) => item.content_type === "katakana")
       .map((item) => item.content_id);
 
+    const applicationIds = items
+      .filter((item) => item.content_type === "application")
+      .map((item) => item.content_id);
+
     const specialTypes = new Set([
       "reading",
       "story",
@@ -290,6 +316,7 @@ class LessonService {
       grammarExamples,
       hiraganaRows,
       katakanaRows,
+      applicationRows,
       specialContents,
     ] = await Promise.all([
       vocabularyRepository.findByIds(vocabularyIds),
@@ -300,6 +327,7 @@ class LessonService {
       grammarRepository.listPublishedExamplesByGrammarIds(grammarIds),
       hiraganaRepository.findByIds(hiraganaIds),
       katakanaRepository.findByIds(katakanaIds),
+      applicationRepository.findByIds(applicationIds),
       Promise.all(
         specialItems.map((item) =>
           this.loadContent(item.content_type, item.content_id),
@@ -324,6 +352,7 @@ class LessonService {
     );
     const hiraganaById = new Map(hiraganaRows.map((row) => [row.id, row]));
     const katakanaById = new Map(katakanaRows.map((row) => [row.id, row]));
+    const applicationById = new Map(applicationRows.map((row) => [row.id, row]));
     const specialByKey = new Map(
       specialItems.map((item, index) => [
         `${item.content_type}:${item.content_id}`,
@@ -418,12 +447,75 @@ class LessonService {
         } satisfies KatakanaLessonContent;
       }
 
+      if (item.content_type === "application") {
+        const row = applicationById.get(item.content_id);
+        if (!row || row.status !== "published") return null;
+        return {
+          type: "application",
+          id: row.id,
+          title: row.title,
+          direction: row.direction,
+          prompt: row.prompt,
+          japaneseText: row.japanese_text,
+          displayHint: row.display_hint,
+          acceptedAnswers: row.accepted_answers,
+          script: row.script,
+        } satisfies ApplicationLessonContent;
+      }
+
       if (specialTypes.has(item.content_type)) {
         return specialByKey.get(`${item.content_type}:${item.content_id}`) ?? null;
       }
 
       return null;
     });
+  }
+
+  private buildApplicationStep(
+    content: ApplicationLessonContent,
+    index: number,
+    total: number,
+  ): LessonApplicationStep {
+    const display =
+      content.direction === "to_japanese"
+        ? content.prompt
+        : (content.japaneseText ?? content.prompt);
+
+    return {
+      kind: "application",
+      direction: content.direction,
+      prompt: content.prompt,
+      display,
+      displayHint: content.displayHint,
+      acceptedAnswers: content.acceptedAnswers,
+      index,
+      total,
+    };
+  }
+
+  private async buildKnowledgeInventoryStep(
+    userId: string,
+    script: "hiragana" | "katakana",
+  ): Promise<LessonKnowledgeInventoryStep> {
+    const chart =
+      script === "katakana"
+        ? await katakanaProgressService.getChart(userId)
+        : await hiraganaProgressService.getChart(userId);
+
+    const learnedCharacters = chart.entries
+      .filter((entry) => entry.learned)
+      .map((entry) => ({
+        character: entry.character,
+        romaji: entry.romaji,
+      }));
+
+    return {
+      kind: "knowledge_inventory",
+      script,
+      learnedCount: chart.learnedCount,
+      totalCount: chart.totalCount,
+      learnedCharacters,
+    };
   }
 
   private buildRecallStep(
@@ -611,6 +703,17 @@ class LessonService {
       return [intro, challengeStep, complete];
     }
 
+    if (lesson.type === "application") {
+      const applicationContents = contents.filter(
+        (content): content is ApplicationLessonContent =>
+          content.type === "application",
+      );
+      const applicationSteps = applicationContents.map((content, index) =>
+        this.buildApplicationStep(content, index + 1, applicationContents.length),
+      );
+      return [intro, ...applicationSteps, complete];
+    }
+
     if (lesson.type === "practice") {
       const practiceContents = contents.filter(
         (
@@ -684,7 +787,28 @@ class LessonService {
       this.getNextIncompleteLesson(userId),
     ]);
     const progressStatus: ProgressStatus = progress?.status ?? "not_started";
-    const steps = this.buildSteps(lesson, contents);
+    let steps = this.buildSteps(lesson, contents);
+
+    if (lesson.type === "application") {
+      const script =
+        contents.find(
+          (content): content is ApplicationLessonContent =>
+            content.type === "application",
+        )?.script ?? "hiragana";
+      const resolvedScript = script === "katakana" ? "katakana" : "hiragana";
+      const inventoryStep = await this.buildKnowledgeInventoryStep(
+        userId,
+        resolvedScript,
+      );
+      const introIndex = steps.findIndex((step) => step.kind === "intro");
+      if (introIndex >= 0) {
+        steps = [
+          ...steps.slice(0, introIndex + 1),
+          inventoryStep,
+          ...steps.slice(introIndex + 1),
+        ];
+      }
+    }
 
     return {
       lessonId: lesson.id,

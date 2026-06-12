@@ -72,7 +72,8 @@ export function NoboruExploreIcon(props: NoboruIconProps) {
       <path d="M12 18v2" />
       <path d="M4 12h2" />
       <path d="M18 12h2" />
-      <path d="M12 8l2 4-4 1 2-4z" fill="currentColor" stroke="none" />
+      <path d="M12 8l2.5 4.5-4.5 1.5 2-6z" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -96,7 +97,7 @@ export function NoboruProfileIcon(props: NoboruIconProps) {
     <svg {...ICON_DEFAULTS} {...props}>
       <circle cx="12" cy="8" r="3.5" />
       <path d="M5 20v-1a7 7 0 0 1 14 0v1" />
-      <path d="M15 5l2 1.5L15 8" />
+      <path d="M16 4.5l1.5 1.2L16 7" />
     </svg>
   );
 }

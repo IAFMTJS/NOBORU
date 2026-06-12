@@ -5,6 +5,7 @@ import type {
   DialogueLessonContent,
   StoryLessonContent,
 } from "@/features/reading/types/reading.types";
+import type { ApplicationLessonContent } from "@/features/application/types/application.types";
 import type {
   ListeningChallengeLessonContent,
   ListeningLessonContent,
@@ -20,7 +21,8 @@ export type LessonContentType =
   | "story"
   | "dialogue"
   | "listening"
-  | "listening_challenge";
+  | "listening_challenge"
+  | "application";
 
 export type LessonItemRow = {
   id: string;
@@ -119,7 +121,8 @@ export type LessonContent =
   | StoryLessonContent
   | DialogueLessonContent
   | ListeningLessonContent
-  | ListeningChallengeLessonContent;
+  | ListeningChallengeLessonContent
+  | ApplicationLessonContent;
 
 export type LessonIntroStep = {
   kind: "intro";
@@ -192,6 +195,27 @@ export type LessonListeningChallengeStep = {
   content: ListeningChallengeLessonContent;
 };
 
+export type ApplicationDirection = "to_japanese" | "to_english" | "to_romaji";
+
+export type LessonApplicationStep = {
+  kind: "application";
+  direction: ApplicationDirection;
+  prompt: string;
+  display: string;
+  displayHint: string | null;
+  acceptedAnswers: string[];
+  index: number;
+  total: number;
+};
+
+export type LessonKnowledgeInventoryStep = {
+  kind: "knowledge_inventory";
+  script: "hiragana" | "katakana";
+  learnedCount: number;
+  totalCount: number;
+  learnedCharacters: Array<{ character: string; romaji: string }>;
+};
+
 export type LessonCompleteStep = {
   kind: "complete";
   xpReward: number;
@@ -207,6 +231,8 @@ export type LessonStep =
   | LessonDialogueStep
   | LessonListeningStep
   | LessonListeningChallengeStep
+  | LessonApplicationStep
+  | LessonKnowledgeInventoryStep
   | LessonCompleteStep;
 
 export type LessonSessionViewModel = {

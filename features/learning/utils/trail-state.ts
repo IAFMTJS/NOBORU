@@ -2,7 +2,7 @@ import type { ProgressStatus } from "@/features/learning/types/progress.types";
 
 export type TrailNodeState = "locked" | "available" | "in_progress" | "completed";
 
-export type TrailNodeKind = "lesson" | "checkpoint";
+export type TrailNodeKind = "lesson" | "checkpoint" | "application";
 
 export type TrailNodeViewModel = {
   id: string;
@@ -23,12 +23,17 @@ type TrailLessonInput = {
 };
 
 function resolveNodeKind(lessonType: string): TrailNodeKind {
-  return lessonType === "practice" ? "checkpoint" : "lesson";
+  if (lessonType === "practice") return "checkpoint";
+  if (lessonType === "application") return "application";
+  return "lesson";
 }
 
 function resolveSubtitle(lessonType: string, xpReward: number): string {
   if (lessonType === "practice") {
     return `Exam · ${xpReward} XP`;
+  }
+  if (lessonType === "application") {
+    return `Apply · ${xpReward} XP`;
   }
   return `${lessonType} · ${xpReward} XP`;
 }

@@ -111,7 +111,9 @@ class ReviewServerService {
       })),
     );
 
-    const dueCards = dueItems.map((item) => this.buildCard(item, contentLookup));
+    const dueCards = dueItems
+      .map((item) => this.buildCard(item, contentLookup))
+      .filter((card): card is ReviewCardViewModel => card !== null);
 
     return {
       userId,

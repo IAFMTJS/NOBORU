@@ -5,6 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
+import {
+  isJapaneseSpeechSupported,
+  preloadJapaneseSpeechVoices,
+  speakJapanese,
+} from "@/lib/audio/japanese-speech";
+import {
+  configureHtmlAudioElement,
+  playHtmlAudio,
+} from "@/lib/audio/play-html-audio";
 
 type AudioPlaybackProps = {
   audioUrl: string | null;
@@ -24,6 +33,12 @@ export function AudioPlayback({
   const [playing, setPlaying] = useState(false);
   const [ttsSupported, setTtsSupported] = useState(true);
   const online = useOnlineStatus();
+
+  useEffect(() => {
+    if (isJapaneseSpeechSupported()) {
+      void preloadJapaneseSpeechVoices();
+    }
+  }, []);
 
   useEffect(() => {
     let objectUrl: string | null = null;
@@ -54,38 +69,44 @@ export function AudioPlayback({
     };
   }, [audioUrl, online]);
 
-  const speak = () => {
-    if (typeof window === "undefined" || !window.speechSynthesis) {
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    configureHtmlAudioElement(audio);
+  }, [resolvedUrl]);
+
+  async function speakWithJapaneseVoice() {
+    if (!isJapaneseSpeechSupported()) {
       setTtsSupported(false);
       return;
     }
 
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(japaneseText);
-    utterance.lang = "ja-JP";
-    utterance.onstart = () => setPlaying(true);
-    utterance.onend = () => setPlaying(false);
-    utterance.onerror = () => setPlaying(false);
-    window.speechSynthesis.speak(utterance);
-  };
+    try {
+      setPlaying(true);
+      await speakJapanese(japaneseText);
+    } catch {
+      setTtsSupported(false);
+    } finally {
+      setPlaying(false);
+    }
+  }
 
   async function playAudio() {
     if (resolvedUrl && audioRef.current) {
       try {
         setPlaying(true);
-        audioRef.current.currentTime = 0;
-        await audioRef.current.play();
+        await playHtmlAudio(audioRef.current);
         if (audioUrl && online) {
           void offlineClient.prefetchAudio(audioUrl);
         }
         return;
       } catch {
-        speak();
+        await speakWithJapaneseVoice();
       }
       return;
     }
 
-    speak();
+    await speakWithJapaneseVoice();
   }
 
   function handleEnded() {
@@ -95,7 +116,14 @@ export function AudioPlayback({
   return (
     <div className="space-y-2">
       {resolvedUrl ? (
-        <audio ref={audioRef} src={resolvedUrl} onEnded={handleEnded} preload="none">
+        <audio
+          ref={audioRef}
+          src={resolvedUrl}
+          onEnded={handleEnded}
+          onPause={() => setPlaying(false)}
+          playsInline
+          preload="auto"
+        >
           <track kind="captions" />
         </audio>
       ) : null}
@@ -107,7 +135,7 @@ export function AudioPlayback({
         disabled={disabled || playing}
         onClick={() => void playAudio()}
       >
-        {playing ? "Playing…" : label ?? "Listen"}
+        {playing ? "Playing…" : (label ?? "Listen")}
       </Button>
       {!audioUrl && !ttsSupported ? (
         <p className="text-caption text-muted-foreground">

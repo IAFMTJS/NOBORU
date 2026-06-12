@@ -1,0 +1,373 @@
+import type {
+  GrammarLessonContent,
+  LessonContent,
+  LessonMatchingStep,
+  LessonRecallStep,
+  VocabularyLessonContent,
+} from "@/features/learning/types/lesson.types";
+
+type LessonFillBlankStep = {
+  kind: "fill_blank";
+  prompt: string;
+  sentenceWithBlank: string;
+  englishHint: string;
+  options: string[];
+  correctIndex: number;
+  index: number;
+  total: number;
+};
+
+type LessonWordBankStep = {
+  kind: "word_bank";
+  prompt: string;
+  englishHint: string;
+  tokens: string[];
+  correctOrder: string[];
+  index: number;
+  total: number;
+};
+
+type LessonListeningRecallStep = {
+  kind: "listening_recall";
+  prompt: string;
+  audioUrl: string;
+  display: string;
+  options: string[];
+  correctIndex: number;
+  index: number;
+  total: number;
+};
+
+type LessonSentenceTypedStep = {
+  kind: "sentence_typed";
+  prompt: string;
+  englishHint: string;
+  acceptedAnswers: string[];
+  index: number;
+  total: number;
+};
+import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
+
+export function shuffle<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+export function buildRecallOptions(correct: string, distractors: string[]): string[] {
+  const unique = Array.from(
+    new Set(distractors.filter((value) => value !== correct)),
+  ).slice(0, 3);
+  return shuffle([correct, ...unique]).slice(0, 4);
+}
+
+export function getRecallAnswer(content: LessonContent): string {
+  switch (content.type) {
+    case "hiragana":
+    case "katakana":
+      return content.romaji;
+    case "grammar":
+    case "vocabulary":
+    case "kanji":
+      return content.meaning;
+    default:
+      return "";
+  }
+}
+
+function getMatchingPrompt(content: LessonContent): string {
+  switch (content.type) {
+    case "vocabulary":
+      return content.kanji ?? content.kana;
+    case "hiragana":
+    case "katakana":
+    case "kanji":
+      return content.character;
+    default:
+      return "";
+  }
+}
+
+export function buildMatchingStep(contents: LessonContent[]): LessonMatchingStep | null {
+  const matchable = contents.filter(
+    (content) =>
+      content.type === "vocabulary" ||
+      content.type === "hiragana" ||
+      content.type === "katakana" ||
+      content.type === "kanji",
+  );
+
+  if (matchable.length < 3) return null;
+
+  const selected = matchable.slice(0, Math.min(4, matchable.length));
+  const pairs = selected.map((content) => ({
+    id: content.id,
+    prompt: getMatchingPrompt(content),
+    answer: getRecallAnswer(content),
+  }));
+
+  return {
+    kind: "matching",
+    prompt: "Match each item to its meaning or reading",
+    pairs,
+    index: 1,
+    total: 1,
+  };
+}
+
+export function buildRecallStep(
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonRecallStep {
+  if (content.type === "vocabulary") {
+    const options = buildRecallOptions(content.meaning, allAnswers);
+    return {
+      kind: "recall",
+      mode: "typed",
+      contentType: "vocabulary",
+      prompt: "Type the meaning of this word",
+      display: content.kanji ?? content.kana,
+      options,
+      correctIndex: options.indexOf(content.meaning),
+      acceptedAnswers: buildAcceptedAnswers(content.meaning),
+      index,
+      total,
+    };
+  }
+
+  if (content.type === "kanji") {
+    const options = buildRecallOptions(content.meaning, allAnswers);
+    return {
+      kind: "recall",
+      mode: "typed",
+      contentType: "kanji",
+      prompt: "Type the meaning of this kanji",
+      display: content.character,
+      options,
+      correctIndex: options.indexOf(content.meaning),
+      acceptedAnswers: buildAcceptedAnswers(content.meaning),
+      index,
+      total,
+    };
+  }
+
+  if (content.type === "hiragana") {
+    const options = buildRecallOptions(content.romaji, allAnswers);
+    return {
+      kind: "recall",
+      mode: "typed",
+      contentType: "hiragana",
+      prompt: "Type the romaji reading",
+      display: content.character,
+      options,
+      correctIndex: options.indexOf(content.romaji),
+      acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      index,
+      total,
+    };
+  }
+
+  if (content.type === "katakana") {
+    const options = buildRecallOptions(content.romaji, allAnswers);
+    return {
+      kind: "recall",
+      mode: "typed",
+      contentType: "katakana",
+      prompt: "Type the romaji reading",
+      display: content.character,
+      options,
+      correctIndex: options.indexOf(content.romaji),
+      acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      index,
+      total,
+    };
+  }
+
+  if (content.type === "grammar") {
+    const options = buildRecallOptions(content.meaning, allAnswers);
+    return {
+      kind: "recall",
+      mode: "choice",
+      contentType: "grammar",
+      prompt: "What does this grammar point mean?",
+      display: content.title,
+      options,
+      correctIndex: options.indexOf(content.meaning),
+      index,
+      total,
+    };
+  }
+
+  return {
+    kind: "recall",
+    mode: "choice",
+    contentType: "hiragana",
+    prompt: "What is the romaji reading?",
+    display: "?",
+    options: allAnswers.slice(0, 4),
+    correctIndex: 0,
+    index,
+    total,
+  };
+}
+
+function pickBlankToken(tokens: string[]): string | null {
+  const candidates = tokens.filter(
+    (token) => token.length >= 1 && !/^[はがをにのでともへか]+$/.test(token),
+  );
+  if (candidates.length === 0) return null;
+  return candidates[Math.floor(candidates.length / 2)] ?? candidates[0] ?? null;
+}
+
+export function buildFillBlankStep(
+  content: GrammarLessonContent | VocabularyLessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonFillBlankStep | null {
+  const example = content.examples[0];
+  if (!example) return null;
+
+  const tokens = tokenizeJapaneseSentence(example.japaneseText);
+  const blankToken = pickBlankToken(tokens);
+  if (!blankToken || blankToken.length > 8) return null;
+
+  const blankChar =
+    blankToken.length > 2 ? blankToken.slice(0, 1) : blankToken;
+  const sentenceWithBlank = example.japaneseText.replace(blankToken, "___");
+  if (sentenceWithBlank === example.japaneseText) return null;
+
+  const distractors = shuffle(
+    allAnswers
+      .flatMap((answer) => answer.split(/\s+/))
+      .filter((value) => value.length <= 3 && value !== blankChar),
+  ).slice(0, 3);
+
+  const options = buildRecallOptions(blankChar, [...distractors, blankToken.slice(1)]);
+
+  return {
+    kind: "fill_blank",
+    prompt: "Fill in the blank",
+    sentenceWithBlank,
+    englishHint: example.english,
+    options,
+    correctIndex: options.indexOf(blankChar),
+    index,
+    total,
+  };
+}
+
+export function buildWordBankStep(
+  content: GrammarLessonContent | VocabularyLessonContent,
+  index: number,
+  total: number,
+): LessonWordBankStep | null {
+  const example = content.examples[0];
+  if (!example) return null;
+
+  const correctOrder = tokenizeJapaneseSentence(example.japaneseText);
+  if (correctOrder.length < 2 || correctOrder.length > 8) return null;
+
+  return {
+    kind: "word_bank",
+    prompt: "Build the sentence",
+    englishHint: example.english,
+    tokens: shuffle(correctOrder),
+    correctOrder,
+    index,
+    total,
+  };
+}
+
+export function buildListeningRecallStep(
+  content: VocabularyLessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonListeningRecallStep | null {
+  if (!content.audioUrl) return null;
+
+  const options = buildRecallOptions(content.meaning, allAnswers);
+
+  return {
+    kind: "listening_recall",
+    prompt: "Listen and choose the meaning",
+    audioUrl: content.audioUrl,
+    display: content.kanji ?? content.kana,
+    options,
+    correctIndex: options.indexOf(content.meaning),
+    index,
+    total,
+  };
+}
+
+export function buildSentenceTypedStep(
+  content: GrammarLessonContent | VocabularyLessonContent,
+  index: number,
+  total: number,
+): LessonSentenceTypedStep | null {
+  const example = content.examples[0];
+  if (!example) return null;
+
+  return {
+    kind: "sentence_typed",
+    prompt: "Type the Japanese sentence",
+    englishHint: example.english,
+    acceptedAnswers: buildAcceptedAnswers(example.japaneseText.replace(/[。、！？]+$/g, "")),
+    index,
+    total,
+  };
+}
+
+type VarietyBuilder = (
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+) => { kind: string } | null;
+
+const VARIETY_ROTATION: VarietyBuilder[] = [
+  (content, allAnswers, index, total) => {
+    if (content.type !== "vocabulary" || !content.audioUrl) return null;
+    return buildListeningRecallStep(content, allAnswers, index, total);
+  },
+  (content, allAnswers, index, total) => {
+    if (content.type !== "grammar" && content.type !== "vocabulary") return null;
+    return buildFillBlankStep(content, allAnswers, index, total);
+  },
+  (content, _allAnswers, index, total) => {
+    if (content.type !== "grammar" && content.type !== "vocabulary") return null;
+    return buildWordBankStep(content, index, total);
+  },
+  (content, _allAnswers, index, total) => {
+    if (content.type !== "grammar" && content.type !== "vocabulary") return null;
+    return buildSentenceTypedStep(content, index, total);
+  },
+  (content, allAnswers, index, total) => {
+    if (content.type !== "grammar") return null;
+    const step = buildRecallStep(content, allAnswers, index, total);
+    return { ...step, mode: "choice" as const };
+  },
+];
+
+export function buildVarietyStep(
+  content: LessonContent,
+  allAnswers: string[],
+  contentIndex: number,
+  drillIndex: number,
+  total: number,
+): LessonFillBlankStep | LessonWordBankStep | LessonListeningRecallStep | LessonSentenceTypedStep | LessonRecallStep | null {
+  const start = contentIndex % VARIETY_ROTATION.length;
+  for (let offset = 0; offset < VARIETY_ROTATION.length; offset += 1) {
+    const builder = VARIETY_ROTATION[(start + offset) % VARIETY_ROTATION.length];
+    const step = builder(content, allAnswers, drillIndex, total);
+    if (step) return step as ReturnType<typeof buildVarietyStep>;
+  }
+  return null;
+}

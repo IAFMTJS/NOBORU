@@ -1,0 +1,22 @@
+{
+  "id": "achievement_game_champion_v1",
+  "name": "Achievement Game Champion",
+  "version": "v1",
+  "category": "achievements",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "status": "approved",
+  "tags": [
+    "achievement",
+    "epic",
+    "games"
+  ],
+  "usage_locations": [
+    "achievements",
+    "profile"
+  ],
+  "files": [
+    "achievement_game_champion_v1.png"
+  ]
+}

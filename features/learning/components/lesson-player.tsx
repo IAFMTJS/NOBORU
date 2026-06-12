@@ -22,9 +22,11 @@ import { analyticsService } from "@/features/analytics/services/analytics.servic
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { yamaService } from "@/features/yama/services/yama.service";
+import { ApplicationDrill } from "@/features/learning/components/drills/application-drill";
 import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
 import { MatchingDrill } from "@/features/learning/components/drills/matching-drill";
 import { TypedRecallDrill } from "@/features/learning/components/drills/typed-recall-drill";
+import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { LessonTeachCard } from "@/features/learning/components/lesson-teach-card";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
@@ -186,6 +188,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           step.kind === "recall" ||
           step.kind === "matching" ||
           step.kind === "reading" ||
+          step.kind === "application" ||
           step.kind === "story" ||
           step.kind === "dialogue" ||
           step.kind === "listening" ||
@@ -347,6 +350,28 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         <>
           <LessonTeachCard step={currentStep} soundEnabled={soundEnabled} />
           <Button className="w-full" onClick={goNext}>
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "knowledge_inventory" ? (
+        <>
+          <KnowledgeInventoryCard step={currentStep} />
+          <Button className="w-full" onClick={goNext}>
+            Continue
+          </Button>
+        </>
+      ) : null}
+
+      {currentStep.kind === "application" ? (
+        <>
+          <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
+          <Button
+            className="w-full"
+            onClick={goNext}
+            disabled={!recallAnswered}
+          >
             Continue
           </Button>
         </>

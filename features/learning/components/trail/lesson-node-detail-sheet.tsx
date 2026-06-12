@@ -35,7 +35,7 @@ function getStatusLabel(node: TrailNodeViewModel | null): string {
     case "in_progress":
       return "In Progress";
     case "available":
-      return "Ready";
+      return "Next Up";
     default:
       return "Locked";
   }
@@ -44,7 +44,13 @@ function getStatusLabel(node: TrailNodeViewModel | null): string {
 function NodeMarker({ node }: { node: TrailNodeViewModel }) {
   const locked = node.state === "locked";
   const completed = node.state === "completed";
-  const Icon = locked ? Lock : completed ? Check : node.state === "in_progress" ? Play : Mountain;
+  const Icon = locked
+    ? Lock
+    : completed
+      ? Check
+      : node.state === "in_progress"
+        ? Mountain
+        : Play;
 
   return (
     <div
@@ -52,7 +58,7 @@ function NodeMarker({ node }: { node: TrailNodeViewModel }) {
         "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2",
         completed && "border-success bg-success/20 text-success",
         node.state === "in_progress" && "border-primary bg-primary/20 text-primary",
-        node.state === "available" && "border-primary/70 bg-primary/10 text-primary",
+        node.state === "available" && "border-warning bg-warning/20 text-warning",
         locked && "border-border bg-muted text-muted-foreground",
       )}
     >

@@ -28,15 +28,20 @@ export function LessonSessionLoader({
   const [loading, setLoading] = useState(!initialSession);
 
   useEffect(() => {
-    if (initialSession) {
-      void offlineClient.cacheLesson(initialSession);
-      void offlineClient.prefetchAudioBatch(
-        getLessonAudioPrefetchPlan(initialSession),
-      );
-    }
+    if (!initialSession) return;
+
+    void offlineClient.cacheLesson(initialSession);
+    void offlineClient.prefetchAudioBatch(
+      getLessonAudioPrefetchPlan(initialSession),
+    );
   }, [initialSession]);
 
   useEffect(() => {
+    if (initialSession && online) {
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
 
     async function load() {
@@ -67,7 +72,7 @@ export function LessonSessionLoader({
     return () => {
       cancelled = true;
     };
-  }, [lessonId, online]);
+  }, [initialSession, lessonId, online]);
 
   if (loading && !session) {
     return <YamaLoading message="Loading lesson…" />;

@@ -4,9 +4,15 @@ import Image from "next/image";
 
 import {
   TRAIL_MAP_IMAGE_CLASS,
+  TRAIL_MAP_IMMERSIVE_IMAGE_CLASS,
   TRAIL_MAP_SCRIM_CLASS,
 } from "@/lib/assets/image-presentation";
-import { getTrailMapArtPath, getTrailScrollArtPath } from "@/lib/assets/registry";
+import {
+  getRegionArtPath,
+  getTrailMapArtPath,
+  getTrailScrollArtPath,
+  hasTrailScrollArt,
+} from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
 type TrailMapArtworkProps = {
@@ -26,8 +32,13 @@ export function TrailMapArtwork({
   immersive = false,
   regionSlug,
 }: TrailMapArtworkProps) {
-  const scrollSrc = immersive ? getTrailScrollArtPath(regionSlug, theme) : null;
-  const spineSrc = getTrailMapArtPath(theme);
+  const scrollSrc =
+    immersive && hasTrailScrollArt(regionSlug)
+      ? getTrailScrollArtPath(regionSlug, theme)
+      : null;
+  const regionSrc =
+    immersive && !scrollSrc && regionSlug ? getRegionArtPath(regionSlug) : null;
+  const spineSrc = getTrailMapArtPath(theme, regionSlug);
 
   if (immersive && scrollSrc) {
     return (
@@ -36,7 +47,7 @@ export function TrailMapArtwork({
           src={scrollSrc}
           alt=""
           fill
-          className={cn("object-cover object-top", imageClassName)}
+          className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
           sizes="100vw"
           priority={priority}
         />
@@ -44,6 +55,27 @@ export function TrailMapArtwork({
           className={cn(
             TRAIL_MAP_SCRIM_CLASS,
             "from-background/10 via-transparent to-background/40",
+          )}
+        />
+      </div>
+    );
+  }
+
+  if (immersive && regionSrc) {
+    return (
+      <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
+        <Image
+          src={regionSrc}
+          alt=""
+          fill
+          className={cn(TRAIL_MAP_IMAGE_CLASS, imageClassName)}
+          sizes="100vw"
+          loading="lazy"
+        />
+        <div
+          className={cn(
+            TRAIL_MAP_SCRIM_CLASS,
+            "from-background/20 via-background/10 to-background/50",
           )}
         />
       </div>
@@ -64,6 +96,7 @@ export function TrailMapArtwork({
         fill
         className={cn(TRAIL_MAP_IMAGE_CLASS, imageClassName)}
         sizes="(max-width: 512px) 100vw, 512px"
+        loading="lazy"
         priority={priority}
       />
       <div className={TRAIL_MAP_SCRIM_CLASS} />

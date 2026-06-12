@@ -40,7 +40,7 @@ export function GameCompleteCard({
           presence={
             result.elevation?.leveledUp
               ? yamaService.resolveCelebration("level_up")
-              : yamaService.resolveCelebration("lesson_complete")
+              : yamaService.resolveGameVictory()
           }
           title={
             result.elevation?.leveledUp

@@ -6,7 +6,9 @@ export type YamaExpression =
   | "supportive"
   | "thinking"
   | "studying"
-  | "loading";
+  | "loading"
+  | "victorious"
+  | "confused";
 
 export type YamaSize = "xs" | "sm" | "md" | "lg" | "xl";
 

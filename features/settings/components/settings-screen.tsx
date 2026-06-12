@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -19,6 +20,8 @@ import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 import { ThemeSelector } from "@/features/settings/components/theme-selector";
 import { useThemeSetting } from "@/features/settings/hooks/use-theme-setting";
 import type { SettingsViewModel } from "@/features/settings/types/settings.types";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
 import { ChevronLeft } from "lucide-react";
 
 type SettingsScreenProps = {
@@ -31,6 +34,7 @@ export function SettingsScreen({ settings, userId }: SettingsScreenProps) {
     settings.theme,
   );
   const { logout, loading: logoutLoading, error: logoutError } = useLogout();
+  const yama = useMemo(() => yamaService.resolveProfilePresence(), []);
 
   return (
     <PageContainer>
@@ -46,6 +50,17 @@ export function SettingsScreen({ settings, userId }: SettingsScreenProps) {
           </Link>
         }
       />
+
+      <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
+        <CardContent className="p-4">
+          <YamaPresence
+            presence={yama}
+            size="sm"
+            layout="horizontal"
+            bubbleClassName="border-primary/20 bg-card/80"
+          />
+        </CardContent>
+      </Card>
 
       <PwaInstallPrompt />
       <OfflineSyncPanel userId={userId} />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { Check, Flag, Lock, Mountain, Play } from "lucide-react";
+import { Check, Flag, Lock, Mountain, Play, Sparkles } from "lucide-react";
 
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { hasTrailScrollArt } from "@/lib/assets/registry";
@@ -12,7 +12,6 @@ import { TrailSpineConnector } from "@/features/learning/components/trail/trail-
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import {
-  getImmersiveTrailLayout,
   getTrailNodePositions,
   TRAIL_SCROLL_ART_HEIGHT,
   TRAIL_SCROLL_ART_WIDTH,
@@ -37,9 +36,9 @@ const MARKER_STYLES: Record<
     icon: Mountain,
   },
   available: {
-    ring: "border-primary/70 bg-card/90 text-primary shadow-elevation-1",
-    fill: "bg-primary/90 text-primary-foreground",
-    icon: Mountain,
+    ring: "border-warning bg-warning/20 text-warning shadow-[0_0_12px_rgba(246,174,45,0.4)]",
+    fill: "bg-warning text-warning-foreground",
+    icon: Play,
   },
   locked: {
     ring: "border-border/80 bg-background/70 text-muted-foreground",
@@ -51,7 +50,7 @@ const MARKER_STYLES: Record<
 const STATE_LABELS: Record<TrailNodeState, string> = {
   completed: "Completed lesson",
   in_progress: "Continue lesson",
-  available: "Start lesson",
+  available: "Next lesson",
   locked: "Locked lesson",
 };
 
@@ -79,12 +78,13 @@ function TrailPathNode({
 }) {
   const styles = MARKER_STYLES[node.state];
   const isCheckpoint = node.nodeKind === "checkpoint";
+  const isApplication = node.nodeKind === "application";
   const isCurrent = node.state === "in_progress";
   const Icon = isCheckpoint
     ? Flag
-    : isCurrent
-      ? Mountain
-      : node.state === "available"
+    : isApplication
+      ? Sparkles
+      : isCurrent || node.state === "available"
         ? Play
         : styles.icon;
   const labelSide =
@@ -206,23 +206,42 @@ function TrailPathNode({
     );
 
   const labelTransform = usePillLabels
-    ? "translate(-1.25rem, -50%)"
+    ? undefined
     : labelsBelow || minimal
       ? "translate(-50%, -50%)"
       : `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`;
 
-  const content = (
+  const pillLabelRow = usePillLabels ? (
+    <div className="flex -translate-y-1/2 items-center gap-2">
+      <div className="-translate-x-1/2 shrink-0">{marker}</div>
+      {pillLabel}
+    </div>
+  ) : null;
+
+  const content = usePillLabels ? (
+    <div
+      className={cn(anchored ? null : "absolute")}
+      style={
+        anchored
+          ? undefined
+          : {
+              left: `${position.x}%`,
+              top: `${position.y}%`,
+            }
+      }
+    >
+      {pillLabelRow}
+    </div>
+  ) : (
     <div
       className={cn(
         anchored ? null : "absolute",
-        usePillLabels
-          ? "flex flex-row items-center gap-2"
-          : labelsBelow || minimal
-            ? "flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-            : cn(
-                "flex -translate-y-1/2 items-center gap-1.5",
-                labelSide === "right" ? "flex-row" : "flex-row-reverse",
-              ),
+        labelsBelow || minimal
+          ? "flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+          : cn(
+              "flex -translate-y-1/2 items-center gap-1.5",
+              labelSide === "right" ? "flex-row" : "flex-row-reverse",
+            ),
       )}
       style={
         anchored
@@ -235,7 +254,6 @@ function TrailPathNode({
       }
     >
       {marker}
-      {pillLabel}
       {card}
     </div>
   );
@@ -298,10 +316,26 @@ export function TrailMap({
   const activeNodeIndex = activeNode
     ? nodes.findIndex((node) => node.id === activeNode.id)
     : -1;
-  const immersiveLayout = immersive ? getImmersiveTrailLayout(nodes.length) : null;
+  const placementNodes: Array<{ nodeKind: "lesson" | "checkpoint" }> =
+    nodes.map((node) => ({
+      nodeKind:
+        node.nodeKind === "checkpoint"
+          ? ("checkpoint" as const)
+          : ("lesson" as const),
+    }));
+  const immersivePositions = immersive
+    ? getTrailNodePositions(placementNodes)
+    : null;
+  const immersiveLayout =
+    immersive && immersivePositions && immersivePositions.length > 0
+      ? {
+          positions: immersivePositions,
+          canvasAspectRatio: TRAIL_SCROLL_ART_WIDTH / TRAIL_SCROLL_ART_HEIGHT,
+        }
+      : null;
   const cardPositions = immersive
     ? null
-    : getTrailNodePositions(nodes.map((node) => ({ nodeKind: node.nodeKind })));
+    : getTrailNodePositions(placementNodes);
   const mapHeightRem = immersive
     ? undefined
     : trailMapMinHeightRem(nodes.length, compact || minimal);
@@ -372,10 +406,13 @@ export function TrailMap({
           theme={resolvedTheme}
           immersive={immersive}
           regionSlug={regionSlug}
-          priority={immersive}
+          priority={useScrollArt}
         />
         {immersive && immersiveLayout && !useScrollArt ? (
-          <TrailSpineConnector points={immersiveLayout.positions} nodes={nodes} />
+          <TrailSpineConnector
+            points={[...immersiveLayout.positions]}
+            nodes={nodes}
+          />
         ) : null}
         <div
           className={cn(

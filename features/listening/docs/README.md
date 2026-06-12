@@ -26,7 +26,9 @@ Purpose: N5 listening comprehension through audio lessons and multi-part challen
 
 ## Audio Playback
 
-Exercises may include an `audio_url`. When absent, `AudioPlayback` uses browser speech synthesis for Japanese text as an MVP fallback until hosted audio is attached.
+Exercises may include an `audio_url`. When absent, `AudioPlayback` uses browser speech synthesis with an explicit **ja-JP** voice (e.g. Kyoko on iOS) as fallback until hosted audio is attached.
+
+On iOS, install Noboru to the Home Screen (PWA) for the most reliable audio playback during listening drills.
 
 ## Dependencies
 

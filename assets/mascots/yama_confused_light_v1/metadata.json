@@ -1,0 +1,23 @@
+{
+  "id": "yama_confused_light_v1",
+  "name": "Yama Confused Light",
+  "version": "v1",
+  "category": "mascots",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "status": "approved",
+  "tags": [
+    "mascot",
+    "yama",
+    "confused",
+    "light-mode"
+  ],
+  "usage_locations": [
+    "drill-feedback",
+    "incorrect-answers"
+  ],
+  "files": [
+    "yama_confused_light_v1.png"
+  ]
+}

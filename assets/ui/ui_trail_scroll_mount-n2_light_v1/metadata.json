@@ -1,0 +1,37 @@
+{
+  "id": "ui_trail_scroll_mount-n2_light_v1",
+  "name": "Trail Scroll Mount N2 Light",
+  "category": "ui",
+  "version": "v1",
+  "status": "review",
+  "owner_agent": "UI Art Agent",
+  "creation_agent": "Region Art Agent",
+  "approved_by": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "tags": [
+    "ui",
+    "trail",
+    "scroll",
+    "mount-n2",
+    "light-mode",
+    "immersive"
+  ],
+  "usage_locations": [
+    "trail-first-learn-screen",
+    "trail-map-immersive"
+  ],
+  "dependencies": [
+    "region_mount_n2_v1",
+    "ui_trail_spine_light_v1"
+  ],
+  "dimensions": {
+    "width": 1536,
+    "height": 5120
+  },
+  "files": [
+    "ui_trail_scroll_mount-n2_light_v1.png",
+    "ui_trail_scroll_mount-n2_light_v1.webp"
+  ],
+  "design_notes": "Vertical immersive Mount N2 scroll (light). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. Generated via generate-region-trail-scrolls.mjs — pending Art Director review."
+}

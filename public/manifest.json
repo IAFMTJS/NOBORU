@@ -13,6 +13,7 @@
   "categories": ["education", "productivity"],
   "lang": "en",
   "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon_app_light_v1.webp",

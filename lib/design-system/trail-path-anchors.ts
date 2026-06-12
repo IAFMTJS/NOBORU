@@ -1,9 +1,10 @@
 /**
  * Percentage positions along the illustrated trail map artwork.
- * Calibrated to ui_trail_spine_{dark,light}_v1 (1536×1024) for card layouts.
+ * Calibrated to ui_trail_spine_{dark,light}_v1 (1536×1024) for card layouts
+ * and ui_trail_scroll_{region}_{theme}_v1 (1536×5120) for immersive Learn.
  *
- * Immersive Learn uses rem-based coordinates + SVG spine until per-region
- * vertical trail art exists (ui_trail_scroll_{region}_{theme}_v1).
+ * Lesson nodes interpolate along these anchors; the painted path in scroll art
+ * must pass through them — code never draws a competing trail when scroll art loads.
  */
 export const TRAIL_MAP_ART_WIDTH = 1536;
 export const TRAIL_MAP_ART_HEIGHT = 1024;

@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { OfflineStatusBanner } from "@/features/offline/components/offline-status-banner";
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
+import { preloadJapaneseSpeechVoices } from "@/lib/audio/japanese-speech";
 
 type OfflineContextValue = {
   isOnline: boolean;
@@ -33,6 +34,7 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
     if ("serviceWorker" in navigator) {
       void navigator.serviceWorker.register("/sw.js");
     }
+    void preloadJapaneseSpeechVoices();
   }, []);
 
   useEffect(() => {

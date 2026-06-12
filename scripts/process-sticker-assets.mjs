@@ -16,6 +16,8 @@ const root = path.resolve(__dirname, "..");
 const STICKER_SOURCES = [
   "achievements",
   "brand",
+  "games",
+  "icons",
   "mascots",
 ];
 

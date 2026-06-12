@@ -17,7 +17,10 @@
     "test:watch": "vitest",
     "assets:webp": "node scripts/convert-assets-to-webp.mjs",
     "assets:stickers": "node scripts/process-sticker-assets.mjs",
+    "assets:nav-icons": "node scripts/generate-nav-icons.mjs && node scripts/process-sticker-assets.mjs",
+    "assets:minigame-art": "node scripts/install-minigame-art.mjs && node scripts/process-sticker-assets.mjs",
     "assets:scenes": "node scripts/convert-scene-assets.mjs",
+    "assets:region-scrolls": "node scripts/generate-region-trail-scrolls.mjs && node scripts/convert-scene-assets.mjs",
     "assets:trail-scroll": "node scripts/finalize-trail-scroll-art.mjs && node scripts/convert-scene-assets.mjs"
   },
   "dependencies": {

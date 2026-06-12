@@ -40,6 +40,7 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
   const [finished, setFinished] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastFinalCorrect, setLastFinalCorrect] = useState<number | null>(null);
   const [result, setResult] = useState<GameCompleteViewModel | null>(null);
   const [startedAt] = useState(() => Date.now());
 
@@ -50,10 +51,9 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
 
   const finishGame = useCallback(
     async (finalCorrect: number) => {
-      if (submitting || finished) return;
+      if (submitting) return;
       setSubmitting(true);
       setError(null);
-      setFinished(true);
       setTimerRunning(false);
 
       try {
@@ -71,9 +71,10 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
           data?: GameCompleteViewModel;
           error?: string;
         };
-        if (!payload.success || !payload.data) {
+        if (!response.ok || !payload.success || !payload.data) {
           throw new Error(payload.error ?? "Failed to save game results.");
         }
+        setFinished(true);
         setResult(payload.data);
         void analyticsService.track({
           name: "game_completed",
@@ -91,13 +92,14 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
         setSubmitting(false);
       }
     },
-    [finished, session.questionCount, session.slug, startedAt, submitting],
+    [session.questionCount, session.slug, startedAt, submitting],
   );
 
   const advanceOrFinish = useCallback(
     (wasCorrect: boolean, nextCorrect: number, nextLives: number) => {
       const nextIndex = questionIndex + 1;
       if (nextIndex >= session.questionCount || nextLives <= 0) {
+        setLastFinalCorrect(nextCorrect);
         void finishGame(nextCorrect);
         return;
       }
@@ -141,7 +143,7 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
   }
 
   function handleAnswer(correct: boolean) {
-    if (finished) return;
+    if (finished || submitting) return;
     setTimerRunning(false);
     const nextCorrect = correctCount + (correct ? 1 : 0);
     setCorrectCount(nextCorrect);
@@ -187,9 +189,22 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
       />
 
       {error ? (
-        <p className="text-body-sm text-destructive" role="alert">
-          {error}
-        </p>
+        <Card className="border-destructive/30 bg-destructive/5 shadow-elevation-1">
+          <CardContent className="space-y-3 p-4">
+            <p className="text-body-sm text-destructive" role="alert">
+              {error}
+            </p>
+            {lastFinalCorrect !== null ? (
+              <Button
+                className="w-full"
+                disabled={submitting}
+                onClick={() => void finishGame(lastFinalCorrect)}
+              >
+                {submitting ? "Saving…" : "Retry saving results"}
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
       ) : null}
 
       {!started ? (

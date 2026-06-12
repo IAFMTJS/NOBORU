@@ -1,0 +1,21 @@
+{
+  "id": "icon_nav_explore_v1",
+  "name": "Nav Icon Explore",
+  "version": "v1",
+  "category": "icons",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-12",
+  "updated_at": "2026-06-12",
+  "status": "approved",
+  "tags": [
+    "nav",
+    "bottom-nav",
+    "explore"
+  ],
+  "usage_locations": [
+    "bottom-nav"
+  ],
+  "files": [
+    "icon_nav_explore_v1.png"
+  ]
+}
