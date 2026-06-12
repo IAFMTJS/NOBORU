@@ -190,6 +190,19 @@ export function getRegionArtPath(slug: string) {
   return REGION_SLUG_TO_ASSET[slug] ?? null;
 }
 
+/** Spine art calibrated to TRAIL_MAP_PATH_ANCHORS — use for all trail map UIs. */
+export function getTrailSpineArtPath(
+  theme: "light" | "dark" | string | undefined,
+) {
+  return theme === "light"
+    ? ASSET_REGISTRY.ui.trailSpineLight
+    : ASSET_REGISTRY.ui.trailSpineDark;
+}
+
+/**
+ * @deprecated Prefer getTrailSpineArtPath for trail maps. Region hero art is not
+ * anchor-calibrated and causes touch/visual misalignment when used on trail UIs.
+ */
 export function getTrailMapArtPath(
   theme: "light" | "dark" | string | undefined,
   regionSlug?: string,
@@ -199,9 +212,7 @@ export function getTrailMapArtPath(
     return regionArt;
   }
 
-  return theme === "light"
-    ? ASSET_REGISTRY.ui.trailSpineLight
-    : ASSET_REGISTRY.ui.trailSpineDark;
+  return getTrailSpineArtPath(theme);
 }
 
 function buildTrailScrollPublicPath(

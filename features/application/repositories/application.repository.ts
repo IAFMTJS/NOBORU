@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 
-import type { ApplicationExerciseRow } from "@/features/application/types/application.types";
+import type {
+  ApplicationExerciseRow,
+  ApplicationScript,
+} from "@/features/application/types/application.types";
 
 function normalizeAcceptedAnswers(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -25,6 +28,30 @@ class ApplicationRepository {
         (data as { accepted_answers: unknown }).accepted_answers,
       ),
     };
+  }
+
+  async listPublished(script?: ApplicationScript): Promise<ApplicationExerciseRow[]> {
+    const supabase = await createClient();
+    let query = supabase
+      .from("application_exercises")
+      .select("*")
+      .eq("status", "published")
+      .order("difficulty", { ascending: true });
+
+    if (script) {
+      query = query.eq("script", script);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw new Error(error.message);
+
+    return (data ?? []).map((row) => ({
+      ...(row as Omit<ApplicationExerciseRow, "accepted_answers">),
+      accepted_answers: normalizeAcceptedAnswers(
+        (row as { accepted_answers: unknown }).accepted_answers,
+      ),
+    }));
   }
 
   async findByIds(ids: string[]): Promise<ApplicationExerciseRow[]> {

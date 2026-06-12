@@ -11,9 +11,13 @@ export function stickerImageClass(className?: string) {
 export const REGION_HERO_IMAGE_CLASS =
   "object-cover object-[center_42%] scale-105";
 
-/** Full illustrated trail map scene — dark/light artwork fills the frame. */
+/** Region hero fallback in immersive mode when scroll art is unavailable. */
 export const TRAIL_MAP_IMAGE_CLASS =
   "object-cover object-[center_38%]";
+
+/** Card/unit trail maps — spine art must not crop or anchors misalign with touches. */
+export const TRAIL_MAP_CARD_IMAGE_CLASS =
+  "object-contain object-center";
 
 /** Immersive Learn — preserve full scroll art so node anchors match painted path. */
 export const TRAIL_MAP_IMMERSIVE_IMAGE_CLASS =

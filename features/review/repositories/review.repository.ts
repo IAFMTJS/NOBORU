@@ -227,6 +227,34 @@ class ReviewRepository {
     if (error) throw new Error(error.message);
   }
 
+  async seedKnownItemsBatch(
+    userId: string,
+    items: Array<{ contentType: string; contentId: string }>,
+  ): Promise<void> {
+    if (items.length === 0) return;
+
+    const supabase = await createClient();
+    const nextReviewAt = new Date();
+    nextReviewAt.setDate(nextReviewAt.getDate() + 30);
+
+    const { error } = await supabase.from("review_items").upsert(
+      items.map((item) => ({
+        user_id: userId,
+        content_type: item.contentType,
+        content_id: item.contentId,
+        state: "mastered",
+        mastery_score: 90,
+        next_review_at: nextReviewAt.toISOString(),
+        interval_days: 30,
+        streak_count: 3,
+        review_count: 0,
+      })),
+      { onConflict: "user_id,content_type,content_id" },
+    );
+
+    if (error) throw new Error(error.message);
+  }
+
   async upsertReviewItem(
     userId: string,
     contentType: string,

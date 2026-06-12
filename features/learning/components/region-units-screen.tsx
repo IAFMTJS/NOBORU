@@ -102,9 +102,14 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
             showValue
           />
           {region.slug === "foothills" && !regionLocked ? (
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/learn/hiragana">Open Hiragana Chart</Link>
-            </Button>
+            <>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/learn/intake">What I already know</Link>
+              </Button>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/learn/hiragana">Open Hiragana Chart</Link>
+              </Button>
+            </>
           ) : null}
           {region.slug === "forest-trail" && !regionLocked ? (
             <Button variant="outline" className="w-full" asChild>

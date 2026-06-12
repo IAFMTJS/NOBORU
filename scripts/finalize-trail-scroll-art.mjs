@@ -1,6 +1,7 @@
 /**
  * Produces final trail scroll PNG (1536×5120) from a single continuous hero illustration.
  * Lanczos upscale — one artwork, correct base→summit orientation, zero tiling.
+ * No spine blend or procedural path overlay (prevents double-path artifacts).
  *
  * Usage: node scripts/finalize-trail-scroll-art.mjs
  */
@@ -11,7 +12,7 @@ import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
-const genDir = path.join("C:/Users/siebe/.cursor/projects/d-NOBORU/assets");
+const pipelinePlates = path.join(root, "assets", "ui", "_pipeline", "_scroll_plates");
 
 const WIDTH = 1536;
 const HEIGHT = 5120;
@@ -19,23 +20,19 @@ const HEIGHT = 5120;
 const SCROLL_SPECS = [
   {
     theme: "dark",
-    hero: path.join(genDir, "ui_trail_scroll_foothills_dark_v1_gen_full.png"),
+    hero: path.join(pipelinePlates, "ui_trail_scroll_foothills_dark_v1_gen.png"),
     fallback: path.join(
       root,
       "assets/ui/ui_trail_scroll_foothills_dark_v1/ui_trail_scroll_foothills_dark_v1_draft.png",
     ),
-    spine: path.join(root, "assets/ui/ui_trail_spine_dark_v1/ui_trail_spine_dark_v1.png"),
-    spineBlend: 0.32,
   },
   {
     theme: "light",
-    hero: path.join(genDir, "ui_trail_scroll_foothills_light_v1_gen_full.png"),
+    hero: path.join(pipelinePlates, "ui_trail_scroll_foothills_light_v1_gen.png"),
     fallback: path.join(
       root,
       "assets/ui/ui_trail_scroll_foothills_light_v1/ui_trail_scroll_foothills_light_v1_draft.png",
     ),
-    spine: path.join(root, "assets/ui/ui_trail_spine_light_v1/ui_trail_spine_light_v1.png"),
-    spineBlend: 0.28,
   },
 ];
 
@@ -62,46 +59,13 @@ async function upscaleHero(heroPath) {
     .toBuffer();
 }
 
-async function blendSpine(scrollBuffer, spinePath, blendOpacity) {
-  const spineH = Math.round(HEIGHT * 0.18);
-  const spine = await sharp(spinePath)
-    .resize(WIDTH, spineH, { fit: "cover", position: "bottom" })
-    .png()
-    .toBuffer();
-
-  const mask = Buffer.from(`
-    <svg width="${WIDTH}" height="${spineH}">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="white" stop-opacity="0"/>
-          <stop offset="35%" stop-color="white" stop-opacity="0"/>
-          <stop offset="100%" stop-color="white" stop-opacity="${blendOpacity}"/>
-        </linearGradient>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#g)"/>
-    </svg>
-  `);
-
-  const faded = await sharp(spine)
-    .composite([{ input: mask, blend: "dest-in" }])
-    .png()
-    .toBuffer();
-
-  return sharp(scrollBuffer)
-    .composite([{ input: faded, top: HEIGHT - spineH, left: 0, blend: "over" }])
-    .png()
-    .toBuffer();
-}
-
 async function finalize(spec) {
   const heroPath = await resolveHero(spec);
   const outDir = path.join(root, `assets/ui/ui_trail_scroll_foothills_${spec.theme}_v1`);
   const outBase = `ui_trail_scroll_foothills_${spec.theme}_v1`;
   const outPng = path.join(outDir, `${outBase}.png`);
 
-  let buffer = await upscaleHero(heroPath);
-  buffer = await blendSpine(buffer, spec.spine, spec.spineBlend);
-
+  const buffer = await upscaleHero(heroPath);
   await sharp(buffer).png({ compressionLevel: 6 }).toFile(outPng);
 
   const metadata = {
@@ -124,9 +88,10 @@ async function finalize(spec) {
       method: "single-hero-lanczos-upscale",
       hero_source: path.basename(heroPath),
       no_tiling: true,
-      spine_blend: spec.spineBlend,
+      no_path_overlay: true,
+      no_spine_blend: true,
     },
-    design_notes: `Vertical immersive Foothills scroll (${spec.theme}). Single continuous hero illustration upscaled to ${WIDTH}×${HEIGHT} with spine detail at base. Glowing path and 14 stone lanterns at TRAIL_MAP_PATH_ANCHORS. Mountain ${spec.theme === "dark" ? "Night" : "Dawn"} per art-direction. Awaiting Art Director approval.`,
+    design_notes: `Vertical immersive Foothills scroll (${spec.theme}). Single continuous hero illustration upscaled to ${WIDTH}×${HEIGHT}. Painted path only — no procedural overlay or spine blend. Node positions align to TRAIL_MAP_PATH_ANCHORS.`,
   };
 
   await writeFile(path.join(outDir, "metadata.json"), `${JSON.stringify(metadata, null, 2)}\n`);

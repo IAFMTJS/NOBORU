@@ -17,23 +17,50 @@ export const IMMERSIVE_NODE_SPACING_REM = 15;
 export const IMMERSIVE_TRAIL_PADDING_TOP_REM = 10;
 export const IMMERSIVE_TRAIL_PADDING_BOTTOM_REM = 14;
 
-/** Lantern / bend waypoints on the glowing spine. */
-export const TRAIL_MAP_PATH_ANCHORS: ReadonlyArray<{ x: number; y: number }> = [
+/**
+ * Lantern / bend waypoints on the painted trail (zigzag ascent, summit converge).
+ * Calibrated to ui_trail_scroll_foothills_{theme}_v1 gen hero art.
+ */
+export const TRAIL_MAP_PATH_ANCHORS_DARK: ReadonlyArray<{ x: number; y: number }> = [
   { x: 50, y: 93 },
-  { x: 43, y: 88 },
-  { x: 35, y: 82 },
-  { x: 30, y: 74 },
-  { x: 36, y: 66 },
-  { x: 46, y: 59 },
-  { x: 56, y: 52 },
-  { x: 64, y: 45 },
-  { x: 58, y: 38 },
-  { x: 48, y: 31 },
-  { x: 40, y: 24 },
-  { x: 44, y: 17 },
-  { x: 52, y: 11 },
+  { x: 56, y: 88 },
+  { x: 44, y: 83 },
+  { x: 56, y: 78 },
+  { x: 44, y: 73 },
+  { x: 56, y: 68 },
+  { x: 44, y: 63 },
+  { x: 56, y: 58 },
+  { x: 44, y: 53 },
+  { x: 54, y: 46 },
+  { x: 50, y: 38 },
+  { x: 50, y: 28 },
+  { x: 50, y: 16 },
   { x: 50, y: 6 },
 ];
+
+export const TRAIL_MAP_PATH_ANCHORS_LIGHT: ReadonlyArray<{ x: number; y: number }> = [
+  { x: 50, y: 93 },
+  { x: 54, y: 88 },
+  { x: 46, y: 83 },
+  { x: 54, y: 78 },
+  { x: 46, y: 73 },
+  { x: 54, y: 68 },
+  { x: 46, y: 63 },
+  { x: 54, y: 58 },
+  { x: 46, y: 53 },
+  { x: 52, y: 46 },
+  { x: 50, y: 38 },
+  { x: 50, y: 28 },
+  { x: 50, y: 16 },
+  { x: 50, y: 6 },
+];
+
+/** Default anchors for card layouts and dark immersive scroll. */
+export const TRAIL_MAP_PATH_ANCHORS = TRAIL_MAP_PATH_ANCHORS_DARK;
+
+export function getTrailMapPathAnchors(theme?: string): ReadonlyArray<{ x: number; y: number }> {
+  return theme === "light" ? TRAIL_MAP_PATH_ANCHORS_LIGHT : TRAIL_MAP_PATH_ANCHORS_DARK;
+}
 
 export type TrailNodePlacementKind = "lesson" | "checkpoint";
 
@@ -54,7 +81,7 @@ export type ImmersiveTrailLayout = {
 };
 
 function interpolateAlongPath(
-  anchors: ReadonlyArray<{ x: number; y: number }>,
+  anchors: ReadonlyArray<{ x: number; y: number }> = TRAIL_MAP_PATH_ANCHORS,
   t: number,
 ): TrailNodePosition {
   if (anchors.length === 0) return { x: 50, y: 50 };
@@ -92,9 +119,10 @@ function interpolateAlongPath(
   return anchors[anchors.length - 1];
 }
 
-function distributeAlongPath(nodeCount: number): TrailNodePosition[] {
+function distributeAlongPath(nodeCount: number, theme?: string): TrailNodePosition[] {
+  const anchors = getTrailMapPathAnchors(theme);
   if (nodeCount <= 0) return [];
-  if (nodeCount === 1) return [interpolateAlongPath(TRAIL_MAP_PATH_ANCHORS, 0.08)];
+  if (nodeCount === 1) return [interpolateAlongPath(anchors, 0.08)];
 
   const positions: TrailNodePosition[] = [];
   const startT = 0.05;
@@ -102,7 +130,7 @@ function distributeAlongPath(nodeCount: number): TrailNodePosition[] {
 
   for (let i = 0; i < nodeCount; i += 1) {
     const t = startT + (i / (nodeCount - 1)) * (endT - startT);
-    positions.push(interpolateAlongPath(TRAIL_MAP_PATH_ANCHORS, t));
+    positions.push(interpolateAlongPath(anchors, t));
   }
 
   return positions;
@@ -111,7 +139,11 @@ function distributeAlongPath(nodeCount: number): TrailNodePosition[] {
 /**
  * Immersive Learn: positions calibrated to ui_trail_scroll_{region}_{theme}_v1.
  */
-export function getImmersiveTrailLayout(nodeCount: number): ImmersiveTrailLayout {
+export function getImmersiveTrailLayout(
+  nodeCount: number,
+  theme?: string,
+): ImmersiveTrailLayout {
+  const anchors = getTrailMapPathAnchors(theme);
   if (nodeCount <= 0) {
     return { positions: [], canvasAspectRatio: TRAIL_SCROLL_ART_WIDTH / TRAIL_SCROLL_ART_HEIGHT };
   }
@@ -120,7 +152,7 @@ export function getImmersiveTrailLayout(nodeCount: number): ImmersiveTrailLayout
 
   for (let index = 0; index < nodeCount; index += 1) {
     const t = nodeCount <= 1 ? 0.5 : index / (nodeCount - 1);
-    const point = interpolateAlongPath(TRAIL_MAP_PATH_ANCHORS, 0.06 + t * 0.88);
+    const point = interpolateAlongPath(anchors, 0.06 + t * 0.88);
 
     positions.push({
       x: point.x,
@@ -139,29 +171,35 @@ export function getImmersiveTrailLayout(nodeCount: number): ImmersiveTrailLayout
  */
 export function getTrailNodePositions(
   nodes: ReadonlyArray<{ nodeKind: TrailNodePlacementKind }>,
+  options?: { theme?: string },
 ): ReadonlyArray<TrailNodePosition>;
 export function getTrailNodePositions(
   nodeCount: number,
+  options?: { theme?: string },
 ): ReadonlyArray<TrailNodePosition>;
 export function getTrailNodePositions(
   input: number | ReadonlyArray<{ nodeKind: TrailNodePlacementKind }>,
+  options?: { theme?: string },
 ): ReadonlyArray<TrailNodePosition> {
+  const theme = options?.theme;
   if (typeof input === "number") {
-    return distributeAlongPath(input);
+    return distributeAlongPath(input, theme);
   }
 
   const nodes = input;
   if (nodes.length === 0) return [];
+
+  const anchors = getTrailMapPathAnchors(theme);
 
   const checkpointIndices = nodes
     .map((node, index) => (node.nodeKind === "checkpoint" ? index : -1))
     .filter((index) => index >= 0);
 
   if (checkpointIndices.length === 0) {
-    return distributeAlongPath(nodes.length);
+    return distributeAlongPath(nodes.length, theme);
   }
 
-  const anchorCount = TRAIL_MAP_PATH_ANCHORS.length;
+  const anchorCount = anchors.length;
   const anchorIndexForCheckpoint = (checkpointOrder: number): number => {
     if (checkpointIndices.length === 1) {
       return Math.floor((anchorCount - 1) / 2);
@@ -197,7 +235,7 @@ export function getTrailNodePositions(
     }
   }
 
-  return nodeTs.map((t) => interpolateAlongPath(TRAIL_MAP_PATH_ANCHORS, t));
+  return nodeTs.map((t) => interpolateAlongPath(anchors, t));
 }
 
 /** Minimum map height for card / preview layouts. */

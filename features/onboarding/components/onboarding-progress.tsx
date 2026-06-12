@@ -4,19 +4,21 @@ import { ONBOARDING_STEP_COUNT } from "@/features/onboarding/constants/onboardin
 
 type OnboardingProgressProps = {
   currentStep: number;
+  totalSteps?: number;
   className?: string;
 };
 
 export function OnboardingProgress({
   currentStep,
+  totalSteps = ONBOARDING_STEP_COUNT,
   className,
 }: OnboardingProgressProps) {
   return (
     <div
       className={cn("flex items-center justify-center gap-2", className)}
-      aria-label={`Step ${currentStep} of ${ONBOARDING_STEP_COUNT}`}
+      aria-label={`Step ${currentStep} of ${totalSteps}`}
     >
-      {Array.from({ length: ONBOARDING_STEP_COUNT }).map((_, index) => {
+      {Array.from({ length: totalSteps }).map((_, index) => {
         const step = index + 1;
         const isActive = step === currentStep;
         const isComplete = step < currentStep;

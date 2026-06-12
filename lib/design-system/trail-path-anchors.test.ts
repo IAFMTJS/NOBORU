@@ -22,6 +22,7 @@ describe("getTrailNodePositions", () => {
     expect(positions[2]?.y).toBeCloseTo(93, 0);
     expect(positions[4]?.x).toBeCloseTo(50, 0);
     expect(positions[4]?.y).toBeCloseTo(6, 0);
+    expect(positions[0]?.y).toBeGreaterThan(positions[4]?.y ?? 0);
   });
 });
 
@@ -45,11 +46,11 @@ describe("getImmersiveTrailLayout", () => {
   });
 
   it("varies x so nodes follow the winding spine", () => {
-    const layout = getImmersiveTrailLayout(8);
+    const layout = getImmersiveTrailLayout(20);
     const xValues = layout.positions.map((position) => position.x);
     const minX = Math.min(...xValues);
     const maxX = Math.max(...xValues);
 
-    expect(maxX - minX).toBeGreaterThan(20);
+    expect(maxX - minX).toBeGreaterThan(10);
   });
 });

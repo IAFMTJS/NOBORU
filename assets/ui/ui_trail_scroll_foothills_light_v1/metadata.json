@@ -15,8 +15,7 @@
     "scroll",
     "foothills",
     "light-mode",
-    "immersive",
-    "painterly"
+    "immersive"
   ],
   "usage_locations": [
     "trail-first-learn-screen",
@@ -33,5 +32,12 @@
     "ui_trail_scroll_foothills_light_v1.png",
     "ui_trail_scroll_foothills_light_v1.webp"
   ],
-  "design_notes": "Production Foothills scroll (light). AI-authored painterly environment bands (summit/mid/ascent) gradient-blended with cropped draft bottom plate (trail base only, no summit repeat). Subtle path overlay + 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. No spine tiling. Awaiting Art Director approval per SPEC.md."
+  "composition": {
+    "method": "single-hero-lanczos-upscale",
+    "hero_source": "ui_trail_scroll_foothills_light_v1_gen.png",
+    "no_tiling": true,
+    "no_path_overlay": true,
+    "no_spine_blend": true
+  },
+  "design_notes": "Vertical immersive Foothills scroll (light). Single continuous hero illustration upscaled to 1536×5120. Painted path only — no procedural overlay or spine blend. Node positions align to TRAIL_MAP_PATH_ANCHORS."
 }

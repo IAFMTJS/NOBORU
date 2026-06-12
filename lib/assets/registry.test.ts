@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  getRegionArtPath,
   getTrailMapArtPath,
   getTrailScrollArtPath,
+  getTrailSpineArtPath,
   hasTrailScrollArt,
 } from "@/lib/assets/registry";
 
@@ -22,10 +22,14 @@ describe("trail art registry", () => {
     expect(getTrailScrollArtPath(undefined, "dark")).toBeNull();
   });
 
-  it("uses region hero art for trail maps when a slug is provided", () => {
+  it("returns spine art for trail map node calibration", () => {
+    expect(getTrailSpineArtPath("dark")).toBe("/ui/ui_trail_spine_dark_v1.webp");
+    expect(getTrailSpineArtPath("light")).toBe("/ui/ui_trail_spine_light_v1.webp");
+  });
+
+  it("keeps legacy getTrailMapArtPath region hero behavior for non-trail callers", () => {
     expect(getTrailMapArtPath("dark", "forest-trail")).toBe(
-      getRegionArtPath("forest-trail"),
+      "/regions/region_forest_trail_v1.webp",
     );
-    expect(getTrailMapArtPath("dark")).toBe("/ui/ui_trail_spine_dark_v1.webp");
   });
 });

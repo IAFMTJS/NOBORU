@@ -137,7 +137,6 @@ function TrailPathNode({
         markerSize,
         styles.ring,
         isCheckpoint && node.state !== "locked" && "border-warning/90 shadow-[0_0_12px_rgba(245,158,11,0.35)]",
-        interactive && onNodeSelect ? "cursor-pointer" : null,
         labelsBelow && "z-20",
       )}
     >
@@ -170,7 +169,7 @@ function TrailPathNode({
   const pillLabel = usePillLabels ? (
     <span
       className={cn(
-        "max-w-[9rem] truncate rounded-full border border-white/10 bg-black/55 px-3 py-1.5",
+        "pointer-events-none max-w-[9rem] truncate rounded-full border border-white/10 bg-black/55 px-3 py-1.5",
         "text-body-sm font-medium text-white shadow-sm backdrop-blur-md",
         node.state === "locked" && "text-white/75",
       )}
@@ -183,7 +182,7 @@ function TrailPathNode({
     minimal || labelsBelow || usePillLabels ? null : (
       <div
         className={cn(
-          "max-w-[7.5rem] rounded-lg border bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
+          "pointer-events-none max-w-[7.5rem] rounded-lg border bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
           styles.ring,
           interactive ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
           compact && "max-w-[6.5rem] p-1.5",
@@ -205,37 +204,64 @@ function TrailPathNode({
       </div>
     );
 
-  const labelTransform = usePillLabels
-    ? undefined
-    : labelsBelow || minimal
+  const labelTransform =
+    labelsBelow || minimal
       ? "translate(-50%, -50%)"
       : `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`;
 
-  const pillLabelRow = usePillLabels ? (
-    <div className="flex -translate-y-1/2 items-center gap-2">
-      <div className="-translate-x-1/2 shrink-0">{marker}</div>
-      {pillLabel}
-    </div>
-  ) : null;
+  const touchTargetClass = cn(
+    "inline-flex shrink-0 touch-manipulation items-center justify-center",
+    "min-h-11 min-w-11 border-0 bg-transparent p-0",
+    interactive && onNodeSelect ? "cursor-pointer" : null,
+  );
 
-  const content = usePillLabels ? (
-    <div
-      className={cn(anchored ? null : "absolute")}
-      style={
-        anchored
-          ? undefined
-          : {
-              left: `${position.x}%`,
-              top: `${position.y}%`,
-            }
-      }
-    >
-      {pillLabelRow}
-    </div>
+  const interactiveMarker = interactive ? (
+    onNodeSelect ? (
+      <button
+        type="button"
+        className={touchTargetClass}
+        aria-label={ariaLabel}
+        onClick={() => onNodeSelect(node)}
+      >
+        {marker}
+      </button>
+    ) : node.href ? (
+      <Link href={node.href} className={touchTargetClass} aria-label={ariaLabel}>
+        {marker}
+      </Link>
+    ) : (
+      <div className={touchTargetClass} aria-label={ariaLabel}>
+        {marker}
+      </div>
+    )
   ) : (
+    <div aria-label={ariaLabel}>{marker}</div>
+  );
+
+  const anchoredLayout = (
     <div
       className={cn(
-        anchored ? null : "absolute",
+        "pointer-events-none",
+        usePillLabels
+          ? "flex items-center gap-2"
+          : labelsBelow || minimal
+            ? "flex flex-col items-center"
+            : cn(
+                "flex items-center gap-1.5",
+                labelSide === "right" ? "flex-row" : "flex-row-reverse",
+              ),
+      )}
+    >
+      <div className="pointer-events-auto">{interactiveMarker}</div>
+      {pillLabel}
+      {card}
+    </div>
+  );
+
+  const floatingLayout = (
+    <div
+      className={cn(
+        "absolute",
         labelsBelow || minimal
           ? "flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
           : cn(
@@ -243,43 +269,19 @@ function TrailPathNode({
               labelSide === "right" ? "flex-row" : "flex-row-reverse",
             ),
       )}
-      style={
-        anchored
-          ? { transform: labelTransform }
-          : {
-              left: `${position.x}%`,
-              top: `${position.y}%`,
-              transform: labelTransform,
-            }
-      }
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        transform: labelTransform,
+      }}
     >
-      {marker}
+      {interactiveMarker}
+      {pillLabel}
       {card}
     </div>
   );
 
-  if (onNodeSelect) {
-    return (
-      <button
-        type="button"
-        className="block border-0 bg-transparent p-0 text-left"
-        aria-label={ariaLabel}
-        onClick={() => onNodeSelect(node)}
-      >
-        {content}
-      </button>
-    );
-  }
-
-  if (!node.href) {
-    return <div aria-label={ariaLabel}>{content}</div>;
-  }
-
-  return (
-    <Link href={node.href} className="block" aria-label={ariaLabel}>
-      {content}
-    </Link>
-  );
+  return anchored ? anchoredLayout : floatingLayout;
 }
 
 type TrailMapProps = {
@@ -324,7 +326,7 @@ export function TrailMap({
           : ("lesson" as const),
     }));
   const immersivePositions = immersive
-    ? getTrailNodePositions(placementNodes)
+    ? getTrailNodePositions(placementNodes, { theme: resolvedTheme })
     : null;
   const immersiveLayout =
     immersive && immersivePositions && immersivePositions.length > 0
@@ -335,7 +337,7 @@ export function TrailMap({
       : null;
   const cardPositions = immersive
     ? null
-    : getTrailNodePositions(placementNodes);
+    : getTrailNodePositions(placementNodes, { theme: resolvedTheme });
   const mapHeightRem = immersive
     ? undefined
     : trailMapMinHeightRem(nodes.length, compact || minimal);
@@ -443,10 +445,12 @@ export function TrailMap({
                 key={node.id}
                 role="listitem"
                 data-trail-node-index={index}
-                className="pointer-events-auto absolute"
+                className="pointer-events-none absolute"
                 style={{
                   left: `${nodePosition.x}%`,
                   top: `${nodePosition.y}%`,
+                  transform: "translate(-50%, -50%)",
+                  zIndex: index + 10,
                 }}
               >
                 <MotionDiv

@@ -3,14 +3,14 @@
 import Image from "next/image";
 
 import {
-  TRAIL_MAP_IMAGE_CLASS,
+  TRAIL_MAP_CARD_IMAGE_CLASS,
   TRAIL_MAP_IMMERSIVE_IMAGE_CLASS,
   TRAIL_MAP_SCRIM_CLASS,
 } from "@/lib/assets/image-presentation";
 import {
   getRegionArtPath,
-  getTrailMapArtPath,
   getTrailScrollArtPath,
+  getTrailSpineArtPath,
   hasTrailScrollArt,
 } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,7 @@ export function TrailMapArtwork({
       : null;
   const regionSrc =
     immersive && !scrollSrc && regionSlug ? getRegionArtPath(regionSlug) : null;
-  const spineSrc = getTrailMapArtPath(theme, regionSlug);
+  const spineSrc = getTrailSpineArtPath(theme);
 
   if (immersive && scrollSrc) {
     return (
@@ -68,7 +68,7 @@ export function TrailMapArtwork({
           src={regionSrc}
           alt=""
           fill
-          className={cn(TRAIL_MAP_IMAGE_CLASS, imageClassName)}
+          className={cn(TRAIL_MAP_CARD_IMAGE_CLASS, imageClassName)}
           sizes="100vw"
           loading="lazy"
         />
@@ -94,7 +94,7 @@ export function TrailMapArtwork({
         src={spineSrc}
         alt=""
         fill
-        className={cn(TRAIL_MAP_IMAGE_CLASS, imageClassName)}
+        className={cn(TRAIL_MAP_CARD_IMAGE_CLASS, imageClassName)}
         sizes="(max-width: 512px) 100vw, 512px"
         loading="lazy"
         priority={priority}
