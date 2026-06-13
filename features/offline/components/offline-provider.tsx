@@ -3,10 +3,14 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 
 import { OfflineStatusBanner } from "@/features/offline/components/offline-status-banner";
+import { OfflineSyncRewardsFeedback } from "@/features/offline/components/offline-sync-rewards-feedback";
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import { preloadJapaneseSpeechVoices } from "@/lib/audio/japanese-speech";
-import type { OfflineStatusViewModel } from "@/lib/offline/types";
+import type {
+  OfflineStatusViewModel,
+  OfflineSyncGamificationResult,
+} from "@/lib/offline/types";
 
 type OfflineContextValue = {
   isOnline: boolean;
@@ -14,8 +18,10 @@ type OfflineContextValue = {
   status: OfflineStatusViewModel | null;
   syncing: boolean;
   error: string | null;
+  syncRewards: OfflineSyncGamificationResult | null;
   refresh: () => Promise<OfflineStatusViewModel>;
   syncNow: () => Promise<void>;
+  dismissSyncRewards: () => void;
 };
 
 const OfflineContext = createContext<OfflineContextValue | null>(null);
@@ -35,7 +41,15 @@ type OfflineProviderProps = {
 
 export function OfflineProvider({ children, userId }: OfflineProviderProps) {
   const isOnline = useOnlineStatus();
-  const { status, syncing, error, syncNow, refresh } = useOfflineSync({
+  const {
+    status,
+    syncing,
+    error,
+    syncRewards,
+    syncNow,
+    refresh,
+    dismissSyncRewards,
+  } = useOfflineSync({
     userId,
     autoSync: true,
   });
@@ -55,13 +69,19 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
         status,
         syncing,
         error,
+        syncRewards,
         refresh,
         syncNow,
+        dismissSyncRewards,
       }}
     >
       <OfflineStatusBanner
         isOnline={isOnline}
         pendingMutations={status?.pendingMutations ?? 0}
+      />
+      <OfflineSyncRewardsFeedback
+        rewards={syncRewards}
+        onDismiss={dismissSyncRewards}
       />
       {children}
     </OfflineContext.Provider>

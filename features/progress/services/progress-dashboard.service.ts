@@ -1,5 +1,8 @@
 import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
-import { elevationService } from "@/features/elevation/services/elevation.service";
+import {
+  getCachedElevationSummary,
+  getCachedReviewStats,
+} from "@/lib/cache/dashboard-cache";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 import { grammarProgressService } from "@/features/grammar/services/grammar-progress.service";
 import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
@@ -18,7 +21,6 @@ import type {
   RegionProgressSummaryViewModel,
 } from "@/features/progress/types/progress-dashboard.types";
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
-import { reviewServerService } from "@/features/review/services/review-server.service";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
 import { vocabularyProgressService } from "@/features/vocabulary/services/vocabulary-progress.service";
@@ -127,8 +129,8 @@ class ProgressDashboardService {
       needsProgressRows
         ? getCachedProgressRows(userId)
         : Promise.resolve(preload!.progressRows!),
-      reviewServerService.getStats(userId),
-      elevationService.getSummary(userId),
+      getCachedReviewStats(userId),
+      getCachedElevationSummary(userId),
     ]);
 
     const domains: DomainMasteryViewModel[] = [

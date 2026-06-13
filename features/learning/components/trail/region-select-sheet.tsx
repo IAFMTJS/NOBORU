@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Check, Lock, Map } from "lucide-react";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
@@ -16,8 +15,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
-import { getRegionArtPath } from "@/lib/assets/registry";
-import { REGION_HERO_IMAGE_CLASS } from "@/lib/assets/image-presentation";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { cn } from "@/lib/utils";
 
@@ -29,25 +26,6 @@ type RegionSelectSheetProps = {
   onSelectRegion: (slug: string) => void;
   mode?: "picker" | "overview";
 };
-
-function RegionThumbnail({ slug, alt }: { slug: string; alt: string }) {
-  const src = getRegionArtPath(slug);
-  if (!src) {
-    return <div className="h-12 w-12 shrink-0 rounded-lg bg-muted" />;
-  }
-
-  return (
-    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className={REGION_HERO_IMAGE_CLASS}
-        sizes="48px"
-      />
-    </div>
-  );
-}
 
 export function RegionSelectSheet({
   open,
@@ -96,7 +74,11 @@ export function RegionSelectSheet({
                     locked ? "cursor-not-allowed opacity-70" : "hover:bg-accent/20",
                   )}
                 >
-                  <RegionThumbnail slug={region.slug} alt={`${region.name} region`} />
+                  <RegionHeroImage
+                    regionSlug={region.slug}
+                    alt={`${region.name} region`}
+                    size="thumbnail"
+                  />
                   <div className="min-w-0 flex-1 space-y-1.5">
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-body-sm font-medium">{region.name}</p>

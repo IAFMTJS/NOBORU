@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
-import type { OfflineStatusViewModel } from "@/lib/offline/types";
+import type {
+  OfflineStatusViewModel,
+  OfflineSyncGamificationResult,
+} from "@/lib/offline/types";
 
 type UseOfflineSyncOptions = {
   userId?: string;
@@ -16,6 +19,8 @@ export function useOfflineSync(options: UseOfflineSyncOptions = {}) {
   const [status, setStatus] = useState<OfflineStatusViewModel | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [syncRewards, setSyncRewards] =
+    useState<OfflineSyncGamificationResult | null>(null);
   const hasAttemptedInitialSync = useRef(false);
 
   const refresh = useCallback(async () => {
@@ -24,11 +29,18 @@ export function useOfflineSync(options: UseOfflineSyncOptions = {}) {
     return next;
   }, [options.userId]);
 
+  const dismissSyncRewards = useCallback(() => {
+    setSyncRewards(null);
+  }, []);
+
   const syncNow = useCallback(async () => {
     setSyncing(true);
     setError(null);
     try {
-      await offlineClient.syncPendingMutations();
+      const result = await offlineClient.syncPendingMutations();
+      if (result.aggregatedGamification) {
+        setSyncRewards(result.aggregatedGamification);
+      }
       await refresh();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Sync failed.");
@@ -64,7 +76,9 @@ export function useOfflineSync(options: UseOfflineSyncOptions = {}) {
     status,
     syncing,
     error,
+    syncRewards,
     refresh,
     syncNow,
+    dismissSyncRewards,
   };
 }

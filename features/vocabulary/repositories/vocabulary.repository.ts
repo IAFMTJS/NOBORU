@@ -93,7 +93,9 @@ class VocabularyRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("vocabulary")
-      .select("*")
+      .select(
+        "id, kanji, kana, meaning, part_of_speech, jlpt_level, frequency_rank, difficulty, audio_url, status, created_at, updated_at",
+      )
       .in("id", ids);
 
     if (error) throw new Error(error.message);
@@ -136,6 +138,13 @@ class VocabularyRepository {
 
   async listLearnedVocabularyIds(userId: string): Promise<string[]> {
     return learnedContentRepository.getLearnedIdsByContentType(
+      userId,
+      "vocabulary",
+    );
+  }
+
+  async countLearnedVocabulary(userId: string): Promise<number> {
+    return learnedContentRepository.countLearnedByContentType(
       userId,
       "vocabulary",
     );

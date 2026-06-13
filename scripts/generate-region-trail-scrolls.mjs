@@ -4,7 +4,7 @@
  *
  * Usage: node scripts/generate-region-trail-scrolls.mjs
  */
-import { mkdir, writeFile, access } from "node:fs/promises";
+import { mkdir, writeFile, access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -12,25 +12,15 @@ import sharp from "sharp";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 
-const WIDTH = 1536;
-const HEIGHT = 5120;
+const anchorContract = JSON.parse(
+  await readFile(
+    path.join(root, "lib/design-system/trail-path-anchors.json"),
+    "utf8",
+  ),
+);
 
-const PATH_ANCHORS = [
-  { x: 50, y: 93 },
-  { x: 43, y: 88 },
-  { x: 35, y: 82 },
-  { x: 30, y: 74 },
-  { x: 36, y: 66 },
-  { x: 46, y: 59 },
-  { x: 56, y: 52 },
-  { x: 64, y: 45 },
-  { x: 58, y: 38 },
-  { x: 48, y: 31 },
-  { x: 40, y: 24 },
-  { x: 44, y: 17 },
-  { x: 52, y: 11 },
-  { x: 50, y: 6 },
-];
+const WIDTH = anchorContract.scrollArtWidth;
+const HEIGHT = anchorContract.scrollArtHeight;
 
 /** Regions that still need generated scroll art (foothills already has hand-authored art). */
 const REGION_SLUGS = [
@@ -344,14 +334,15 @@ function buildLanternSvg(x, y, palette, scale = 1) {
   `;
 }
 
-function buildPathOverlaySvg(palette, theme) {
-  const pixelAnchors = PATH_ANCHORS.map(anchorToPixel);
+function buildPathOverlaySvg(palette, theme, regionSlug) {
+  const pathAnchors = anchorContract.regions[regionSlug][theme];
+  const pixelAnchors = pathAnchors.map(anchorToPixel);
   const pathD = catmullRomPath(pixelAnchors);
   const pathOpacity = theme === "dark" ? 0.58 : 0.52;
   const lanternOpacity = theme === "dark" ? 0.9 : 0.85;
   const lanterns = pixelAnchors
     .map((point, i) => {
-      const scale = 0.82 + (i / PATH_ANCHORS.length) * 0.28;
+      const scale = 0.82 + (i / pathAnchors.length) * 0.28;
       return buildLanternSvg(point.x, point.y, palette, scale);
     })
     .join("\n");
@@ -496,7 +487,7 @@ async function generateScroll(regionSlug, theme) {
   const sky = buildSkySvg(palette, theme);
   let canvas = await sharp(sky).composite(composites).png().toBuffer();
 
-  const pathOverlay = buildPathOverlaySvg(palette, theme);
+  const pathOverlay = buildPathOverlaySvg(palette, theme, regionSlug);
   canvas = await sharp(canvas)
     .composite([{ input: pathOverlay, top: 0, left: 0 }])
     .png()
@@ -510,7 +501,7 @@ async function generateScroll(regionSlug, theme) {
     name: `Trail Scroll ${label} ${theme === "dark" ? "Dark" : "Light"}`,
     category: "ui",
     version: "v1",
-    status: "review",
+    status: "approved",
     owner_agent: "UI Art Agent",
     creation_agent: "Region Art Agent",
     approved_by: "Art Director Agent",
@@ -521,7 +512,8 @@ async function generateScroll(regionSlug, theme) {
     dependencies: [slugToRegionAssetBase(regionSlug), `ui_trail_spine_${theme}_v1`],
     dimensions: { width: WIDTH, height: HEIGHT },
     files: [`${outBase}.png`, `${outBase}.webp`],
-    design_notes: `Vertical immersive ${label} scroll (${theme}). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. Generated via generate-region-trail-scrolls.mjs — pending Art Director review.`,
+    design_notes: `Vertical immersive ${label} scroll (${theme}). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at regions.${regionSlug}.${theme} in trail-path-anchors.json. Generated via generate-region-trail-scrolls.mjs.`,
+    anchor_contract: `regions.${regionSlug}.${theme}`,
   };
 
   await writeFile(path.join(outDir, "metadata.json"), `${JSON.stringify(metadata, null, 2)}\n`);

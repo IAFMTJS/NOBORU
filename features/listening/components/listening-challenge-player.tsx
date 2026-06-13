@@ -17,6 +17,8 @@ import {
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { AudioPlayback } from "@/features/listening/components/audio-playback";
 import type { ListeningChallengeDetailViewModel } from "@/features/listening/types/listening.types";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
 
 type ListeningChallengePlayerProps = {
   challenge: ListeningChallengeDetailViewModel;
@@ -45,19 +47,14 @@ export function ListeningChallengePlayer({
       ? 100
       : Math.round(((exerciseIndex + (phase === "quiz" ? 0.5 : 0)) / challenge.exercises.length) * 100);
 
-  useEffect(() => {
-    if (challenge.completed || embedded) return;
-    void fetch("/api/listening/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contentType: "challenge",
-        contentId: challenge.id,
-        status: "in_progress",
-        score: 0,
-      }),
+  useMountOnceEffect(() => {
+    void offlineClient.saveListeningProgress({
+      contentType: "challenge",
+      contentId: challenge.id,
+      status: "in_progress",
+      score: 0,
     });
-  }, [challenge.completed, challenge.id, embedded]);
+  }, !challenge.completed && !embedded);
 
   useEffect(() => {
     setPhase("listen");
@@ -76,24 +73,16 @@ export function ListeningChallengePlayer({
     setSaving(true);
     setError(null);
     try {
-      const response = await fetch("/api/listening/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contentType: "challenge",
-          contentId: challenge.id,
-          status: "completed",
-          score: finalScore,
-        }),
+      const result = await offlineClient.saveListeningProgress({
+        contentType: "challenge",
+        contentId: challenge.id,
+        status: "completed",
+        score: finalScore,
       });
-      const result = (await response.json()) as {
-        success: boolean;
-        error?: string;
-      };
-      if (!result.success) {
-        throw new Error(result.error ?? "Unable to save progress.");
+      if (!result.saved) {
+        throw new Error("Unable to save progress.");
       }
-      setScore(finalScore);
+      setScore(result.score);
       setFinished(true);
       onComplete?.(finalScore);
     } catch (caught) {

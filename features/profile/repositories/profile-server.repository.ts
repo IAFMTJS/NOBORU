@@ -19,6 +19,27 @@ class ProfileServerRepository {
     return data as ProfileRow | null;
   }
 
+  async updateDisplayName(
+    userId: string,
+    displayName: string,
+  ): Promise<ProfileRow> {
+    const supabase = await createServerClient();
+    await ensureProfile(supabase, { userId, displayName });
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ display_name: displayName })
+      .eq("user_id", userId)
+      .select("*")
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data as ProfileRow;
+  }
+
   async ensureProfile(userId: string, displayName: string): Promise<ProfileRow> {
     const existing = await this.findByUserId(userId);
     if (existing) {

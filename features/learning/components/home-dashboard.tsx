@@ -19,6 +19,7 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         lessonNumber={data.upcomingLesson.lessonNumber}
         lessonCount={data.upcomingLesson.lessonCount}
         trailPreview={data.trailPreview}
+        trailPreviewPlacement={data.trailPreviewPlacement}
         quests={data.quests}
         yama={data.yama}
         stats={data.stats}

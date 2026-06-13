@@ -1,4 +1,4 @@
-import type { ContentHubVariant } from "@/components/ui/content-hub-banner";
+import type { ContentHubVariant } from "@/lib/design-system/content-hub-tokens";
 import {
   CONTENT_HUB_ICONS,
   CONTENT_HUB_TOKENS,

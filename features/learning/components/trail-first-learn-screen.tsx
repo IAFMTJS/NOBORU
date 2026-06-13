@@ -14,8 +14,8 @@ import {
   findLessonInRegion,
   getLessonPositionInRegion,
 } from "@/features/learning/utils/region-lesson";
-import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
-import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import { flattenRegionTrailLessons } from "@/features/learning/services/trail.service";
+import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import { cn } from "@/lib/utils";
 import { glassClass, resolveVisualTier } from "@/lib/performance/visual-tier";
 

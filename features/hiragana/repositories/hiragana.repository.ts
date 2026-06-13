@@ -26,7 +26,9 @@ class HiraganaRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("hiragana")
-      .select("*")
+      .select(
+        "id, character, romaji, row_name, row_label, order_index, variant_type, status, created_at, updated_at",
+      )
       .in("id", ids);
 
     if (error) throw new Error(error.message);

@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  getTrailMapArtPath,
   getTrailScrollArtPath,
   getTrailSpineArtPath,
   hasTrailScrollArt,
@@ -25,11 +24,5 @@ describe("trail art registry", () => {
   it("returns spine art for trail map node calibration", () => {
     expect(getTrailSpineArtPath("dark")).toBe("/ui/ui_trail_spine_dark_v1.webp");
     expect(getTrailSpineArtPath("light")).toBe("/ui/ui_trail_spine_light_v1.webp");
-  });
-
-  it("keeps legacy getTrailMapArtPath region hero behavior for non-trail callers", () => {
-    expect(getTrailMapArtPath("dark", "forest-trail")).toBe(
-      "/regions/region_forest_trail_v1.webp",
-    );
   });
 });

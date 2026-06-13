@@ -60,29 +60,20 @@ export function MemoryDungeonPlayer({ session }: MemoryDungeonPlayerProps) {
       setLastCompleteAttempt(attempt);
 
       try {
-        const response = await fetch(`/api/games/${session.slug}/complete`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...attempt,
-            durationMs: Date.now() - startedAt,
-          }),
+        const payload = await offlineClient.completeGame({
+          slug: session.slug,
+          correctCount: attempt.correctCount,
+          totalCount: attempt.totalCount,
+          wrongAttempts: attempt.wrongAttempts,
+          durationMs: Date.now() - startedAt,
         });
-        const payload = (await response.json()) as {
-          success: boolean;
-          data?: GameCompleteViewModel;
-          error?: string;
-        };
-        if (!response.ok || !payload.success || !payload.data) {
-          throw new Error(payload.error ?? "Failed to save game results.");
-        }
-        setResult(payload.data);
+        setResult(payload.result);
         void analyticsService.track({
           name: "game_completed",
           properties: {
             gameSlug: session.slug,
-            accuracyPercent: payload.data.accuracyPercent,
-            epAwarded: payload.data.epAwarded,
+            accuracyPercent: payload.result.accuracyPercent,
+            epAwarded: payload.result.epAwarded,
             roomCount: session.roomCount,
           },
         });

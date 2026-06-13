@@ -1,12 +1,6 @@
-export type RegionSlug =
-  | "foothills"
-  | "forest-trail"
-  | "mount-n5"
-  | "mount-n4"
-  | "mount-n3"
-  | "mount-n2"
-  | "mount-n1"
-  | "master-summit";
+import type { RegionSlug } from "@/lib/design-system/regions";
+
+export type { RegionSlug } from "@/lib/design-system/regions";
 
 export type RegionVisualTokens = {
   slug: RegionSlug;

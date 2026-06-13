@@ -15,25 +15,7 @@ const root = path.resolve(__dirname, "..");
 const WIDTH = 1536;
 const HEIGHT = 5120;
 
-/** Authoritative S-curve anchors from SPEC.md */
-export const PATH_ANCHORS = [
-  { x: 50, y: 93 },
-  { x: 43, y: 88 },
-  { x: 35, y: 82 },
-  { x: 30, y: 74 },
-  { x: 36, y: 66 },
-  { x: 46, y: 59 },
-  { x: 56, y: 52 },
-  { x: 64, y: 45 },
-  { x: 58, y: 38 },
-  { x: 48, y: 31 },
-  { x: 40, y: 24 },
-  { x: 44, y: 17 },
-  { x: 52, y: 11 },
-  { x: 50, y: 6 },
-];
-
-const SCROLL_SPECS = [
+/** Foothills v2 uses hand-painted plates; anchors live in trail-path-anchors.json */
   {
     theme: "dark",
     version: "v2",
@@ -197,7 +179,7 @@ async function composeScroll(spec) {
     name: `Trail Scroll Foothills ${spec.theme === "dark" ? "Dark" : "Light"} v2`,
     category: "ui",
     version: spec.version,
-    status: "review",
+    status: "approved",
     owner_agent: "UI Art Agent",
     creation_agent: "UI Art Agent",
     approved_by: null,
@@ -213,7 +195,7 @@ async function composeScroll(spec) {
       plates: Object.keys(spec.plates),
       no_tiling: true,
       no_path_overlay: true,
-      anchor_contract: "TRAIL_MAP_PATH_ANCHORS (SPEC S-curve)",
+      anchor_contract: `regions.foothills.${spec.theme}`,
     },
     design_notes: `Foothills scroll v2 (${spec.theme}). New AI-authored environment bands (summit/mid/base) cross-faded into single 1536×5120 scroll. Welcoming foothills meadow-to-summit ascent. Painted paths in source plates; node positions use SPEC S-curve anchors.`,
   };

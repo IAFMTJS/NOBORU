@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { TRIAL_GRADE_LABELS, TRIAL_KIND_LABELS } from "@/features/trials/constants/trial.constants";
 import { TrialStepCard } from "@/features/trials/components/trial-step-card";
 import { TrialTimer } from "@/features/trials/components/trial-timer";
@@ -43,6 +44,10 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
   const [result, setResult] = useState<TrialCompleteViewModel | null>(null);
   const [timeExpired, setTimeExpired] = useState(false);
 
+  useEffect(() => {
+    void offlineClient.cacheTrialSession(session);
+  }, [session]);
+
   const currentStep = session.steps[stepIndex];
   const progressPercent = Math.round(
     ((stepIndex + (finished ? 1 : 0)) / session.steps.length) * 100,
@@ -60,32 +65,21 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
     );
 
     try {
-      const response = await fetch(`/api/trials/${session.slug}/complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          correctCount,
-          totalCount: session.steps.length,
-          timeSpentSeconds: elapsedSeconds,
-          startedAt,
-        }),
+      const payload = await offlineClient.completeTrial({
+        slug: session.slug,
+        correctCount,
+        totalCount: session.steps.length,
+        timeSpentSeconds: elapsedSeconds,
+        startedAt,
       });
-      const payload = (await response.json()) as {
-        success: boolean;
-        data?: TrialCompleteViewModel;
-        error?: string;
-      };
-      if (!payload.success || !payload.data) {
-        throw new Error(payload.error ?? "Failed to save trial results.");
-      }
-      setResult(payload.data);
+      setResult(payload.result);
       void analyticsService.track({
         name: "trial_completed",
         properties: {
           trialSlug: session.slug,
-          passed: payload.data.passed,
-          scorePercent: payload.data.scorePercent,
-          grade: payload.data.grade,
+          passed: payload.result.passed,
+          scorePercent: payload.result.scorePercent,
+          grade: payload.result.grade,
         },
       });
     } catch (caught) {

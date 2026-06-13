@@ -1,8 +1,11 @@
 /**
  * Renders anchor overlay on trail art for visual calibration.
- * Usage: node scripts/calibrate-trail-anchors.mjs
+ * Usage:
+ *   npm run assets:calibrate-trail
+ *   npm run assets:calibrate-trail -- --region=foothills
+ *   npm run assets:calibrate-trail -- --all
  */
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -10,108 +13,149 @@ import sharp from "sharp";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 
-const WIDTH = 1536;
-const HEIGHT = 5120;
+const anchorContract = JSON.parse(
+  await readFile(
+    path.join(root, "lib/design-system/trail-path-anchors.json"),
+    "utf8",
+  ),
+);
 
-const CANDIDATE_ANCHORS_BY_THEME = {
-  dark: [
-    { x: 50, y: 93 },
-    { x: 40, y: 88 },
-    { x: 52, y: 83 },
-    { x: 40, y: 77 },
-    { x: 54, y: 71 },
-    { x: 44, y: 65 },
-    { x: 54, y: 59 },
-    { x: 46, y: 53 },
-    { x: 54, y: 47 },
-    { x: 48, y: 40 },
-    { x: 50, y: 32 },
-    { x: 50, y: 22 },
-    { x: 50, y: 12 },
-    { x: 50, y: 6 },
-  ],
-  light: [
-    { x: 50, y: 93 },
-    { x: 44, y: 88 },
-    { x: 52, y: 83 },
-    { x: 38, y: 77 },
-    { x: 48, y: 71 },
-    { x: 36, y: 65 },
-    { x: 46, y: 59 },
-    { x: 38, y: 53 },
-    { x: 48, y: 46 },
-    { x: 52, y: 38 },
-    { x: 50, y: 28 },
-    { x: 50, y: 16 },
-    { x: 50, y: 8 },
-    { x: 50, y: 4 },
-  ],
+const SCROLL_VERSION_BY_REGION = {
+  foothills: "v2",
 };
 
-function anchorToPixel(anchor) {
+const GENERATED_REGIONS = [
+  "forest-trail",
+  "mount-n5",
+  "mount-n4",
+  "mount-n3",
+  "mount-n2",
+  "mount-n1",
+  "master-summit",
+];
+
+function parseArgs(argv) {
+  const flags = {
+    all: argv.includes("--all"),
+    region: null,
+  };
+
+  for (const arg of argv) {
+    if (arg.startsWith("--region=")) {
+      flags.region = arg.slice("--region=".length);
+    }
+  }
+
+  return flags;
+}
+
+function resolveTargets(flags) {
+  if (flags.all) {
+    return Object.keys(anchorContract.regions);
+  }
+  if (flags.region) {
+    return [flags.region];
+  }
+  return ["foothills"];
+}
+
+function anchorToPixel(anchor, width, height) {
   return {
-    x: (anchor.x / 100) * WIDTH,
-    y: (anchor.y / 100) * HEIGHT,
+    x: (anchor.x / 100) * width,
+    y: (anchor.y / 100) * height,
   };
 }
 
-function buildOverlaySvg(anchors) {
-  const points = anchors.map(anchorToPixel);
+function buildOverlaySvg(anchors, width, height) {
+  const points = anchors.map((anchor) => anchorToPixel(anchor, width, height));
   const circles = points
     .map(
-      (p, i) => `
-    <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="28" fill="none" stroke="#00ff88" stroke-width="4"/>
-    <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="6" fill="#00ff88"/>
-    <text x="${p.x.toFixed(1)}" y="${(p.y - 36).toFixed(1)}" text-anchor="middle" fill="#00ff88" font-size="22" font-family="sans-serif">${i + 1}</text>
-  `,
+      (point, index) =>
+        `<circle cx="${point.x}" cy="${point.y}" r="18" fill="lime" fill-opacity="0.85" />` +
+        `<text x="${point.x + 22}" y="${point.y + 6}" font-size="28" fill="lime">${index + 1}</text>`,
     )
-    .join("\n");
+    .join("");
 
-  const pathD = points
-    .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
-    .join(" ");
+  const polyline = points.map((point) => `${point.x},${point.y}`).join(" ");
 
-  return Buffer.from(`
-    <svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-      <path d="${pathD}" fill="none" stroke="#00ff88" stroke-width="3" stroke-dasharray="12 8" opacity="0.9"/>
-      ${circles}
-    </svg>
-  `);
+  return Buffer.from(
+    `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">` +
+      `<polyline points="${polyline}" fill="none" stroke="lime" stroke-width="6" stroke-dasharray="24 16" />` +
+      circles +
+      `</svg>`,
+  );
 }
 
-async function upscaleHero(heroPath) {
-  return sharp(heroPath)
-    .resize(WIDTH, HEIGHT, { fit: "fill", kernel: sharp.kernel.lanczos3 })
+function resolveScrollAssetPath(regionSlug, theme) {
+  const version = SCROLL_VERSION_BY_REGION[regionSlug] ?? "v1";
+  const assetId = `ui_trail_scroll_${regionSlug}_${theme}_${version}`;
+  return {
+    assetId,
+    pngPath: path.join(root, "assets/ui", assetId, `${assetId}.png`),
+    version,
+  };
+}
+
+async function writeDetectedAnchors(regionSlug, theme, anchors) {
+  const outputDir = path.join(root, "assets/ui/_pipeline/_calibration");
+  await mkdir(outputDir, { recursive: true });
+  const outputPath = path.join(
+    outputDir,
+    `${regionSlug.replace(/-/g, "_")}_${theme}_detected_anchors.json`,
+  );
+  await writeFile(
+    outputPath,
+    JSON.stringify(
+      {
+        regionSlug,
+        theme,
+        source: "trail-path-anchors.json",
+        lanternCount: anchors.length,
+        anchors,
+      },
+      null,
+      2,
+    ),
+  );
+}
+
+async function renderOverlay(regionSlug, theme) {
+  const anchors = anchorContract.regions[regionSlug]?.[theme];
+  if (!anchors) {
+    console.warn(`Skipping ${regionSlug}/${theme}: no anchors in contract`);
+    return;
+  }
+
+  const { assetId, pngPath, version } = resolveScrollAssetPath(regionSlug, theme);
+  const width = anchorContract.scrollArtWidth;
+  const height = anchorContract.scrollArtHeight;
+  const outputDir = path.join(root, "assets/ui/_pipeline/_calibration");
+  const outputPath = path.join(
+    outputDir,
+    `${regionSlug.replace(/-/g, "_")}_${theme}_${version}_anchor_overlay.png`,
+  );
+
+  const overlay = buildOverlaySvg(anchors, width, height);
+  const composite = await sharp(pngPath)
+    .composite([{ input: overlay, top: 0, left: 0 }])
     .png()
     .toBuffer();
+
+  await mkdir(outputDir, { recursive: true });
+  await writeFile(outputPath, composite);
+  await writeDetectedAnchors(regionSlug, theme, anchors);
+  console.log(`Wrote ${path.relative(root, outputPath)}`);
 }
 
-async function main() {
-  const outDir = path.join(root, "assets", "ui", "_pipeline", "_calibration");
-  await mkdir(outDir, { recursive: true });
+const flags = parseArgs(process.argv.slice(2));
+const targets = resolveTargets(flags);
 
+for (const regionSlug of targets) {
   for (const theme of ["dark", "light"]) {
-    const CANDIDATE_ANCHORS = CANDIDATE_ANCHORS_BY_THEME[theme];
-    const scrollPath = path.join(
-      root,
-      "assets/ui",
-      `ui_trail_scroll_foothills_${theme}_v2`,
-      `ui_trail_scroll_foothills_${theme}_v2.png`,
-    );
-    const scrollBuffer = await sharp(scrollPath).png().toBuffer();
-    const overlay = buildOverlaySvg(CANDIDATE_ANCHORS);
-    const out = path.join(outDir, `foothills_${theme}_v2_anchor_overlay.png`);
-
-    await sharp(scrollBuffer)
-      .composite([{ input: overlay, top: 0, left: 0 }])
-      .png()
-      .toFile(out);
-
-    console.log(`Wrote ${path.relative(root, out)}`);
+    await renderOverlay(regionSlug, theme);
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+console.log(
+  `Anchor overlays rendered from lib/design-system/trail-path-anchors.json (${targets.length} region(s))`,
+);

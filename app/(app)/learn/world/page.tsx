@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { WorldMapScreen } from "@/features/world-map/components/world-map-screen";
-import { buildWorldMapViewModel } from "@/features/world-map/types/world-map.types";
+import { buildWorldMapViewModel } from "@/features/world-map/services/world-map.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";

@@ -7,4 +7,4 @@
 Entirely new Mountain Dawn foothills scroll. Golden meadow path, sunlit forest shrine mid-slope, torii summit threshold. Composed from AI-authored bands with cross-fade blending — no tiling, no procedural path overlay.
 
 **Pipeline:** `npm run assets:foothills-scroll-v2`  
-**Anchors:** `TRAIL_MAP_PATH_ANCHORS` in `lib/design-system/trail-path-anchors.ts`
+**Anchors:** `lib/design-system/trail-path-anchors.json` (consumed by `trail-path-anchors.ts`)

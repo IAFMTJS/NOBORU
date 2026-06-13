@@ -16,7 +16,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { RegionContentLinks } from "@/features/learning/components/region-content-links";
 import { RegionContinueFooter } from "@/features/learning/components/region-continue-footer";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
-import { buildTrailNodes } from "@/features/learning/utils/trail-state";
+import { buildTrailNodes, getUnitTrailPlacementRange } from "@/features/learning/services/trail.service";
 import { getNextLessonInRegion } from "@/features/learning/utils/region-lesson";
 import { RegionTrialsPanel } from "@/features/trials/components/region-trials-panel";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
@@ -124,7 +124,7 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
 
       {!regionLocked ? (
         <div className="space-y-4">
-          {region.units.map((unit) => (
+          {region.units.map((unit, unitIndex) => (
             <Card key={unit.id} className="shadow-elevation-1">
               <CardHeader>
                 <CardTitle className="text-heading-6">{unit.name}</CardTitle>
@@ -136,6 +136,7 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
                   title={unit.name}
                   description={`${unit.completedCount}/${unit.lessonCount} lessons complete`}
                   regionSlug={region.slug}
+                  placementRange={getUnitTrailPlacementRange(region.units, unitIndex)}
                 />
               </CardContent>
             </Card>

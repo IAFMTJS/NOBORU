@@ -1,57 +1,43 @@
-import { FOOTHILLS_REGION } from "@/features/onboarding/constants/onboarding.constants";
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
 import { streakService } from "@/features/achievements/services/streak.service";
-import { elevationService } from "@/features/elevation/services/elevation.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import { questService } from "@/features/quests/services/quest.service";
+import { flattenRegionTrailLessons } from "@/features/learning/services/trail.service";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
 import { reviewRepository } from "@/features/review/repositories/review.repository";
 import { settingsServerService } from "@/features/settings/services/settings-server.service";
 import { trialService } from "@/features/trials/services/trial.service";
-import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
-import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import { companionService } from "@/features/companion/services/companion.service";
-import { progressionPreviewService } from "@/lib/progression/preview.service";
+import { chestService } from "@/features/chests/services/chest.service";
+import { collectibleService } from "@/features/collectibles/services/collectible.service";
+import { buildProgressionPreview } from "@/lib/progression/preview.service";
+import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
+import { getRegionVisuals } from "@/lib/design-system/region-tokens";
+import {
+  getCachedElevationSummary,
+  getCachedQuestDashboard,
+} from "@/lib/cache/dashboard-cache";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
-const REGION_LABELS: Record<string, { name: string; trail: string }> = {
-  foothills: {
-    name: FOOTHILLS_REGION.name,
-    trail: FOOTHILLS_REGION.trail,
-  },
-  "forest-trail": {
-    name: "Forest Trail",
-    trail: "Canopy Path",
-  },
-  "mount-n5": {
-    name: "Mount N5",
-    trail: "Summit Trail",
-  },
-  "mount-n4": {
-    name: "Mount N4",
-    trail: "Ascent Trail",
-  },
-};
-
-function getRegionDisplay(slug: string) {
-  const display =
-    REGION_LABELS[slug] ?? {
-      name: "Foothills",
-      trail: "Base Camp Trail",
-    };
-  return { slug, ...display };
+function resolveDashboardRegion(
+  slug: string,
+  regionName?: string,
+): HomeDashboardViewModel["region"] {
+  const visuals = getRegionVisuals(slug);
+  return {
+    slug,
+    name: regionName ?? visuals.label,
+    trail: visuals.label,
+  };
 }
 
 class DashboardServerService {
   async getHomeDashboard(
     profile: ProfileViewModel,
   ): Promise<HomeDashboardViewModel> {
-    const region = getRegionDisplay(profile.currentRegionSlug);
-
     const [
       regions,
       progressRows,
@@ -64,18 +50,29 @@ class DashboardServerService {
       gamesUnlocked,
       settings,
       currentStreak,
+      companion,
+      companionNext,
+      collectibleNext,
+      chestNext,
     ] = await Promise.all([
       learningPathRepository.listPublishedRegionsWithCurriculum(),
       getCachedProgressRows(profile.userId),
       reviewRepository.countDue(profile.userId),
-      elevationService.getSummary(profile.userId),
+      getCachedElevationSummary(profile.userId),
       achievementService.listRecentUnlocked(profile.userId),
-      questService.getQuestDashboard(profile.userId),
+      getCachedQuestDashboard(profile.userId),
       learningPathService.getPassedTrialSlugs(profile.userId),
       trialService.listTrials(profile.userId),
       gameContentRepository.hasUnlockedGames(profile.userId),
       settingsServerService.getSettings(),
       streakService.getCurrentStreak(profile.userId),
+      companionService.getCompanion(profile.userId),
+      companionService.getNextUnlock(profile.userId),
+      collectibleService.getNextRegionCollectible(
+        profile.userId,
+        profile.currentRegionSlug,
+      ),
+      chestService.getNextEligibleChest(profile.userId),
     ]);
 
     const learningPath = learningPathService.buildLearningPath(
@@ -88,6 +85,11 @@ class DashboardServerService {
       learningPath.regions.find(
         (entry) => entry.slug === profile.currentRegionSlug,
       ) ?? learningPath.regions[0];
+
+    const region = resolveDashboardRegion(
+      profile.currentRegionSlug,
+      currentRegionPath?.name,
+    );
 
     const trailNodes = currentRegionPath
       ? flattenRegionTrailLessons(currentRegionPath.units, {
@@ -127,10 +129,15 @@ class DashboardServerService {
         ? getLessonPositionInRegion(regionForNextLesson, learningPath.nextLesson.id)
         : null;
 
-    const [companion, progressionPreview] = await Promise.all([
-      companionService.getCompanion(profile.userId),
-      progressionPreviewService.getPreview(profile.userId, profile.currentRegionSlug),
-    ]);
+    const progressionPreview = buildProgressionPreview({
+      regionSlug: profile.currentRegionSlug,
+      learningPath,
+      elevation,
+      trials,
+      companionNext,
+      collectibleNext,
+      chestNext,
+    });
 
     return {
       greeting: `Kon'nichiwa, ${profile.displayName}`,
@@ -153,6 +160,10 @@ class DashboardServerService {
       quests,
       yama,
       trailPreview,
+      trailPreviewPlacement: {
+        startIndex: trailStartIndex,
+        totalCount: trailNodes.length,
+      },
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
         href: "/learn",

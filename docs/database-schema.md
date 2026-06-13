@@ -528,10 +528,16 @@ legendary
 Indexes:
 
 review_items_user_content_type_idx on (user_id, content_type)
+review_items_user_state_idx on (user_id, state)
+review_items_user_due_active_idx on (user_id, next_review_at) where state not in ('mastered', 'legendary')
 
 Functions:
 
-get_review_stats(p_user_id uuid) returns json — aggregated counts for review dashboard stats
+get_review_stats(p_user_id uuid) returns json — aggregated counts for review dashboard stats (single-scan CTE)
+
+get_learned_content_count(p_user_id uuid, p_content_type text) returns integer — distinct learned items from review queue and completed lessons
+
+submit_review_rating(p_user_id uuid, p_review_item_id uuid, p_rating text, p_client_event_id uuid) returns json — atomic SRS update + history insert with idempotency
 
 ⸻
 

@@ -3,7 +3,7 @@ import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.type
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
-import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 
 export type HomeDashboardViewModel = {
   greeting: string;
@@ -28,6 +28,10 @@ export type HomeDashboardViewModel = {
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
   trailPreview: TrailNodeViewModel[];
+  trailPreviewPlacement: {
+    startIndex: number;
+    totalCount: number;
+  };
   upcomingLesson: {
     title: string;
     href: string;

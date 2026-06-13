@@ -1,4 +1,4 @@
-import type { TrailNodeKind, TrailNodeState } from "@/features/learning/utils/trail-state";
+import type { TrailNodeKind, TrailNodeState } from "@/features/learning/types/trail.types";
 import { cn } from "@/lib/utils";
 
 type TrailNodeMarkerIcon =

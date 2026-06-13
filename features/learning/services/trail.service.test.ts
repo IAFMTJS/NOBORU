@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildTrailNodes } from "@/features/learning/utils/trail-state";
+import { buildTrailNodes, getUnitTrailPlacementRange } from "@/features/learning/services/trail.service";
 
 describe("buildTrailNodes", () => {
   it("locks all nodes when the region is locked", () => {
@@ -86,5 +86,24 @@ describe("buildTrailNodes", () => {
 
     expect(nodes[0]?.nodeKind).toBe("application");
     expect(nodes[0]?.subtitle).toBe("Apply · 18 XP");
+  });
+});
+
+describe("getUnitTrailPlacementRange", () => {
+  it("returns the lesson offset for a unit within the region trail", () => {
+    const units = [
+      { lessons: [{ id: "1" }, { id: "2" }] },
+      { lessons: [{ id: "3" }] },
+      { lessons: [{ id: "4" }, { id: "5" }, { id: "6" }] },
+    ];
+
+    expect(getUnitTrailPlacementRange(units, 0)).toEqual({
+      startIndex: 0,
+      totalCount: 6,
+    });
+    expect(getUnitTrailPlacementRange(units, 2)).toEqual({
+      startIndex: 3,
+      totalCount: 6,
+    });
   });
 });

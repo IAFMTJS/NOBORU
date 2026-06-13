@@ -12,7 +12,7 @@ import { NextUnlockPreview } from "@/components/progression/next-unlock-preview"
 import { CompanionBadge } from "@/features/companion/components/companion-badge";
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
-import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 
 type ExpeditionHeroProps = {
@@ -25,6 +25,10 @@ type ExpeditionHeroProps = {
   lessonNumber: number | null;
   lessonCount: number;
   trailPreview: TrailNodeViewModel[];
+  trailPreviewPlacement: {
+    startIndex: number;
+    totalCount: number;
+  };
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
   stats: {
@@ -45,6 +49,7 @@ export function ExpeditionHero({
   lessonCount,
   regionProgressPercent,
   trailPreview,
+  trailPreviewPlacement,
   quests,
   yama,
   stats,
@@ -130,6 +135,7 @@ export function ExpeditionHero({
             compact
             minimal
             regionSlug={regionSlug}
+            placementRange={trailPreviewPlacement}
             className="rounded-xl"
           />
         </div>

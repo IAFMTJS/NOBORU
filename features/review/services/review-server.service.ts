@@ -16,6 +16,8 @@ import {
   formatReviewStateLabel,
 } from "@/features/review/services/srs.service";
 import type {
+  ReviewBatchSubmitItem,
+  ReviewBatchSubmitResult,
   ReviewCardViewModel,
   ReviewContentType,
   ReviewGamificationViewModel,
@@ -125,10 +127,7 @@ class ReviewServerService {
   }
 
   async getStats(userId: string): Promise<ReviewStatsViewModel> {
-    const [dueCount, aggregated] = await Promise.all([
-      reviewRepository.countDue(userId),
-      reviewRepository.getAggregatedStats(userId),
-    ]);
+    const aggregated = await reviewRepository.getAggregatedStats(userId);
 
     const weakAreas: WeakAreaViewModel[] = aggregated.weakAreas
       .filter(
@@ -143,11 +142,62 @@ class ReviewServerService {
       .sort((left, right) => right.count - left.count);
 
     return {
-      dueCount,
+      dueCount: aggregated.dueCount,
       learningCount: aggregated.learningCount,
       masteredCount: aggregated.masteredCount,
       totalCount: aggregated.totalCount,
       weakAreas,
+    };
+  }
+
+  async submitReviewBatch(
+    userId: string,
+    items: ReviewBatchSubmitItem[],
+  ): Promise<ReviewBatchSubmitResult> {
+    const results: ReviewSubmitDeltaViewModel[] = [];
+    const gamificationJobs: ReviewBatchSubmitItem[] = [];
+
+    for (const item of items) {
+      const delta = await this.submitReviewFast(
+        userId,
+        item.reviewItemId,
+        item.rating,
+        item.clientEventId,
+      );
+      results.push(delta);
+
+      if (delta.gamificationPending) {
+        gamificationJobs.push(item);
+      }
+    }
+
+    const lastDelta = results[results.length - 1] ?? {
+      dueCount: 0,
+      stats: {
+        dueCount: 0,
+        learningCount: 0,
+        masteredCount: 0,
+        totalCount: 0,
+        weakAreas: [],
+      },
+      currentCard: null,
+      recentHistoryEntry: {
+        id: "empty",
+        contentType: "vocabulary",
+        term: "",
+        rating: "good",
+        state: "new",
+        reviewedAt: new Date().toISOString(),
+      },
+      elevation: null,
+      achievements: [],
+      quests: [],
+    };
+
+    return {
+      results,
+      lastDelta,
+      gamificationJobs,
     };
   }
 

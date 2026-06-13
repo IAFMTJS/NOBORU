@@ -1,9 +1,14 @@
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
+import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import type { GameCompleteViewModel } from "@/features/games/types/game.types";
 import type { LessonSessionViewModel } from "@/features/learning/types/lesson.types";
+import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type {
   ReviewCardViewModel,
   ReviewRating,
   ReviewSessionViewModel,
 } from "@/features/review/types/review.types";
+import type { TrialCompleteViewModel } from "@/features/trials/types/trial.types";
 import type { OFFLINE_SYNC_MUTATION_TYPES } from "@/lib/offline/constants";
 
 export type OfflineSyncMutationType =
@@ -26,10 +31,44 @@ export type OfflineReviewSubmitPayload = {
   clientEventId: string;
 };
 
+export type OfflineReadingProgressPayload = {
+  contentType: "story" | "dialogue";
+  contentId: string;
+  status: "in_progress" | "completed";
+  score: number;
+};
+
+export type OfflineListeningProgressPayload = {
+  contentType: "exercise" | "challenge";
+  contentId: string;
+  status: "in_progress" | "completed";
+  score: number;
+};
+
+export type OfflineGameCompletePayload = {
+  slug: string;
+  correctCount: number;
+  totalCount: number;
+  wrongAttempts?: number;
+  durationMs?: number;
+};
+
+export type OfflineTrialCompletePayload = {
+  slug: string;
+  correctCount: number;
+  totalCount: number;
+  timeSpentSeconds: number;
+  startedAt: string;
+};
+
 export type OfflineSyncPayload =
   | OfflineLessonStartPayload
   | OfflineLessonCompletePayload
-  | OfflineReviewSubmitPayload;
+  | OfflineReviewSubmitPayload
+  | OfflineReadingProgressPayload
+  | OfflineListeningProgressPayload
+  | OfflineGameCompletePayload
+  | OfflineTrialCompletePayload;
 
 export type OfflineSyncMutation = {
   id: string;
@@ -73,10 +112,19 @@ export type OfflineSyncConflictResolution =
   | "server_wins"
   | "merged";
 
+export type OfflineSyncGamificationResult = {
+  elevation: ElevationAwardViewModel | null;
+  achievements: AchievementUnlockViewModel[];
+  quests: QuestCompletionViewModel[];
+};
+
 export type OfflineSyncResultItem = {
   mutationId: string;
   resolution: OfflineSyncConflictResolution;
   message?: string;
+  gamification?: OfflineSyncGamificationResult;
+  gameComplete?: GameCompleteViewModel;
+  trialComplete?: TrialCompleteViewModel;
 };
 
 export type OfflineSyncBatchRequest = {
@@ -92,6 +140,7 @@ export type OfflineSyncBatchResponse = {
   applied: OfflineSyncResultItem[];
   failed: Array<{ mutationId: string; error: string }>;
   pendingCount: number;
+  aggregatedGamification?: OfflineSyncGamificationResult | null;
 };
 
 export type OfflineStatusViewModel = {

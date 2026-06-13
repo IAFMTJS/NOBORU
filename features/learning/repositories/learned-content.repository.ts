@@ -70,6 +70,20 @@ async function loadLearnedContentSnapshot(
 const getLearnedContentSnapshot = cache(loadLearnedContentSnapshot);
 
 class LearnedContentRepository {
+  async countLearnedByContentType(
+    userId: string,
+    contentType: string,
+  ): Promise<number> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("get_learned_content_count", {
+      p_user_id: userId,
+      p_content_type: contentType,
+    });
+
+    if (error) throw new Error(error.message);
+    return (data as number) ?? 0;
+  }
+
   async getLearnedIdsByContentType(
     userId: string,
     contentType: string,

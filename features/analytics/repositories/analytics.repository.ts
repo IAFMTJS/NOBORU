@@ -37,29 +37,42 @@ class AnalyticsRepository {
     if (error) throw new Error(error.message);
   }
 
+  async insertBatch(input: {
+    userId: string;
+    events: AnalyticsEventPayload[];
+  }): Promise<string[]> {
+    if (input.events.length === 0) return [];
+
+    const supabase = await createClient();
+    const rows = input.events.map((event) => ({
+      id: crypto.randomUUID(),
+      user_id: input.userId,
+      name: event.name,
+      occurred_at: event.occurredAt,
+      properties: event.properties ?? null,
+    }));
+
+    const { error } = await supabase.from("analytics_events").insert(rows);
+    if (error) throw new Error(error.message);
+
+    return rows.map((row) => row.id);
+  }
+
   async getSummary(limitDays = 7): Promise<AnalyticsSummaryEntry[]> {
     const supabase = await createClient();
-    const since = new Date();
-    since.setDate(since.getDate() - limitDays);
 
-    const { data, error } = await supabase
-      .from("analytics_events")
-      .select("name")
-      .gte("occurred_at", since.toISOString());
+    const { data, error } = await supabase.rpc("get_analytics_event_summary", {
+      p_limit_days: limitDays,
+    });
 
     if (error) throw new Error(error.message);
 
-    const counts = new Map<string, number>();
-    for (const row of data ?? []) {
-      counts.set(row.name, (counts.get(row.name) ?? 0) + 1);
-    }
+    type SummaryRow = { name: string; count: number | string };
 
-    return [...counts.entries()]
-      .map(([name, count]) => ({
-        name: name as AnalyticsEventName,
-        count,
-      }))
-      .sort((a, b) => b.count - a.count);
+    return ((data ?? []) as SummaryRow[]).map((row) => ({
+      name: row.name as AnalyticsEventName,
+      count: Number(row.count),
+    }));
   }
 }
 

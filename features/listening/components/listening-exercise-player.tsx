@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import { AudioPlayback } from "@/features/listening/components/audio-playback";
 import type { ListeningExerciseDetailViewModel } from "@/features/listening/types/listening.types";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
 
 type ListeningExercisePlayerProps = {
   exercise: ListeningExerciseDetailViewModel;
@@ -38,19 +40,14 @@ export function ListeningExercisePlayer({
   const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(exercise.score);
 
-  useEffect(() => {
-    if (exercise.completed || embedded) return;
-    void fetch("/api/listening/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contentType: "exercise",
-        contentId: exercise.id,
-        status: "in_progress",
-        score: 0,
-      }),
+  useMountOnceEffect(() => {
+    void offlineClient.saveListeningProgress({
+      contentType: "exercise",
+      contentId: exercise.id,
+      status: "in_progress",
+      score: 0,
     });
-  }, [embedded, exercise.completed, exercise.id]);
+  }, !exercise.completed && !embedded);
 
   async function saveProgress(finalScore: number) {
     if (embedded) {
@@ -63,24 +60,16 @@ export function ListeningExercisePlayer({
     setSaving(true);
     setError(null);
     try {
-      const response = await fetch("/api/listening/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contentType: "exercise",
-          contentId: exercise.id,
-          status: "completed",
-          score: finalScore,
-        }),
+      const result = await offlineClient.saveListeningProgress({
+        contentType: "exercise",
+        contentId: exercise.id,
+        status: "completed",
+        score: finalScore,
       });
-      const result = (await response.json()) as {
-        success: boolean;
-        error?: string;
-      };
-      if (!result.success) {
-        throw new Error(result.error ?? "Unable to save progress.");
+      if (!result.saved) {
+        throw new Error("Unable to save progress.");
       }
-      setScore(finalScore);
+      setScore(result.score);
       setPhase("done");
       onComplete?.(finalScore);
     } catch (caught) {

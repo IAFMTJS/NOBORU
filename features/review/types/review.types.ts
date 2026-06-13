@@ -75,6 +75,18 @@ export type ReviewSessionViewModel = {
 
 export type ReviewRating = "again" | "good" | "strong";
 
+export type ReviewBatchSubmitItem = {
+  reviewItemId: string;
+  rating: ReviewRating;
+  clientEventId: string;
+};
+
+export type ReviewBatchSubmitResult = {
+  results: ReviewSubmitDeltaViewModel[];
+  lastDelta: ReviewSubmitDeltaViewModel;
+  gamificationJobs: ReviewBatchSubmitItem[];
+};
+
 export const REVIEW_CONTENT_LABELS: Record<ReviewContentType, string> = {
   hiragana: "Hiragana",
   katakana: "Katakana",

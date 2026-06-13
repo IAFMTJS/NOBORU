@@ -48,7 +48,6 @@ import type {
 import { LessonFeedbackPrompt } from "@/features/feedback/components/lesson-feedback-prompt";
 import {
   collectUpcomingLessonAudioUrls,
-  getLessonAudioPrefetchPlan,
 } from "@/lib/learning/lesson-audio-prefetch";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
 import { fadeInUp } from "@/lib/motion/presets";
@@ -226,13 +225,14 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   }, [stepIndex]);
 
   useEffect(() => {
-    void offlineClient.prefetchAudioBatch(getLessonAudioPrefetchPlan(session));
-  }, [session]);
-
-  useEffect(() => {
     const urls = collectUpcomingLessonAudioUrls(session.steps, stepIndex, 2);
     if (urls.length === 0) return;
-    void offlineClient.prefetchAudioBatch(urls);
+
+    const timeoutId = window.setTimeout(() => {
+      void offlineClient.prefetchAudioBatch(urls);
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
   }, [session.steps, stepIndex]);
 
   const handleStart = useCallback(async () => {

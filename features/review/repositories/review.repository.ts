@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-
-import { applySrsRating } from "@/features/review/services/srs.service";
+import type { Json, SubmitReviewRatingRpcResult } from "@/lib/supabase/database.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
 
 export type ReviewState =
@@ -47,18 +46,16 @@ export type SubmitRatingResult = {
   historyId: string | null;
 };
 
-export type ReviewSummaryRow = {
-  state: ReviewState;
-  mastery_score: number;
-  content_type: string;
-};
-
 export type ReviewAggregatedStats = {
   totalCount: number;
   learningCount: number;
   masteredCount: number;
+  dueCount: number;
   weakAreas: Array<{ content_type: string; count: number }>;
 };
+
+const REVIEW_ITEM_COLUMNS =
+  "id, user_id, content_type, content_id, state, next_review_at, review_count, mastery_score, interval_days, streak_count, created_at, updated_at";
 
 class ReviewRepository {
   async listDue(
@@ -69,7 +66,7 @@ class ReviewRepository {
     const supabase = await createClient();
     let query = supabase
       .from("review_items")
-      .select("*")
+      .select(REVIEW_ITEM_COLUMNS)
       .eq("user_id", userId)
       .lte("next_review_at", new Date().toISOString())
       .order("next_review_at", { ascending: true });
@@ -107,13 +104,21 @@ class ReviewRepository {
     });
 
     if (error) {
-      return this.getAggregatedStatsFallback(userId);
+      console.error("get_review_stats RPC failed:", error.message);
+      return {
+        totalCount: 0,
+        learningCount: 0,
+        masteredCount: 0,
+        dueCount: 0,
+        weakAreas: [],
+      };
     }
 
     const payload = data as {
       total_count: number;
       learning_count: number;
       mastered_count: number;
+      due_count?: number;
       weak_areas: Array<{ content_type: string; count: number }> | null;
     };
 
@@ -121,56 +126,9 @@ class ReviewRepository {
       totalCount: payload.total_count ?? 0,
       learningCount: payload.learning_count ?? 0,
       masteredCount: payload.mastered_count ?? 0,
+      dueCount: payload.due_count ?? 0,
       weakAreas: payload.weak_areas ?? [],
     };
-  }
-
-  private async getAggregatedStatsFallback(
-    userId: string,
-  ): Promise<ReviewAggregatedStats> {
-    const rows = await this.listSummary(userId);
-    const weakAreaCounts = new Map<string, number>();
-    let learningCount = 0;
-    let masteredCount = 0;
-
-    for (const row of rows) {
-      if (row.state === "learning" || row.state === "new") {
-        learningCount += 1;
-      }
-      if (row.state === "mastered" || row.state === "legendary") {
-        masteredCount += 1;
-      }
-      const isWeak =
-        row.state === "learning" ||
-        row.state === "new" ||
-        row.mastery_score < 60;
-      if (isWeak) {
-        weakAreaCounts.set(
-          row.content_type,
-          (weakAreaCounts.get(row.content_type) ?? 0) + 1,
-        );
-      }
-    }
-
-    return {
-      totalCount: rows.length,
-      learningCount,
-      masteredCount,
-      weakAreas: Array.from(weakAreaCounts.entries()).map(
-        ([content_type, count]) => ({ content_type, count }),
-      ),
-    };
-  }
-
-  async listSummary(userId: string): Promise<ReviewSummaryRow[]> {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("review_items")
-      .select("state, mastery_score, content_type")
-      .eq("user_id", userId);
-
-    if (error) throw new Error(error.message);
-    return (data ?? []) as ReviewSummaryRow[];
   }
 
   async listRecentHistory(
@@ -334,7 +292,7 @@ class ReviewRepository {
       .from("review_history")
       .update({
         gamification_applied_at: new Date().toISOString(),
-        gamification_result: result,
+        gamification_result: result as Json,
       })
       .eq("user_id", userId)
       .eq("client_event_id", clientEventId)
@@ -350,87 +308,21 @@ class ReviewRepository {
     clientEventId?: string,
   ): Promise<SubmitRatingResult> {
     const supabase = await createClient();
-
-    if (clientEventId) {
-      const existingHistory = await this.findHistoryByClientEventId(
-        userId,
-        clientEventId,
-      );
-      if (existingHistory) {
-        const { data: existingItem, error: existingItemError } = await supabase
-          .from("review_items")
-          .select("*")
-          .eq("id", existingHistory.review_item_id)
-          .eq("user_id", userId)
-          .maybeSingle();
-
-        if (existingItemError) throw new Error(existingItemError.message);
-        if (!existingItem) throw new Error("Review item not found.");
-
-        return {
-          item: existingItem as ReviewItemRow,
-          alreadyApplied: true,
-          historyId: existingHistory.id,
-        };
-      }
-    }
-
-    const { data: current, error: currentError } = await supabase
-      .from("review_items")
-      .select("*")
-      .eq("id", reviewItemId)
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (currentError) throw new Error(currentError.message);
-    if (!current) throw new Error("Review item not found.");
-
-    const item = current as ReviewItemRow;
-    const schedule = applySrsRating({
-      state: item.state,
-      rating,
-      masteryScore: item.mastery_score,
-      streakCount: item.streak_count,
+    const { data, error } = await supabase.rpc("submit_review_rating", {
+      p_user_id: userId,
+      p_review_item_id: reviewItemId,
+      p_rating: rating,
+      p_client_event_id: clientEventId ?? null,
     });
-
-    const { data, error } = await supabase
-      .from("review_items")
-      .update({
-        state: schedule.state,
-        next_review_at: schedule.nextReviewAt.toISOString(),
-        review_count: item.review_count + 1,
-        mastery_score: schedule.masteryScore,
-        interval_days: schedule.intervalDays,
-        streak_count: schedule.streakCount,
-      })
-      .eq("id", reviewItemId)
-      .eq("user_id", userId)
-      .select("*")
-      .single();
 
     if (error) throw new Error(error.message);
 
-    const { data: historyRow, error: historyError } = await supabase
-      .from("review_history")
-      .insert({
-        user_id: userId,
-        review_item_id: reviewItemId,
-        rating,
-        previous_state: item.state,
-        new_state: schedule.state,
-        mastery_score: schedule.masteryScore,
-        interval_days: schedule.intervalDays,
-        client_event_id: clientEventId ?? null,
-      })
-      .select("id")
-      .single();
-
-    if (historyError) throw new Error(historyError.message);
+    const payload = data as SubmitReviewRatingRpcResult;
 
     return {
-      item: data as ReviewItemRow,
-      alreadyApplied: false,
-      historyId: (historyRow?.id as string) ?? null,
+      item: payload.item as ReviewItemRow,
+      alreadyApplied: payload.already_applied,
+      historyId: payload.history_id,
     };
   }
 }

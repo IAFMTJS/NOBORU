@@ -91,8 +91,8 @@ class AchievementService {
       profileServerRepository.findByUserId(userId),
       getCachedProgressRows(userId),
       learningPathRepository.listPublishedRegionsWithCurriculum(),
-      vocabularyRepository.listLearnedVocabularyIds(userId),
-      kanjiRepository.listLearnedKanjiIds(userId),
+      vocabularyRepository.countLearnedVocabulary(userId),
+      kanjiRepository.countLearnedKanji(userId),
       streakService.getCurrentStreak(userId),
     ]);
 
@@ -111,8 +111,8 @@ class AchievementService {
     return {
       onboardingCompleted: profile?.onboarding_completed ?? false,
       lessonsCompleted,
-      vocabularyLearned: vocabularyLearned.length,
-      kanjiLearned: kanjiLearned.length,
+      vocabularyLearned: vocabularyLearned,
+      kanjiLearned: kanjiLearned,
       currentStreak,
       mountN5ProgressPercent: mountN5?.progressPercent ?? 0,
       mountN5LessonCount: mountN5?.lessonCount ?? 0,

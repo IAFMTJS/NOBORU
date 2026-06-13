@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { StoryDetailViewModel } from "@/features/reading/types/reading.types";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
 
 type StoryReaderProps = {
   story: StoryDetailViewModel;
@@ -42,19 +44,14 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
     return Math.round(((sectionIndex + 1) / story.sections.length) * 100);
   }, [sectionIndex, story.sections.length]);
 
-  useEffect(() => {
-    if (story.completed || embedded) return;
-    void fetch("/api/reading/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contentType: "story",
-        contentId: story.id,
-        status: "in_progress",
-        score: 0,
-      }),
+  useMountOnceEffect(() => {
+    void offlineClient.saveReadingProgress({
+      contentType: "story",
+      contentId: story.id,
+      status: "in_progress",
+      score: 0,
     });
-  }, [embedded, story.completed, story.id]);
+  }, !story.completed && !embedded);
 
   async function saveProgress(finalScore: number) {
     if (embedded) {
@@ -65,24 +62,16 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
     setSaving(true);
     setError(null);
     try {
-      const response = await fetch("/api/reading/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contentType: "story",
-          contentId: story.id,
-          status: "completed",
-          score: finalScore,
-        }),
+      const result = await offlineClient.saveReadingProgress({
+        contentType: "story",
+        contentId: story.id,
+        status: "completed",
+        score: finalScore,
       });
-      const result = (await response.json()) as {
-        success: boolean;
-        error?: string;
-      };
-      if (!result.success) {
-        throw new Error(result.error ?? "Unable to save progress.");
+      if (!result.saved) {
+        throw new Error("Unable to save progress.");
       }
-      setScore(finalScore);
+      setScore(result.score);
       setPhase("done");
       onComplete?.(finalScore);
     } catch (caught) {

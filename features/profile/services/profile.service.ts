@@ -1,4 +1,3 @@
-import { profileRepository } from "@/features/profile/repositories/profile.repository";
 import type { UpdateProfileInput } from "@/features/profile/types/profile.types";
 
 class ProfileService {
@@ -10,10 +9,23 @@ class ProfileService {
       throw new Error("Display name is required.");
     }
 
-    const profile =
-      await profileRepository.updateDisplayNameForCurrentUser(trimmedName);
+    const response = await fetch("/api/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ displayName: trimmedName }),
+    });
 
-    return { displayName: profile.display_name };
+    const result = (await response.json()) as {
+      success: boolean;
+      data?: { displayName: string };
+      error?: string;
+    };
+
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Unable to update profile.");
+    }
+
+    return { displayName: result.data.displayName };
   }
 }
 

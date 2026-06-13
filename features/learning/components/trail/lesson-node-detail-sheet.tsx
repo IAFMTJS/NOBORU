@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
 import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.types";
-import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 
 type LessonNodeDetailSheetProps = {
   open: boolean;

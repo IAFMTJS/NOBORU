@@ -7,25 +7,44 @@ import type {
   ReviewSessionViewModel,
   ReviewSubmitDeltaViewModel,
 } from "@/features/review/types/review.types";
+import type { ReviewState } from "@/features/review/repositories/review.repository";
+import {
+  applySrsRating,
+  formatNextReviewLabel,
+} from "@/features/review/services/srs.service";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
-import type { GameSessionViewModel } from "@/features/games/types/game.types";
+import type {
+  GameCompleteViewModel,
+  GameSessionViewModel,
+} from "@/features/games/types/game.types";
 import type { LessonSessionViewModel } from "@/features/learning/types/lesson.types";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
+import { computeTrialGrade } from "@/features/trials/constants/trial.constants";
+import type {
+  TrialCompleteViewModel,
+  TrialSessionViewModel,
+} from "@/features/trials/types/trial.types";
 import {
   OFFLINE_AUDIO_CACHE_MAX_ENTRIES,
+  OFFLINE_BACKGROUND_SYNC_TAG,
   OFFLINE_STORES,
 } from "@/lib/offline/constants";
 import { getOfflineDb } from "@/lib/offline/db";
+import { aggregateSyncGamification } from "@/lib/offline/sync-gamification";
 import type {
+  OfflineGameCompletePayload,
   OfflineLessonCompletePayload,
   OfflineLessonStartPayload,
+  OfflineListeningProgressPayload,
+  OfflineReadingProgressPayload,
   OfflineReviewBundle,
   OfflineReviewSubmitPayload,
   OfflineStatusViewModel,
   OfflineSyncBatchResponse,
   OfflineSyncMutation,
   OfflineSyncPayload,
+  OfflineTrialCompletePayload,
 } from "@/lib/offline/types";
 
 function createMutationId(): string {
@@ -38,6 +57,24 @@ function createMutationId(): string {
 function isOfflineFetchFailure(error: unknown): boolean {
   if (typeof navigator !== "undefined" && !navigator.onLine) return true;
   return error instanceof TypeError;
+}
+
+function estimateStreakCount(state: ReviewState): number {
+  switch (state) {
+    case "new":
+    case "learning":
+      return 0;
+    case "good":
+      return 1;
+    case "strong":
+      return 3;
+    case "mastered":
+      return 5;
+    case "legendary":
+      return 8;
+    default:
+      return 0;
+  }
 }
 
 export function isBrowserOnline(): boolean {
@@ -128,7 +165,28 @@ class OfflineClientService {
       createdAt: new Date().toISOString(),
     };
     await db.add(OFFLINE_STORES.syncQueue, mutation);
+    void this.registerBackgroundSync();
     return mutation;
+  }
+
+  private async registerBackgroundSync(): Promise<void> {
+    if (
+      typeof window === "undefined" ||
+      !("serviceWorker" in navigator) ||
+      !("SyncManager" in window)
+    ) {
+      return;
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const syncManager = registration as ServiceWorkerRegistration & {
+        sync?: { register: (tag: string) => Promise<void> };
+      };
+      await syncManager.sync?.register(OFFLINE_BACKGROUND_SYNC_TAG);
+    } catch {
+      // Background Sync is optional and browser-dependent.
+    }
   }
 
   async markMutationsSyncing(ids: string[]): Promise<void> {
@@ -232,25 +290,48 @@ class OfflineClientService {
       throw new Error("Review card is out of sync with offline cache.");
     }
 
-    const remainingCards = bundle.dueCards.filter(
+    const reviewedAt = new Date().toISOString();
+    const now = new Date();
+    const schedule = applySrsRating({
+      state: current.state,
+      rating,
+      masteryScore: current.masteryScore,
+      streakCount: estimateStreakCount(current.state),
+      now,
+    });
+
+    const updatedCard: ReviewCardViewModel = {
+      ...current,
+      state: schedule.state,
+      masteryScore: schedule.masteryScore,
+      nextReviewLabel: formatNextReviewLabel(
+        schedule.nextReviewAt.toISOString(),
+        schedule.intervalDays,
+      ),
+    };
+
+    const remainingWithoutCurrent = bundle.dueCards.filter(
       (card) => card.id !== reviewItemId,
     );
-    const nextCard = remainingCards[0] ?? null;
-    const reviewedAt = new Date().toISOString();
+    const stillDueInSession = schedule.nextReviewAt.getTime() <= now.getTime();
+    const dueCards = stillDueInSession
+      ? [...remainingWithoutCurrent, updatedCard]
+      : remainingWithoutCurrent;
+    const nextCard = dueCards[0] ?? null;
     const historyEntry = {
       id: `${reviewItemId}-${reviewedAt}`,
       contentType: current.contentType,
       term: current.term,
       rating,
-      state: current.state,
+      state: schedule.state,
       reviewedAt,
     };
 
     const session: ReviewSessionViewModel = {
-      dueCount: Math.max(0, bundle.session.dueCount - 1),
+      dueCount: dueCards.length,
       stats: {
         ...bundle.session.stats,
-        dueCount: Math.max(0, bundle.session.stats.dueCount - 1),
+        dueCount: dueCards.length,
       },
       currentCard: nextCard,
       recentHistory: [historyEntry, ...bundle.session.recentHistory].slice(0, 5),
@@ -259,7 +340,7 @@ class OfflineClientService {
     const updatedBundle: OfflineReviewBundle = {
       ...bundle,
       session,
-      dueCards: remainingCards,
+      dueCards,
       cachedAt: reviewedAt,
     };
 
@@ -558,7 +639,10 @@ class OfflineClientService {
       await this.resetSyncingMutations(unresolvedIds);
 
       await this.setLastSyncedAt(new Date().toISOString());
-      return result.data;
+      return {
+        ...result.data,
+        aggregatedGamification: aggregateSyncGamification(result.data.applied),
+      };
     } catch (error) {
       await this.resetSyncingMutations(pendingIds);
       throw error;
@@ -604,6 +688,222 @@ class OfflineClientService {
     } catch {
       return null;
     }
+  }
+
+  async cacheTrialSession(session: TrialSessionViewModel): Promise<void> {
+    const db = await getOfflineDb();
+    await db.put(OFFLINE_STORES.meta, {
+      key: `trial-session:${session.slug}`,
+      value: JSON.stringify(session),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async getCachedTrialSession(
+    slug: string,
+  ): Promise<TrialSessionViewModel | null> {
+    const db = await getOfflineDb();
+    const record = await db.get(OFFLINE_STORES.meta, `trial-session:${slug}`);
+    if (!record?.value) return null;
+    try {
+      return JSON.parse(record.value) as TrialSessionViewModel;
+    } catch {
+      return null;
+    }
+  }
+
+  async saveReadingProgress(input: {
+    contentType: "story" | "dialogue";
+    contentId: string;
+    status: "in_progress" | "completed";
+    score: number;
+  }): Promise<{ saved: boolean; score: number; queuedOffline: boolean }> {
+    if (isBrowserOnline()) {
+      try {
+        const response = await fetch("/api/reading/progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        });
+        const result = (await response.json()) as {
+          success: boolean;
+          error?: string;
+          data?: { saved: boolean; score?: number };
+        };
+        if (!result.success) {
+          throw new Error(result.error ?? "Failed to save reading progress.");
+        }
+        return {
+          saved: true,
+          score: result.data?.score ?? input.score,
+          queuedOffline: false,
+        };
+      } catch (error) {
+        if (!isOfflineFetchFailure(error)) throw error;
+      }
+    }
+
+    await this.enqueueMutation({
+      type: "reading_progress",
+      payload: input satisfies OfflineReadingProgressPayload,
+    });
+
+    return { saved: true, score: input.score, queuedOffline: true };
+  }
+
+  async saveListeningProgress(input: {
+    contentType: "exercise" | "challenge";
+    contentId: string;
+    status: "in_progress" | "completed";
+    score: number;
+  }): Promise<{ saved: boolean; score: number; queuedOffline: boolean }> {
+    if (isBrowserOnline()) {
+      try {
+        const response = await fetch("/api/listening/progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        });
+        const result = (await response.json()) as {
+          success: boolean;
+          error?: string;
+          data?: { saved: boolean; score?: number };
+        };
+        if (!result.success) {
+          throw new Error(result.error ?? "Failed to save listening progress.");
+        }
+        return {
+          saved: true,
+          score: result.data?.score ?? input.score,
+          queuedOffline: false,
+        };
+      } catch (error) {
+        if (!isOfflineFetchFailure(error)) throw error;
+      }
+    }
+
+    await this.enqueueMutation({
+      type: "listening_progress",
+      payload: input satisfies OfflineListeningProgressPayload,
+    });
+
+    return { saved: true, score: input.score, queuedOffline: true };
+  }
+
+  async completeGame(input: {
+    slug: string;
+    correctCount: number;
+    totalCount: number;
+    wrongAttempts?: number;
+    durationMs?: number;
+  }): Promise<{ result: GameCompleteViewModel; queuedOffline: boolean }> {
+    if (isBrowserOnline()) {
+      try {
+        const response = await fetch(`/api/games/${input.slug}/complete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            correctCount: input.correctCount,
+            totalCount: input.totalCount,
+            wrongAttempts: input.wrongAttempts,
+            durationMs: input.durationMs,
+          }),
+        });
+        const payload = (await response.json()) as {
+          success: boolean;
+          data?: GameCompleteViewModel;
+          error?: string;
+        };
+        if (!response.ok || !payload.success || !payload.data) {
+          throw new Error(payload.error ?? "Failed to save game results.");
+        }
+        return { result: payload.data, queuedOffline: false };
+      } catch (error) {
+        if (!isOfflineFetchFailure(error)) throw error;
+      }
+    }
+
+    await this.enqueueMutation({
+      type: "game_complete",
+      payload: input satisfies OfflineGameCompletePayload,
+    });
+
+    const accuracyPercent = Math.round(
+      (input.correctCount / Math.max(input.totalCount, 1)) * 100,
+    );
+
+    return {
+      result: {
+        slug: input.slug as GameCompleteViewModel["slug"],
+        accuracyPercent,
+        epAwarded: 0,
+        elevation: null,
+        quests: [],
+      },
+      queuedOffline: true,
+    };
+  }
+
+  async completeTrial(input: {
+    slug: string;
+    correctCount: number;
+    totalCount: number;
+    timeSpentSeconds: number;
+    startedAt: string;
+  }): Promise<{ result: TrialCompleteViewModel; queuedOffline: boolean }> {
+    if (isBrowserOnline()) {
+      try {
+        const response = await fetch(`/api/trials/${input.slug}/complete`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(input),
+        });
+        const payload = (await response.json()) as {
+          success: boolean;
+          data?: TrialCompleteViewModel;
+          error?: string;
+        };
+        if (!payload.success || !payload.data) {
+          throw new Error(payload.error ?? "Failed to save trial results.");
+        }
+        return { result: payload.data, queuedOffline: false };
+      } catch (error) {
+        if (!isOfflineFetchFailure(error)) throw error;
+      }
+    }
+
+    await this.enqueueMutation({
+      type: "trial_complete",
+      payload: input satisfies OfflineTrialCompletePayload,
+    });
+
+    const cachedSession = await this.getCachedTrialSession(input.slug);
+    const totalCount = Math.max(input.totalCount, 1);
+    const scorePercent = Math.round((input.correctCount / totalCount) * 100);
+    const passScore = cachedSession?.passScore ?? 70;
+    const passed = scorePercent >= passScore;
+    const grade = computeTrialGrade(scorePercent, passed);
+
+    return {
+      result: {
+        passed,
+        scorePercent,
+        grade,
+        epAwarded: null,
+        elevation: null,
+        achievements: [],
+        quests: [],
+        reviewRecommendations: [],
+        progress: cachedSession?.progress ?? {
+          bestScore: scorePercent,
+          bestGrade: grade,
+          passed,
+          passedAt: passed ? new Date().toISOString() : null,
+          attemptCount: 1,
+        },
+      },
+      queuedOffline: true,
+    };
   }
 }
 

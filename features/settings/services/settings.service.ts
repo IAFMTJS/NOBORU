@@ -1,4 +1,3 @@
-import { settingsRepository } from "@/features/settings/repositories/settings.repository";
 import type {
   ThemePreference,
   UpdateThemeInput,
@@ -8,11 +7,23 @@ class SettingsService {
   async updateTheme(
     input: UpdateThemeInput,
   ): Promise<{ theme: ThemePreference }> {
-    const settings = await settingsRepository.updateThemeForCurrentUser(
-      input.theme,
-    );
+    const response = await fetch("/api/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: input.theme }),
+    });
 
-    return { theme: settings.preferred_theme };
+    const result = (await response.json()) as {
+      success: boolean;
+      data?: { theme: ThemePreference };
+      error?: string;
+    };
+
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Unable to update theme.");
+    }
+
+    return { theme: result.data.theme };
   }
 }
 

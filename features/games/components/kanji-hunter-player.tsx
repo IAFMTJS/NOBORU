@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
+import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { GameCompleteCard } from "@/features/games/components/game-complete-card";
 import type {
   GameCompleteViewModel,
@@ -44,6 +45,10 @@ export function KanjiHunterPlayer({ session }: KanjiHunterPlayerProps) {
   const [result, setResult] = useState<GameCompleteViewModel | null>(null);
   const [startedAt] = useState(() => Date.now());
 
+  useEffect(() => {
+    void offlineClient.cacheGameSession(session.slug, session);
+  }, [session]);
+
   const currentQuestion = session.questions[questionIndex];
   const progressPercent = Math.round(
     ((questionIndex + (finished ? 1 : 0)) / session.questionCount) * 100,
@@ -57,31 +62,20 @@ export function KanjiHunterPlayer({ session }: KanjiHunterPlayerProps) {
       setTimerRunning(false);
 
       try {
-        const response = await fetch(`/api/games/${session.slug}/complete`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            correctCount: finalCorrect,
-            totalCount: session.questionCount,
-            durationMs: Date.now() - startedAt,
-          }),
+        const payload = await offlineClient.completeGame({
+          slug: session.slug,
+          correctCount: finalCorrect,
+          totalCount: session.questionCount,
+          durationMs: Date.now() - startedAt,
         });
-        const payload = (await response.json()) as {
-          success: boolean;
-          data?: GameCompleteViewModel;
-          error?: string;
-        };
-        if (!response.ok || !payload.success || !payload.data) {
-          throw new Error(payload.error ?? "Failed to save game results.");
-        }
         setFinished(true);
-        setResult(payload.data);
+        setResult(payload.result);
         void analyticsService.track({
           name: "game_completed",
           properties: {
             gameSlug: session.slug,
-            accuracyPercent: payload.data.accuracyPercent,
-            epAwarded: payload.data.epAwarded,
+            accuracyPercent: payload.result.accuracyPercent,
+            epAwarded: payload.result.epAwarded,
           },
         });
       } catch (caught) {

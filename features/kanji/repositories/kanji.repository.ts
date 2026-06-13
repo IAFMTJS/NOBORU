@@ -84,7 +84,9 @@ class KanjiRepository {
     const supabase = await createClient();
     const { data: kanjiRows, error } = await supabase
       .from("kanji")
-      .select("*")
+      .select(
+        "id, character, meaning, jlpt_level, grade_level, frequency_rank, stroke_count, status, created_at, updated_at",
+      )
       .in("id", ids);
 
     if (error) throw new Error(error.message);
@@ -92,7 +94,7 @@ class KanjiRepository {
 
     const { data: readings, error: readingsError } = await supabase
       .from("kanji_readings")
-      .select("*")
+      .select("id, kanji_id, reading, reading_type")
       .in("kanji_id", ids);
 
     if (readingsError) throw new Error(readingsError.message);
@@ -144,6 +146,10 @@ class KanjiRepository {
 
   async listLearnedKanjiIds(userId: string): Promise<string[]> {
     return learnedContentRepository.getLearnedIdsByContentType(userId, "kanji");
+  }
+
+  async countLearnedKanji(userId: string): Promise<number> {
+    return learnedContentRepository.countLearnedByContentType(userId, "kanji");
   }
 
   private async syncReadings(

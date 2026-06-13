@@ -27,26 +27,35 @@ From [asset-pipeline.md](./asset-pipeline.md):
 
 ```
 assets/                          # Source assets + metadata
+├── ui/                          # Trail scroll, spine, auth atmosphere
+├── regions/                     # Region hero banners
 ├── mascots/
-│   ├── yama_main_light_v1/
-│   │   └── metadata.json
-│   └── yama_main_dark_v1/
-│       └── metadata.json
 ├── icons/
-│   ├── icon_app_light_v1/
-│   │   └── metadata.json
-│   └── icon_app_dark_v1/
-│       └── metadata.json
 └── marketing/
-    └── metadata.json
 
 public/                          # Served assets (production paths)
+├── ui/
+├── regions/
 ├── mascots/
 ├── icons/
 └── manifest.json
 
-lib/assets/registry.ts         # Canonical path constants
+lib/assets/registry.ts           # Canonical path constants
+lib/design-system/
+├── trail-path-anchors.json      # Anchor source of truth (runtime + pipeline)
+└── regions.ts                   # Region slug catalog
 ```
+
+### Trail anchor contract
+
+Each region owns a unique 14-point polyline in `lib/design-system/trail-path-anchors.json`:
+
+- `spine.{dark|light}` — horizontal spine art (1536×1024) for Home/card previews
+- `regions.{slug}.{dark|light}` — immersive scroll art (1536×5120) per region
+
+Runtime: `getTrailMapPathAnchors({ regionSlug, mode, theme })`  
+Pipeline: `generate-region-trail-scrolls.mjs`, `calibrate-trail-anchors.mjs`  
+QA: `npm run assets:calibrate-trail:all`
 
 ---
 
@@ -83,9 +92,9 @@ lib/assets/registry.ts         # Canonical path constants
 | `ui_auth_atmosphere_light_v1` | Auth Atmosphere Light | ui | v1 | approved | light |
 | `ui_trail_spine_dark_v1` | Trail Spine Dark | ui | v1 | approved | dark |
 | `ui_trail_spine_light_v1` | Trail Spine Light | ui | v1 | approved | light |
-| `ui_trail_scroll_foothills_dark_v2` | Trail Scroll Foothills Dark | ui | v2 | review | dark |
-| `ui_trail_scroll_foothills_light_v2` | Trail Scroll Foothills Light | ui | v2 | review | light |
-| `ui_trail_scroll_*_{dark,light}_v1` | Trail Scroll (7 regions) | ui | v1 | approved | both |
+| `ui_trail_scroll_foothills_dark_v2` | Trail Scroll Foothills Dark | ui | v2 | approved | dark |
+| `ui_trail_scroll_foothills_light_v2` | Trail Scroll Foothills Light | ui | v2 | approved | light |
+| `ui_trail_scroll_*_{dark,light}_v1` | Trail Scroll (8 regions) | ui | v1 | approved | both |
 | `achievement_*_v1` (11 badges) | Achievement Badges | achievements | v1 | approved | both |
 | `region_*_v1` (8 regions) | Region Heroes | regions | v1 | approved | both |
 | `game_*_v1` (5 games) | Game Art | games | v1 | approved | both |
@@ -352,7 +361,7 @@ lib/assets/registry.ts         # Canonical path constants
 - Learning path screen
 - Expedition hero
 
-**Helper:** `getTrailMapArtPath("dark")` returns this path.
+**Helper:** `getTrailSpineArtPath("dark")` returns this path.
 
 ---
 
@@ -385,7 +394,7 @@ lib/assets/registry.ts         # Canonical path constants
 - Learning path screen
 - Expedition hero
 
-**Helper:** `getTrailMapArtPath("light")` returns this path.
+**Helper:** `getTrailSpineArtPath("light")` returns this path.
 
 ---
 

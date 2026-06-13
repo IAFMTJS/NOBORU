@@ -13,7 +13,13 @@ export const OFFLINE_SYNC_MUTATION_TYPES = [
   "lesson_start",
   "lesson_complete",
   "review_submit",
+  "reading_progress",
+  "listening_progress",
+  "game_complete",
+  "trial_complete",
 ] as const;
 
 export const OFFLINE_REVIEW_CACHE_LIMIT = 25;
 export const OFFLINE_AUDIO_CACHE_MAX_ENTRIES = 48;
+export const OFFLINE_BACKGROUND_SYNC_TAG = "noboru-offline-sync";
+export const REVIEW_BATCH_FLUSH_SIZE = 5;

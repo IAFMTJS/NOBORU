@@ -142,6 +142,10 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       nodeKind: "lesson",
     },
   ],
+  trailPreviewPlacement: {
+    startIndex: 1,
+    totalCount: 20,
+  },
   upcomingLesson: {
     title: "Lesson 23: ~て form",
     href: "/learn",

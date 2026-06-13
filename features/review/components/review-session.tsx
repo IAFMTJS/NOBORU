@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
@@ -26,6 +26,7 @@ import { QuestCompleteFeedback } from "@/features/quests/components/quest-comple
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { OfflineReviewBundle } from "@/lib/offline/types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { reviewBatchClient } from "@/features/review/services/review-batch-client.service";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
@@ -50,7 +51,6 @@ export function ReviewSession({
   weakOnly = false,
 }: ReviewSessionProps) {
   const [session, setSession] = useState(initialSession);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [lastElevation, setLastElevation] = useState<ElevationAwardViewModel | null>(
@@ -79,87 +79,132 @@ export function ReviewSession({
       sessionCompletedCount > 0 &&
       !session.currentCard);
 
+  useEffect(() => {
+    if (!sessionComplete) return;
+    void reviewBatchClient.flush().catch(() => undefined);
+  }, [sessionComplete]);
+
+  useEffect(() => {
+    return () => {
+      void reviewBatchClient.flush().catch(() => undefined);
+    };
+  }, []);
+
   async function submitRating(rating: ReviewRating) {
     if (!session.currentCard) return;
-    setSubmitting(true);
-    setError(null);
-    try {
-      const result = await offlineClient.submitReview(
-        offlineBundle,
-        session.currentCard.id,
-        rating,
-      );
-      setSession((previous) => ({
-        dueCount: result.delta.dueCount,
-        stats:
-          result.delta.stats.totalCount > 0
-            ? result.delta.stats
-            : {
-                ...previous.stats,
-                dueCount: result.delta.dueCount,
-              },
-        currentCard: result.delta.currentCard,
-        recentHistory: [
-          result.delta.recentHistoryEntry,
-          ...previous.recentHistory,
-        ].slice(0, 5),
-      }));
-      onBundleChange(result.bundle);
-      setLastReviewFeedback(yamaService.resolveReviewFeedback(rating));
-      setRevealed(false);
-      setSessionCompletedCount((current) => current + 1);
-      const nextCount = sessionCompletedCount + 1;
-      if (quickSessionTarget !== null && nextCount >= quickSessionTarget) {
-        setSessionFinished(true);
-      } else if (
-        quickSessionTarget === null &&
-        !result.delta.currentCard &&
-        nextCount > 0
-      ) {
-        setSessionFinished(true);
-      }
-      void analyticsService.track({
-        name: "review_submitted",
-        properties: {
-          rating,
-          contentType: session.currentCard.contentType,
-          queuedOffline: result.queuedOffline,
-        },
-      });
 
-      if (result.gamificationPromise) {
-        void result.gamificationPromise.then((gamification) => {
-          if (!gamification?.ready) return;
-          setLastElevation(gamification.elevation);
-          setLastAchievements(gamification.achievements);
-          setLastQuests(gamification.quests);
-          if (gamification.stats) {
-            setSession((previous) => ({
-              ...previous,
-              stats: gamification.stats!,
-            }));
-          }
-          if (gamification.elevation) {
+    const ratedCard = session.currentCard;
+    const previousSession = session;
+    const previousBundle = offlineBundle;
+    const optimistic = offlineClient.applyOfflineReview(
+      offlineBundle,
+      ratedCard.id,
+      rating,
+    );
+
+    setSession({
+      dueCount: optimistic.delta.dueCount,
+      stats: {
+        ...previousSession.stats,
+        dueCount: optimistic.delta.dueCount,
+      },
+      currentCard: optimistic.delta.currentCard,
+      recentHistory: [
+        optimistic.delta.recentHistoryEntry,
+        ...previousSession.recentHistory,
+      ].slice(0, 5),
+    });
+    onBundleChange(optimistic.bundle);
+    setLastReviewFeedback(yamaService.resolveReviewFeedback(rating));
+    setRevealed(false);
+    setSessionCompletedCount((current) => current + 1);
+    const nextCount = sessionCompletedCount + 1;
+    let finishedAfterOptimistic = false;
+    if (quickSessionTarget !== null && nextCount >= quickSessionTarget) {
+      setSessionFinished(true);
+      finishedAfterOptimistic = true;
+    } else if (
+      quickSessionTarget === null &&
+      !optimistic.delta.currentCard &&
+      nextCount > 0
+    ) {
+      setSessionFinished(true);
+      finishedAfterOptimistic = true;
+    }
+
+    setError(null);
+
+    void reviewBatchClient
+      .enqueue({
+        bundle: optimistic.bundle,
+        reviewItemId: ratedCard.id,
+        rating,
+      })
+      .then((result) => {
+        setSession((previous) => ({
+          dueCount: result.delta.dueCount,
+          stats:
+            result.delta.stats.totalCount > 0
+              ? result.delta.stats
+              : {
+                  ...previous.stats,
+                  dueCount: result.delta.dueCount,
+                },
+          currentCard: result.delta.currentCard,
+          recentHistory: [
+            result.delta.recentHistoryEntry,
+            ...previous.recentHistory,
+          ].slice(0, 5),
+        }));
+        onBundleChange(result.bundle);
+
+        void analyticsService.track({
+          name: "review_submitted",
+          properties: {
+            rating,
+            contentType: ratedCard.contentType,
+            queuedOffline: result.queuedOffline,
+          },
+        });
+
+        if (result.gamificationPromise) {
+          void result.gamificationPromise.then((gamification) => {
+            if (!gamification?.ready) return;
+            setLastElevation(gamification.elevation);
+            setLastAchievements(gamification.achievements);
+            setLastQuests(gamification.quests);
+            if (gamification.stats) {
+              setSession((previous) => ({
+                ...previous,
+                stats: gamification.stats!,
+              }));
+            }
+            if (gamification.elevation) {
+              setSessionEpEarned(
+                (current) => current + gamification.elevation!.epAwarded,
+              );
+            }
+          });
+        } else {
+          setLastElevation(result.delta.elevation ?? null);
+          setLastAchievements(result.delta.achievements ?? []);
+          setLastQuests(result.delta.quests ?? []);
+          if (result.delta.elevation) {
             setSessionEpEarned(
-              (current) => current + gamification.elevation!.epAwarded,
+              (current) => current + result.delta.elevation!.epAwarded,
             );
           }
-        });
-      } else {
-        setLastElevation(result.delta.elevation ?? null);
-        setLastAchievements(result.delta.achievements ?? []);
-        setLastQuests(result.delta.quests ?? []);
-        if (result.delta.elevation) {
-          setSessionEpEarned(
-            (current) => current + result.delta.elevation!.epAwarded,
-          );
         }
-      }
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Review failed.");
-    } finally {
-      setSubmitting(false);
-    }
+      })
+      .catch((caught) => {
+        setSession(previousSession);
+        onBundleChange(previousBundle);
+        setSessionCompletedCount((current) => Math.max(0, current - 1));
+        if (finishedAfterOptimistic) {
+          setSessionFinished(false);
+        }
+        setError(caught instanceof Error ? caught.message : "Review failed.");
+      });
   }
 
   return (
@@ -285,21 +330,18 @@ export function ReviewSession({
                 <div className="grid grid-cols-3 gap-2">
                   <Button
                     variant="outline"
-                    disabled={submitting}
                     onClick={() => void submitRating("again")}
                   >
                     Again
                   </Button>
                   <Button
                     variant="outline"
-                    disabled={submitting}
                     onClick={() => void submitRating("good")}
                   >
                     Good
                   </Button>
                   <Button
                     variant="outline"
-                    disabled={submitting}
                     onClick={() => void submitRating("strong")}
                   >
                     Strong

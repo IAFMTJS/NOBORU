@@ -2,6 +2,14 @@
  * Canonical public asset paths.
  * Source of truth: assets/ with metadata.json per asset-pipeline.md
  */
+import {
+  TRAIL_SCROLL_REGION_SLUGS,
+  type TrailScrollRegionSlug,
+  hasTrailScrollArt as regionHasTrailScrollArt,
+} from "@/lib/design-system/regions";
+
+export { TRAIL_SCROLL_REGION_SLUGS, type TrailScrollRegionSlug } from "@/lib/design-system/regions";
+
 export const ASSET_REGISTRY = {
   mascots: {
     yamaMainLight: "/mascots/yama_main_light_v1.webp",
@@ -115,25 +123,6 @@ const REGION_SLUG_TO_ASSET: Record<string, string> = {
   "master-summit": ASSET_REGISTRY.regions.masterSummit,
 };
 
-/**
- * Region slugs with dedicated vertical trail scroll art.
- * Public path pattern: `/ui/ui_trail_scroll_{slug}_{theme}_v1.webp`
- */
-export const TRAIL_SCROLL_REGION_SLUGS = [
-  "foothills",
-  "forest-trail",
-  "mount-n5",
-  "mount-n4",
-  "mount-n3",
-  "mount-n2",
-  "mount-n1",
-  "master-summit",
-] as const;
-
-export type TrailScrollRegionSlug = (typeof TRAIL_SCROLL_REGION_SLUGS)[number];
-
-const TRAIL_SCROLL_REGION_SLUG_SET = new Set<string>(TRAIL_SCROLL_REGION_SLUGS);
-
 const YAMA_EXPRESSION_DARK: Record<string, string> = {
   main: ASSET_REGISTRY.mascots.yamaMainDark,
   happy: ASSET_REGISTRY.mascots.yamaHappyDark,
@@ -199,22 +188,6 @@ export function getTrailSpineArtPath(
     : ASSET_REGISTRY.ui.trailSpineDark;
 }
 
-/**
- * @deprecated Prefer getTrailSpineArtPath for trail maps. Region hero art is not
- * anchor-calibrated and causes touch/visual misalignment when used on trail UIs.
- */
-export function getTrailMapArtPath(
-  theme: "light" | "dark" | string | undefined,
-  regionSlug?: string,
-) {
-  const regionArt = regionSlug ? getRegionArtPath(regionSlug) : null;
-  if (regionArt) {
-    return regionArt;
-  }
-
-  return getTrailSpineArtPath(theme);
-}
-
 /** Per-region scroll art version (defaults to v1). */
 const TRAIL_SCROLL_VERSION_BY_REGION: Partial<Record<TrailScrollRegionSlug, string>> = {
   foothills: "v2",
@@ -243,7 +216,7 @@ export function getTrailScrollArtPath(
   regionSlug: string | undefined,
   theme: "light" | "dark" | string | undefined,
 ): string | null {
-  if (!regionSlug || !TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug)) {
+  if (!regionHasTrailScrollArt(regionSlug)) {
     return null;
   }
 
@@ -253,12 +226,7 @@ export function getTrailScrollArtPath(
 }
 
 export function hasTrailScrollArt(regionSlug: string | undefined): boolean {
-  return regionSlug ? TRAIL_SCROLL_REGION_SLUG_SET.has(regionSlug) : false;
-}
-
-/** @deprecated Use getTrailMapArtPath */
-export function getTrailSpinePath(theme: "light" | "dark" | string | undefined) {
-  return getTrailMapArtPath(theme);
+  return regionHasTrailScrollArt(regionSlug);
 }
 
 export function getWordmarkPath(theme: "light" | "dark" | string | undefined) {

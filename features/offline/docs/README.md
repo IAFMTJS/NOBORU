@@ -28,7 +28,9 @@ Purpose: Offline-first core learning with installable PWA delivery and backgroun
 ## API
 
 - `GET /api/review/session` — review bundle for offline caching
+- `POST /api/review/submit/batch` — buffered online review ratings (every 5 cards or session end)
 - `POST /api/sync/batch` — apply queued offline mutations
+- `POST /api/admin/maintenance/archive` — move stale events to archive tables (content admin)
 
 ## Conflict Resolution
 
@@ -47,4 +49,5 @@ Educational progress is authoritative (`lib/offline/conflict-resolver.ts`):
 
 - Home dashboard is not fully cached offline (lessons/reviews are)
 - Gamification replay after offline sync may award deferred EP/achievements on reconnect only
-- Background Sync API not used yet; sync runs on reconnect or manual action
+- Background Sync API is registered when supported; otherwise sync runs on reconnect or manual action
+- JWT `is_content_admin` claims sync when `SUPABASE_SERVICE_ROLE_KEY` is configured (users may need a token refresh)

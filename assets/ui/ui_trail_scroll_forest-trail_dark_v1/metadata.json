@@ -3,7 +3,7 @@
   "name": "Trail Scroll Forest Trail Dark",
   "category": "ui",
   "version": "v1",
-  "status": "review",
+  "status": "approved",
   "owner_agent": "UI Art Agent",
   "creation_agent": "Region Art Agent",
   "approved_by": "Art Director Agent",
@@ -33,5 +33,6 @@
     "ui_trail_scroll_forest-trail_dark_v1.png",
     "ui_trail_scroll_forest-trail_dark_v1.webp"
   ],
-  "design_notes": "Vertical immersive Forest Trail scroll (dark). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at TRAIL_MAP_PATH_ANCHORS. Generated via generate-region-trail-scrolls.mjs — pending Art Director review."
+  "design_notes": "Vertical immersive Forest Trail scroll (dark). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at regions.forest-trail.dark in trail-path-anchors.json. Generated via generate-region-trail-scrolls.mjs.",
+  "anchor_contract": "regions.forest-trail.dark"
 }

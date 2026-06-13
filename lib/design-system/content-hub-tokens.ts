@@ -1,10 +1,20 @@
-import type { ContentHubVariant } from "@/components/ui/content-hub-banner";
+export type ContentHubVariant =
+  | "vocabulary"
+  | "grammar"
+  | "kanji"
+  | "reading"
+  | "listening";
 
 export type ContentHubTokens = {
   progressIndicator: string;
   leadingBg: string;
   leadingText: string;
   progressCardBorder: string;
+};
+
+export type ContentHubBannerStyle = {
+  gradient: string;
+  border: string;
 };
 
 export const CONTENT_HUB_TOKENS: Record<ContentHubVariant, ContentHubTokens> = {
@@ -37,6 +47,29 @@ export const CONTENT_HUB_TOKENS: Record<ContentHubVariant, ContentHubTokens> = {
     leadingBg: "border-sky-500/25 bg-sky-500/10",
     leadingText: "text-sky-700 dark:text-sky-300",
     progressCardBorder: "border-sky-500/20",
+  },
+};
+
+export const CONTENT_HUB_BANNER_STYLES: Record<ContentHubVariant, ContentHubBannerStyle> = {
+  vocabulary: {
+    gradient: "from-primary/15 via-rose-500/5 to-card",
+    border: "border-primary/25",
+  },
+  grammar: {
+    gradient: "from-violet-500/15 via-primary/5 to-card",
+    border: "border-violet-500/25",
+  },
+  kanji: {
+    gradient: "from-amber-500/15 via-primary/5 to-card",
+    border: "border-amber-500/25",
+  },
+  reading: {
+    gradient: "from-emerald-500/15 via-primary/5 to-card",
+    border: "border-emerald-500/25",
+  },
+  listening: {
+    gradient: "from-sky-500/15 via-primary/5 to-card",
+    border: "border-sky-500/25",
   },
 };
 

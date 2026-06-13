@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# asset pipeline intermediates (source art lives in assets/ui/* and assets/regions/*)
+/assets/ui/_pipeline/_review/
+/assets/ui/_pipeline/_scroll_plates/
+/assets/ui/_pipeline/_trail_scroll_segments/
+/assets/ui/_pipeline/_calibration/*_anchor_overlay.png
+/assets/ui/_pipeline/_calibration/*_hero_overlay.png

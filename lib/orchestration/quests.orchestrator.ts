@@ -1,3 +1,4 @@
+import { getCachedQuestDashboard } from "@/lib/cache/dashboard-cache";
 import { questService } from "@/features/quests/services/quest.service";
 import type {
   DailyQuestsViewModel,
@@ -7,7 +8,7 @@ import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenti
 
 export async function getQuestDashboard(): Promise<QuestDashboardViewModel> {
   const userId = await requireAuthenticatedUserId();
-  return questService.getQuestDashboard(userId);
+  return getCachedQuestDashboard(userId);
 }
 
 export async function getDailyQuests(): Promise<DailyQuestsViewModel> {

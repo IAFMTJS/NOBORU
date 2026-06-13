@@ -1,4 +1,4 @@
-import type { TrailNodeState, TrailNodeViewModel } from "@/features/learning/utils/trail-state";
+import type { TrailNodeState, TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import type { ImmersiveTrailNodePosition } from "@/lib/design-system/trail-path-anchors";
 
 type TrailSpineConnectorProps = {
