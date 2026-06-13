@@ -125,6 +125,7 @@ export function TrailFirstLearnScreen({
           nodes={trailNodes}
           immersive
           regionSlug={selectedRegion.slug}
+          regionLessonCount={selectedRegion.lessonCount}
           trialHref={regionTrial?.href ?? null}
           trialTitle={regionTrial?.title ?? null}
           onNodeSelect={handleNodeSelect}

@@ -16,7 +16,10 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { RegionContentLinks } from "@/features/learning/components/region-content-links";
 import { RegionContinueFooter } from "@/features/learning/components/region-continue-footer";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
-import { buildTrailNodes, getUnitTrailPlacementRange } from "@/features/learning/services/trail.service";
+import {
+  buildTrailNodes,
+  getUnitTrailSegmentSlices,
+} from "@/features/learning/services/trail.service";
 import { getNextLessonInRegion } from "@/features/learning/utils/region-lesson";
 import { RegionTrialsPanel } from "@/features/trials/components/region-trials-panel";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
@@ -130,14 +133,27 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
                 <CardTitle className="text-heading-6">{unit.name}</CardTitle>
                 <CardDescription>{unit.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <TrailMap
-                  nodes={buildTrailNodes(unit.lessons)}
-                  title={unit.name}
-                  description={`${unit.completedCount}/${unit.lessonCount} lessons complete`}
-                  regionSlug={region.slug}
-                  placementRange={getUnitTrailPlacementRange(region.units, unitIndex)}
-                />
+              <CardContent className="space-y-4">
+                {getUnitTrailSegmentSlices(region.units, unitIndex).map(
+                  (segment) => (
+                    <TrailMap
+                      key={`${unit.id}-trail-${segment.trailSegmentIndex}`}
+                      nodes={buildTrailNodes(segment.nodes)}
+                      title={
+                        segment.trailSegmentIndex > 0
+                          ? `${unit.name} · Trail ${segment.trailSegmentIndex + 1}`
+                          : undefined
+                      }
+                      description={
+                        segment.trailSegmentIndex === 0
+                          ? `${unit.completedCount}/${unit.lessonCount} lessons complete`
+                          : undefined
+                      }
+                      regionSlug={region.slug}
+                      placementRange={segment.placementRange}
+                    />
+                  ),
+                )}
               </CardContent>
             </Card>
           ))}

@@ -196,9 +196,13 @@ const TRAIL_SCROLL_VERSION_BY_REGION: Partial<Record<TrailScrollRegionSlug, stri
 function buildTrailScrollPublicPath(
   regionSlug: TrailScrollRegionSlug,
   theme: "light" | "dark",
+  trailSegmentIndex = 0,
 ): string {
   const version = TRAIL_SCROLL_VERSION_BY_REGION[regionSlug] ?? "v1";
-  return `/ui/ui_trail_scroll_${regionSlug}_${theme}_${version}.webp`;
+  if (trailSegmentIndex === 0) {
+    return `/ui/ui_trail_scroll_${regionSlug}_${theme}_${version}.webp`;
+  }
+  return `/ui/ui_trail_scroll_${regionSlug}_trail-${trailSegmentIndex + 1}_${theme}_v1.webp`;
 }
 
 const TRAIL_SCROLL_PATH_BY_REGION = Object.fromEntries(
@@ -215,14 +219,23 @@ const TRAIL_SCROLL_PATH_BY_REGION = Object.fromEntries(
 export function getTrailScrollArtPath(
   regionSlug: string | undefined,
   theme: "light" | "dark" | string | undefined,
+  trailSegmentIndex = 0,
 ): string | null {
   if (!regionHasTrailScrollArt(regionSlug)) {
     return null;
   }
 
   const mode = theme === "light" ? "light" : "dark";
-  const paths = TRAIL_SCROLL_PATH_BY_REGION[regionSlug as TrailScrollRegionSlug];
-  return paths?.[mode] ?? null;
+  if (trailSegmentIndex === 0) {
+    const paths = TRAIL_SCROLL_PATH_BY_REGION[regionSlug as TrailScrollRegionSlug];
+    return paths?.[mode] ?? null;
+  }
+
+  return buildTrailScrollPublicPath(
+    regionSlug as TrailScrollRegionSlug,
+    mode,
+    trailSegmentIndex,
+  );
 }
 
 export function hasTrailScrollArt(regionSlug: string | undefined): boolean {

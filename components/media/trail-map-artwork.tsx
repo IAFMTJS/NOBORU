@@ -22,6 +22,7 @@ type TrailMapArtworkProps = {
   priority?: boolean;
   immersive?: boolean;
   regionSlug?: string;
+  trailSegmentIndex?: number;
 };
 
 export function TrailMapArtwork({
@@ -31,10 +32,11 @@ export function TrailMapArtwork({
   priority = false,
   immersive = false,
   regionSlug,
+  trailSegmentIndex = 0,
 }: TrailMapArtworkProps) {
   const scrollSrc =
     immersive && hasTrailScrollArt(regionSlug)
-      ? getTrailScrollArtPath(regionSlug, theme)
+      ? getTrailScrollArtPath(regionSlug, theme, trailSegmentIndex)
       : null;
   const regionSrc =
     immersive && !scrollSrc && regionSlug ? getRegionArtPath(regionSlug) : null;

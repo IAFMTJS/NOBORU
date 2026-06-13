@@ -21,3 +21,16 @@ export type TrailLessonInput = {
   xpReward: number;
   progress: ProgressStatus;
 };
+
+/** Maps lesson nodes to coordinates along a trail path segment. */
+export type TrailPlacementRange = {
+  startIndex: number;
+  totalCount: number;
+  trailSegmentIndex?: number;
+};
+
+export type TrailSegmentSlice<T> = {
+  trailSegmentIndex: number;
+  nodes: T[];
+  placementRange: TrailPlacementRange;
+};

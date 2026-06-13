@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildTrailNodes, getUnitTrailPlacementRange } from "@/features/learning/services/trail.service";
+import { buildTrailNodes, getUnitTrailPlacementRange, splitTrailNodesIntoSegments } from "@/features/learning/services/trail.service";
 
 describe("buildTrailNodes", () => {
   it("locks all nodes when the region is locked", () => {
@@ -100,10 +100,55 @@ describe("getUnitTrailPlacementRange", () => {
     expect(getUnitTrailPlacementRange(units, 0)).toEqual({
       startIndex: 0,
       totalCount: 6,
+      trailSegmentIndex: 0,
     });
     expect(getUnitTrailPlacementRange(units, 2)).toEqual({
       startIndex: 3,
       totalCount: 6,
+      trailSegmentIndex: 0,
+    });
+  });
+
+  it("maps units past lesson 40 onto the next trail segment", () => {
+    const units = [
+      {
+        lessons: Array.from({ length: 38 }, (_, index) => ({ id: `a-${index}` })),
+      },
+      {
+        lessons: [{ id: "b-1" }, { id: "b-2" }, { id: "b-3" }],
+      },
+    ];
+
+    expect(getUnitTrailPlacementRange(units, 1)).toEqual({
+      startIndex: 38,
+      totalCount: 40,
+      trailSegmentIndex: 0,
+    });
+  });
+});
+
+describe("splitTrailNodesIntoSegments", () => {
+  it("splits immersive trails into 40-lesson segments", () => {
+    const nodes = Array.from({ length: 55 }, (_, index) => ({
+      id: `lesson-${index}`,
+    }));
+
+    const segments = splitTrailNodesIntoSegments(nodes, {
+      regionLessonCount: 55,
+    });
+
+    expect(segments).toHaveLength(2);
+    expect(segments[0]?.nodes).toHaveLength(40);
+    expect(segments[1]?.nodes).toHaveLength(15);
+    expect(segments[0]?.placementRange).toEqual({
+      startIndex: 0,
+      totalCount: 40,
+      trailSegmentIndex: 0,
+    });
+    expect(segments[1]?.placementRange).toEqual({
+      startIndex: 0,
+      totalCount: 15,
+      trailSegmentIndex: 1,
     });
   });
 });

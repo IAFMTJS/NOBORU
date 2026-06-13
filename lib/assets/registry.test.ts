@@ -18,6 +18,9 @@ describe("trail art registry", () => {
     expect(getTrailScrollArtPath("forest-trail", "dark")).toBe(
       "/ui/ui_trail_scroll_forest-trail_dark_v1.webp",
     );
+    expect(getTrailScrollArtPath("mount-n5", "dark", 1)).toBe(
+      "/ui/ui_trail_scroll_mount-n5_trail-2_dark_v1.webp",
+    );
     expect(getTrailScrollArtPath(undefined, "dark")).toBeNull();
   });
 

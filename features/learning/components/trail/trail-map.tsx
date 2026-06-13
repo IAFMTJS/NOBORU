@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTheme } from "next-themes";
 
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
@@ -9,6 +9,8 @@ import { hasTrailScrollArt } from "@/lib/assets/registry";
 import { MotionDiv } from "@/components/motion/motion-div";
 import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
 import { TrailSpineConnector } from "@/features/learning/components/trail/trail-spine-connector";
+import { MAX_LESSONS_PER_TRAIL_PATH } from "@/features/learning/constants/trail.constants";
+import { splitTrailNodesIntoSegments } from "@/features/learning/services/trail.service";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import {
@@ -21,7 +23,12 @@ import {
 } from "@/lib/design-system/trail-path-anchors";
 import { trailNodeReveal } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
-import type { TrailNodeState, TrailNodeViewModel } from "@/features/learning/types/trail.types";
+import type {
+  TrailNodeState,
+  TrailNodeViewModel,
+  TrailPlacementRange,
+  TrailSegmentSlice,
+} from "@/features/learning/types/trail.types";
 
 const STATE_LABELS: Record<TrailNodeState, string> = {
   completed: "Completed lesson",
@@ -225,56 +232,41 @@ function TrailPathNode({
   return anchored ? anchoredLayout : floatingLayout;
 }
 
-type TrailMapProps = {
+type TrailMapCanvasProps = {
   nodes: TrailNodeViewModel[];
   compact?: boolean;
   minimal?: boolean;
   labelsBelow?: boolean;
   immersive?: boolean;
   regionSlug?: string;
-  title?: string;
-  description?: string;
-  className?: string;
-  trialHref?: string | null;
-  trialTitle?: string | null;
+  trailSegmentIndex?: number;
+  placementRange?: TrailPlacementRange;
+  activeNodeId?: string | null;
   onNodeSelect?: (node: TrailNodeViewModel) => void;
-  placementRange?: TrailPlacementOptions["placementRange"];
+  labelTheme?: string;
 };
 
-export function TrailMap({
+function TrailMapCanvas({
   nodes,
   compact = false,
   minimal = false,
   labelsBelow = false,
   immersive = false,
   regionSlug,
-  title,
-  description,
-  className,
-  trialHref,
-  trialTitle,
-  onNodeSelect,
+  trailSegmentIndex = 0,
   placementRange,
-}: TrailMapProps) {
-  const { resolvedTheme } = useTheme();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+  activeNodeId = null,
+  onNodeSelect,
+  labelTheme,
+}: TrailMapCanvasProps) {
   const placementOptions: TrailPlacementOptions = {
-    theme: resolvedTheme,
+    theme: labelTheme,
     regionSlug,
     mode: immersive ? "scroll" : "spine",
+    trailSegmentIndex,
     placementRange,
   };
 
-  const activeNode =
-    nodes.find((node) => node.state === "in_progress") ??
-    nodes.find((node) => node.state === "available");
-  const activeNodeIndex = activeNode
-    ? nodes.findIndex((node) => node.id === activeNode.id)
-    : -1;
   const placementNodes: Array<{ nodeKind: "lesson" | "checkpoint" }> =
     nodes.map((node) => ({
       nodeKind:
@@ -300,11 +292,184 @@ export function TrailMap({
     ? `${TRAIL_SCROLL_ART_WIDTH} / ${TRAIL_SCROLL_ART_HEIGHT}`
     : `${TRAIL_MAP_ART_WIDTH} / ${TRAIL_MAP_ART_HEIGHT}`;
 
+  return (
+    <div
+      className={cn(
+        "relative w-full",
+        immersive
+          ? "shrink-0 rounded-none border-0 shadow-none"
+          : "overflow-hidden rounded-2xl border border-primary/20 shadow-elevation-1 dark:shadow-elevation-2",
+      )}
+      data-trail-map-canvas
+      data-trail-segment-index={trailSegmentIndex}
+      style={{ aspectRatio: canvasAspectRatio }}
+    >
+      <TrailMapArtwork
+        theme={labelTheme}
+        immersive={immersive}
+        regionSlug={regionSlug}
+        trailSegmentIndex={trailSegmentIndex}
+        priority={useScrollArt}
+      />
+      {immersive && immersiveLayout && !useScrollArt ? (
+        <TrailSpineConnector
+          points={[...immersiveLayout.positions]}
+          nodes={nodes}
+        />
+      ) : null}
+      <div
+        className={cn(
+          "absolute inset-0",
+          immersive ? "px-0 py-0" : "px-0 py-0",
+        )}
+        role="list"
+        aria-label={
+          trailSegmentIndex > 0
+            ? `Trail lessons, path ${trailSegmentIndex + 1}`
+            : "Trail lessons"
+        }
+        style={{ aspectRatio: canvasAspectRatio }}
+      >
+        {nodes.map((node, index) => {
+          const immersivePosition = immersiveLayout?.positions[index];
+          const cardPosition = cardPositions?.[index];
+          if (immersive && !immersivePosition) return null;
+          if (!immersive && !cardPosition) return null;
+
+          const labelPosition = immersivePosition ?? cardPosition!;
+          const nodePosition = immersivePosition ?? cardPosition!;
+          const activeNodeIndex = activeNodeId
+            ? nodes.findIndex((candidate) => candidate.id === activeNodeId)
+            : -1;
+          const isDistant =
+            immersive &&
+            activeNodeIndex >= 0 &&
+            Math.abs(index - activeNodeIndex) > 4;
+
+          return (
+            <div
+              key={node.id}
+              role="listitem"
+              data-trail-node-id={node.id}
+              data-trail-node-index={index}
+              className={cn(
+                "pointer-events-none absolute transition-opacity",
+                isDistant && "opacity-40",
+              )}
+              style={{
+                left: `${nodePosition.x}%`,
+                top: `${nodePosition.y}%`,
+                transform: "translate(-50%, -50%)",
+                zIndex: index + 10,
+              }}
+            >
+              <MotionDiv
+                {...trailNodeReveal}
+                transition={{ delay: Math.min(index * 0.03, 0.6) }}
+              >
+                <TrailPathNode
+                  node={node}
+                  position={labelPosition}
+                  nodeIndex={index}
+                  compact={compact}
+                  minimal={minimal}
+                  labelsBelow={labelsBelow}
+                  immersive={immersive}
+                  anchored
+                  onNodeSelect={onNodeSelect}
+                  labelTheme={labelTheme}
+                />
+              </MotionDiv>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+type TrailMapProps = {
+  nodes: TrailNodeViewModel[];
+  compact?: boolean;
+  minimal?: boolean;
+  labelsBelow?: boolean;
+  immersive?: boolean;
+  regionSlug?: string;
+  title?: string;
+  description?: string;
+  className?: string;
+  trialHref?: string | null;
+  trialTitle?: string | null;
+  onNodeSelect?: (node: TrailNodeViewModel) => void;
+  placementRange?: TrailPlacementRange;
+  /** Total lessons in the region when splitting immersive trails across segments. */
+  regionLessonCount?: number;
+};
+
+export function TrailMap({
+  nodes,
+  compact = false,
+  minimal = false,
+  labelsBelow = false,
+  immersive = false,
+  regionSlug,
+  title,
+  description,
+  className,
+  trialHref,
+  trialTitle,
+  onNodeSelect,
+  placementRange,
+  regionLessonCount,
+}: TrailMapProps) {
+  const { resolvedTheme } = useTheme();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const activeNode =
+    nodes.find((node) => node.state === "in_progress") ??
+    nodes.find((node) => node.state === "available");
+
+  const trailSegments = useMemo((): TrailSegmentSlice<TrailNodeViewModel>[] => {
+    if (placementRange) {
+      return [
+        {
+          trailSegmentIndex: placementRange.trailSegmentIndex ?? 0,
+          nodes: [...nodes],
+          placementRange,
+        },
+      ];
+    }
+
+    if (
+      immersive &&
+      nodes.length > MAX_LESSONS_PER_TRAIL_PATH
+    ) {
+      return splitTrailNodesIntoSegments(nodes, {
+        regionLessonCount: regionLessonCount ?? nodes.length,
+      });
+    }
+
+    return [
+      {
+        trailSegmentIndex: 0,
+        nodes: [...nodes],
+        placementRange: {
+          startIndex: 0,
+          totalCount: nodes.length,
+          trailSegmentIndex: 0,
+        },
+      },
+    ];
+  }, [immersive, nodes, placementRange, regionLessonCount]);
+
   useEffect(() => {
-    if (!immersive || activeNodeIndex < 0 || !scrollRef.current) return;
+    if (!immersive || !activeNode || !scrollRef.current) return;
 
     const activeElement = scrollRef.current.querySelector(
-      `[data-trail-node-index="${activeNodeIndex}"]`,
+      `[data-trail-node-id="${activeNode.id}"]`,
     );
     if (!activeElement) return;
 
@@ -312,7 +477,7 @@ export function TrailMap({
       block: "center",
       behavior: prefersReducedMotion ? "auto" : "smooth",
     });
-  }, [activeNodeIndex, immersive, nodes.length, prefersReducedMotion]);
+  }, [activeNode, immersive, prefersReducedMotion]);
 
   if (nodes.length === 0) {
     return (
@@ -356,87 +521,42 @@ export function TrailMap({
           size="sm"
         />
       ) : null}
-      <div
-        className={cn(
-          "relative w-full",
-          immersive
-            ? "shrink-0 rounded-none border-0 shadow-none"
-            : "overflow-hidden rounded-2xl border border-primary/20 shadow-elevation-1 dark:shadow-elevation-2",
-        )}
-        data-trail-map-canvas
-        style={{ aspectRatio: canvasAspectRatio }}
-      >
-        <TrailMapArtwork
-          theme={resolvedTheme}
-          immersive={immersive}
-          regionSlug={regionSlug}
-          priority={useScrollArt}
-        />
-        {immersive && immersiveLayout && !useScrollArt ? (
-          <TrailSpineConnector
-            points={[...immersiveLayout.positions]}
-            nodes={nodes}
-          />
-        ) : null}
-        <div
-          className={cn(
-            "absolute inset-0",
-            immersive ? "px-0 py-0" : "px-0 py-0",
-          )}
-          role="list"
-          aria-label="Trail lessons"
-          style={{ aspectRatio: canvasAspectRatio }}
-        >
-          {nodes.map((node, index) => {
-            const immersivePosition = immersiveLayout?.positions[index];
-            const cardPosition = cardPositions?.[index];
-            if (immersive && !immersivePosition) return null;
-            if (!immersive && !cardPosition) return null;
-
-            const labelPosition = immersivePosition ?? cardPosition!;
-            const nodePosition = immersivePosition ?? cardPosition!;
-            const isDistant =
-              immersive &&
-              activeNodeIndex >= 0 &&
-              Math.abs(index - activeNodeIndex) > 4;
-
-            return (
-              <div
-                key={node.id}
-                role="listitem"
-                data-trail-node-index={index}
+      <div className={cn("space-y-4", immersive && "space-y-0")}>
+        {trailSegments.map((segment, segmentIndex) => (
+          <div key={segment.trailSegmentIndex}>
+            {trailSegments.length > 1 ? (
+              <p
                 className={cn(
-                  "pointer-events-none absolute transition-opacity",
-                  isDistant && "opacity-40",
+                  "px-1 pb-2 text-caption font-medium",
+                  immersive
+                    ? "text-white/80"
+                    : "text-muted-foreground",
                 )}
-                style={{
-                  left: `${nodePosition.x}%`,
-                  top: `${nodePosition.y}%`,
-                  transform: "translate(-50%, -50%)",
-                  zIndex: index + 10,
-                }}
               >
-                <MotionDiv
-                  {...trailNodeReveal}
-                  transition={{ delay: Math.min(index * 0.03, 0.6) }}
-                >
-                  <TrailPathNode
-                    node={node}
-                    position={labelPosition}
-                    nodeIndex={index}
-                    compact={compact}
-                    minimal={minimal}
-                    labelsBelow={labelsBelow}
-                    immersive={immersive}
-                    anchored
-                    onNodeSelect={onNodeSelect}
-                    labelTheme={resolvedTheme}
-                  />
-                </MotionDiv>
-              </div>
-            );
-          })}
-        </div>
+                Trail {segment.trailSegmentIndex + 1}
+              </p>
+            ) : null}
+            {segmentIndex > 0 && immersive ? (
+              <div
+                className="my-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                aria-hidden
+              />
+            ) : null}
+            <TrailMapCanvas
+              nodes={segment.nodes}
+              compact={compact}
+              minimal={minimal}
+              labelsBelow={labelsBelow}
+              immersive={immersive}
+              regionSlug={regionSlug}
+              trailSegmentIndex={segment.trailSegmentIndex}
+              placementRange={segment.placementRange}
+              activeNodeId={activeNode?.id ?? null}
+              onNodeSelect={onNodeSelect}
+              labelTheme={resolvedTheme}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

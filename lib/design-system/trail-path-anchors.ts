@@ -22,10 +22,22 @@ export type TrailPlacementOptions = {
   theme?: string;
   regionSlug?: string;
   mode?: TrailAnchorMode;
+  /** Which trail path segment within a region (0 = first 40 lessons). */
+  trailSegmentIndex?: number;
   placementRange?: {
     startIndex: number;
     totalCount: number;
+    trailSegmentIndex?: number;
   };
+};
+
+type RegionAnchorContract = {
+  dark: TrailAnchorPoint[];
+  light: TrailAnchorPoint[];
+  trails?: Array<{
+    dark: TrailAnchorPoint[];
+    light: TrailAnchorPoint[];
+  }>;
 };
 
 const DEFAULT_REGION: RegionSlug = "foothills";
@@ -56,7 +68,29 @@ export function getTrailMapPathAnchors(
       ? options.regionSlug
       : DEFAULT_REGION;
 
-  return anchorContract.regions[slug][theme];
+  const trailSegmentIndex =
+    options?.trailSegmentIndex ??
+    options?.placementRange?.trailSegmentIndex ??
+    0;
+
+  const region = anchorContract.regions[slug] as RegionAnchorContract;
+
+  if (trailSegmentIndex === 0) {
+    return region[theme];
+  }
+
+  const segmentAnchors = region.trails?.[trailSegmentIndex - 1]?.[theme];
+  if (segmentAnchors) {
+    return segmentAnchors;
+  }
+
+  return region[theme];
+}
+
+export function getTrailSegmentCount(regionSlug: string): number {
+  if (!isRegionSlug(regionSlug)) return 1;
+  const region = anchorContract.regions[regionSlug] as RegionAnchorContract;
+  return 1 + (region.trails?.length ?? 0);
 }
 
 export type TrailNodePlacementKind = "lesson" | "checkpoint";

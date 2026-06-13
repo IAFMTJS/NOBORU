@@ -4,7 +4,10 @@ import { achievementService } from "@/features/achievements/services/achievement
 import { streakService } from "@/features/achievements/services/streak.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import { flattenRegionTrailLessons } from "@/features/learning/services/trail.service";
+import {
+  buildTrailPlacementRange,
+  flattenRegionTrailLessons,
+} from "@/features/learning/services/trail.service";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
 import { reviewRepository } from "@/features/review/repositories/review.repository";
@@ -160,10 +163,10 @@ class DashboardServerService {
       quests,
       yama,
       trailPreview,
-      trailPreviewPlacement: {
-        startIndex: trailStartIndex,
-        totalCount: trailNodes.length,
-      },
+      trailPreviewPlacement: buildTrailPlacementRange(
+        trailStartIndex,
+        trailNodes.length,
+      ),
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
         href: "/learn",

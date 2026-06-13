@@ -44,7 +44,25 @@ describe("getTrailMapPathAnchors", () => {
     for (const slug of REGION_SLUGS) {
       expect(getTrailMapPathAnchors({ regionSlug: slug, mode: "scroll" })).toHaveLength(14);
       expect(getTrailMapPathAnchors({ regionSlug: slug, mode: "scroll", theme: "light" })).toHaveLength(14);
+      expect(getTrailMapPathAnchors({ regionSlug: slug, mode: "scroll", trailSegmentIndex: 1 })).toHaveLength(14);
     }
+  });
+
+  it("uses distinct anchors for trail segment 2", () => {
+    const trail1 = getTrailMapPathAnchors({
+      regionSlug: "mount-n5",
+      mode: "scroll",
+      theme: "dark",
+      trailSegmentIndex: 0,
+    });
+    const trail2 = getTrailMapPathAnchors({
+      regionSlug: "mount-n5",
+      mode: "scroll",
+      theme: "dark",
+      trailSegmentIndex: 1,
+    });
+
+    expect(trail2[3]).not.toEqual(trail1[3]);
   });
 });
 
@@ -111,6 +129,20 @@ describe("getImmersiveTrailLayout", () => {
     expect(layout.positions[0]?.y).toBeGreaterThan(layout.positions[19]?.y ?? 0);
     expect(layout.positions[0]?.y).toBeGreaterThan(80);
     expect(layout.positions[19]?.y).toBeLessThan(20);
+  });
+
+  it("distributes up to 40 lessons along the full trail path", () => {
+    const layout = getImmersiveTrailLayout(40, {
+      regionSlug: "foothills",
+      mode: "scroll",
+    });
+
+    expect(layout.positions).toHaveLength(40);
+    expect(layout.positions[0]?.y).toBeGreaterThan(layout.positions[39]?.y ?? 0);
+
+    const yValues = layout.positions.map((position) => position.y);
+    expect(Math.min(...yValues)).toBeLessThan(15);
+    expect(Math.max(...yValues)).toBeGreaterThan(85);
   });
 
   it("varies x so nodes follow the winding spine", () => {

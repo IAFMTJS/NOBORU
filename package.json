@@ -22,10 +22,13 @@
     "assets:minigame-art": "node scripts/install-minigame-art.mjs && node scripts/process-sticker-assets.mjs",
     "assets:scenes": "node scripts/convert-scene-assets.mjs",
     "assets:region-scrolls": "node scripts/generate-region-trail-scrolls.mjs && node scripts/convert-scene-assets.mjs",
+    "assets:region-scrolls-trail2": "node scripts/sync-trail2-anchors.mjs && node scripts/generate-region-trail-scrolls.mjs --trail=2 && node scripts/convert-scene-assets.mjs",
+    "assets:trail2-anchors": "node scripts/sync-trail2-anchors.mjs",
     "assets:trail-scroll": "node scripts/finalize-trail-scroll-art.mjs && node scripts/convert-scene-assets.mjs",
     "assets:foothills-scroll-v2": "node scripts/create-foothills-scroll-v2.mjs && node scripts/convert-scene-assets.mjs",
     "assets:calibrate-trail": "node scripts/calibrate-trail-anchors.mjs",
-    "assets:calibrate-trail:all": "node scripts/calibrate-trail-anchors.mjs --all"
+    "assets:calibrate-trail:all": "node scripts/calibrate-trail-anchors.mjs --all",
+    "assets:calibrate-trail2:all": "node scripts/calibrate-trail-anchors.mjs --all --trail=2"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

@@ -48,14 +48,18 @@ lib/design-system/
 
 ### Trail anchor contract
 
-Each region owns a unique 14-point polyline in `lib/design-system/trail-path-anchors.json`:
+Each region owns unique 14-point polylines in `lib/design-system/trail-path-anchors.json`:
 
 - `spine.{dark|light}` — horizontal spine art (1536×1024) for Home/card previews
-- `regions.{slug}.{dark|light}` — immersive scroll art (1536×5120) per region
+- `regions.{slug}.{dark|light}` — trail 1 immersive scroll (lessons 1–40)
+- `regions.{slug}.trails[0].{dark|light}` — trail 2 continuation scroll (lessons 41–80)
 
-Runtime: `getTrailMapPathAnchors({ regionSlug, mode, theme })`  
-Pipeline: `generate-region-trail-scrolls.mjs`, `calibrate-trail-anchors.mjs`  
-QA: `npm run assets:calibrate-trail:all`
+Max **40 lessons per trail path**. Regions with more lessons stack multiple scroll canvases in immersive Learn.
+
+Runtime: `getTrailMapPathAnchors({ regionSlug, mode, theme, trailSegmentIndex })`  
+Pipeline: `generate-region-trail-scrolls.mjs --trail=2`, `sync-trail2-anchors.mjs`, `calibrate-trail-anchors.mjs`  
+QA: `npm run assets:calibrate-trail:all` and `npm run assets:calibrate-trail2:all`  
+Generate trail-2 art: `npm run assets:region-scrolls-trail2`
 
 ---
 

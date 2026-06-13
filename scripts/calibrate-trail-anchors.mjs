@@ -4,8 +4,9 @@
  *   npm run assets:calibrate-trail
  *   npm run assets:calibrate-trail -- --region=foothills
  *   npm run assets:calibrate-trail -- --all
+ *   npm run assets:calibrate-trail -- --all --trail=2
  */
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -24,25 +25,19 @@ const SCROLL_VERSION_BY_REGION = {
   foothills: "v2",
 };
 
-const GENERATED_REGIONS = [
-  "forest-trail",
-  "mount-n5",
-  "mount-n4",
-  "mount-n3",
-  "mount-n2",
-  "mount-n1",
-  "master-summit",
-];
-
 function parseArgs(argv) {
   const flags = {
     all: argv.includes("--all"),
     region: null,
+    trail: 1,
   };
 
   for (const arg of argv) {
     if (arg.startsWith("--region=")) {
       flags.region = arg.slice("--region=".length);
+    }
+    if (arg.startsWith("--trail=")) {
+      flags.trail = Number.parseInt(arg.slice("--trail=".length), 10);
     }
   }
 
@@ -57,6 +52,15 @@ function resolveTargets(flags) {
     return [flags.region];
   }
   return ["foothills"];
+}
+
+function resolvePathAnchors(regionSlug, theme, trailNumber) {
+  const region = anchorContract.regions[regionSlug];
+  if (!region) return null;
+  if (trailNumber <= 1) {
+    return region[theme];
+  }
+  return region.trails?.[trailNumber - 2]?.[theme] ?? null;
 }
 
 function anchorToPixel(anchor, width, height) {
@@ -86,7 +90,16 @@ function buildOverlaySvg(anchors, width, height) {
   );
 }
 
-function resolveScrollAssetPath(regionSlug, theme) {
+function resolveScrollAssetPath(regionSlug, theme, trailNumber) {
+  if (trailNumber >= 2) {
+    const assetId = `ui_trail_scroll_${regionSlug}_trail-${trailNumber}_${theme}_v1`;
+    return {
+      assetId,
+      pngPath: path.join(root, "assets/ui", assetId, `${assetId}.png`),
+      version: "v1",
+    };
+  }
+
   const version = SCROLL_VERSION_BY_REGION[regionSlug] ?? "v1";
   const assetId = `ui_trail_scroll_${regionSlug}_${theme}_${version}`;
   return {
@@ -96,12 +109,13 @@ function resolveScrollAssetPath(regionSlug, theme) {
   };
 }
 
-async function writeDetectedAnchors(regionSlug, theme, anchors) {
+async function writeDetectedAnchors(regionSlug, theme, trailNumber, anchors) {
   const outputDir = path.join(root, "assets/ui/_pipeline/_calibration");
   await mkdir(outputDir, { recursive: true });
+  const trailSuffix = trailNumber >= 2 ? `_trail${trailNumber}` : "";
   const outputPath = path.join(
     outputDir,
-    `${regionSlug.replace(/-/g, "_")}_${theme}_detected_anchors.json`,
+    `${regionSlug.replace(/-/g, "_")}_${theme}${trailSuffix}_detected_anchors.json`,
   );
   await writeFile(
     outputPath,
@@ -109,6 +123,7 @@ async function writeDetectedAnchors(regionSlug, theme, anchors) {
       {
         regionSlug,
         theme,
+        trailNumber,
         source: "trail-path-anchors.json",
         lanternCount: anchors.length,
         anchors,
@@ -119,20 +134,33 @@ async function writeDetectedAnchors(regionSlug, theme, anchors) {
   );
 }
 
-async function renderOverlay(regionSlug, theme) {
-  const anchors = anchorContract.regions[regionSlug]?.[theme];
+async function renderOverlay(regionSlug, theme, trailNumber) {
+  const anchors = resolvePathAnchors(regionSlug, theme, trailNumber);
   if (!anchors) {
-    console.warn(`Skipping ${regionSlug}/${theme}: no anchors in contract`);
+    console.warn(`Skipping ${regionSlug}/${theme}/trail-${trailNumber}: no anchors`);
     return;
   }
 
-  const { assetId, pngPath, version } = resolveScrollAssetPath(regionSlug, theme);
+  const { assetId, pngPath, version } = resolveScrollAssetPath(
+    regionSlug,
+    theme,
+    trailNumber,
+  );
+
+  try {
+    await access(pngPath);
+  } catch {
+    console.warn(`Skipping ${regionSlug}/${theme}/trail-${trailNumber}: missing ${assetId}.png`);
+    return;
+  }
+
   const width = anchorContract.scrollArtWidth;
   const height = anchorContract.scrollArtHeight;
   const outputDir = path.join(root, "assets/ui/_pipeline/_calibration");
+  const trailSuffix = trailNumber >= 2 ? `_trail${trailNumber}` : "";
   const outputPath = path.join(
     outputDir,
-    `${regionSlug.replace(/-/g, "_")}_${theme}_${version}_anchor_overlay.png`,
+    `${regionSlug.replace(/-/g, "_")}_${theme}_${version}${trailSuffix}_anchor_overlay.png`,
   );
 
   const overlay = buildOverlaySvg(anchors, width, height);
@@ -143,7 +171,7 @@ async function renderOverlay(regionSlug, theme) {
 
   await mkdir(outputDir, { recursive: true });
   await writeFile(outputPath, composite);
-  await writeDetectedAnchors(regionSlug, theme, anchors);
+  await writeDetectedAnchors(regionSlug, theme, trailNumber, anchors);
   console.log(`Wrote ${path.relative(root, outputPath)}`);
 }
 
@@ -152,10 +180,10 @@ const targets = resolveTargets(flags);
 
 for (const regionSlug of targets) {
   for (const theme of ["dark", "light"]) {
-    await renderOverlay(regionSlug, theme);
+    await renderOverlay(regionSlug, theme, flags.trail);
   }
 }
 
 console.log(
-  `Anchor overlays rendered from lib/design-system/trail-path-anchors.json (${targets.length} region(s))`,
+  `Anchor overlays rendered from lib/design-system/trail-path-anchors.json (${targets.length} region(s), trail ${flags.trail})`,
 );
