@@ -92,15 +92,32 @@ class OfflineSyncServerService {
       }
       case "review_submit": {
         const payload = mutation.payload as OfflineReviewSubmitPayload;
-        await reviewServerService.submitReview(
+        const clientEventId = payload.clientEventId ?? mutation.id;
+        const fast = await reviewServerService.submitReviewFast(
           userId,
           payload.reviewItemId,
           payload.rating,
+          clientEventId,
         );
+
+        if (fast.gamificationPending) {
+          await reviewServerService.processReviewGamification({
+            userId,
+            reviewItemId: payload.reviewItemId,
+            rating: payload.rating,
+            clientEventId,
+          });
+        }
+
+        const resolution = resolveSyncConflict({
+          type: mutation.type,
+          alreadyApplied: fast.alreadyApplied ?? false,
+        });
+
         return {
           mutationId: mutation.id,
-          resolution: "applied",
-          message: conflictMessage("applied"),
+          resolution,
+          message: conflictMessage(resolution),
         };
       }
       default:

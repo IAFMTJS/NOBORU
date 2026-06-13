@@ -2,6 +2,7 @@
 
 import type {
   ReviewCardViewModel,
+  ReviewGamificationViewModel,
   ReviewRating,
   ReviewSessionViewModel,
   ReviewSubmitDeltaViewModel,
@@ -44,6 +45,8 @@ export function isBrowserOnline(): boolean {
 }
 
 class OfflineClientService {
+  private syncInFlight: Promise<OfflineSyncBatchResponse> | null = null;
+
   async cacheLesson(session: LessonSessionViewModel): Promise<void> {
     const db = await getOfflineDb();
     await db.put(OFFLINE_STORES.lessons, {
@@ -111,10 +114,11 @@ class OfflineClientService {
   async enqueueMutation(input: {
     type: OfflineSyncMutation["type"];
     payload: OfflineSyncPayload;
+    id?: string;
   }): Promise<OfflineSyncMutation> {
     const db = await getOfflineDb();
     const mutation: OfflineSyncMutation = {
-      id: createMutationId(),
+      id: input.id ?? createMutationId(),
       type: input.type,
       payload: input.payload,
       clientTimestamp: new Date().toISOString(),
@@ -125,6 +129,36 @@ class OfflineClientService {
     };
     await db.add(OFFLINE_STORES.syncQueue, mutation);
     return mutation;
+  }
+
+  async markMutationsSyncing(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    const db = await getOfflineDb();
+    await Promise.all(
+      ids.map(async (id) => {
+        const mutation = await db.get(OFFLINE_STORES.syncQueue, id);
+        if (!mutation) return;
+        await db.put(OFFLINE_STORES.syncQueue, {
+          ...mutation,
+          status: "syncing",
+        });
+      }),
+    );
+  }
+
+  async resetSyncingMutations(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    const db = await getOfflineDb();
+    await Promise.all(
+      ids.map(async (id) => {
+        const mutation = await db.get(OFFLINE_STORES.syncQueue, id);
+        if (!mutation || mutation.status !== "syncing") return;
+        await db.put(OFFLINE_STORES.syncQueue, {
+          ...mutation,
+          status: "pending",
+        });
+      }),
+    );
   }
 
   async listPendingMutations(): Promise<OfflineSyncMutation[]> {
@@ -348,13 +382,20 @@ class OfflineClientService {
     bundle: OfflineReviewBundle,
     reviewItemId: string,
     rating: ReviewRating,
-  ): Promise<{ delta: ReviewSubmitDeltaViewModel; bundle: OfflineReviewBundle; queuedOffline: boolean }> {
+  ): Promise<{
+    delta: ReviewSubmitDeltaViewModel;
+    bundle: OfflineReviewBundle;
+    queuedOffline: boolean;
+    gamificationPromise: Promise<ReviewGamificationViewModel | null> | null;
+  }> {
+    const clientEventId = createMutationId();
+
     if (isBrowserOnline()) {
       try {
         const response = await fetch("/api/review/submit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reviewItemId, rating }),
+          body: JSON.stringify({ reviewItemId, rating, clientEventId }),
         });
         const result = (await response.json()) as {
           success: boolean;
@@ -369,7 +410,10 @@ class OfflineClientService {
           ...bundle,
           session: {
             dueCount: result.data.dueCount,
-            stats: result.data.stats,
+            stats: {
+              ...bundle.session.stats,
+              dueCount: result.data.dueCount,
+            },
             currentCard: result.data.currentCard,
             recentHistory: [
               result.data.recentHistoryEntry,
@@ -387,7 +431,21 @@ class OfflineClientService {
           cachedAt: new Date().toISOString(),
         };
         await this.cacheReviewBundle(updatedBundle);
-        return { delta: result.data, bundle: updatedBundle, queuedOffline: false };
+
+        const gamificationPromise = result.data.gamificationPending
+          ? this.fetchReviewGamification({
+              clientEventId,
+              reviewItemId,
+              rating,
+            }).catch(() => null)
+          : null;
+
+        return {
+          delta: result.data,
+          bundle: updatedBundle,
+          queuedOffline: false,
+          gamificationPromise,
+        };
       } catch (error) {
         if (!isOfflineFetchFailure(error)) throw error;
       }
@@ -396,18 +454,57 @@ class OfflineClientService {
     const offlineResult = this.applyOfflineReview(bundle, reviewItemId, rating);
     await this.cacheReviewBundle(offlineResult.bundle);
     await this.enqueueMutation({
+      id: clientEventId,
       type: "review_submit",
-      payload: { reviewItemId, rating } satisfies OfflineReviewSubmitPayload,
+      payload: {
+        reviewItemId,
+        rating,
+        clientEventId,
+      } satisfies OfflineReviewSubmitPayload,
     });
 
     return {
       delta: offlineResult.delta,
       bundle: offlineResult.bundle,
       queuedOffline: true,
+      gamificationPromise: null,
     };
   }
 
+  async fetchReviewGamification(input: {
+    clientEventId: string;
+    reviewItemId: string;
+    rating: ReviewRating;
+  }): Promise<ReviewGamificationViewModel> {
+    const response = await fetch("/api/review/gamification", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    const result = (await response.json()) as {
+      success: boolean;
+      data?: ReviewGamificationViewModel;
+      error?: string;
+    };
+    if (!result.success || !result.data) {
+      throw new Error(result.error ?? "Failed to load review rewards.");
+    }
+    return result.data;
+  }
+
   async syncPendingMutations(): Promise<OfflineSyncBatchResponse> {
+    if (this.syncInFlight) {
+      return this.syncInFlight;
+    }
+
+    this.syncInFlight = this.syncPendingMutationsInternal().finally(() => {
+      this.syncInFlight = null;
+    });
+
+    return this.syncInFlight;
+  }
+
+  private async syncPendingMutationsInternal(): Promise<OfflineSyncBatchResponse> {
     if (!isBrowserOnline()) {
       throw new Error("Cannot sync while offline.");
     }
@@ -417,40 +514,55 @@ class OfflineClientService {
       return { applied: [], failed: [], pendingCount: 0 };
     }
 
-    const response = await fetch("/api/sync/batch", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mutations: pending.map((mutation) => ({
-          id: mutation.id,
-          type: mutation.type,
-          payload: mutation.payload,
-          clientTimestamp: mutation.clientTimestamp,
-        })),
-      }),
-    });
+    const pendingIds = pending.map((mutation) => mutation.id);
+    await this.markMutationsSyncing(pendingIds);
 
-    const result = (await response.json()) as {
-      success: boolean;
-      data?: OfflineSyncBatchResponse;
-      error?: string;
-    };
+    try {
+      const response = await fetch("/api/sync/batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mutations: pending.map((mutation) => ({
+            id: mutation.id,
+            type: mutation.type,
+            payload: mutation.payload,
+            clientTimestamp: mutation.clientTimestamp,
+          })),
+        }),
+      });
 
-    if (!result.success || !result.data) {
-      throw new Error(result.error ?? "Sync failed.");
+      const result = (await response.json()) as {
+        success: boolean;
+        data?: OfflineSyncBatchResponse;
+        error?: string;
+      };
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error ?? "Sync failed.");
+      }
+
+      const appliedIds = result.data.applied.map((entry) => entry.mutationId);
+      await this.removeMutations(appliedIds);
+
+      await Promise.all(
+        result.data.failed.map((failure) =>
+          this.markMutationFailed(failure.mutationId, failure.error),
+        ),
+      );
+
+      const unresolvedIds = pendingIds.filter(
+        (id) =>
+          !appliedIds.includes(id) &&
+          !result.data!.failed.some((failure) => failure.mutationId === id),
+      );
+      await this.resetSyncingMutations(unresolvedIds);
+
+      await this.setLastSyncedAt(new Date().toISOString());
+      return result.data;
+    } catch (error) {
+      await this.resetSyncingMutations(pendingIds);
+      throw error;
     }
-
-    const appliedIds = result.data.applied.map((entry) => entry.mutationId);
-    await this.removeMutations(appliedIds);
-
-    await Promise.all(
-      result.data.failed.map((failure) =>
-        this.markMutationFailed(failure.mutationId, failure.error),
-      ),
-    );
-
-    await this.setLastSyncedAt(new Date().toISOString());
-    return result.data;
   }
 
   async prefetchAudio(url: string): Promise<void> {

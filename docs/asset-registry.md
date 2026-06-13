@@ -56,14 +56,41 @@ lib/assets/registry.ts         # Canonical path constants
 |----|------|----------|---------|--------|-------|
 | `yama_main_light_v1` | Yama Main Light | mascots | v1 | approved | light |
 | `yama_main_dark_v1` | Yama Main Dark | mascots | v1 | approved | dark |
+| `yama_happy_dark_v2` | Yama Happy Dark | mascots | v2 | approved | dark |
+| `yama_happy_light_v1` | Yama Happy Light | mascots | v1 | approved | light |
+| `yama_celebrating_dark_v2` | Yama Celebrating Dark | mascots | v2 | approved | dark |
+| `yama_celebrating_light_v1` | Yama Celebrating Light | mascots | v1 | approved | light |
+| `yama_encouraging_dark_v2` | Yama Encouraging Dark | mascots | v2 | approved | dark |
+| `yama_encouraging_light_v1` | Yama Encouraging Light | mascots | v1 | approved | light |
+| `yama_thinking_dark_v2` | Yama Thinking Dark | mascots | v2 | approved | dark |
+| `yama_thinking_light_v1` | Yama Thinking Light | mascots | v1 | approved | light |
+| `yama_loading_dark_v2` | Yama Loading Dark | mascots | v2 | approved | dark |
+| `yama_loading_light_v1` | Yama Loading Light | mascots | v1 | approved | light |
+| `yama_victorious_dark_v1` | Yama Victorious Dark | mascots | v1 | approved | dark |
+| `yama_victorious_light_v1` | Yama Victorious Light | mascots | v1 | approved | light |
+| `yama_confused_dark_v1` | Yama Confused Dark | mascots | v1 | approved | dark |
+| `yama_confused_light_v1` | Yama Confused Light | mascots | v1 | approved | light |
 | `icon_app_light_v1` | App Icon Light | icons | v1 | approved | light |
 | `icon_app_dark_v1` | App Icon Dark | icons | v1 | approved | dark |
-| `mockup_product_collection_v1` | Product Mockup Collection | marketing | v1 | approved | both |
-| `mockup_home_learn_flow_dark_v1` | Home & Learn Flow Redesign | marketing | v1 | approved | dark |
+| `icon_nav_home_v1` | Nav Home | icons | v1 | approved | both |
+| `icon_nav_learn_v1` | Nav Learn | icons | v1 | approved | both |
+| `icon_nav_review_v1` | Nav Review | icons | v1 | approved | both |
+| `icon_nav_explore_v1` | Nav Explore | icons | v1 | approved | both |
+| `icon_nav_profile_v1` | Nav Profile | icons | v1 | approved | both |
+| `brand_wordmark_dark_v1` | Wordmark Dark | brand | v1 | approved | dark |
+| `brand_wordmark_light_v1` | Wordmark Light | brand | v1 | approved | light |
+| `ui_auth_atmosphere_dark_v1` | Auth Atmosphere Dark | ui | v1 | approved | dark |
+| `ui_auth_atmosphere_light_v1` | Auth Atmosphere Light | ui | v1 | approved | light |
 | `ui_trail_spine_dark_v1` | Trail Spine Dark | ui | v1 | approved | dark |
 | `ui_trail_spine_light_v1` | Trail Spine Light | ui | v1 | approved | light |
-| `ui_trail_scroll_foothills_dark_v1` | Trail Scroll Foothills Dark | ui | v1 | review | dark |
-| `ui_trail_scroll_foothills_light_v1` | Trail Scroll Foothills Light | ui | v1 | review | light |
+| `ui_trail_scroll_foothills_dark_v2` | Trail Scroll Foothills Dark | ui | v2 | review | dark |
+| `ui_trail_scroll_foothills_light_v2` | Trail Scroll Foothills Light | ui | v2 | review | light |
+| `ui_trail_scroll_*_{dark,light}_v1` | Trail Scroll (7 regions) | ui | v1 | approved | both |
+| `achievement_*_v1` (11 badges) | Achievement Badges | achievements | v1 | approved | both |
+| `region_*_v1` (8 regions) | Region Heroes | regions | v1 | approved | both |
+| `game_*_v1` (5 games) | Game Art | games | v1 | approved | both |
+| `mockup_product_collection_v1` | Product Mockup Collection | marketing | v1 | approved | both |
+| `mockup_home_learn_flow_dark_v1` | Home & Learn Flow Redesign | marketing | v1 | approved | dark |
 
 ---
 
@@ -362,14 +389,14 @@ lib/assets/registry.ts         # Canonical path constants
 
 ---
 
-### ui_trail_scroll_foothills_dark_v1
+### ui_trail_scroll_foothills_dark_v2
 
 | Field | Value |
 |-------|-------|
-| **ID** | `ui_trail_scroll_foothills_dark_v1` |
+| **ID** | `ui_trail_scroll_foothills_dark_v2` |
 | **Name** | Trail Scroll Foothills Dark |
 | **Category** | ui |
-| **Version** | v1 |
+| **Version** | v2 |
 | **Status** | review |
 | **Owner Agent** | UI Art Agent |
 | **Creation Agent** | UI Art Agent |
@@ -377,11 +404,11 @@ lib/assets/registry.ts         # Canonical path constants
 | **Created** | 2026-06-11 |
 | **Updated** | 2026-06-12 |
 
-**Source path:** `assets/ui/ui_trail_scroll_foothills_dark_v1/`
+**Source path:** `assets/ui/ui_trail_scroll_foothills_dark_v2/`
 
-**Public path:** `/ui/ui_trail_scroll_foothills_dark_v1.webp`
+**Public path:** `/ui/ui_trail_scroll_foothills_dark_v2.webp`
 
-**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsDark`
+**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsDark` (via `getTrailScrollArtPath("foothills", "dark")`)
 
 **Dependencies:** `ui_trail_spine_dark_v1`
 
@@ -394,53 +421,144 @@ lib/assets/registry.ts         # Canonical path constants
 - Trail-first Learn screen (immersive mode)
 - Trail map immersive scroll
 
-**Pipeline:** `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs`
+**Pipeline:** Scene converter (`scripts/convert-scene-assets.mjs`) — not sticker pipeline.
 
 **Helper:** `getTrailScrollArtPath("foothills", "dark")` returns this path.
 
-**Design notes:** Vertical immersive Foothills scroll (dark). Procedural regeneration: `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs` (Asset Pipeline Agent execution). UI Art Agent creation; Art Director visual QA pending before `approved_by` and promotion to `production`. Hand-authored replacement per SPEC.md when acceptance criteria A–F pass.
+**Design notes:** Foothills uses v2 in code (`TRAIL_SCROLL_VERSION_BY_REGION`). v1 superseded but may remain in `public/` until archived.
 
 ---
 
-### ui_trail_scroll_foothills_light_v1
+### ui_trail_scroll_foothills_light_v2
 
 | Field | Value |
 |-------|-------|
-| **ID** | `ui_trail_scroll_foothills_light_v1` |
+| **ID** | `ui_trail_scroll_foothills_light_v2` |
 | **Name** | Trail Scroll Foothills Light |
 | **Category** | ui |
-| **Version** | v1 |
+| **Version** | v2 |
 | **Status** | review |
 | **Owner Agent** | UI Art Agent |
 | **Creation Agent** | UI Art Agent |
-| **Approved By** | *(pending — omit from metadata until Art Director QA)* |
+| **Approved By** | *(pending)* |
 | **Created** | 2026-06-11 |
 | **Updated** | 2026-06-12 |
 
-**Source path:** `assets/ui/ui_trail_scroll_foothills_light_v1/`
+**Source path:** `assets/ui/ui_trail_scroll_foothills_light_v2/`
 
-**Public path:** `/ui/ui_trail_scroll_foothills_light_v1.webp`
+**Public path:** `/ui/ui_trail_scroll_foothills_light_v2.webp`
 
-**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsLight`
-
-**Dependencies:** `ui_trail_spine_light_v1`
-
-**Dimensions:** 1536 × 5120
-
-**Tags:** `ui`, `trail`, `scroll`, `foothills`, `light-mode`, `immersive`
-
-**Usage locations:**
-
-- Trail-first Learn screen (immersive mode)
-- Trail map immersive scroll
-
-**Pipeline:** `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs`
+**Registry key:** `ASSET_REGISTRY.ui.trailScrollFoothillsLight` (via `getTrailScrollArtPath("foothills", "light")`)
 
 **Helper:** `getTrailScrollArtPath("foothills", "light")` returns this path.
 
-**Design notes:** Vertical immersive Foothills scroll (light). Procedural regeneration: `npm run assets:trail-scroll` → `scripts/generate-trail-scroll-art.mjs` → `scripts/convert-scene-assets.mjs` (Asset Pipeline Agent execution). UI Art Agent creation; Art Director visual QA pending before `approved_by` and promotion to `production`. Hand-authored replacement per SPEC.md when acceptance criteria A–F pass.
+---
 
-**Region slugs:** `TRAIL_SCROLL_REGION_SLUGS` in `lib/assets/registry.ts` currently lists `foothills` only. Add new slugs when additional regions receive scroll art.
+### Trail scroll — all regions
+
+`TRAIL_SCROLL_REGION_SLUGS` in `lib/assets/registry.ts` lists all 8 regions: `foothills`, `forest-trail`, `mount-n5` … `master-summit`. Public path pattern: `/ui/ui_trail_scroll_{slug}_{theme}_v1.webp` (foothills uses v2).
+
+---
+
+### ui_auth_atmosphere_dark_v1 / ui_auth_atmosphere_light_v1
+
+| Field | Value |
+|-------|-------|
+| **Category** | ui |
+| **Status** | approved |
+| **Public paths** | `/ui/ui_auth_atmosphere_dark_v1.webp`, `/ui/ui_auth_atmosphere_light_v1.webp` |
+| **Usage** | `components/layout/auth-atmosphere.tsx`, `app/(auth)/layout.tsx` |
+| **Helper** | `getAuthAtmospherePath(theme)` |
+
+---
+
+### brand_wordmark_dark_v1 / brand_wordmark_light_v1
+
+| Field | Value |
+|-------|-------|
+| **Category** | brand |
+| **Status** | approved |
+| **Public paths** | `/brand/brand_wordmark_dark_v1.webp`, `/brand/brand_wordmark_light_v1.webp` |
+| **Usage** | `components/brand/noboru-wordmark.tsx`, auth + onboarding |
+| **Helper** | `getWordmarkPath(theme)` |
+| **Pipeline** | Sticker (`npm run assets:stickers`) |
+
+---
+
+## Achievements
+
+Eleven illustrated badges in `assets/achievements/` and `public/achievements/`. Mapped by slug in `getAchievementArtPath()`.
+
+| Slug | Asset ID |
+|------|----------|
+| `first-step` | `achievement_first_step_v1` |
+| `first-lesson` | `achievement_first_lesson_v1` |
+| `ten-lessons` | `achievement_trail_walker_v1` |
+| `hundred-words` | `achievement_word_collector_v1` |
+| `fifty-kanji` | `achievement_kanji_scholar_v1` |
+| `seven-day-streak` | `achievement_steady_climber_v1` |
+| `n5-completed` | `achievement_n5_summit_v1` |
+| `memory-master` | `achievement_memory_master_v1` |
+| `game-champion` | `achievement_game_champion_v1` |
+| `perfect-recall` | `achievement_perfect_recall_v1` |
+| `dungeon-delver` | `achievement_dungeon_delver_v1` |
+
+**Usage:** `features/achievements/components/achievement-badge.tsx`
+
+**Pipeline:** Sticker (`npm run assets:stickers`)
+
+---
+
+## Regions
+
+Eight region hero illustrations in `assets/regions/` and `public/regions/`. Mapped by slug in `getRegionArtPath()`.
+
+| Slug | Asset ID |
+|------|----------|
+| `foothills` | `region_foothills_v1` |
+| `forest-trail` | `region_forest_trail_v1` |
+| `mount-n5` … `mount-n1` | `region_mount_n5_v1` … `region_mount_n1_v1` |
+| `master-summit` | `region_master_summit_v1` |
+
+**Usage:** Home hero, Learn trail fallback, progress dashboard, profile, region picker
+
+**Pipeline:** Scene converter (backgrounds preserved)
+
+---
+
+## Games
+
+| Slug | Asset ID | Usage |
+|------|----------|-------|
+| `word-match` | `game_word_match_v1` | Explore + Games hub |
+| `vocabulary-rush` | `game_vocabulary_rush_v1` | Explore + Games hub |
+| `kanji-hunter` | `game_kanji_hunter_v1` | Explore + Games hub |
+| `memory-dungeon` | `game_memory_dungeon_v1` | Explore + Games hub |
+| `reading-challenge` | `game_reading_challenge_v1` | Explore (coming soon) |
+
+**Helper:** `getGameArtPath(slug)`
+
+---
+
+## Yama Expressions
+
+Expression sprites (light + dark) registered in `ASSET_REGISTRY.mascots` and resolved via `getYamaExpressionPath(expression, theme)`.
+
+Expressions: `happy`, `celebrating`, `encouraging`, `thinking`, `loading`, `victorious`, `confused` (+ aliases `supportive`, `studying` → encouraging/thinking).
+
+Dark v2 expressions supersede dark v1 files still present in `public/mascots/`.
+
+**Pipeline:** Sticker (`npm run assets:stickers`)
+
+---
+
+## Navigation Icons
+
+Custom WebP nav icons: `icon_nav_{home,learn,review,explore,profile}_v1`. Resolved via `getNavIconPath(tab)`.
+
+**Usage:** `components/layout/bottom-nav.tsx`
+
+**Pipeline:** Sticker (`npm run assets:stickers`)
 
 ---
 
@@ -450,18 +568,26 @@ lib/assets/registry.ts         # Canonical path constants
 
 ```typescript
 export const ASSET_REGISTRY = {
-  mascots: { /* ... */ },
-  icons: { /* ... */ },
+  mascots: { /* main + 16 expressions */ },
+  icons: { /* app + 5 nav */ },
+  games: { /* 5 game art */ },
+  brand: { wordmarkDark, wordmarkLight },
   ui: {
-    trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
-    trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
-    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v1.webp",
-    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v1.webp",
+    trailSpineDark, trailSpineLight,
+    trailScrollFoothillsDark, trailScrollFoothillsLight,
+    authAtmosphereDark, authAtmosphereLight,
   },
+  achievements: { /* 11 badges */ },
+  regions: { /* 8 region heroes */ },
 } as const;
 
-export const TRAIL_SCROLL_REGION_SLUGS = ["foothills"] as const;
+export const TRAIL_SCROLL_REGION_SLUGS = [
+  "foothills", "forest-trail", "mount-n5", "mount-n4",
+  "mount-n3", "mount-n2", "mount-n1", "master-summit",
+] as const;
 ```
+
+**Helpers:** `getMascotPath`, `getYamaExpressionPath`, `getAchievementArtPath`, `getGameArtPath`, `getNavIconPath`, `getRegionArtPath`, `getTrailSpineArtPath`, `getTrailScrollArtPath`, `getWordmarkPath`, `getAuthAtmospherePath`
 
 **Rule:** UI components must import paths from `ASSET_REGISTRY` — never hardcode asset paths.
 
@@ -516,25 +642,17 @@ Examples:
 
 ## Future Asset Categories
 
-From [asset-pipeline.md](./asset-pipeline.md) — not yet registered:
+From [asset-pipeline.md](./asset-pipeline.md) — scaffold folders exist but not yet populated:
 
-| Category | Folder | Examples |
-|----------|--------|----------|
-| Avatars | `assets/avatars/` | User avatar options |
-| Achievements | `assets/achievements/` | Badge artwork per achievement |
-| Regions | `assets/regions/` | Region hero illustrations |
-| Backgrounds | `assets/backgrounds/` | Screen backgrounds |
-| Enemies / Bosses | `assets/enemies/`, `assets/bosses/` | Trial boss artwork |
-| Loading | `assets/loading/` | Yama loading states |
-| Events | `assets/events/` | Seasonal event art |
-| UI | `assets/ui/` | Trail spine, trail scroll, auth atmosphere, empty states |
+| Category | Folder | Status |
+|----------|--------|--------|
+| Avatars | `assets/avatars/` | empty |
+| Backgrounds | `assets/backgrounds/` | empty |
+| Enemies / Bosses | `assets/enemies/`, `assets/bosses/` | empty |
+| Loading | `assets/loading/` | empty (Yama loading expression used instead) |
+| Events / Seasons | `assets/events/`, `assets/seasons/` | empty |
 
-When new assets are approved:
-
-1. Add `metadata.json` to source folder
-2. Copy production files to `public/`
-3. Add entry to `lib/assets/registry.ts`
-4. Update this document
+**Shipped categories:** mascots, icons, brand, ui, achievements, regions, games, marketing.
 
 ---
 

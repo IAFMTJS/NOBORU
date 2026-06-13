@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import type { OfflineStatusViewModel } from "@/lib/offline/types";
 
 type UseOfflineSyncOptions = {
@@ -11,9 +12,11 @@ type UseOfflineSyncOptions = {
 };
 
 export function useOfflineSync(options: UseOfflineSyncOptions = {}) {
+  const isOnline = useOnlineStatus();
   const [status, setStatus] = useState<OfflineStatusViewModel | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasAttemptedInitialSync = useRef(false);
 
   const refresh = useCallback(async () => {
     const next = await offlineClient.getStatus(options.userId);
@@ -49,6 +52,13 @@ export function useOfflineSync(options: UseOfflineSyncOptions = {}) {
     window.addEventListener("online", handleOnline);
     return () => window.removeEventListener("online", handleOnline);
   }, [options.autoSync, syncNow]);
+
+  useEffect(() => {
+    if (!options.autoSync || !status || hasAttemptedInitialSync.current) return;
+    if (!isOnline || status.pendingMutations === 0 || syncing) return;
+    hasAttemptedInitialSync.current = true;
+    void syncNow().catch(() => undefined);
+  }, [isOnline, options.autoSync, status, syncNow, syncing]);
 
   return {
     status,

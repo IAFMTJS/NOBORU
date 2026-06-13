@@ -477,20 +477,21 @@ High strategic importance
 
 Phase A is complete when:
 
-- [x] Learning path is a **visual trail**, not a list — on Home and Learn
+- [x] Learning path is a **visual trail**, not a list — on Learn
+- [x] Learning path preview appears on **Home** (Current Trail section)
 - [x] At least **Foothills + one JLPT region** have distinct visual identity (accent/gradient minimum)
 - [x] Achievements render as **illustrated badges**, not text pills, on Profile and Achievements
-- [x] Japanese content uses a **dedicated Japanese typeface**
+- [x] Japanese content uses a **dedicated Japanese typeface** (lesson, review, lists, teach cards)
 - [x] Kanji list matches supplementary mockup layout pattern
-- [x] Home, Login, and Onboarding welcome align with approved mockups at spacing/hierarchy level
+- [ ] Home, Login, and Onboarding welcome align with approved mockups at spacing/hierarchy level (Login brand pass in progress)
 - [x] Progress dashboard includes **circular overall mastery** visualization
-- [x] Dark mode has intentional **surface depth** without harsh shadows
+- [x] Dark mode has intentional **surface depth** (`bg-surface` on nav shell)
 - [x] Empty, loading, and major celebration states use **Yama** appropriately
 - [x] Nav matches **resolved IA** (5-tab Explore; Games/Community via Explore hub)
 - [x] Streak UI remains **secondary** per vision (even if mockups show it prominently)
-- [x] All new assets registered in [asset-registry.md](./asset-registry.md)
-- [x] No hardcoded hex outside design tokens
-- [x] `prefers-reduced-motion` honored on new animations
+- [ ] All new assets registered in [asset-registry.md](./asset-registry.md)
+- [x] No hardcoded hex outside design tokens (trail glows use semantic CSS utilities)
+- [ ] `prefers-reduced-motion` honored on new animations (dialogs/sheets remain)
 
 ---
 

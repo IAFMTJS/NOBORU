@@ -165,6 +165,19 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
   reviewQueueCount: 8,
   readyTrial: null,
   gamesAvailable: false,
+  companion: {
+    bondLevel: 3,
+    bondXp: 250,
+    bondXpToNextLevel: 50,
+    progressPercent: 50,
+    evolutionSlug: "young_fox",
+    evolutionName: "Young Fox",
+    equippedOutfitName: null,
+  },
+  progressionPreview: {
+    unlocks: [],
+    primaryUnlock: null,
+  },
   dailyGoal: {
     targetMinutes: 15,
     progressPercent: 25,

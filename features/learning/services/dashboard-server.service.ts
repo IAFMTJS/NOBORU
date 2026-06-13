@@ -14,6 +14,8 @@ import { settingsServerService } from "@/features/settings/services/settings-ser
 import { trialService } from "@/features/trials/services/trial.service";
 import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
+import { companionService } from "@/features/companion/services/companion.service";
+import { progressionPreviewService } from "@/lib/progression/preview.service";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
 const REGION_LABELS: Record<string, { name: string; trail: string }> = {
@@ -110,7 +112,9 @@ class DashboardServerService {
       profile.userId.length,
     );
 
-    const readyTrial = trials.find((trial) => trial.availability === "available");
+    const readyTrial = trials.find(
+      (trial) => trial.availability === "available",
+    );
     const regionForNextLesson = learningPath.nextLesson
       ? (learningPath.regions.find((entry) =>
           entry.units.some((unit) =>
@@ -122,6 +126,11 @@ class DashboardServerService {
       learningPath.nextLesson && regionForNextLesson
         ? getLessonPositionInRegion(regionForNextLesson, learningPath.nextLesson.id)
         : null;
+
+    const [companion, progressionPreview] = await Promise.all([
+      companionService.getCompanion(profile.userId),
+      progressionPreviewService.getPreview(profile.userId, profile.currentRegionSlug),
+    ]);
 
     return {
       greeting: `Kon'nichiwa, ${profile.displayName}`,
@@ -155,7 +164,8 @@ class DashboardServerService {
         currentStreak,
         totalXp: elevation.totalEp,
       },
-      recentAchievements: recentAchievements.map((achievement) => ({
+      recentAchievements: recentAchievements.map(
+        (achievement: { id: string; slug: string; name: string; rarity: HomeDashboardViewModel["recentAchievements"][number]["rarity"] }) => ({
         id: achievement.id,
         slug: achievement.slug,
         title: achievement.name,
@@ -169,6 +179,8 @@ class DashboardServerService {
           }
         : null,
       gamesAvailable: gamesUnlocked,
+      companion,
+      progressionPreview,
       dailyGoal: {
         targetMinutes: settings?.dailyGoalMinutes ?? 15,
         progressPercent:

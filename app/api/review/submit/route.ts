@@ -11,17 +11,34 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       reviewItemId?: string;
       rating?: ReviewRating;
+      clientEventId?: string;
     };
 
     if (!body.reviewItemId || !body.rating) {
       return jsonError("Review item ID and rating are required.", 400);
     }
 
-    const data = await reviewServerService.submitReview(
+    const clientEventId = body.clientEventId?.trim() || undefined;
+    const data = await reviewServerService.submitReviewFast(
       session.userId,
       body.reviewItemId,
       body.rating,
+      clientEventId,
     );
+
+    if (clientEventId && data.gamificationPending) {
+      void reviewServerService
+        .processReviewGamification({
+          userId: session.userId,
+          reviewItemId: body.reviewItemId,
+          rating: body.rating,
+          clientEventId,
+        })
+        .catch((caught) => {
+          console.error("Deferred review gamification failed.", caught);
+        });
+    }
+
     return jsonOk(data);
   } catch (caught) {
     return jsonError(

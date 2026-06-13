@@ -93,6 +93,14 @@ export const YAMA_CELEBRATION_MESSAGES = {
     "Trail node cleared. The path opens ahead.",
     "Another step on the mountain, complete.",
   ],
+  trial_boss: [
+    "Boss defeated! The region gate opens before you.",
+    "Trial conquered. Yama leaps with pride.",
+  ],
+  streak_milestone: [
+    "Streak milestone reached. Consistency builds summits.",
+    "Days of steady climbing. The mountain remembers.",
+  ],
 } as const;
 
 export const YAMA_EXPRESSION_STYLES: Record<

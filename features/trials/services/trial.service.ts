@@ -20,6 +20,10 @@ import type {
   UserTrialProgressRow,
 } from "@/features/trials/types/trial.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
+import { companionService } from "@/features/companion/services/companion.service";
+import { chestService } from "@/features/chests/services/chest.service";
+import { friendsService } from "@/features/friends/services/friends.service";
+import { leagueService } from "@/features/leagues/services/league.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import { questService } from "@/features/quests/services/quest.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
@@ -274,6 +278,19 @@ class TrialService {
         ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
         : []),
     ]);
+
+    if (passed && isFirstPass) {
+      await companionService.awardBondXp(userId, "trial_pass");
+      await chestService.claimBossChest(userId, slug);
+      await friendsService.recordActivity(
+        userId,
+        "trial_pass",
+        `Passed ${template.title}`,
+      );
+      if (elevation?.epAwarded) {
+        await leagueService.addWeeklyEp(userId, elevation.epAwarded);
+      }
+    }
 
     return {
       passed,

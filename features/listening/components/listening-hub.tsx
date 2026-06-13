@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -17,6 +18,7 @@ import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { ListeningHubViewModel } from "@/features/listening/types/listening.types";
 
 type ListeningHubProps = {
@@ -26,6 +28,7 @@ type ListeningHubProps = {
 
 export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
   const contentHub = getJlptContentHub(jlptLevel);
+  const tokens = CONTENT_HUB_TOKENS.listening;
 
   return (
     <PageContainer>
@@ -47,7 +50,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
 
       <JlptLevelPills basePath="/learn/listening" activeLevel={jlptLevel} />
 
-      <Card>
+      <Card className={tokens.progressCardBorder}>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -59,6 +62,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
             value={hub.progressPercent}
             label="Listening comprehension"
             showValue
+            indicatorClassName={tokens.progressIndicator}
           />
         </CardContent>
       </Card>
@@ -70,8 +74,13 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           {hub.exercises.map((exercise) => (
-            <Link key={exercise.id} href={`/learn/listening/exercises/${exercise.slug}`}>
+            <Link
+              key={exercise.id}
+              href={`/learn/listening/exercises/${exercise.slug}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
+                leading={<ContentHubLeading variant="listening" glyph="聴" />}
                 primary={exercise.title}
                 secondary={`${exercise.estimatedDuration} min`}
                 trailing={
@@ -94,8 +103,13 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           {hub.challenges.map((challenge) => (
-            <Link key={challenge.id} href={`/learn/listening/challenges/${challenge.slug}`}>
+            <Link
+              key={challenge.id}
+              href={`/learn/listening/challenges/${challenge.slug}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
+                leading={<ContentHubLeading variant="listening" glyph="挑" />}
                 primary={challenge.title}
                 secondary={
                   challenge.description ??

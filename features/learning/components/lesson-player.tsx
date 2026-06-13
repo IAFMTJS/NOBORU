@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
+import { LessonLayout } from "@/components/layout/lesson-layout";
+import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
 import { MotionDiv } from "@/components/motion/motion-div";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ import { analyticsService } from "@/features/analytics/services/analytics.servic
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { yamaService } from "@/features/yama/services/yama.service";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
 import {
   calculateLessonScore,
   LESSON_EMBEDDED_STEP_PASS_THRESHOLD,
@@ -347,7 +349,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
   if (lessonFailed) {
     return (
-      <PageContainer>
+      <LessonLayout>
         <ScreenHeader
           title={session.title}
           subtitle={`${session.type} lesson · ${session.xpReward} XP`}
@@ -363,12 +365,39 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           regionSlug={session.regionSlug}
           onRetry={handleRetry}
         />
-      </PageContainer>
+      </LessonLayout>
     );
   }
 
+  const stickyFooter =
+    currentStep.kind === "teach" || currentStep.kind === "knowledge_inventory" ? (
+      <Button className="w-full" onClick={goNext}>
+        Continue
+      </Button>
+    ) : currentStep.kind === "application" ? (
+      <Button className="w-full" onClick={goNext} disabled={!recallAnswered}>
+        Continue
+      </Button>
+    ) : currentStep.kind === "recall" ||
+        currentStep.kind === "fill_blank" ||
+        currentStep.kind === "word_bank" ||
+        currentStep.kind === "sentence_typed" ||
+        currentStep.kind === "matching" ||
+        currentStep.kind === "reading" ? (
+      <Button className="w-full" onClick={goNext} disabled={!recallAnswered}>
+        Continue
+      </Button>
+    ) : currentStep.kind === "story" ||
+        currentStep.kind === "dialogue" ||
+        currentStep.kind === "listening" ||
+        currentStep.kind === "listening_challenge" ? (
+      <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
+        Continue
+      </Button>
+    ) : null;
+
   return (
-    <PageContainer>
+    <LessonLayout footer={stickyFooter}>
       <ScreenHeader
         title={session.title}
         subtitle={`${session.type} lesson · ${session.xpReward} XP`}
@@ -383,6 +412,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
+      <StudyAtmosphere>
       <MotionDiv
         key={stepIndex}
         {...fadeInUp}
@@ -402,6 +432,10 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             ) : null}
           </CardHeader>
           <CardContent className="space-y-4">
+            <YamaPresence
+              presence={yamaService.resolveTeachPresence(stepIndex)}
+              size="sm"
+            />
             <p className="text-body-sm text-muted-foreground">
               {checkStepCount} checks · Pass {session.passScore}% ·{" "}
               {currentStep.xpReward} XP reward
@@ -429,33 +463,23 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
       {currentStep.kind === "teach" ? (
         <>
+          <YamaPresence
+            presence={yamaService.resolveTeachPresence(stepIndex)}
+            size="sm"
+            className="mb-2"
+          />
           <LessonTeachCard step={currentStep} soundEnabled={soundEnabled} />
-          <Button className="w-full" onClick={goNext}>
-            Continue
-          </Button>
         </>
       ) : null}
 
       {currentStep.kind === "knowledge_inventory" ? (
         <>
           <KnowledgeInventoryCard step={currentStep} />
-          <Button className="w-full" onClick={goNext}>
-            Continue
-          </Button>
         </>
       ) : null}
 
       {currentStep.kind === "application" ? (
-        <>
-          <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
       ) : null}
 
       {currentStep.kind === "recall" ? (
@@ -470,186 +494,114 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           ) : (
             <ChoiceRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
           )}
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
         </>
       ) : null}
 
       {currentStep.kind === "fill_blank" ? (
-        <>
-          <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
       ) : null}
 
       {currentStep.kind === "word_bank" ? (
-        <>
-          <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
       ) : null}
 
       {currentStep.kind === "sentence_typed" ? (
-        <>
-          <TypedSentenceDrill
-            prompt={currentStep.prompt}
-            display={currentStep.englishHint}
-            acceptedAnswers={currentStep.acceptedAnswers}
-            onAnswer={handleRecallAnswer}
-          />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <TypedSentenceDrill
+          prompt={currentStep.prompt}
+          display={currentStep.englishHint}
+          acceptedAnswers={currentStep.acceptedAnswers}
+          onAnswer={handleRecallAnswer}
+        />
       ) : null}
 
       {currentStep.kind === "matching" ? (
-        <>
-          <MatchingDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <MatchingDrill step={currentStep} onAnswer={handleRecallAnswer} />
       ) : null}
 
       {currentStep.kind === "reading" ? (
-        <>
-          <ReadingCard step={currentStep} onAnswer={handleRecallAnswer} />
-          <Button
-            className="w-full"
-            onClick={goNext}
-            disabled={!recallAnswered}
-          >
-            Continue
-          </Button>
-        </>
+        <ReadingCard step={currentStep} onAnswer={handleRecallAnswer} />
       ) : null}
 
       {currentStep.kind === "story" ? (
-        <>
-          <StoryReader
-            embedded
-            story={{
-              id: currentStep.content.id,
-              title: currentStep.content.title,
-              slug: currentStep.content.slug,
-              summary: currentStep.content.summary,
-              jlptLevel: regionJlpt,
-              estimatedReadTime: currentStep.content.sections.length * 2,
-              sections: currentStep.content.sections,
-              questions: currentStep.content.questions,
-              completed: false,
-              score: 0,
-            }}
-            onComplete={(score) => {
-              setRecallTotal(1);
-              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-              setEmbeddedComplete(true);
-            }}
-          />
-          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
-            Continue
-          </Button>
-        </>
+        <StoryReader
+          embedded
+          story={{
+            id: currentStep.content.id,
+            title: currentStep.content.title,
+            slug: currentStep.content.slug,
+            summary: currentStep.content.summary,
+            jlptLevel: regionJlpt,
+            estimatedReadTime: currentStep.content.sections.length * 2,
+            sections: currentStep.content.sections,
+            questions: currentStep.content.questions,
+            completed: false,
+            score: 0,
+          }}
+          onComplete={(score) => {
+            setRecallTotal(1);
+            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+            setEmbeddedComplete(true);
+          }}
+        />
       ) : null}
 
       {currentStep.kind === "dialogue" ? (
-        <>
-          <DialoguePlayer
-            embedded
-            dialogue={{
-              id: currentStep.content.id,
-              title: currentStep.content.title,
-              slug: currentStep.content.slug,
-              description: currentStep.content.description,
-              jlptLevel: regionJlpt,
-              nodes: currentStep.content.nodes,
-              completed: false,
-              score: 0,
-            }}
-            onComplete={(score) => {
-              setRecallTotal(1);
-              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-              setEmbeddedComplete(true);
-            }}
-          />
-          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
-            Continue
-          </Button>
-        </>
+        <DialoguePlayer
+          embedded
+          dialogue={{
+            id: currentStep.content.id,
+            title: currentStep.content.title,
+            slug: currentStep.content.slug,
+            description: currentStep.content.description,
+            jlptLevel: regionJlpt,
+            nodes: currentStep.content.nodes,
+            completed: false,
+            score: 0,
+          }}
+          onComplete={(score) => {
+            setRecallTotal(1);
+            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+            setEmbeddedComplete(true);
+          }}
+        />
       ) : null}
 
       {currentStep.kind === "listening" ? (
-        <>
-          <ListeningExercisePlayer
-            embedded
-            exercise={{
-              ...currentStep.content,
-              jlptLevel: regionJlpt,
-              completed: false,
-              score: 0,
-            }}
-            onComplete={(score) => {
-              setRecallTotal(1);
-              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-              setEmbeddedComplete(true);
-            }}
-          />
-          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
-            Continue
-          </Button>
-        </>
+        <ListeningExercisePlayer
+          embedded
+          exercise={{
+            ...currentStep.content,
+            jlptLevel: regionJlpt,
+            completed: false,
+            score: 0,
+          }}
+          onComplete={(score) => {
+            setRecallTotal(1);
+            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+            setEmbeddedComplete(true);
+          }}
+        />
       ) : null}
 
       {currentStep.kind === "listening_challenge" ? (
-        <>
-          <ListeningChallengePlayer
-            embedded
-            challenge={{
-              id: currentStep.content.id,
-              title: currentStep.content.title,
-              slug: currentStep.content.slug,
-              description: currentStep.content.description,
-              jlptLevel: regionJlpt,
-              exercises: currentStep.content.exercises,
-              completed: false,
-              score: 0,
-            }}
-            onComplete={(score) => {
-              setRecallTotal(1);
-              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-              setEmbeddedComplete(true);
-            }}
-          />
-          <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
-            Continue
-          </Button>
-        </>
+        <ListeningChallengePlayer
+          embedded
+          challenge={{
+            id: currentStep.content.id,
+            title: currentStep.content.title,
+            slug: currentStep.content.slug,
+            description: currentStep.content.description,
+            jlptLevel: regionJlpt,
+            exercises: currentStep.content.exercises,
+            completed: false,
+            score: 0,
+          }}
+          onComplete={(score) => {
+            setRecallTotal(1);
+            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+            setEmbeddedComplete(true);
+          }}
+        />
       ) : null}
 
       {currentStep.kind === "complete" ? (
@@ -725,6 +677,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         </Card>
       ) : null}
       </MotionDiv>
-    </PageContainer>
+      </StudyAtmosphere>
+    </LessonLayout>
   );
 }

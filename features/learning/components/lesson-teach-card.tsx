@@ -71,7 +71,9 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           <CardDescription>
             Hiragana · {step.index}/{step.total}
           </CardDescription>
-          <CardTitle className="text-heading-1">{content.character}</CardTitle>
+          <CardTitle className="font-japanese text-heading-1" lang="ja">
+            {content.character}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-heading-5">{content.romaji}</p>
@@ -95,7 +97,9 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           <CardDescription>
             Katakana · {step.index}/{step.total}
           </CardDescription>
-          <CardTitle className="text-heading-1">{content.character}</CardTitle>
+          <CardTitle className="font-japanese text-heading-1" lang="ja">
+            {content.character}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-heading-5">{content.romaji}</p>
@@ -119,7 +123,9 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           <CardDescription>
             Kanji · {step.index}/{step.total}
           </CardDescription>
-          <CardTitle className="text-heading-1">{content.character}</CardTitle>
+          <CardTitle className="font-japanese text-heading-1" lang="ja">
+            {content.character}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-body">{content.meaning}</p>
@@ -169,7 +175,9 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           <CardDescription>
             Grammar · {step.index}/{step.total}
           </CardDescription>
-          <CardTitle className="text-heading-4">{content.title}</CardTitle>
+          <CardTitle className="font-japanese text-heading-4" lang="ja">
+            {content.title}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-body">{content.meaning}</p>

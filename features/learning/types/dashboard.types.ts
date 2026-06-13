@@ -1,4 +1,6 @@
 import type { AchievementRarity } from "@/lib/content/types";
+import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
+import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
@@ -49,6 +51,8 @@ export type HomeDashboardViewModel = {
     href: string;
   } | null;
   gamesAvailable: boolean;
+  progressionPreview: ProgressionPreviewViewModel;
+  companion: CompanionViewModel;
   dailyGoal: {
     targetMinutes: number;
     progressPercent: number;

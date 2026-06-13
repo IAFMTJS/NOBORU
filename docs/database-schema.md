@@ -540,9 +540,16 @@ review_history
 Fields:
 
 id
+user_id
 review_item_id
-result
-response_time
+rating
+previous_state
+new_state
+mastery_score
+interval_days
+client_event_id (nullable, unique per user for idempotent replay)
+gamification_applied_at (nullable)
+gamification_result (nullable jsonb)
 created_at
 
 ⸻

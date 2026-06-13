@@ -52,6 +52,18 @@ export type ReviewSubmitDeltaViewModel = {
   elevation: ElevationAwardViewModel | null;
   achievements: AchievementUnlockViewModel[];
   quests: QuestCompletionViewModel[];
+  clientEventId?: string;
+  gamificationPending?: boolean;
+  alreadyApplied?: boolean;
+};
+
+export type ReviewGamificationViewModel = {
+  clientEventId: string;
+  ready: boolean;
+  elevation: ElevationAwardViewModel | null;
+  achievements: AchievementUnlockViewModel[];
+  quests: QuestCompletionViewModel[];
+  stats: ReviewStatsViewModel | null;
 };
 
 export type ReviewSessionViewModel = {

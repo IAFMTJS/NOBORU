@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
+import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,13 @@ export function ReviewSession({
       );
       setSession((previous) => ({
         dueCount: result.delta.dueCount,
-        stats: result.delta.stats,
+        stats:
+          result.delta.stats.totalCount > 0
+            ? result.delta.stats
+            : {
+                ...previous.stats,
+                dueCount: result.delta.dueCount,
+              },
         currentCard: result.delta.currentCard,
         recentHistory: [
           result.delta.recentHistoryEntry,
@@ -98,15 +105,9 @@ export function ReviewSession({
         ].slice(0, 5),
       }));
       onBundleChange(result.bundle);
-      setLastElevation(result.delta.elevation ?? null);
-      setLastAchievements(result.delta.achievements ?? []);
-      setLastQuests(result.delta.quests ?? []);
       setLastReviewFeedback(yamaService.resolveReviewFeedback(rating));
       setRevealed(false);
       setSessionCompletedCount((current) => current + 1);
-      if (result.delta.elevation) {
-        setSessionEpEarned((current) => current + result.delta.elevation!.epAwarded);
-      }
       const nextCount = sessionCompletedCount + 1;
       if (quickSessionTarget !== null && nextCount >= quickSessionTarget) {
         setSessionFinished(true);
@@ -125,6 +126,35 @@ export function ReviewSession({
           queuedOffline: result.queuedOffline,
         },
       });
+
+      if (result.gamificationPromise) {
+        void result.gamificationPromise.then((gamification) => {
+          if (!gamification?.ready) return;
+          setLastElevation(gamification.elevation);
+          setLastAchievements(gamification.achievements);
+          setLastQuests(gamification.quests);
+          if (gamification.stats) {
+            setSession((previous) => ({
+              ...previous,
+              stats: gamification.stats!,
+            }));
+          }
+          if (gamification.elevation) {
+            setSessionEpEarned(
+              (current) => current + gamification.elevation!.epAwarded,
+            );
+          }
+        });
+      } else {
+        setLastElevation(result.delta.elevation ?? null);
+        setLastAchievements(result.delta.achievements ?? []);
+        setLastQuests(result.delta.quests ?? []);
+        if (result.delta.elevation) {
+          setSessionEpEarned(
+            (current) => current + result.delta.elevation!.epAwarded,
+          );
+        }
+      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Review failed.");
     } finally {
@@ -135,7 +165,7 @@ export function ReviewSession({
   return (
     <PageContainer>
       <ScreenHeader
-        title={quickSessionTarget ? "Quick Review" : "Review"}
+        title={quickSessionTarget ? "Spirit Trials" : "Training Grounds"}
         subtitle={
           weakOnly && contentType
             ? `Weak ${contentType} sprint · ${session.dueCount} due overall`
@@ -218,10 +248,12 @@ export function ReviewSession({
           <EmptyState
             title="No reviews due"
             description="Complete lessons to build your review queue. Scheduled reviews will appear here."
+            yamaExpression="encouraging"
           />
         </div>
       ) : (
-        <Card className="shadow-elevation-1">
+        <StudyAtmosphere>
+        <Card className="border-border/60 bg-card/95 shadow-elevation-2">
           <CardHeader>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Badge variant="outline" className="capitalize">
@@ -238,7 +270,9 @@ export function ReviewSession({
               {session.currentCard.nextReviewLabel}
             </CardDescription>
             <CardTitle className="text-center text-heading-1">
-              {session.currentCard.term}
+              <span lang="ja" className="font-japanese">
+                {session.currentCard.term}
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-center">
@@ -279,6 +313,7 @@ export function ReviewSession({
             )}
           </CardContent>
         </Card>
+        </StudyAtmosphere>
       )}
 
       {session.recentHistory.length > 0 ? (
@@ -293,7 +328,11 @@ export function ReviewSession({
                 className="flex items-center justify-between gap-3 border-b border-border/60 pb-3 last:border-b-0 last:pb-0"
               >
                 <div>
-                  <p className="text-body-sm font-medium">{entry.term}</p>
+                <p className="text-body-sm font-medium">
+                  <span lang="ja" className="font-japanese">
+                    {entry.term}
+                  </span>
+                </p>
                   <p className="text-caption capitalize text-muted-foreground">
                     {entry.contentType} · {formatReviewStateLabel(entry.state)}
                   </p>

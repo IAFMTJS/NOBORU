@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { Mountain, Sparkles, Swords } from "lucide-react";
 
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GameCard } from "@/features/games/components/game-card";
 import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
 
 type GamesScreenProps = {
@@ -25,22 +26,32 @@ export function GamesScreen({ availability }: GamesScreenProps) {
         ? "Word Match"
         : "Word Match";
 
+  const hasMiniGame =
+    availability.wordMatch.available ||
+    availability.vocabularyRush.available ||
+    availability.kanjiHunter.available ||
+    availability.memoryDungeon.available;
+
   return (
     <PageContainer>
       <ScreenHeader
         title="Games"
         subtitle="Educational challenges that reinforce mastery"
       />
-      <Card className="border-primary/20 shadow-elevation-1">
+
+      <Card className="border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
         <CardHeader>
-          <CardTitle>Trials</CardTitle>
+          <div className="flex items-center gap-2">
+            <Swords className="h-5 w-5 text-primary" aria-hidden />
+            <CardTitle>Trials</CardTitle>
+          </div>
           <CardDescription>
-            Timed regional and N5 boss challenges using interactive recall drills.
+            Timed regional challenges and boss proving grounds.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button className="w-full" asChild>
-            <Link href="/trials">Open Trials</Link>
+            <Link href="/trials">Enter Trials</Link>
           </Button>
         </CardContent>
       </Card>
@@ -49,133 +60,99 @@ export function GamesScreen({ availability }: GamesScreenProps) {
         <CardHeader>
           <CardTitle>Mini-Games</CardTitle>
           <CardDescription>
-            Short sprints using vocabulary and kana you have already learned on the trail.
+            {hasMiniGame
+              ? "Quick sprints that reinforce what you have already learned."
+              : "Complete your first lessons to unlock matching and rush drills."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm font-medium">{wordMatchLabel}</p>
-              {availability.wordMatch.available ? (
-                <Badge variant="secondary">
-                  {availability.wordMatch.poolSize} items ready
-                </Badge>
-              ) : (
-                <Badge variant="outline">Locked</Badge>
-              )}
-            </div>
-            <p className="text-caption text-muted-foreground">
-              Match pairs in one focused round. Falls back to kana when vocabulary is still thin.
-            </p>
-            <Button
-              className="w-full"
-              disabled={!availability.wordMatch.available}
-              asChild={availability.wordMatch.available}
-            >
-              {availability.wordMatch.available ? (
-                <Link href="/games/word-match">Play {wordMatchLabel}</Link>
-              ) : (
-                <span>Complete more lessons to unlock</span>
-              )}
-            </Button>
-          </div>
+        <CardContent className="space-y-2">
+          {availability.wordMatch.available ? (
+            <GameCard
+              href="/games/word-match"
+              title={wordMatchLabel}
+              description="Match pairs in one focused round. Falls back to kana when vocabulary is still thin."
+              gameSlug="word-match"
+              badge={`${availability.wordMatch.poolSize} items`}
+            />
+          ) : (
+            <GameCard
+              href="#"
+              title={wordMatchLabel}
+              description="Complete more lessons to unlock matching drills."
+              gameSlug="word-match"
+              disabled
+            />
+          )}
 
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm font-medium">Memory Dungeon</p>
-              {availability.memoryDungeon.available ? (
-                <Badge variant="secondary">
-                  {availability.memoryDungeon.roomCount} rooms ·{" "}
-                  {availability.memoryDungeon.poolSize} pairs
-                </Badge>
-              ) : (
-                <Badge variant="outline">Locked</Badge>
-              )}
-            </div>
-            <p className="text-caption text-muted-foreground">
-              Flip hidden pairs across vocabulary and kanji rooms in a dungeon crawl.
-            </p>
-            <Button
-              className="w-full"
-              disabled={!availability.memoryDungeon.available}
-              asChild={availability.memoryDungeon.available}
-            >
-              {availability.memoryDungeon.available ? (
-                <Link href="/games/memory-dungeon">Play Memory Dungeon</Link>
-              ) : (
-                <span>Learn more on the trail to unlock</span>
-              )}
-            </Button>
-          </div>
+          {availability.vocabularyRush.available ? (
+            <GameCard
+              href="/games/vocabulary-rush"
+              title="Vocabulary Rush"
+              description="Ten timed recall questions with three lives."
+              gameSlug="vocabulary-rush"
+              badge={`${availability.vocabularyRush.poolSize} words`}
+            />
+          ) : (
+            <GameCard
+              href="#"
+              title="Vocabulary Rush"
+              description="Learn more vocabulary on the trail to unlock."
+              gameSlug="vocabulary-rush"
+              disabled
+            />
+          )}
 
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm font-medium">Kanji Hunter</p>
-              {availability.kanjiHunter.available ? (
-                <Badge variant="secondary">
-                  {availability.kanjiHunter.poolSize} kanji ready
-                </Badge>
-              ) : (
-                <Badge variant="outline">Locked</Badge>
-              )}
-            </div>
-            <p className="text-caption text-muted-foreground">
-              Timed kanji meaning recall with three lives.
-            </p>
-            <Button
-              className="w-full"
-              disabled={!availability.kanjiHunter.available}
-              asChild={availability.kanjiHunter.available}
-            >
-              {availability.kanjiHunter.available ? (
-                <Link href="/games/kanji-hunter">Play Kanji Hunter</Link>
-              ) : (
-                <span>Learn more kanji on the trail</span>
-              )}
-            </Button>
-          </div>
+          {availability.kanjiHunter.available ? (
+            <GameCard
+              href="/games/kanji-hunter"
+              title="Kanji Hunter"
+              description="Timed kanji meaning recall with three lives."
+              gameSlug="kanji-hunter"
+              badge={`${availability.kanjiHunter.poolSize} kanji`}
+            />
+          ) : (
+            <GameCard
+              href="#"
+              title="Kanji Hunter"
+              description="Learn more kanji on the trail to unlock."
+              gameSlug="kanji-hunter"
+              disabled
+            />
+          )}
 
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm font-medium">Weak Vocabulary Rush</p>
-              <Badge variant="outline">Weak areas</Badge>
-            </div>
-            <p className="text-caption text-muted-foreground">
-              Sprint through vocabulary you are still strengthening in review.
-            </p>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/games/vocabulary-rush?weakOnly=true">
-                Play Weak Sprint
-              </Link>
-            </Button>
-          </div>
+          {availability.memoryDungeon.available ? (
+            <GameCard
+              href="/games/memory-dungeon"
+              title="Memory Dungeon"
+              description="Flip hidden pairs across vocabulary and kanji rooms."
+              gameSlug="memory-dungeon"
+              badge={`${availability.memoryDungeon.roomCount} rooms`}
+            />
+          ) : (
+            <GameCard
+              href="#"
+              title="Memory Dungeon"
+              description="Learn more on the trail to unlock the dungeon."
+              gameSlug="memory-dungeon"
+              disabled
+            />
+          )}
 
-          <div className="rounded-lg border border-border p-4 space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-body-sm font-medium">Vocabulary Rush</p>
-              {availability.vocabularyRush.available ? (
-                <Badge variant="secondary">
-                  {availability.vocabularyRush.poolSize} words ready
-                </Badge>
-              ) : (
-                <Badge variant="outline">Locked</Badge>
-              )}
-            </div>
-            <p className="text-caption text-muted-foreground">
-              Ten timed recall questions with three lives. Speed increases as your streak grows.
-            </p>
-            <Button
-              className="w-full"
-              disabled={!availability.vocabularyRush.available}
-              asChild={availability.vocabularyRush.available}
-            >
-              {availability.vocabularyRush.available ? (
-                <Link href="/games/vocabulary-rush">Play Vocabulary Rush</Link>
-              ) : (
-                <span>Learn more vocabulary on the trail</span>
-              )}
-            </Button>
-          </div>
+          {availability.vocabularyRush.available ? (
+            <GameCard
+              href="/games/vocabulary-rush?weakOnly=true"
+              title="Weak Vocabulary Sprint"
+              description="Focus on words that need more practice."
+              icon={<Sparkles className="h-5 w-5" aria-hidden />}
+            />
+          ) : null}
+
+          <GameCard
+            href="/explore"
+            title="Explore Hub"
+            description="Return to the full Explore hub for trials and study trails."
+            icon={<Mountain className="h-5 w-5" aria-hidden />}
+          />
         </CardContent>
       </Card>
     </PageContainer>

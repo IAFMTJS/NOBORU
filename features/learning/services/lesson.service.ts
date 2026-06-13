@@ -704,6 +704,47 @@ class LessonService {
     };
   }
 
+  private extractPreviewLabel(content: LessonContent): string | null {
+    switch (content.type) {
+      case "hiragana":
+      case "katakana":
+      case "kanji":
+        return content.character;
+      case "vocabulary":
+        return content.kanji ?? content.kana;
+      case "grammar":
+        return content.title;
+      default:
+        return null;
+    }
+  }
+
+  async getLessonPreviewLabels(
+    lessonId: string,
+    userId: string,
+  ): Promise<string[] | null> {
+    const lesson = await learningPathRepository.findPublishedLessonById(lessonId);
+    if (!lesson) return null;
+
+    const regionAccessible = await learningPathService.isRegionAccessible(
+      userId,
+      lesson.unit.region.slug,
+    );
+    if (!regionAccessible) return null;
+
+    const items = await learningPathRepository.listLessonItems(lessonId);
+    const labels: string[] = [];
+
+    for (const item of items.slice(0, 5)) {
+      const content = await this.loadContent(item.content_type, item.content_id);
+      if (!content) continue;
+      const label = this.extractPreviewLabel(content);
+      if (label) labels.push(label);
+    }
+
+    return labels;
+  }
+
   async getNextIncompleteLesson(
     userId: string,
   ): Promise<LessonSummaryViewModel | null> {

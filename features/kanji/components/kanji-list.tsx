@@ -16,6 +16,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { KanjiListRow } from "@/features/kanji/components/kanji-list-row";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { KanjiListViewModel } from "@/features/kanji/types/kanji.types";
 
 type KanjiListProps = {
@@ -26,6 +27,7 @@ type KanjiListProps = {
 export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
   const hub = getJlptContentHub(jlptLevel);
   const levelLabel = jlptLevel.toUpperCase();
+  const tokens = CONTENT_HUB_TOKENS.kanji;
 
   return (
     <PageContainer>
@@ -47,7 +49,7 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
 
       <JlptLevelPills basePath="/learn/kanji" activeLevel={jlptLevel} />
 
-      <Card>
+      <Card className={tokens.progressCardBorder}>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -59,6 +61,7 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
             value={list.progressPercent}
             label="Kanji mastery"
             showValue
+            indicatorClassName={tokens.progressIndicator}
           />
         </CardContent>
       </Card>

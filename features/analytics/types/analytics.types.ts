@@ -9,6 +9,7 @@ export const ANALYTICS_EVENT_NAMES = [
   "pwa_install_prompt_accepted",
   "pwa_install_prompt_dismissed",
   "trail_continue_clicked",
+  "trail_map_opened",
   "feedback_submitted",
 ] as const;
 

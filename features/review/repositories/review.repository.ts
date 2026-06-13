@@ -36,6 +36,15 @@ export type ReviewHistoryRow = {
   mastery_score: number;
   interval_days: number;
   created_at: string;
+  client_event_id?: string | null;
+  gamification_applied_at?: string | null;
+  gamification_result?: Record<string, unknown> | null;
+};
+
+export type SubmitRatingResult = {
+  item: ReviewItemRow;
+  alreadyApplied: boolean;
+  historyId: string | null;
 };
 
 export type ReviewSummaryRow = {
@@ -297,12 +306,74 @@ class ReviewRepository {
     return this.upsertReviewItem(userId, "kanji", contentId);
   }
 
+  async findHistoryByClientEventId(
+    userId: string,
+    clientEventId: string,
+  ): Promise<(ReviewHistoryRow & { review_item_id: string }) | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("review_history")
+      .select(
+        "id, user_id, review_item_id, rating, previous_state, new_state, mastery_score, interval_days, created_at, client_event_id, gamification_applied_at, gamification_result",
+      )
+      .eq("user_id", userId)
+      .eq("client_event_id", clientEventId)
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    return (data as ReviewHistoryRow & { review_item_id: string }) ?? null;
+  }
+
+  async saveGamificationResult(
+    userId: string,
+    clientEventId: string,
+    result: Record<string, unknown>,
+  ): Promise<void> {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("review_history")
+      .update({
+        gamification_applied_at: new Date().toISOString(),
+        gamification_result: result,
+      })
+      .eq("user_id", userId)
+      .eq("client_event_id", clientEventId)
+      .is("gamification_applied_at", null);
+
+    if (error) throw new Error(error.message);
+  }
+
   async submitRating(
     userId: string,
     reviewItemId: string,
     rating: ReviewRating,
-  ): Promise<ReviewItemRow> {
+    clientEventId?: string,
+  ): Promise<SubmitRatingResult> {
     const supabase = await createClient();
+
+    if (clientEventId) {
+      const existingHistory = await this.findHistoryByClientEventId(
+        userId,
+        clientEventId,
+      );
+      if (existingHistory) {
+        const { data: existingItem, error: existingItemError } = await supabase
+          .from("review_items")
+          .select("*")
+          .eq("id", existingHistory.review_item_id)
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (existingItemError) throw new Error(existingItemError.message);
+        if (!existingItem) throw new Error("Review item not found.");
+
+        return {
+          item: existingItem as ReviewItemRow,
+          alreadyApplied: true,
+          historyId: existingHistory.id,
+        };
+      }
+    }
 
     const { data: current, error: currentError } = await supabase
       .from("review_items")
@@ -339,19 +410,28 @@ class ReviewRepository {
 
     if (error) throw new Error(error.message);
 
-    const { error: historyError } = await supabase.from("review_history").insert({
-      user_id: userId,
-      review_item_id: reviewItemId,
-      rating,
-      previous_state: item.state,
-      new_state: schedule.state,
-      mastery_score: schedule.masteryScore,
-      interval_days: schedule.intervalDays,
-    });
+    const { data: historyRow, error: historyError } = await supabase
+      .from("review_history")
+      .insert({
+        user_id: userId,
+        review_item_id: reviewItemId,
+        rating,
+        previous_state: item.state,
+        new_state: schedule.state,
+        mastery_score: schedule.masteryScore,
+        interval_days: schedule.intervalDays,
+        client_event_id: clientEventId ?? null,
+      })
+      .select("id")
+      .single();
 
     if (historyError) throw new Error(historyError.message);
 
-    return data as ReviewItemRow;
+    return {
+      item: data as ReviewItemRow,
+      alreadyApplied: false,
+      historyId: (historyRow?.id as string) ?? null,
+    };
   }
 }
 

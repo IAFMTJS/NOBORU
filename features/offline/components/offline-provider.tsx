@@ -6,19 +6,26 @@ import { OfflineStatusBanner } from "@/features/offline/components/offline-statu
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import { preloadJapaneseSpeechVoices } from "@/lib/audio/japanese-speech";
+import type { OfflineStatusViewModel } from "@/lib/offline/types";
 
 type OfflineContextValue = {
   isOnline: boolean;
   pendingMutations: number;
+  status: OfflineStatusViewModel | null;
+  syncing: boolean;
+  error: string | null;
+  refresh: () => Promise<OfflineStatusViewModel>;
+  syncNow: () => Promise<void>;
 };
 
-const OfflineContext = createContext<OfflineContextValue>({
-  isOnline: true,
-  pendingMutations: 0,
-});
+const OfflineContext = createContext<OfflineContextValue | null>(null);
 
 export function useOfflineContext() {
-  return useContext(OfflineContext);
+  const context = useContext(OfflineContext);
+  if (!context) {
+    throw new Error("useOfflineContext must be used within OfflineProvider.");
+  }
+  return context;
 }
 
 type OfflineProviderProps = {
@@ -28,7 +35,10 @@ type OfflineProviderProps = {
 
 export function OfflineProvider({ children, userId }: OfflineProviderProps) {
   const isOnline = useOnlineStatus();
-  const { status, syncNow } = useOfflineSync({ userId, autoSync: true });
+  const { status, syncing, error, syncNow, refresh } = useOfflineSync({
+    userId,
+    autoSync: true,
+  });
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
@@ -37,17 +47,16 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
     void preloadJapaneseSpeechVoices();
   }, []);
 
-  useEffect(() => {
-    if (isOnline && (status?.pendingMutations ?? 0) > 0) {
-      void syncNow().catch(() => undefined);
-    }
-  }, [isOnline, status?.pendingMutations, syncNow]);
-
   return (
     <OfflineContext.Provider
       value={{
         isOnline,
         pendingMutations: status?.pendingMutations ?? 0,
+        status,
+        syncing,
+        error,
+        refresh,
+        syncNow,
       }}
     >
       <OfflineStatusBanner

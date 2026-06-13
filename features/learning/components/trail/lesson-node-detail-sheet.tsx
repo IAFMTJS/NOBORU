@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Clock, Gem, Lock, Mountain, Play, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Clock, Gem, Zap } from "lucide-react";
 
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { Badge } from "@/components/ui/badge";
@@ -13,9 +14,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
 import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.types";
 import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
-import { cn } from "@/lib/utils";
 
 type LessonNodeDetailSheetProps = {
   open: boolean;
@@ -41,28 +42,20 @@ function getStatusLabel(node: TrailNodeViewModel | null): string {
   }
 }
 
-function NodeMarker({ node }: { node: TrailNodeViewModel }) {
-  const locked = node.state === "locked";
-  const completed = node.state === "completed";
-  const Icon = locked
-    ? Lock
-    : completed
-      ? Check
-      : node.state === "in_progress"
-        ? Mountain
-        : Play;
+function LessonPreviewRow({ labels }: { labels: string[] }) {
+  if (labels.length === 0) return null;
 
   return (
-    <div
-      className={cn(
-        "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2",
-        completed && "border-success bg-success/20 text-success",
-        node.state === "in_progress" && "border-primary bg-primary/20 text-primary",
-        node.state === "available" && "border-warning bg-warning/20 text-warning",
-        locked && "border-border bg-muted text-muted-foreground",
-      )}
-    >
-      <Icon className="h-5 w-5" aria-hidden />
+    <div className="flex flex-wrap gap-2">
+      {labels.map((label) => (
+        <span
+          key={label}
+          lang="ja"
+          className="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-border/60 bg-background/80 px-2 font-japanese text-heading-6"
+        >
+          {label}
+        </span>
+      ))}
     </div>
   );
 }
@@ -76,6 +69,32 @@ export function LessonNodeDetailSheet({
   lessonCount,
   regionName,
 }: LessonNodeDetailSheetProps) {
+  const [previewLabels, setPreviewLabels] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!open || !lesson?.id) {
+      setPreviewLabels([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    void fetch(`/api/learning/lessons/${lesson.id}/preview`)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload: { data?: { labels?: string[] } } | null) => {
+        if (!cancelled) {
+          setPreviewLabels(payload?.data?.labels ?? []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setPreviewLabels([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, lesson?.id]);
+
   if (!node) return null;
 
   const locked = node.state === "locked" || !node.href;
@@ -89,7 +108,11 @@ export function LessonNodeDetailSheet({
       <SheetContent side="bottom" className="rounded-t-2xl">
         <SheetHeader className="text-left">
           <div className="flex items-start gap-3">
-            <NodeMarker node={node} />
+            <TrailNodeMarker
+              state={node.state}
+              nodeKind={node.nodeKind}
+              size="lg"
+            />
             <div className="min-w-0 space-y-1">
               <SheetTitle>{node.label}</SheetTitle>
               <p className="text-caption text-muted-foreground">
@@ -98,7 +121,13 @@ export function LessonNodeDetailSheet({
               </p>
               <div className="flex flex-wrap items-center gap-1.5">
                 <Badge
-                  variant={locked ? "outline" : node.state === "in_progress" ? "default" : "secondary"}
+                  variant={
+                    locked
+                      ? "outline"
+                      : node.state === "in_progress"
+                        ? "default"
+                        : "secondary"
+                  }
                 >
                   {getStatusLabel(node)}
                 </Badge>
@@ -113,14 +142,25 @@ export function LessonNodeDetailSheet({
         </SheetHeader>
 
         <div className="space-y-4 py-4">
-          {(lesson?.description || node.subtitle) ? (
+          {previewLabels.length > 0 || lesson?.description || node.subtitle ? (
             <div className="rounded-xl border border-border/60 bg-card/90 p-4">
               <p className="mb-2 text-caption font-medium uppercase tracking-wide text-muted-foreground">
                 Learn
               </p>
-              <p className="text-body-sm">
-                {lesson?.description ?? node.subtitle}
-              </p>
+              {previewLabels.length > 0 ? (
+                <LessonPreviewRow labels={previewLabels} />
+              ) : null}
+              {lesson?.description || node.subtitle ? (
+                <p
+                  className={
+                    previewLabels.length > 0
+                      ? "mt-3 text-body-sm text-muted-foreground"
+                      : "text-body-sm"
+                  }
+                >
+                  {lesson?.description ?? node.subtitle}
+                </p>
+              ) : null}
             </div>
           ) : null}
 

@@ -1,23 +1,16 @@
 import { Suspense } from "react";
 
-import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
-import { MascotImage } from "@/components/media/mascot-image";
+import { AuthBrandHeader } from "@/components/auth/auth-brand-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoginForm } from "@/features/authentication/components/login-form";
 
 export default function LoginPage() {
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <NoboruWordmark className="mx-auto mb-4" priority />
-        <div className="relative mx-auto mb-4 h-16 w-16">
-          <MascotImage alt="Yama" fill className="object-contain" priority />
-        </div>
-        <h1 className="text-2xl font-semibold">Welcome back, Climber</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Sign in to continue your journey.
-        </p>
-      </div>
+      <AuthBrandHeader
+        title="Welcome back, Climber"
+        description="Sign in to continue your journey."
+      />
       <Card>
         <CardHeader>
           <CardTitle>Sign In</CardTitle>

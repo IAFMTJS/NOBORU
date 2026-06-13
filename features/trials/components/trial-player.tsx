@@ -118,9 +118,9 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
       return yamaService.resolveDrillFeedback("incorrect");
     }
     if (result.grade === "legendary" || result.grade === "mastery") {
-      return yamaService.resolveCelebration("level_up");
+      return yamaService.resolveCelebration("trial_boss");
     }
-    return yamaService.resolveCelebration("lesson_complete");
+    return yamaService.resolveCelebration(result.passed ? "trial_boss" : "lesson_complete");
   }, [result]);
 
   if (result) {
@@ -207,11 +207,22 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
             </p>
           ) : null}
           {!started ? (
-            <Button className="w-full" onClick={() => setStarted(true)}>
-              Begin Trial
-            </Button>
+            <div className="space-y-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+              <p className="text-body font-medium">{session.bossName} awaits</p>
+              <p className="text-body-sm text-muted-foreground">
+                {session.steps.length} phases · Pass {session.passScore}% to clear the gate
+              </p>
+              <Button className="w-full" onClick={() => setStarted(true)}>
+                Face the Boss
+              </Button>
+            </div>
           ) : currentStep ? (
-            <TrialStepCard step={currentStep} onAnswer={handleAnswer} />
+            <>
+              <p className="text-caption text-muted-foreground">
+                Phase {stepIndex + 1} of {session.steps.length}
+              </p>
+              <TrialStepCard step={currentStep} onAnswer={handleAnswer} />
+            </>
           ) : null}
         </CardContent>
       </Card>

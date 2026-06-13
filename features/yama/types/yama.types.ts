@@ -30,4 +30,6 @@ export type YamaCelebrationKind =
   | "level_up"
   | "achievement"
   | "quest"
-  | "trail_node";
+  | "trail_node"
+  | "trial_boss"
+  | "streak_milestone";

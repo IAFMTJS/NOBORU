@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -17,6 +18,7 @@ import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { GrammarListViewModel } from "@/features/grammar/types/grammar.types";
 
 type GrammarListProps = {
@@ -27,6 +29,7 @@ type GrammarListProps = {
 export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
   const hub = getJlptContentHub(jlptLevel);
   const levelLabel = jlptLevel.toUpperCase();
+  const tokens = CONTENT_HUB_TOKENS.grammar;
 
   return (
     <PageContainer>
@@ -48,7 +51,7 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
 
       <JlptLevelPills basePath="/learn/grammar" activeLevel={jlptLevel} />
 
-      <Card>
+      <Card className={tokens.progressCardBorder}>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -60,6 +63,7 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
             value={list.progressPercent}
             label="Grammar mastery"
             showValue
+            indicatorClassName={tokens.progressIndicator}
           />
         </CardContent>
       </Card>
@@ -70,9 +74,23 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           {list.entries.map((entry) => (
-            <Link key={entry.id} href={`/learn/grammar/${entry.id}`}>
+            <Link
+              key={entry.id}
+              href={`/learn/grammar/${entry.id}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
-                primary={entry.title}
+                leading={
+                  <ContentHubLeading
+                    variant="grammar"
+                    glyph={entry.title[0] ?? "文"}
+                  />
+                }
+                primary={
+                  <span lang="ja" className="font-japanese">
+                    {entry.title}
+                  </span>
+                }
                 secondary={entry.meaning}
                 trailing={
                   entry.learned ? (

@@ -116,6 +116,7 @@ class ElevationService {
     userId: string,
     reviewItemId: string,
     rating: "again" | "good" | "strong",
+    clientEventId?: string,
   ): Promise<ElevationAwardViewModel | null> {
     const amount = rating === "strong" ? 5 : rating === "good" ? 3 : 0;
     if (amount === 0) return null;
@@ -123,7 +124,7 @@ class ElevationService {
     return this.awardEp({
       userId,
       sourceType: "review_rating",
-      sourceId: reviewItemId,
+      sourceId: clientEventId ?? reviewItemId,
       amount,
       description: `Review rating: ${rating}`,
     });

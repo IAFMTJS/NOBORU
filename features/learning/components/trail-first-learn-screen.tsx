@@ -17,10 +17,12 @@ import {
 import { flattenRegionTrailLessons } from "@/features/learning/utils/trail-state";
 import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
 import { cn } from "@/lib/utils";
+import { glassClass, resolveVisualTier } from "@/lib/performance/visual-tier";
 
 type TrailFirstLearnScreenProps = {
   path: LearningPathViewModel;
   initialRegionSlug: string;
+  regionTrial?: { href: string; title: string } | null;
 };
 
 function resolveInitialRegion(
@@ -42,6 +44,7 @@ function resolveInitialRegion(
 export function TrailFirstLearnScreen({
   path,
   initialRegionSlug,
+  regionTrial = null,
 }: TrailFirstLearnScreenProps) {
   const defaultRegion = resolveInitialRegion(path, initialRegionSlug);
   const [selectedSlug, setSelectedSlug] = useState(
@@ -51,6 +54,8 @@ export function TrailFirstLearnScreen({
   const [regionsOverviewOpen, setRegionsOverviewOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<TrailNodeViewModel | null>(null);
   const [nodeDetailOpen, setNodeDetailOpen] = useState(false);
+  const visualTier = resolveVisualTier();
+  const headerGlass = glassClass(visualTier);
 
   const selectedRegion =
     path.regions.find((region) => region.slug === selectedSlug) ?? defaultRegion;
@@ -96,8 +101,8 @@ export function TrailFirstLearnScreen({
             type="button"
             onClick={() => setRegionPickerOpen(true)}
             className={cn(
-              "inline-flex items-center gap-1 rounded-full border border-white/15",
-              "bg-black/45 px-3 py-1.5 text-body-sm font-medium text-white backdrop-blur-md",
+              "inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-body-sm font-medium text-white",
+              headerGlass,
             )}
           >
             {selectedRegion.name}
@@ -120,6 +125,8 @@ export function TrailFirstLearnScreen({
           nodes={trailNodes}
           immersive
           regionSlug={selectedRegion.slug}
+          trialHref={regionTrial?.href ?? null}
+          trialTitle={regionTrial?.title ?? null}
           onNodeSelect={handleNodeSelect}
           className="min-h-0 flex-1"
         />

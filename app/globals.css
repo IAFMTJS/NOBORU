@@ -158,6 +158,22 @@
     @apply border border-border/80 bg-card shadow-elevation-1 dark:border-border dark:shadow-elevation-2;
   }
 
+  .focus-ring {
+    @apply rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .trail-glow-success {
+    box-shadow: 0 0 12px hsl(var(--success) / 0.35);
+  }
+
+  .trail-glow-primary {
+    box-shadow: 0 0 14px hsl(var(--primary) / 0.45);
+  }
+
+  .trail-glow-warning {
+    box-shadow: 0 0 12px hsl(var(--warning) / 0.4);
+  }
+
   .shadow-elevation-1 {
     box-shadow: var(--shadow-elevation-1);
   }

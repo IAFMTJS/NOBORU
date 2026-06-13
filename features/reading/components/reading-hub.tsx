@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -17,6 +18,7 @@ import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { ReadingHubViewModel } from "@/features/reading/types/reading.types";
 
 type ReadingHubProps = {
@@ -26,6 +28,7 @@ type ReadingHubProps = {
 
 export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
   const contentHub = getJlptContentHub(jlptLevel);
+  const tokens = CONTENT_HUB_TOKENS.reading;
 
   return (
     <PageContainer>
@@ -47,7 +50,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
 
       <JlptLevelPills basePath="/learn/reading" activeLevel={jlptLevel} />
 
-      <Card>
+      <Card className={tokens.progressCardBorder}>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -59,6 +62,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
             value={hub.progressPercent}
             label="Reading comprehension"
             showValue
+            indicatorClassName={tokens.progressIndicator}
           />
         </CardContent>
       </Card>
@@ -70,8 +74,13 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           {hub.stories.map((story) => (
-            <Link key={story.id} href={`/learn/reading/stories/${story.slug}`}>
+            <Link
+              key={story.id}
+              href={`/learn/reading/stories/${story.slug}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
+                leading={<ContentHubLeading variant="reading" glyph="読" />}
                 primary={story.title}
                 secondary={story.summary ?? `${story.estimatedReadTime} min read`}
                 trailing={
@@ -94,8 +103,13 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         </CardHeader>
         <CardContent className="space-y-2">
           {hub.dialogues.map((dialogue) => (
-            <Link key={dialogue.id} href={`/learn/reading/dialogs/${dialogue.slug}`}>
+            <Link
+              key={dialogue.id}
+              href={`/learn/reading/dialogs/${dialogue.slug}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
+                leading={<ContentHubLeading variant="reading" glyph="話" />}
                 primary={dialogue.title}
                 secondary={dialogue.description ?? "Conversation practice"}
                 trailing={

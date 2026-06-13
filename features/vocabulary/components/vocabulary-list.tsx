@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
+import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -17,7 +18,12 @@ import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
+
+function vocabularyLeadingGlyph(entry: { kana: string; kanji: string | null }) {
+  return entry.kanji?.[0] ?? entry.kana[0] ?? "語";
+}
 
 type VocabularyListProps = {
   list: VocabularyListViewModel;
@@ -27,6 +33,7 @@ type VocabularyListProps = {
 export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) {
   const hub = getJlptContentHub(jlptLevel);
   const levelLabel = jlptLevel.toUpperCase();
+  const tokens = CONTENT_HUB_TOKENS.vocabulary;
 
   return (
     <PageContainer>
@@ -48,7 +55,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
 
       <JlptLevelPills basePath="/learn/vocabulary" activeLevel={jlptLevel} />
 
-      <Card>
+      <Card className={tokens.progressCardBorder}>
         <CardHeader>
           <CardTitle>Your Progress</CardTitle>
           <CardDescription>
@@ -60,6 +67,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
             value={list.progressPercent}
             label="Vocabulary mastery"
             showValue
+            indicatorClassName={tokens.progressIndicator}
           />
         </CardContent>
       </Card>
@@ -70,9 +78,23 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         </CardHeader>
         <CardContent className="space-y-2">
           {list.entries.map((entry) => (
-            <Link key={entry.id} href={`/learn/vocabulary/${entry.id}`}>
+            <Link
+              key={entry.id}
+              href={`/learn/vocabulary/${entry.id}`}
+              className="focus-ring block rounded-card"
+            >
               <ListRow
-                primary={entry.kanji ? `${entry.kana} · ${entry.kanji}` : entry.kana}
+                leading={
+                  <ContentHubLeading
+                    variant="vocabulary"
+                    glyph={vocabularyLeadingGlyph(entry)}
+                  />
+                }
+                primary={
+                  <span lang="ja" className="font-japanese">
+                    {entry.kanji ? `${entry.kana} · ${entry.kanji}` : entry.kana}
+                  </span>
+                }
                 secondary={entry.meaning}
                 trailing={
                   entry.learned ? (

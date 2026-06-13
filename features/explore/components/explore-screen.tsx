@@ -1,22 +1,25 @@
+"use client";
+
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useState } from "react";
 import {
   BookOpen,
   Clock,
+  Compass,
+  Globe,
   Languages,
   Mountain,
   Sparkles,
   Swords,
   Target,
+  Tent,
   Trophy,
   Users,
   Zap,
 } from "lucide-react";
 
-import { GameArtImage } from "@/components/media/game-art-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,100 +28,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GameCard } from "@/features/games/components/game-card";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
+
+const DISCOVER_CATEGORIES = [
+  { label: "Culture", href: "/explore" },
+  { label: "History", href: "/explore" },
+  { label: "Folklore", href: "/explore" },
+  { label: "Food", href: "/explore" },
+  { label: "Anime", href: "/explore" },
+  { label: "Mythology", href: "/explore" },
+] as const;
 
 type ExploreScreenProps = {
   gameAvailability: GameAvailabilityViewModel;
   yama: YamaPresenceViewModel;
 };
 
-type GameCardProps = {
-  href: string;
-  title: string;
-  description: string;
-  gameSlug?: string;
-  icon?: ReactNode;
-  badge?: string;
-  disabled?: boolean;
-};
-
-function GameCardArt({
-  gameSlug,
-  icon,
-  title,
-}: {
-  gameSlug?: string;
-  icon?: ReactNode;
-  title: string;
-}) {
-  if (gameSlug) {
-    return (
-      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl ring-1 ring-border/60">
-        <GameArtImage slug={gameSlug} alt={title} className="h-full w-full object-cover" sizes="56px" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-      {icon}
-    </div>
-  );
-}
-
-function GameCard({ href, title, description, gameSlug, icon, badge, disabled }: GameCardProps) {
-  if (disabled) {
-    return (
-      <div className="flex items-start gap-3 rounded-xl border border-border/60 bg-muted/30 p-4 opacity-80">
-        <GameCardArt gameSlug={gameSlug} icon={icon} title={title} />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="text-body-sm font-medium">{title}</p>
-            <Badge variant="outline" className="text-[10px]">
-              Soon
-            </Badge>
-          </div>
-          <p className="text-caption text-muted-foreground">{description}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <Link
-      href={href}
-      className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 shadow-elevation-1 transition-colors hover:border-primary/30 hover:bg-primary/5"
-    >
-      <GameCardArt gameSlug={gameSlug} icon={icon} title={title} />
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <p className="text-body-sm font-medium">{title}</p>
-          {badge ? (
-            <Badge variant="secondary" className="text-[10px]">
-              {badge}
-            </Badge>
-          ) : null}
-        </div>
-        <p className="text-caption text-muted-foreground">{description}</p>
-      </div>
-    </Link>
-  );
-}
-
 export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
+  const [joiningLeague, setJoiningLeague] = useState(false);
+
   const hasMiniGame =
     gameAvailability.wordMatch.available ||
     gameAvailability.vocabularyRush.available ||
     gameAvailability.kanjiHunter.available ||
     gameAvailability.memoryDungeon.available;
 
+  async function joinLeague() {
+    setJoiningLeague(true);
+    try {
+      await fetch("/api/leagues", { method: "POST" });
+    } finally {
+      setJoiningLeague(false);
+    }
+  }
+
   return (
     <PageContainer>
       <ScreenHeader
         title="Explore"
-        subtitle="Trials, challenges, and fellow climbers"
+        subtitle="Discover Japan — trials, culture, and fellow climbers"
       />
 
       <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
@@ -129,6 +80,47 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
             layout="horizontal"
             bubbleClassName="border-primary/20 bg-card/80"
           />
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Globe className="h-5 w-5 text-primary" aria-hidden />
+            <CardTitle>Discover Japan</CardTitle>
+          </div>
+          <CardDescription>Culture, folklore, and lore along the climb.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 gap-2">
+          {DISCOVER_CATEGORIES.map((cat) => (
+            <Button key={cat.label} variant="outline" className="h-auto py-2" asChild>
+              <Link href={cat.href}>
+                <Compass className="mr-1 h-4 w-4" aria-hidden />
+                {cat.label}
+              </Link>
+            </Button>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card className="border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Mountain className="h-5 w-5 text-primary" aria-hidden />
+            <CardTitle>World Map</CardTitle>
+          </div>
+          <CardDescription>See the full mountain from foothills to celestial summit.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Button className="w-full" asChild>
+            <Link href="/learn/world">Open world map</Link>
+          </Button>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/camp">
+              <Tent className="mr-2 h-4 w-4" aria-hidden />
+              Fox Camp
+            </Link>
+          </Button>
         </CardContent>
       </Card>
 
@@ -198,14 +190,6 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
               badge={`${gameAvailability.memoryDungeon.roomCount} rooms`}
             />
           ) : null}
-          {gameAvailability.vocabularyRush.available ? (
-            <GameCard
-              href="/games/vocabulary-rush?weakOnly=true"
-              title="Weak Vocabulary Sprint"
-              description="Focus on words that need more practice."
-              icon={<Sparkles className="h-5 w-5" aria-hidden />}
-            />
-          ) : null}
           <GameCard
             href="/games"
             title="Games Hub"
@@ -218,33 +202,9 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
       <Card className="shadow-elevation-1">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-muted-foreground" aria-hidden />
-            <CardTitle>Coming Soon</CardTitle>
-          </div>
-          <CardDescription>
-            More challenges are being carved into the mountain.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <GameCard
-            href="#"
-            title="Reading Challenge"
-            description="Timed comprehension sprints through graded passages."
-            gameSlug="reading-challenge"
-            disabled
-          />
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" aria-hidden />
             <CardTitle>Study Trails</CardTitle>
           </div>
-          <CardDescription>
-            Browse content libraries and track your climb.
-          </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-2">
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>
@@ -256,7 +216,7 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>
             <Link href="/review">
               <Target className="h-4 w-4" aria-hidden />
-              Review
+              Training Grounds
             </Link>
           </Button>
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>
@@ -280,16 +240,34 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
             <Users className="h-5 w-5 text-primary" aria-hidden />
             <CardTitle>Community</CardTitle>
           </div>
-          <CardDescription>
-            Leagues and social features are still climbing toward launch.
-          </CardDescription>
+          <CardDescription>Opt-in leagues and fellow climbers.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/community">Community Preview</Link>
+          <Button
+            variant="outline"
+            className="w-full"
+            loading={joiningLeague}
+            onClick={() => void joinLeague()}
+          >
+            Join weekly league
           </Button>
-          <Button variant="ghost" className="w-full" asChild>
-            <Link href="/feedback">Share beta feedback</Link>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/community">Friends & activity</Link>
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-elevation-1">
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Clock className="h-5 w-5 text-muted-foreground" aria-hidden />
+            <CardTitle>Endgame</CardTitle>
+          </div>
+          <CardDescription>Post-N1 mastery mountains and seasonal events.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/endgame">Mastery Mountains</Link>
           </Button>
         </CardContent>
       </Card>

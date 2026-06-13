@@ -1,5 +1,9 @@
-import { reviewEnqueueService } from "@/features/review/services/review-server.service";
 import { achievementService } from "@/features/achievements/services/achievement.service";
+import { reviewEnqueueService } from "@/features/review/services/review-server.service";
+import { companionService } from "@/features/companion/services/companion.service";
+import { chestService } from "@/features/chests/services/chest.service";
+import { friendsService } from "@/features/friends/services/friends.service";
+import { leagueService } from "@/features/leagues/services/league.service";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
@@ -126,6 +130,17 @@ class ProgressService {
     ];
 
     const quests = await questService.recordActivities(input.userId, questEvents);
+
+    void companionService.awardBondXp(input.userId, "lesson_complete");
+    void chestService.claimDailyOnStudy(input.userId);
+    void friendsService.recordActivity(
+      input.userId,
+      "lesson_complete",
+      `Completed ${lesson.title}`,
+    );
+    if (elevation?.epAwarded) {
+      void leagueService.addWeeklyEp(input.userId, elevation.epAwarded);
+    }
 
     return { ...result, elevation, achievements, quests, reviewItemsEnqueued };
   }

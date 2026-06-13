@@ -9,17 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
-import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
+import { useOfflineContext } from "@/features/offline/components/offline-provider";
 
-type OfflineSyncPanelProps = {
-  userId?: string;
-};
-
-export function OfflineSyncPanel({ userId }: OfflineSyncPanelProps) {
-  const { status, syncing, error, syncNow, refresh } = useOfflineSync({
-    userId,
-    autoSync: true,
-  });
+export function OfflineSyncPanel() {
+  const { status, syncing, error, syncNow, refresh } = useOfflineContext();
 
   if (!status) return null;
 

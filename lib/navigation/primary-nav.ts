@@ -18,7 +18,7 @@ export type PrimaryNavItem = {
 export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
   { href: "/home", label: "Home", icon: NoboruHomeIcon, navTab: "home" },
   { href: "/learn", label: "Learn", icon: NoboruLearnIcon, navTab: "learn" },
-  { href: "/review", label: "Review", icon: NoboruReviewIcon, navTab: "review" },
+  { href: "/review", label: "Training", icon: NoboruReviewIcon, navTab: "review" },
   { href: "/explore", label: "Explore", icon: NoboruExploreIcon, navTab: "explore" },
   { href: "/profile", label: "Profile", icon: NoboruProfileIcon, navTab: "profile" },
 ];

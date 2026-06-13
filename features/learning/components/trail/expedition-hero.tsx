@@ -5,8 +5,14 @@ import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { ExpeditionHeroYama } from "@/features/learning/components/trail/expedition-hero-yama";
+import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
+import { NextUnlockPreview } from "@/components/progression/next-unlock-preview";
+import { CompanionBadge } from "@/features/companion/components/companion-badge";
+import type { CompanionViewModel } from "@/features/companion/types/companion.types";
+import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
+import type { TrailNodeViewModel } from "@/features/learning/utils/trail-state";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 
 type ExpeditionHeroProps = {
@@ -18,12 +24,15 @@ type ExpeditionHeroProps = {
   continueHref: string;
   lessonNumber: number | null;
   lessonCount: number;
+  trailPreview: TrailNodeViewModel[];
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
   stats: {
     currentStreak: number;
     totalXp: number;
   };
+  companion: CompanionViewModel;
+  progressionPreview: ProgressionPreviewViewModel;
 };
 
 export function ExpeditionHero({
@@ -35,9 +44,12 @@ export function ExpeditionHero({
   lessonNumber,
   lessonCount,
   regionProgressPercent,
+  trailPreview,
   quests,
   yama,
   stats,
+  companion,
+  progressionPreview,
 }: ExpeditionHeroProps) {
   const lessonLabel =
     lessonNumber && lessonCount > 0
@@ -100,7 +112,36 @@ export function ExpeditionHero({
         </Button>
       </div>
 
+      {trailPreview.length > 0 ? (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-caption font-semibold">Current Trail</p>
+            <AnalyticsLink
+              href="/learn"
+              className="text-caption font-medium text-primary hover:underline"
+              eventName="trail_map_opened"
+              eventProperties={{ source: "home_trail_preview" }}
+            >
+              View map
+            </AnalyticsLink>
+          </div>
+          <TrailMap
+            nodes={trailPreview}
+            compact
+            minimal
+            regionSlug={regionSlug}
+            className="rounded-xl"
+          />
+        </div>
+      ) : null}
+
       <TrailQuestCards daily={quests.daily} variant="compact" />
+
+      <CompanionBadge companion={companion} />
+
+      {progressionPreview.primaryUnlock ? (
+        <NextUnlockPreview unlock={progressionPreview.primaryUnlock} compact />
+      ) : null}
 
       <div className="grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-card/80 px-3 py-3">
         <div className="flex items-center justify-center gap-1.5">

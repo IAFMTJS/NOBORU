@@ -26,10 +26,9 @@ import { ChevronLeft } from "lucide-react";
 
 type SettingsScreenProps = {
   settings: SettingsViewModel;
-  userId: string;
 };
 
-export function SettingsScreen({ settings, userId }: SettingsScreenProps) {
+export function SettingsScreen({ settings }: SettingsScreenProps) {
   const { theme, updateTheme, loading, error } = useThemeSetting(
     settings.theme,
   );
@@ -63,7 +62,7 @@ export function SettingsScreen({ settings, userId }: SettingsScreenProps) {
       </Card>
 
       <PwaInstallPrompt />
-      <OfflineSyncPanel userId={userId} />
+      <OfflineSyncPanel />
 
       <Card className="shadow-elevation-1">
         <CardHeader>

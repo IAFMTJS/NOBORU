@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTheme } from "next-themes";
-import { Check, Flag, Lock, Mountain, Play, Sparkles } from "lucide-react";
 
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { hasTrailScrollArt } from "@/lib/assets/registry";
 import { MotionDiv } from "@/components/motion/motion-div";
+import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
 import { TrailSpineConnector } from "@/features/learning/components/trail/trail-spine-connector";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
@@ -20,32 +20,6 @@ import {
 import { trailNodeReveal } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
 import type { TrailNodeState, TrailNodeViewModel } from "@/features/learning/utils/trail-state";
-
-const MARKER_STYLES: Record<
-  TrailNodeState,
-  { ring: string; fill: string; icon: typeof Check }
-> = {
-  completed: {
-    ring: "border-success bg-success/20 text-success shadow-[0_0_12px_rgba(47,191,113,0.35)]",
-    fill: "bg-success text-success-foreground",
-    icon: Check,
-  },
-  in_progress: {
-    ring: "border-primary bg-primary/20 text-primary shadow-[0_0_14px_rgba(214,64,69,0.45)]",
-    fill: "bg-primary text-primary-foreground",
-    icon: Mountain,
-  },
-  available: {
-    ring: "border-warning bg-warning/20 text-warning shadow-[0_0_12px_rgba(246,174,45,0.4)]",
-    fill: "bg-warning text-warning-foreground",
-    icon: Play,
-  },
-  locked: {
-    ring: "border-border/80 bg-background/70 text-muted-foreground",
-    fill: "bg-muted-foreground/60 text-background",
-    icon: Lock,
-  },
-};
 
 const STATE_LABELS: Record<TrailNodeState, string> = {
   completed: "Completed lesson",
@@ -76,17 +50,8 @@ function TrailPathNode({
   anchored?: boolean;
   onNodeSelect?: (node: TrailNodeViewModel) => void;
 }) {
-  const styles = MARKER_STYLES[node.state];
   const isCheckpoint = node.nodeKind === "checkpoint";
-  const isApplication = node.nodeKind === "application";
   const isCurrent = node.state === "in_progress";
-  const Icon = isCheckpoint
-    ? Flag
-    : isApplication
-      ? Sparkles
-      : isCurrent || node.state === "available"
-        ? Play
-        : styles.icon;
   const labelSide =
     immersive || labelsBelow ? "right" : position.x < 48 ? "right" : "left";
   const usePillLabels = immersive && !labelsBelow;
@@ -95,60 +60,28 @@ function TrailPathNode({
   }`;
   const interactive = Boolean(onNodeSelect) || Boolean(node.href);
 
-  const markerSize = isCheckpoint
+  const markerSize: "sm" | "md" | "lg" = isCheckpoint
     ? labelsBelow
-      ? "h-11 w-11"
-      : "h-10 w-10"
+      ? "lg"
+      : "md"
     : labelsBelow && isCurrent
-      ? "h-11 w-11"
+      ? "lg"
       : usePillLabels
-        ? "h-10 w-10"
+        ? "md"
         : compact || minimal
-          ? "h-8 w-8"
-          : "h-9 w-9";
-  const innerSize = isCheckpoint
-    ? labelsBelow
-      ? "h-8 w-8"
-      : "h-7 w-7"
-    : labelsBelow && isCurrent
-      ? "h-7 w-7"
-      : usePillLabels
-        ? "h-7 w-7"
-        : compact || minimal
-          ? "h-5 w-5"
-          : "h-6 w-6";
-  const iconSize = isCheckpoint
-    ? "h-4 w-4"
-    : labelsBelow && isCurrent
-      ? "h-4 w-4"
-      : usePillLabels
-        ? "h-4 w-4"
-        : compact || minimal
-          ? "h-3 w-3"
-          : "h-3.5 w-3.5";
+          ? "sm"
+          : "md";
 
   const labelOnLeft = !immersive && !labelsBelow && position.x >= 50;
   const hideLockedLabel = labelsBelow && immersive && node.state === "locked";
 
   const marker = (
-    <div
-      className={cn(
-        "relative z-10 flex shrink-0 items-center justify-center rounded-full border-2 backdrop-blur-sm",
-        markerSize,
-        styles.ring,
-        isCheckpoint && node.state !== "locked" && "border-warning/90 shadow-[0_0_12px_rgba(245,158,11,0.35)]",
-        labelsBelow && "z-20",
-      )}
-    >
-      <div
-        className={cn(
-          "flex items-center justify-center rounded-full",
-          innerSize,
-          styles.fill,
-        )}
-      >
-        <Icon className={iconSize} aria-hidden />
-      </div>
+    <div className={cn("relative z-10 shrink-0", labelsBelow && "z-20")}>
+      <TrailNodeMarker
+        state={node.state}
+        nodeKind={node.nodeKind}
+        size={markerSize}
+      />
       {labelsBelow && !hideLockedLabel ? (
         <span
           className={cn(
@@ -182,8 +115,8 @@ function TrailPathNode({
     minimal || labelsBelow || usePillLabels ? null : (
       <div
         className={cn(
-          "pointer-events-none max-w-[7.5rem] rounded-lg border bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
-          styles.ring,
+          "pointer-events-none max-w-[7.5rem] rounded-lg border border-border/60 bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
+          node.state === "locked" ? "opacity-75" : null,
           interactive ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
           compact && "max-w-[6.5rem] p-1.5",
         )}
@@ -294,6 +227,8 @@ type TrailMapProps = {
   title?: string;
   description?: string;
   className?: string;
+  trialHref?: string | null;
+  trialTitle?: string | null;
   onNodeSelect?: (node: TrailNodeViewModel) => void;
 };
 
@@ -307,6 +242,8 @@ export function TrailMap({
   title,
   description,
   className,
+  trialHref,
+  trialTitle,
   onNodeSelect,
 }: TrailMapProps) {
   const { resolvedTheme } = useTheme();
@@ -342,6 +279,16 @@ export function TrailMap({
     ? undefined
     : trailMapMinHeightRem(nodes.length, compact || minimal);
   const useScrollArt = immersive && hasTrailScrollArt(regionSlug);
+
+  const visibleNodeIndices = useMemo(() => {
+    if (!immersive || nodes.length <= 8 || activeNodeIndex < 0) {
+      return nodes.map((_, i) => i);
+    }
+    const window = 3;
+    const start = Math.max(0, activeNodeIndex - window);
+    const end = Math.min(nodes.length - 1, activeNodeIndex + window);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }, [activeNodeIndex, immersive, nodes.length]);
 
   useEffect(() => {
     if (!immersive || activeNodeIndex < 0 || !scrollRef.current) return;
@@ -381,6 +328,14 @@ export function TrailMap({
             <p className="text-caption text-muted-foreground">{description}</p>
           ) : null}
         </div>
+      ) : null}
+      {trialHref && trialTitle ? (
+        <Link
+          href={trialHref}
+          className="block rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-body-sm font-medium text-primary"
+        >
+          Boss Trial · {trialTitle}
+        </Link>
       ) : null}
       {activeNode && !minimal && !labelsBelow ? (
         <YamaPresence
@@ -432,6 +387,7 @@ export function TrailMap({
           }
         >
           {nodes.map((node, index) => {
+            if (!visibleNodeIndices.includes(index)) return null;
             const immersivePosition = immersiveLayout?.positions[index];
             const cardPosition = cardPositions?.[index];
             if (immersive && !immersivePosition) return null;

@@ -90,8 +90,22 @@ class YamaService {
     }
 
     return withPresence(
-      "supportive",
+      "confused",
       pickMessage(YAMA_DRILL_MESSAGES.incorrect, seed),
+    );
+  }
+
+  resolveTeachPresence(seed = 0): YamaPresenceViewModel {
+    return withPresence(
+      "studying",
+      pickMessage(YAMA_HOME_MESSAGES.trailInProgress, seed),
+    );
+  }
+
+  resolveFailPresence(seed = 0): YamaPresenceViewModel {
+    return withPresence(
+      "supportive",
+      "Every climber stumbles. Review and try again — the trail waits.",
     );
   }
 
@@ -131,9 +145,9 @@ class YamaService {
     seed = 0,
   ): YamaPresenceViewModel {
     const expression =
-      kind === "level_up"
+      kind === "level_up" || kind === "trial_boss"
         ? "celebrating"
-        : kind === "achievement" || kind === "quest"
+        : kind === "achievement" || kind === "quest" || kind === "streak_milestone"
           ? "happy"
           : "celebrating";
 

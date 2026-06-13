@@ -18,9 +18,12 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         continueHref={data.upcomingLesson.href}
         lessonNumber={data.upcomingLesson.lessonNumber}
         lessonCount={data.upcomingLesson.lessonCount}
+        trailPreview={data.trailPreview}
         quests={data.quests}
         yama={data.yama}
         stats={data.stats}
+        companion={data.companion}
+        progressionPreview={data.progressionPreview}
       />
     </PageContainer>
   );

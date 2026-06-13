@@ -23,6 +23,7 @@ export type OfflineLessonCompletePayload = {
 export type OfflineReviewSubmitPayload = {
   reviewItemId: string;
   rating: ReviewRating;
+  clientEventId: string;
 };
 
 export type OfflineSyncPayload =

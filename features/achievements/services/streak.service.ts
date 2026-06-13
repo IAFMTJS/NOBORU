@@ -1,3 +1,4 @@
+import { shrineProtectionService } from "@/features/streak-protection/services/shrine-protection.service";
 import { userStreakRepository } from "@/features/achievements/repositories/user-streak.repository";
 
 function formatUtcDate(date: Date): string {
@@ -36,6 +37,19 @@ class StreakService {
     const gap = existing.last_study_date
       ? daysBetween(existing.last_study_date, today)
       : null;
+
+    if (gap !== null && gap > 1) {
+      const protected_ = await shrineProtectionService.useToken(userId);
+      if (protected_) {
+        const updated = await userStreakRepository.upsertStreak({
+          userId,
+          currentStreak: existing.current_streak,
+          longestStreak: existing.longest_streak,
+          lastStudyDate: today,
+        });
+        return updated.current_streak;
+      }
+    }
 
     const currentStreak = gap === 1 ? existing.current_streak + 1 : 1;
     const longestStreak = Math.max(existing.longest_streak, currentStreak);

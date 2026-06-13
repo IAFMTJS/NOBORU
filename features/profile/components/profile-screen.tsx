@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileEditSection } from "@/features/profile/components/profile-edit-section";
+import { TitleSelector } from "@/features/profile/components/title-selector";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
@@ -77,6 +78,15 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
             layout="horizontal"
             bubbleClassName="border-primary/20 bg-card/80"
           />
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-elevation-1">
+        <CardContent className="space-y-3 p-4">
+          <TitleSelector />
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/camp">Visit Fox Camp</Link>
+          </Button>
         </CardContent>
       </Card>
 

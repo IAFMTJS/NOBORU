@@ -18,6 +18,7 @@ import {
 import type {
   ReviewCardViewModel,
   ReviewContentType,
+  ReviewGamificationViewModel,
   ReviewHistoryEntryViewModel,
   ReviewRating,
   ReviewSessionViewModel,
@@ -154,25 +155,52 @@ class ReviewServerService {
     userId: string,
     reviewItemId: string,
     rating: ReviewRating,
+    clientEventId?: string,
   ): Promise<ReviewSubmitDeltaViewModel> {
-    const ratedItem = await reviewRepository.submitRating(
+    const fast = await this.submitReviewFast(
       userId,
       reviewItemId,
       rating,
+      clientEventId,
     );
 
-    const [dueItems, elevation, achievements, stats] = await Promise.all([
-      reviewRepository.listDue(userId, 1),
-      elevationService.awardReviewRating(userId, reviewItemId, rating),
-      achievementService.afterStudyActivity(userId),
-      this.getStats(userId),
-    ]);
+    if (!clientEventId || fast.gamificationPending) {
+      return fast;
+    }
 
-    const quests = await questService.recordActivities(userId, [
-      { type: "review_item", amount: 1 },
-      ...(elevation
-        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
-        : []),
+    const gamification = await this.processReviewGamification({
+      userId,
+      reviewItemId,
+      rating,
+      clientEventId,
+    });
+
+    return {
+      ...fast,
+      stats: gamification.stats ?? fast.stats,
+      elevation: gamification.elevation,
+      achievements: gamification.achievements,
+      quests: gamification.quests,
+      gamificationPending: false,
+    };
+  }
+
+  async submitReviewFast(
+    userId: string,
+    reviewItemId: string,
+    rating: ReviewRating,
+    clientEventId?: string,
+  ): Promise<ReviewSubmitDeltaViewModel> {
+    const { item: ratedItem, alreadyApplied } = await reviewRepository.submitRating(
+      userId,
+      reviewItemId,
+      rating,
+      clientEventId,
+    );
+
+    const [dueCount, dueItems] = await Promise.all([
+      reviewRepository.countDue(userId),
+      reviewRepository.listDue(userId, 1),
     ]);
 
     const contentLookup = await this.resolveContentBatch([
@@ -207,13 +235,128 @@ class ReviewServerService {
       : null;
 
     return {
-      dueCount: stats.dueCount,
-      stats,
+      dueCount,
+      stats: {
+        dueCount,
+        learningCount: 0,
+        masteredCount: 0,
+        totalCount: 0,
+        weakAreas: [],
+      },
       currentCard,
       recentHistoryEntry: historyEntry,
+      elevation: null,
+      achievements: [],
+      quests: [],
+      clientEventId,
+      gamificationPending: Boolean(clientEventId) && !alreadyApplied,
+      alreadyApplied,
+    };
+  }
+
+  async processReviewGamification(input: {
+    userId: string;
+    reviewItemId: string;
+    rating: ReviewRating;
+    clientEventId: string;
+  }): Promise<ReviewGamificationViewModel> {
+    const existing = await reviewRepository.findHistoryByClientEventId(
+      input.userId,
+      input.clientEventId,
+    );
+
+    if (existing?.gamification_applied_at && existing.gamification_result) {
+      return this.parseStoredGamification(
+        input.clientEventId,
+        existing.gamification_result,
+      );
+    }
+
+    const [elevation, achievements, stats] = await Promise.all([
+      elevationService.awardReviewRating(
+        input.userId,
+        input.reviewItemId,
+        input.rating,
+        input.clientEventId,
+      ),
+      achievementService.afterStudyActivity(input.userId),
+      this.getStats(input.userId),
+    ]);
+
+    const quests = await questService.recordActivities(input.userId, [
+      { type: "review_item", amount: 1 },
+      ...(elevation
+        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+        : []),
+    ]);
+
+    const payload: ReviewGamificationViewModel = {
+      clientEventId: input.clientEventId,
+      ready: true,
       elevation,
       achievements,
       quests,
+      stats,
+    };
+
+    await reviewRepository.saveGamificationResult(
+      input.userId,
+      input.clientEventId,
+      payload as unknown as Record<string, unknown>,
+    );
+
+    return payload;
+  }
+
+  async getGamificationResult(
+    userId: string,
+    clientEventId: string,
+  ): Promise<ReviewGamificationViewModel> {
+    const history = await reviewRepository.findHistoryByClientEventId(
+      userId,
+      clientEventId,
+    );
+
+    if (!history) {
+      return {
+        clientEventId,
+        ready: false,
+        elevation: null,
+        achievements: [],
+        quests: [],
+        stats: null,
+      };
+    }
+
+    if (history.gamification_applied_at && history.gamification_result) {
+      return this.parseStoredGamification(
+        clientEventId,
+        history.gamification_result,
+      );
+    }
+
+    return {
+      clientEventId,
+      ready: false,
+      elevation: null,
+      achievements: [],
+      quests: [],
+      stats: null,
+    };
+  }
+
+  private parseStoredGamification(
+    clientEventId: string,
+    raw: Record<string, unknown>,
+  ): ReviewGamificationViewModel {
+    return {
+      clientEventId,
+      ready: true,
+      elevation: (raw.elevation as ReviewGamificationViewModel["elevation"]) ?? null,
+      achievements:
+        (raw.achievements as ReviewGamificationViewModel["achievements"]) ?? [],
+      quests: (raw.quests as ReviewGamificationViewModel["quests"]) ?? [],
+      stats: (raw.stats as ReviewGamificationViewModel["stats"]) ?? null,
     };
   }
 
