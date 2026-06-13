@@ -23,6 +23,10 @@ type TrailMapArtworkProps = {
   immersive?: boolean;
   regionSlug?: string;
   trailSegmentIndex?: number;
+  /** Lighter scrim when segments stack into one continuous climb. */
+  scrim?: "full" | "minimal";
+  /** Focal point for scroll art cropped into a compact card (percent 0–100). */
+  scrollCropFocus?: { x: number; y: number };
 };
 
 export function TrailMapArtwork({
@@ -33,14 +37,17 @@ export function TrailMapArtwork({
   immersive = false,
   regionSlug,
   trailSegmentIndex = 0,
+  scrim = "full",
+  scrollCropFocus,
 }: TrailMapArtworkProps) {
   const scrollSrc =
-    immersive && hasTrailScrollArt(regionSlug)
+    hasTrailScrollArt(regionSlug)
       ? getTrailScrollArtPath(regionSlug, theme, trailSegmentIndex)
       : null;
   const regionSrc =
     immersive && !scrollSrc && regionSlug ? getRegionArtPath(regionSlug) : null;
   const spineSrc = getTrailSpineArtPath(theme);
+  const compactScrollSrc = !immersive && scrollSrc && trailSegmentIndex > 0 ? scrollSrc : null;
 
   if (immersive && scrollSrc) {
     return (
@@ -56,9 +63,31 @@ export function TrailMapArtwork({
         <div
           className={cn(
             TRAIL_MAP_SCRIM_CLASS,
-            "from-background/10 via-transparent to-background/40",
+            scrim === "minimal"
+              ? "from-transparent via-transparent to-background/20"
+              : "from-background/10 via-transparent to-background/40",
           )}
         />
+      </div>
+    );
+  }
+
+  if (compactScrollSrc) {
+    const focusX = scrollCropFocus?.x ?? 50;
+    const focusY = scrollCropFocus?.y ?? 50;
+
+    return (
+      <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
+        <Image
+          src={compactScrollSrc}
+          alt=""
+          fill
+          className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
+          style={{ objectPosition: `${focusX}% ${focusY}%` }}
+          sizes="(max-width: 512px) 100vw, 512px"
+          priority={priority}
+        />
+        <div className={TRAIL_MAP_SCRIM_CLASS} />
       </div>
     );
   }

@@ -1,5 +1,5 @@
-import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
-import type { RegionSlug } from "@/lib/design-system/regions";
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";import type { RegionSlug } from "@/lib/design-system/regions";
 import type {
   WorldMapRegionViewModel,
   WorldMapViewModel,
@@ -19,7 +19,7 @@ export function buildWorldMapViewModel(
         : region.progressPercent >= 100
           ? "completed"
           : "available",
-    href: `/learn/${region.slug}`,
+    href: regionTrailHref(region.slug),
   }));
 
   return { regions, currentRegionSlug };

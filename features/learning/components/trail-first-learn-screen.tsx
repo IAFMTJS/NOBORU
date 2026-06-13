@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, Map, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS } from "@/lib/assets/image-presentation";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
+import { ClimbElevationIndicator } from "@/features/learning/components/trail/climb-elevation-indicator";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
@@ -16,14 +18,30 @@ import {
 } from "@/features/learning/utils/region-lesson";
 import { flattenRegionTrailLessons } from "@/features/learning/services/trail.service";
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { cn } from "@/lib/utils";
 import { glassClass, resolveVisualTier } from "@/lib/performance/visual-tier";
+
+import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
 
 type TrailFirstLearnScreenProps = {
   path: LearningPathViewModel;
   initialRegionSlug: string;
-  regionTrial?: { href: string; title: string } | null;
+  trials?: TrialListEntryViewModel[];
 };
+
+function resolveRegionTrial(
+  trials: TrialListEntryViewModel[],
+  regionSlug: string,
+): { href: string; title: string } | null {
+  const trial = trials.find(
+    (entry) =>
+      entry.regionSlug === regionSlug &&
+      entry.availability === "available" &&
+      !entry.progress?.passed,
+  );
+  return trial ? { href: `/trials/${trial.slug}`, title: trial.title } : null;
+}
 
 function resolveInitialRegion(
   path: LearningPathViewModel,
@@ -44,8 +62,9 @@ function resolveInitialRegion(
 export function TrailFirstLearnScreen({
   path,
   initialRegionSlug,
-  regionTrial = null,
+  trials = [],
 }: TrailFirstLearnScreenProps) {
+  const router = useRouter();
   const defaultRegion = resolveInitialRegion(path, initialRegionSlug);
   const [selectedSlug, setSelectedSlug] = useState(
     defaultRegion?.slug ?? initialRegionSlug,
@@ -57,8 +76,27 @@ export function TrailFirstLearnScreen({
   const visualTier = resolveVisualTier();
   const headerGlass = glassClass(visualTier);
 
+  useEffect(() => {
+    const resolved = resolveInitialRegion(path, initialRegionSlug);
+    if (resolved?.slug) {
+      setSelectedSlug(resolved.slug);
+    }
+  }, [initialRegionSlug, path]);
+
+  useEffect(() => {
+    if (!selectedSlug || typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("region") !== selectedSlug) {
+      router.replace(regionTrailHref(selectedSlug), { scroll: false });
+    }
+  }, [router, selectedSlug]);
+
   const selectedRegion =
     path.regions.find((region) => region.slug === selectedSlug) ?? defaultRegion;
+
+  const regionTrial = selectedRegion
+    ? resolveRegionTrial(trials, selectedRegion.slug)
+    : null;
 
   const trailNodes = useMemo(() => {
     if (!selectedRegion) return [];
@@ -130,6 +168,11 @@ export function TrailFirstLearnScreen({
           trialTitle={regionTrial?.title ?? null}
           onNodeSelect={handleNodeSelect}
           className="min-h-0 flex-1"
+        />
+
+        <ClimbElevationIndicator
+          completedCount={selectedRegion.completedCount}
+          lessonCount={selectedRegion.lessonCount}
         />
 
         <button

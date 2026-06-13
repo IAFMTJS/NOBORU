@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
@@ -42,7 +44,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         subtitle={hub.vocabularySubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/learn/${hub.regionSlug}`}>Back</Link>
+            <Link href={regionTrailHref(hub.regionSlug)}>Back</Link>
           </Button>
         }
       />

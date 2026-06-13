@@ -1,5 +1,6 @@
 import { Flame, Gem, Star } from "lucide-react";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { Button } from "@/components/ui/button";
@@ -119,7 +120,7 @@ export function ExpeditionHero({
           <div className="flex items-center justify-between gap-2">
             <p className="text-caption font-semibold">Current Trail</p>
             <AnalyticsLink
-              href="/learn"
+              href={regionTrailHref(regionSlug)}
               className="text-caption font-medium text-primary hover:underline"
               eventName="trail_map_opened"
               eventProperties={{ source: "home_trail_preview" }}

@@ -16,6 +16,7 @@ import { trialService } from "@/features/trials/services/trial.service";
 import { companionService } from "@/features/companion/services/companion.service";
 import { chestService } from "@/features/chests/services/chest.service";
 import { collectibleService } from "@/features/collectibles/services/collectible.service";
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { buildProgressionPreview } from "@/lib/progression/preview.service";
 import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
@@ -165,11 +166,13 @@ class DashboardServerService {
       trailPreview,
       trailPreviewPlacement: buildTrailPlacementRange(
         trailStartIndex,
-        trailNodes.length,
+        currentRegionPath?.lessonCount ?? trailNodes.length,
       ),
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
-        href: "/learn",
+        href: profile.currentRegionSlug
+          ? regionTrailHref(profile.currentRegionSlug)
+          : "/learn",
         lessonNumber: lessonPosition?.index ?? null,
         lessonCount: regionForNextLesson?.lessonCount ?? 0,
         estimatedDuration: learningPath.nextLesson?.estimatedDuration ?? null,

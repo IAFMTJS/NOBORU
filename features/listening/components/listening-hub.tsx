@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
@@ -37,7 +39,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         subtitle={contentHub.listeningSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/learn/${contentHub.regionSlug}`}>Back</Link>
+            <Link href={regionTrailHref(contentHub.regionSlug)}>Back</Link>
           </Button>
         }
       />

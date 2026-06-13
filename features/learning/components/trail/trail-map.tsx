@@ -7,7 +7,8 @@ import { useTheme } from "next-themes";
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { hasTrailScrollArt } from "@/lib/assets/registry";
 import { MotionDiv } from "@/components/motion/motion-div";
-import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
+import { ImmersiveTrailWorld } from "@/features/learning/components/trail/immersive-trail-world";
+import { TrailPathNode } from "@/features/learning/components/trail/trail-path-node";
 import { TrailSpineConnector } from "@/features/learning/components/trail/trail-spine-connector";
 import { MAX_LESSONS_PER_TRAIL_PATH } from "@/features/learning/constants/trail.constants";
 import { splitTrailNodesIntoSegments } from "@/features/learning/services/trail.service";
@@ -24,213 +25,10 @@ import {
 import { trailNodeReveal } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
 import type {
-  TrailNodeState,
   TrailNodeViewModel,
   TrailPlacementRange,
   TrailSegmentSlice,
 } from "@/features/learning/types/trail.types";
-
-const STATE_LABELS: Record<TrailNodeState, string> = {
-  completed: "Completed lesson",
-  in_progress: "Continue lesson",
-  available: "Next lesson",
-  locked: "Locked lesson",
-};
-
-function TrailPathNode({
-  node,
-  position,
-  nodeIndex: _nodeIndex,
-  compact,
-  minimal,
-  labelsBelow,
-  immersive,
-  anchored = false,
-  onNodeSelect,
-  labelTheme,
-}: {
-  node: TrailNodeViewModel;
-  position: { x: number; y: number };
-  nodeIndex: number;
-  compact?: boolean;
-  minimal?: boolean;
-  labelsBelow?: boolean;
-  immersive?: boolean;
-  /** When true, the parent wrapper owns left/top placement along the trail. */
-  anchored?: boolean;
-  onNodeSelect?: (node: TrailNodeViewModel) => void;
-  labelTheme?: string;
-}) {
-  const isCheckpoint = node.nodeKind === "checkpoint";
-  const isCurrent = node.state === "in_progress";
-  const labelSide =
-    immersive || labelsBelow ? "right" : position.x < 48 ? "right" : "left";
-  const usePillLabels = immersive && !labelsBelow;
-  const ariaLabel = `${STATE_LABELS[node.state]}: ${node.label}${
-    node.subtitle ? `, ${node.subtitle}` : ""
-  }`;
-  const interactive = Boolean(onNodeSelect) || Boolean(node.href);
-
-  const markerSize: "sm" | "md" | "lg" = isCheckpoint
-    ? labelsBelow
-      ? "lg"
-      : "md"
-    : labelsBelow && isCurrent
-      ? "lg"
-      : usePillLabels
-        ? "md"
-        : compact || minimal
-          ? "sm"
-          : "md";
-
-  const labelOnLeft = !immersive && !labelsBelow && position.x >= 50;
-  const hideLockedLabel = labelsBelow && immersive && node.state === "locked";
-
-  const marker = (
-    <div className={cn("relative z-10 shrink-0", labelsBelow && "z-20")}>
-      <TrailNodeMarker
-        state={node.state}
-        nodeKind={node.nodeKind}
-        size={markerSize}
-      />
-      {labelsBelow && !hideLockedLabel ? (
-        <span
-          className={cn(
-            "pointer-events-none absolute top-[calc(100%+0.35rem)] max-w-[5.5rem] truncate text-[0.6875rem] font-medium leading-tight",
-            immersive ? "text-white/90 drop-shadow-sm" : "text-foreground",
-            node.state === "locked" ? "text-muted-foreground/80" : null,
-            labelOnLeft
-              ? "right-full mr-1.5 text-right"
-              : "left-full ml-1.5 text-left",
-          )}
-        >
-          {node.label}
-        </span>
-      ) : null}
-    </div>
-  );
-
-  const pillLabel = usePillLabels ? (
-    <span
-      className={cn(
-        "pointer-events-none max-w-[9rem] truncate rounded-full border px-3 py-1.5",
-        "text-body-sm font-medium shadow-sm backdrop-blur-md",
-        labelTheme === "light"
-          ? "border-border/60 bg-card/85 text-foreground"
-          : "border-white/10 bg-black/55 text-white",
-        node.state === "locked" &&
-          (labelTheme === "light" ? "text-muted-foreground" : "text-white/75"),
-      )}
-    >
-      {node.label}
-    </span>
-  ) : null;
-
-  const card =
-    minimal || labelsBelow || usePillLabels ? null : (
-      <div
-        className={cn(
-          "pointer-events-none max-w-[7.5rem] rounded-lg border border-border/60 bg-card/92 p-2 shadow-elevation-1 backdrop-blur-md transition-colors sm:max-w-[9rem]",
-          node.state === "locked" ? "opacity-75" : null,
-          interactive ? "hover:bg-accent/35" : "cursor-not-allowed opacity-75",
-          compact && "max-w-[6.5rem] p-1.5",
-        )}
-      >
-        <p
-          className={cn(
-            "line-clamp-2 font-medium leading-tight",
-            compact ? "text-[0.65rem]" : "text-caption",
-          )}
-        >
-          {node.label}
-        </p>
-        {!compact && node.subtitle ? (
-          <p className="mt-0.5 truncate text-[0.65rem] text-muted-foreground">
-            {node.subtitle}
-          </p>
-        ) : null}
-      </div>
-    );
-
-  const labelTransform =
-    labelsBelow || minimal
-      ? "translate(-50%, -50%)"
-      : `translate(${labelSide === "right" ? "-12%" : "-88%"}, -50%)`;
-
-  const touchTargetClass = cn(
-    "inline-flex shrink-0 touch-manipulation items-center justify-center",
-    "min-h-11 min-w-11 border-0 bg-transparent p-0",
-    interactive && onNodeSelect ? "cursor-pointer" : null,
-  );
-
-  const interactiveMarker = interactive ? (
-    onNodeSelect ? (
-      <button
-        type="button"
-        className={touchTargetClass}
-        aria-label={ariaLabel}
-        onClick={() => onNodeSelect(node)}
-      >
-        {marker}
-      </button>
-    ) : node.href ? (
-      <Link href={node.href} className={touchTargetClass} aria-label={ariaLabel}>
-        {marker}
-      </Link>
-    ) : (
-      <div className={touchTargetClass} aria-label={ariaLabel}>
-        {marker}
-      </div>
-    )
-  ) : (
-    <div aria-label={ariaLabel}>{marker}</div>
-  );
-
-  const anchoredLayout = (
-    <div
-      className={cn(
-        "pointer-events-none",
-        usePillLabels
-          ? "flex items-center gap-2"
-          : labelsBelow || minimal
-            ? "flex flex-col items-center"
-            : cn(
-                "flex items-center gap-1.5",
-                labelSide === "right" ? "flex-row" : "flex-row-reverse",
-              ),
-      )}
-    >
-      <div className="pointer-events-auto">{interactiveMarker}</div>
-      {pillLabel}
-      {card}
-    </div>
-  );
-
-  const floatingLayout = (
-    <div
-      className={cn(
-        "absolute",
-        labelsBelow || minimal
-          ? "flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-          : cn(
-              "flex -translate-y-1/2 items-center gap-1.5",
-              labelSide === "right" ? "flex-row" : "flex-row-reverse",
-            ),
-      )}
-      style={{
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-        transform: labelTransform,
-      }}
-    >
-      {interactiveMarker}
-      {pillLabel}
-      {card}
-    </div>
-  );
-
-  return anchored ? anchoredLayout : floatingLayout;
-}
 
 type TrailMapCanvasProps = {
   nodes: TrailNodeViewModel[];
@@ -246,6 +44,27 @@ type TrailMapCanvasProps = {
   labelTheme?: string;
 };
 
+function resolvePlacementConfig(
+  immersive: boolean,
+  trailSegmentIndex: number,
+  placementRange?: TrailPlacementRange,
+): {
+  mode: "scroll" | "spine";
+  segmentIndex: number;
+  useCompactScrollArt: boolean;
+} {
+  const segmentIndex =
+    placementRange?.trailSegmentIndex ?? trailSegmentIndex;
+  const useScrollAnchors =
+    immersive || segmentIndex > 0 || Boolean(placementRange?.trailSegmentIndex);
+
+  return {
+    mode: useScrollAnchors ? "scroll" : "spine",
+    segmentIndex,
+    useCompactScrollArt: !immersive && segmentIndex > 0,
+  };
+}
+
 function TrailMapCanvas({
   nodes,
   compact = false,
@@ -259,11 +78,17 @@ function TrailMapCanvas({
   onNodeSelect,
   labelTheme,
 }: TrailMapCanvasProps) {
+  const placementConfig = resolvePlacementConfig(
+    immersive,
+    trailSegmentIndex,
+    placementRange,
+  );
+
   const placementOptions: TrailPlacementOptions = {
     theme: labelTheme,
     regionSlug,
-    mode: immersive ? "scroll" : "spine",
-    trailSegmentIndex,
+    mode: placementConfig.mode,
+    trailSegmentIndex: placementConfig.segmentIndex,
     placementRange,
   };
 
@@ -287,6 +112,17 @@ function TrailMapCanvas({
   const cardPositions = immersive
     ? null
     : getTrailNodePositions(placementNodes, placementOptions);
+  const scrollCropFocus =
+    placementConfig.useCompactScrollArt && cardPositions && cardPositions.length > 0
+      ? {
+          x:
+            cardPositions.reduce((sum, point) => sum + point.x, 0) /
+            cardPositions.length,
+          y:
+            cardPositions.reduce((sum, point) => sum + point.y, 0) /
+            cardPositions.length,
+        }
+      : undefined;
   const useScrollArt = immersive && hasTrailScrollArt(regionSlug);
   const canvasAspectRatio = immersive
     ? `${TRAIL_SCROLL_ART_WIDTH} / ${TRAIL_SCROLL_ART_HEIGHT}`
@@ -301,15 +137,16 @@ function TrailMapCanvas({
           : "overflow-hidden rounded-2xl border border-primary/20 shadow-elevation-1 dark:shadow-elevation-2",
       )}
       data-trail-map-canvas
-      data-trail-segment-index={trailSegmentIndex}
+      data-trail-segment-index={placementConfig.segmentIndex}
       style={{ aspectRatio: canvasAspectRatio }}
     >
       <TrailMapArtwork
         theme={labelTheme}
         immersive={immersive}
         regionSlug={regionSlug}
-        trailSegmentIndex={trailSegmentIndex}
-        priority={useScrollArt}
+        trailSegmentIndex={placementConfig.segmentIndex}
+        priority={useScrollArt || Boolean(scrollCropFocus)}
+        scrollCropFocus={scrollCropFocus}
       />
       {immersive && immersiveLayout && !useScrollArt ? (
         <TrailSpineConnector
@@ -324,8 +161,8 @@ function TrailMapCanvas({
         )}
         role="list"
         aria-label={
-          trailSegmentIndex > 0
-            ? `Trail lessons, path ${trailSegmentIndex + 1}`
+          placementConfig.segmentIndex > 0
+            ? `Trail lessons, path ${placementConfig.segmentIndex + 1}`
             : "Trail lessons"
         }
         style={{ aspectRatio: canvasAspectRatio }}
@@ -465,6 +302,8 @@ export function TrailMap({
     ];
   }, [immersive, nodes, placementRange, regionLessonCount]);
 
+  const useContinuousWorld = immersive && !placementRange;
+
   useEffect(() => {
     if (!immersive || !activeNode || !scrollRef.current) return;
 
@@ -477,7 +316,7 @@ export function TrailMap({
       block: "center",
       behavior: prefersReducedMotion ? "auto" : "smooth",
     });
-  }, [activeNode, immersive, prefersReducedMotion]);
+  }, [activeNode, immersive, prefersReducedMotion, regionSlug]);
 
   if (nodes.length === 0) {
     return (
@@ -515,34 +354,27 @@ export function TrailMap({
           Boss Trial · {trialTitle}
         </Link>
       ) : null}
-      {activeNode && !minimal && !labelsBelow ? (
+      {activeNode && !minimal && !labelsBelow && !useContinuousWorld ? (
         <YamaPresence
           presence={yamaService.resolveTrailProgress(activeNode.id.length)}
           size="sm"
         />
       ) : null}
-      <div className={cn("space-y-4", immersive && "space-y-0")}>
-        {trailSegments.map((segment, segmentIndex) => (
-          <div key={segment.trailSegmentIndex}>
-            {trailSegments.length > 1 ? (
-              <p
-                className={cn(
-                  "px-1 pb-2 text-caption font-medium",
-                  immersive
-                    ? "text-white/80"
-                    : "text-muted-foreground",
-                )}
-              >
-                Trail {segment.trailSegmentIndex + 1}
-              </p>
-            ) : null}
-            {segmentIndex > 0 && immersive ? (
-              <div
-                className="my-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                aria-hidden
-              />
-            ) : null}
+      {useContinuousWorld ? (
+        <ImmersiveTrailWorld
+          segments={trailSegments}
+          regionSlug={regionSlug}
+          activeNodeId={activeNode?.id ?? null}
+          onNodeSelect={onNodeSelect}
+          labelTheme={resolvedTheme}
+          scrollContainerRef={scrollRef}
+          prefersReducedMotion={prefersReducedMotion}
+        />
+      ) : (
+        <div className={cn("space-y-4", immersive && "space-y-0")}>
+          {trailSegments.map((segment) => (
             <TrailMapCanvas
+              key={segment.trailSegmentIndex}
               nodes={segment.nodes}
               compact={compact}
               minimal={minimal}
@@ -555,9 +387,9 @@ export function TrailMap({
               onNodeSelect={onNodeSelect}
               labelTheme={resolvedTheme}
             />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

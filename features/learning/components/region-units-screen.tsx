@@ -1,3 +1,4 @@
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import Link from "next/link";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
@@ -15,11 +16,6 @@ import {
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { RegionContentLinks } from "@/features/learning/components/region-content-links";
 import { RegionContinueFooter } from "@/features/learning/components/region-continue-footer";
-import { TrailMap } from "@/features/learning/components/trail/trail-map";
-import {
-  buildTrailNodes,
-  getUnitTrailSegmentSlices,
-} from "@/features/learning/services/trail.service";
 import { getNextLessonInRegion } from "@/features/learning/utils/region-lesson";
 import { RegionTrialsPanel } from "@/features/trials/components/region-trials-panel";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
@@ -126,38 +122,65 @@ export function RegionUnitsScreen({ region, trials = [] }: RegionUnitsScreenProp
       </Card>
 
       {!regionLocked ? (
-        <div className="space-y-4">
-          {region.units.map((unit, unitIndex) => (
-            <Card key={unit.id} className="shadow-elevation-1">
-              <CardHeader>
-                <CardTitle className="text-heading-6">{unit.name}</CardTitle>
-                <CardDescription>{unit.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {getUnitTrailSegmentSlices(region.units, unitIndex).map(
-                  (segment) => (
-                    <TrailMap
-                      key={`${unit.id}-trail-${segment.trailSegmentIndex}`}
-                      nodes={buildTrailNodes(segment.nodes)}
-                      title={
-                        segment.trailSegmentIndex > 0
-                          ? `${unit.name} · Trail ${segment.trailSegmentIndex + 1}`
-                          : undefined
-                      }
-                      description={
-                        segment.trailSegmentIndex === 0
-                          ? `${unit.completedCount}/${unit.lessonCount} lessons complete`
-                          : undefined
-                      }
-                      regionSlug={region.slug}
-                      placementRange={segment.placementRange}
-                    />
-                  ),
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <>
+          <Card className="shadow-elevation-1">
+            <CardHeader>
+              <CardTitle>Region Trail</CardTitle>
+              <CardDescription>
+                Your path continues as one climb through {region.name}.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <ProgressBar
+                value={region.progressPercent}
+                label="Region completion"
+                showValue
+              />
+              <Button className="w-full" asChild>
+                <Link href={regionTrailHref(region.slug)}>Open Trail Map</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <div className="space-y-4">
+            {region.units.map((unit) => (
+              <Card key={unit.id} className="shadow-elevation-1">
+                <CardHeader>
+                  <CardTitle className="text-heading-6">{unit.name}</CardTitle>
+                  <CardDescription>{unit.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <ProgressBar
+                    value={
+                      unit.lessonCount === 0
+                        ? 0
+                        : Math.round(
+                            (unit.completedCount / unit.lessonCount) * 100,
+                          )
+                    }
+                    label={`${unit.completedCount}/${unit.lessonCount} lessons`}
+                    showValue
+                  />
+                  <ul className="space-y-1">
+                    {unit.lessons.map((lesson) => (
+                      <li key={lesson.id}>
+                        <Link
+                          href={`/learn/lesson/${lesson.id}`}
+                          className="flex items-center justify-between rounded-lg px-2 py-2 text-body-sm hover:bg-accent/40"
+                        >
+                          <span className="line-clamp-1">{lesson.title}</span>
+                          <Badge variant="outline" className="ml-2 shrink-0 capitalize">
+                            {lesson.progress.replace("_", " ")}
+                          </Badge>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
       ) : null}
 
       {!regionLocked && nextLesson ? (

@@ -166,12 +166,19 @@ export function RegionSelectSheet({
           })}
         </div>
         {mode === "overview" ? (
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/trials">
-              <Map className="mr-2 h-4 w-4" aria-hidden />
-              View trials to unlock regions
-            </Link>
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/learn/world">
+                <Map className="mr-2 h-4 w-4" aria-hidden />
+                Mountain world map
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/trials">
+                View trials to unlock regions
+              </Link>
+            </Button>
+          </div>
         ) : null}
       </SheetContent>
     </Sheet>

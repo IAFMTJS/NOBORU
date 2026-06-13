@@ -104,6 +104,26 @@ describe("getTrailNodePositions", () => {
     expect(slice[0]?.y).toBeCloseTo(full[4]?.y ?? 0, 0);
     expect(slice[2]?.y).toBeCloseTo(full[6]?.y ?? 0, 0);
   });
+
+  it("preserves global trail position for trail segment 2 previews", () => {
+    const segment2Full = getTrailNodePositions(10, {
+      regionSlug: "mount-n5",
+      mode: "scroll",
+      theme: "dark",
+      trailSegmentIndex: 1,
+      placementRange: { startIndex: 0, totalCount: 25, trailSegmentIndex: 1 },
+    });
+    const segment2Slice = getTrailNodePositions(3, {
+      regionSlug: "mount-n5",
+      mode: "scroll",
+      theme: "dark",
+      trailSegmentIndex: 1,
+      placementRange: { startIndex: 4, totalCount: 25, trailSegmentIndex: 1 },
+    });
+
+    expect(segment2Slice[0]?.y).toBeCloseTo(segment2Full[4]?.y ?? 0, 0);
+    expect(segment2Slice[2]?.y).toBeCloseTo(segment2Full[6]?.y ?? 0, 0);
+  });
 });
 
 describe("getImmersiveTrailLayout", () => {

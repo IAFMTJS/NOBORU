@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -64,7 +66,7 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
       </div>
 
       <Link
-        href="/learn"
+        href={regionTrailHref(data.currentRegionSlug)}
         className="block text-center text-body-sm text-primary underline-offset-4 hover:underline"
       >
         Return to current trail

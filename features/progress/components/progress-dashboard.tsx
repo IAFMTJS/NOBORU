@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
@@ -136,7 +138,7 @@ export function ProgressDashboard({
                 <div className="flex items-center gap-2">
                   <Badge className={visuals.badge}>{region.progressPercent}%</Badge>
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/learn/${region.slug}`}>Open</Link>
+                    <Link href={regionTrailHref(region.slug)}>Open</Link>
                   </Button>
                 </div>
               </div>

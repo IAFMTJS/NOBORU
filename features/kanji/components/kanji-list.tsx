@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
@@ -36,7 +38,7 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
         subtitle={hub.kanjiSubtitle}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/learn/${hub.regionSlug}`}>Back</Link>
+            <Link href={regionTrailHref(hub.regionSlug)}>Back</Link>
           </Button>
         }
       />

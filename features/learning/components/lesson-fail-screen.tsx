@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +53,7 @@ export function LessonFailScreen({
           Retry lesson
         </Button>
         <Button variant="outline" className="w-full" asChild>
-          <Link href={`/learn/${regionSlug}`}>Back to region</Link>
+          <Link href={regionTrailHref(regionSlug)}>Back to trail</Link>
         </Button>
       </CardContent>
     </Card>

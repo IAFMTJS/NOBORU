@@ -3,26 +3,21 @@ import { getLearningPathWithContext } from "@/lib/orchestration/learn.orchestrat
 import { trialService } from "@/features/trials/services/trial.service";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 
-export default async function LearnPage() {
+export default async function LearnPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ region?: string }>;
+}) {
   const userId = await requireAuthenticatedUserId();
+  const { region: regionQuery } = await searchParams;
   const { path, currentRegionSlug } = await getLearningPathWithContext();
   const trials = await trialService.listTrials(userId);
-  const regionTrial = trials.find(
-    (t) =>
-      t.regionSlug === currentRegionSlug &&
-      t.availability === "available" &&
-      !t.progress?.passed,
-  );
 
   return (
     <TrailFirstLearnScreen
       path={path}
-      initialRegionSlug={currentRegionSlug}
-      regionTrial={
-        regionTrial
-          ? { href: `/trials/${regionTrial.slug}`, title: regionTrial.title }
-          : null
-      }
+      initialRegionSlug={regionQuery ?? currentRegionSlug}
+      trials={trials}
     />
   );
 }

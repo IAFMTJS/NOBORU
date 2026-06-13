@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { LessonLayout } from "@/components/layout/lesson-layout";
@@ -355,7 +356,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           subtitle={`${session.type} lesson · ${session.xpReward} XP`}
           action={
             <Button variant="ghost" size="sm" asChild>
-              <Link href={`/learn/${session.regionSlug}`}>Exit</Link>
+              <Link href={regionTrailHref(session.regionSlug)}>Exit</Link>
             </Button>
           }
         />
@@ -403,7 +404,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         subtitle={`${session.type} lesson · ${session.xpReward} XP`}
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/learn/${session.regionSlug}`}>Exit</Link>
+            <Link href={regionTrailHref(session.regionSlug)}>Exit</Link>
           </Button>
         }
       />
@@ -668,10 +669,10 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
               </Button>
             ) : null}
             <Button className="w-full" asChild>
-              <Link href={`/learn/${session.regionSlug}`}>Back to Region</Link>
+              <Link href={regionTrailHref(session.regionSlug)}>Back to trail</Link>
             </Button>
             <Button variant="outline" className="w-full" asChild>
-              <Link href="/learn">Learning Path</Link>
+              <Link href={regionTrailHref(session.regionSlug)}>Learning Path</Link>
             </Button>
           </CardContent>
         </Card>
