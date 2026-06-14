@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { REGION_HERO_IMAGE_CLASS } from "@/lib/assets/image-presentation";
 import { getRegionArtPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +32,7 @@ export function RegionHeroImage({
         src={src}
         alt={alt}
         fill
-        className={REGION_HERO_IMAGE_CLASS}
+        className="object-cover object-center"
         sizes={size === "thumbnail" ? "48px" : "(max-width: 512px) 100vw, 512px"}
       />
       {hideOverlay || size === "thumbnail" ? null : (

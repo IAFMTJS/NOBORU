@@ -26,7 +26,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "camp",
     theme: "campfire",
     skinId: "ember_night",
-    barTexturePath: "/ui/ui_nav_skin_ember_night_v1.webp",
+    barTexturePath: "/art/ui/navbars/nav-ember-camp-active-camp.webp",
     mascotExpression: "encouraging",
     barSurfaceClass:
       "bg-gradient-to-r from-stone-950/95 via-stone-900/92 to-stone-950/95 shadow-[inset_0_1px_0_rgba(246,174,45,0.12)]",
@@ -42,7 +42,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "journey",
     theme: "trail",
     skinId: "trail_mist",
-    barTexturePath: "/ui/ui_nav_skin_trail_mist_v1.webp",
+    barTexturePath: "/art/ui/navbars/nav-moonlit-journey-active-journey.webp",
     mascotExpression: "adventure",
     barSurfaceClass:
       "bg-gradient-to-r from-slate-950/95 via-indigo-950/90 to-slate-950/95 shadow-[inset_0_1px_0_rgba(96,165,250,0.12)]",
@@ -58,7 +58,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "dojo",
     theme: "dojo",
     skinId: "bamboo_grove",
-    barTexturePath: "/ui/ui_nav_skin_bamboo_grove_v1.webp",
+    barTexturePath: "/art/ui/navbars/nav-bamboo-dojo-active-dojo.webp",
     mascotExpression: "training",
     barSurfaceClass:
       "bg-gradient-to-r from-emerald-950/95 via-green-950/90 to-emerald-950/95 shadow-[inset_0_1px_0_rgba(74,222,128,0.1)]",
@@ -74,7 +74,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "world",
     theme: "compass",
     skinId: "moonlit_torii",
-    barTexturePath: "/ui/ui_nav_skin_moonlit_torii_v1.webp",
+    barTexturePath: "/art/ui/navbars/nav-cosmic-world-active-world.webp",
     mascotExpression: "adventure",
     barSurfaceClass:
       "bg-gradient-to-r from-violet-950/95 via-purple-950/90 to-violet-950/95 shadow-[inset_0_1px_0_rgba(167,139,250,0.12)]",
@@ -90,7 +90,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "profile",
     theme: "journal",
     skinId: "stone_path",
-    barTexturePath: "/ui/ui_nav_skin_stone_path_v1.webp",
+    barTexturePath: "/art/ui/navbars/nav-premium-gold-profile-active-profile.webp",
     mascotExpression: "victorious",
     barSurfaceClass:
       "bg-gradient-to-r from-amber-950/95 via-stone-900/92 to-amber-950/95 shadow-[inset_0_1px_0_rgba(250,204,21,0.1)]",

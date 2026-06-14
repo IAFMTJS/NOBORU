@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Lora } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ASSET_REGISTRY } from "@/lib/assets/registry";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 
 import "./globals.css";
@@ -47,19 +46,6 @@ export const metadata: Metadata = {
   applicationName: "Noboru",
   formatDetection: {
     telephone: false,
-  },
-  icons: {
-    icon: [
-      {
-        url: ASSET_REGISTRY.icons.appDark,
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: ASSET_REGISTRY.icons.appLight,
-        media: "(prefers-color-scheme: light)",
-      },
-    ],
-    apple: ASSET_REGISTRY.icons.appLight,
   },
 };
 

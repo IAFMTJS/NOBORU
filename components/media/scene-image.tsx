@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 
 import { getSceneArtPath } from "@/lib/assets/registry";
+import { resolveSceneBackgroundPresentation } from "@/lib/assets/image-presentation";
 import { cn } from "@/lib/utils";
 
 export type SceneId =
@@ -39,6 +40,7 @@ export function SceneImage({
 }: SceneImageProps) {
   const { resolvedTheme } = useTheme();
   const src = getSceneArtPath(scene, resolvedTheme);
+  const presentation = resolveSceneBackgroundPresentation();
   if (!src) return null;
 
   return (
@@ -48,6 +50,10 @@ export function SceneImage({
       fill={fill}
       priority={priority}
       className={cn("object-cover object-center", className)}
+      style={{
+        objectFit: presentation.objectFit,
+        objectPosition: presentation.objectPosition,
+      }}
       sizes="100vw"
     />
   );

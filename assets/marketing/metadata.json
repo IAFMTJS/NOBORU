@@ -1,22 +1,25 @@
 {
-  "id": "mockup_product_collection_v1",
-  "name": "Product Mockup Collection",
+  "id": "mockup_canonical_collection_v1",
+  "name": "Canonical Mockup Collection",
   "version": "v1",
   "category": "marketing",
-  "owner_agent": "Frontend Agent",
+  "owner_agent": "Art Director Agent",
   "created_at": "2026-06-08",
-  "updated_at": "2026-06-08",
+  "updated_at": "2026-06-14",
   "status": "approved",
-  "tags": ["mockup", "ui-reference", "product-design"],
+  "tags": ["mockup", "ui-reference", "binding", "art-direction"],
   "usage_locations": [
-    "uiux.mdc",
-    "design-system.md",
-    "development-reference"
+    "docs/mockup-reference-style.md"
   ],
   "files": [
+    "mockup_navbar_concepts_v1.png",
+    "mockup_journey_core_flow_v1.png",
+    "mockup_full_product_ux_v1.png",
+    "mockup_gamification_screens_v1.png",
     "mockup_product_dark_v1.png",
     "mockup_product_light_v1.png",
     "mockup_supplementary_dark_v1.png",
     "mockup_home_learn_flow_dark_v1.png"
-  ]
+  ],
+  "note": "Design references only — not production assets."
 }

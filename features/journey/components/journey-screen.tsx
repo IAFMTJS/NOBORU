@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import { TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS } from "@/lib/assets/image-presentation";
 import { JourneyRegionScroll } from "@/features/journey/components/journey-region-scroll";
 import { JourneyStatusBar } from "@/features/journey/components/journey-status-bar";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
@@ -188,7 +187,10 @@ export function JourneyScreen({
   return (
     <>
       <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-6rem)] min-h-0 flex-col">
-        <div className={TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS} aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-background/80 to-transparent"
+          aria-hidden
+        />
 
         {profileStats ? (
           <JourneyStatusBar

@@ -1,9 +1,7 @@
 "use client";
 
 import { useMemo, useState, type KeyboardEvent } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useTheme } from "next-themes";
 
 import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import {
@@ -13,8 +11,6 @@ import {
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import { yamaService } from "@/features/yama/services/yama.service";
-import { stickerImageClass } from "@/lib/assets/image-presentation";
-import { getYamaTrailCompanionPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
 type JourneyFoxCompanionProps = {
@@ -48,33 +44,14 @@ function TrailCompanionSprite({
   height?: number;
   priority?: boolean;
 }) {
-  const { resolvedTheme } = useTheme();
-  const [useFallback, setUseFallback] = useState(false);
-  const src = getYamaTrailCompanionPath(resolvedTheme);
-
-  if (!src || useFallback) {
-    return (
-      <YamaExpressionImage
-        expression="adventure"
-        fit="sticker"
-        width={width}
-        height={height}
-        priority={priority}
-        className={className}
-      />
-    );
-  }
-
   return (
-    <Image
-      src={src}
-      alt=""
+    <YamaExpressionImage
+      expression="adventure"
+      fit="sticker"
       width={width}
       height={height}
       priority={priority}
-      aria-hidden
-      onError={() => setUseFallback(true)}
-      className={stickerImageClass(className)}
+      className={className}
     />
   );
 }

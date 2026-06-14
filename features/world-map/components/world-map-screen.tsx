@@ -8,7 +8,7 @@ import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { WorldMapRegionNode } from "@/features/world-map/components/world-map-region-node";
 import { WorldMapSpineConnector } from "@/features/world-map/components/world-map-spine-connector";
 import type { WorldMapViewModel } from "@/features/world-map/types/world-map.types";
-import { TRAIL_MAP_ART_ASPECT } from "@/lib/design-system/trail-path-anchors";
+const WORLD_MAP_ASPECT = 9 / 16;
 
 type WorldMapScreenProps = {
   data: WorldMapViewModel;
@@ -44,7 +44,7 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
         <GlassPanel
           className="relative w-full overflow-hidden p-0"
           style={{
-            aspectRatio: String(TRAIL_MAP_ART_ASPECT),
+            aspectRatio: String(WORLD_MAP_ASPECT),
             minHeight: resolveMapMinHeight(data.regions.length),
           }}
           role="img"

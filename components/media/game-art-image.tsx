@@ -1,10 +1,9 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
-import { useTheme } from "next-themes";
 
-import { stickerImageClass } from "@/lib/assets/image-presentation";
 import { getGameArtPath } from "@/lib/assets/registry";
+import { cn } from "@/lib/utils";
 
 type GameArtImageProps = {
   slug: string;
@@ -13,14 +12,18 @@ type GameArtImageProps = {
   sizes?: string;
 };
 
-export function GameArtImage({
-  slug,
-  alt,
-  className,
-  sizes = "64px",
-}: GameArtImageProps) {
+export function GameArtImage({ slug, alt, className, sizes }: GameArtImageProps) {
   const src = getGameArtPath(slug);
-  if (!src) return null;
+
+  if (!src) {
+    return (
+      <div
+        role="img"
+        aria-label={alt}
+        className={cn("h-16 w-16 shrink-0 rounded-xl bg-muted/40", className)}
+      />
+    );
+  }
 
   return (
     <Image
@@ -28,8 +31,8 @@ export function GameArtImage({
       alt={alt}
       width={64}
       height={64}
-      sizes={sizes}
-      className={stickerImageClass(className)}
+      sizes={sizes ?? "64px"}
+      className={cn("h-16 w-16 shrink-0 rounded-xl object-contain", className)}
     />
   );
 }

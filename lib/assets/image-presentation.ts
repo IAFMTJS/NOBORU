@@ -1,32 +1,49 @@
-import { cn } from "@/lib/utils";
+﻿import {
+  JOURNEY_SCROLL_ART_ASPECT,
+  JOURNEY_SCROLL_ART_HEIGHT,
+  JOURNEY_SCROLL_ART_WIDTH,
+} from "@/lib/design-system/journey-path-contracts";
 
-/** Slightly overscale so characters fill their frame without cropping limbs. */
-export const STICKER_FIT_CLASS = "object-contain object-center scale-[1.15]";
+export type TrailScrollPresentation = {
+  objectFit: "cover";
+  objectPosition: string;
+  width: number;
+  height: number;
+  aspectRatio: number;
+};
 
-export function stickerImageClass(className?: string) {
-  return cn(STICKER_FIT_CLASS, className);
+export type CharacterStickerPresentation = {
+  objectFit: "contain";
+  objectPosition: string;
+};
+
+export function resolveTrailScrollPresentation(options?: {
+  scrollCropFocus?: { x: number; y: number };
+  parallaxOffsetPx?: number;
+}): TrailScrollPresentation {
+  const focusX = options?.scrollCropFocus?.x ?? 50;
+  const focusY = options?.scrollCropFocus?.y ?? 50;
+  const parallax = options?.parallaxOffsetPx ?? 0;
+
+  return {
+    objectFit: "cover",
+    objectPosition: `${focusX}% calc(${focusY}% + ${parallax}px)`,
+    width: JOURNEY_SCROLL_ART_WIDTH,
+    height: JOURNEY_SCROLL_ART_HEIGHT,
+    aspectRatio: JOURNEY_SCROLL_ART_ASPECT,
+  };
 }
 
-/** Full-scene region banners — focus on the path/landscape center. */
-export const REGION_HERO_IMAGE_CLASS =
-  "object-cover object-[center_42%] scale-105";
+export function resolveCharacterStickerPresentation(): CharacterStickerPresentation {
+  return {
+    objectFit: "contain",
+    objectPosition: "center bottom",
+  };
+}
 
-/** Region hero fallback in immersive mode when scroll art is unavailable. */
-export const TRAIL_MAP_IMAGE_CLASS =
-  "object-cover object-[center_38%]";
-
-/** Card/unit trail maps — spine art must not crop or anchors misalign with touches. */
-export const TRAIL_MAP_CARD_IMAGE_CLASS =
-  "object-contain object-center";
-
-/** Immersive Learn — cover scroll art edge-to-edge; object-top keeps path anchors aligned. */
-export const TRAIL_MAP_IMMERSIVE_IMAGE_CLASS =
-  "h-full w-full object-cover object-top";
-
-/** Keeps lesson labels readable over bright/dark trail art. */
-export const TRAIL_MAP_SCRIM_CLASS =
-  "absolute inset-0 bg-gradient-to-b from-background/25 via-background/5 to-background/45";
-
-/** Subtle top fade so the floating Learn header stays readable. */
-export const TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS =
-  "pointer-events-none absolute inset-x-0 top-0 z-10 h-28 bg-gradient-to-b from-background/80 via-background/35 to-transparent";
+export function resolveSceneBackgroundPresentation(): { objectFit: "cover"; objectPosition: string } {
+  return {
+    objectFit: "cover",
+    objectPosition: "center center",
+  };
+}

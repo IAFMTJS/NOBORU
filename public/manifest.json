@@ -16,22 +16,10 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon_app_light_v1.webp",
+      "src": "/art/brand/icon-app-dark.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon_app_dark_v1.webp",
-      "sizes": "512x512",
-      "type": "image/webp",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon_app_light_v1.webp",
-      "sizes": "512x512",
-      "type": "image/webp",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [

@@ -1,3 +1,4 @@
+import { getNavSkinTexturePath } from "@/lib/assets/registry";
 import {
   IMMERSIVE_NAV_TAB_CONFIG,
   type ImmersiveNavTab,
@@ -77,7 +78,7 @@ function withSkinId(config: ImmersiveNavTabConfig, skinId: NavPillSkinId): Immer
   return {
     ...config,
     skinId,
-    barTexturePath: `/ui/ui_nav_skin_${skinId}_v1.webp`,
+    barTexturePath: getNavSkinTexturePath(skinId),
   };
 }
 

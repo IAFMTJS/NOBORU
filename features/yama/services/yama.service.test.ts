@@ -154,13 +154,13 @@ describe("yama dialogue pools", () => {
   });
 });
 
-describe("getYamaExpressionPath expansion assets", () => {
-  it("resolves dedicated Phase 1 expression art", () => {
-    expect(getYamaExpressionPath("teaching", "dark")).toContain("teaching");
-    expect(getYamaExpressionPath("sleeping", "light")).toContain("sleeping");
-    expect(getYamaExpressionPath("reward", "dark")).toContain("reward");
-    expect(getYamaExpressionPath("adventure", "light")).toContain("adventure");
-    expect(getYamaExpressionPath("determined", "dark")).toContain("determined");
-    expect(getYamaExpressionPath("concerned", "light")).toContain("concerned");
+describe("getYamaExpressionPath art-direction assets", () => {
+  it("resolves char-noboru art-direction paths", () => {
+    expect(getYamaExpressionPath("teaching", "dark")).toContain("char-noboru-reaction-teaching");
+    expect(getYamaExpressionPath("sleeping", "light")).toContain("char-noboru-sitting-campfire");
+    expect(getYamaExpressionPath("reward", "dark")).toContain("char-noboru-reaction-mastery");
+    expect(getYamaExpressionPath("adventure", "light")).toContain("char-noboru-walking-backpack");
+    expect(getYamaExpressionPath("determined", "dark")).toContain("char-noboru-running-ember");
+    expect(getYamaExpressionPath("concerned", "light")).toContain("char-noboru-reaction-worried");
   });
 });
