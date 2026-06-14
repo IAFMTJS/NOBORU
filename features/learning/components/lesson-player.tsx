@@ -19,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
@@ -381,29 +382,29 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
   const stickyFooter =
     currentStep.kind === "teach" || currentStep.kind === "knowledge_inventory" ? (
-      <Button className="w-full" onClick={goNext}>
+      <PrimaryClimbButton className="w-full" onClick={goNext}>
         Continue
-      </Button>
+      </PrimaryClimbButton>
     ) : currentStep.kind === "application" ? (
-      <Button className="w-full" onClick={goNext} disabled={!recallAnswered}>
+      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!recallAnswered}>
         Continue
-      </Button>
+      </PrimaryClimbButton>
     ) : currentStep.kind === "recall" ||
         currentStep.kind === "fill_blank" ||
         currentStep.kind === "word_bank" ||
         currentStep.kind === "sentence_typed" ||
         currentStep.kind === "matching" ||
         currentStep.kind === "reading" ? (
-      <Button className="w-full" onClick={goNext} disabled={!recallAnswered}>
+      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!recallAnswered}>
         Continue
-      </Button>
+      </PrimaryClimbButton>
     ) : currentStep.kind === "story" ||
         currentStep.kind === "dialogue" ||
         currentStep.kind === "listening" ||
         currentStep.kind === "listening_challenge" ? (
-      <Button className="w-full" onClick={goNext} disabled={!embeddedComplete}>
+      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!embeddedComplete}>
         Continue
-      </Button>
+      </PrimaryClimbButton>
     ) : null;
 
   return (

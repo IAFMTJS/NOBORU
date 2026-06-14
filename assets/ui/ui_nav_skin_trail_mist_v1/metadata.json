@@ -1,0 +1,10 @@
+{
+  "id": "ui_nav_skin_trail_mist_v1",
+  "name": "ui nav skin trail mist",
+  "version": "v1",
+  "category": "ui",
+  "status": "approved",
+  "files": [
+    "ui_nav_skin_trail_mist_v1.png"
+  ]
+}

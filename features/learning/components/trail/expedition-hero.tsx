@@ -1,5 +1,6 @@
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
-import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { GlassPanel } from "@/components/visual/glass-panel";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
@@ -61,15 +62,15 @@ export function ExpeditionHero({
   return (
     <div className="space-y-5">
       <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-2xl">
-        <div className="relative min-h-[19rem]">
-          <RegionHeroImage
-            regionSlug={regionSlug}
+        <div className="relative min-h-[24rem]">
+          <SceneImage
+            scene="camp_base"
             alt={`${regionName} base camp`}
-            className="absolute inset-0 h-full min-h-[19rem] rounded-none"
-            hideOverlay
+            className="absolute inset-0 min-h-[24rem] rounded-none"
+            priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-background" />
-          <div className="relative z-10 flex min-h-[19rem] flex-col justify-between p-4 pb-36 sm:pb-40">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/80" />
+          <div className="relative z-10 flex min-h-[24rem] flex-col justify-between p-4">
             <div className="space-y-1 pr-4">
               <p className="text-body-sm text-white/85">{greeting}</p>
               <p className="text-heading-3 font-bold text-white">
@@ -77,12 +78,18 @@ export function ExpeditionHero({
               </p>
             </div>
             {yama ? <ExpeditionHeroYama yama={yama} /> : null}
+            <DailyQuestBoard
+              daily={quests.daily}
+              weekly={quests.weekly}
+              variant="camp"
+              streakDays={stats.currentStreak}
+            />
           </div>
         </div>
       </div>
 
       <GlassPanel className="p-3">
-        <StoryTitle as="h3" className="mb-2 text-sm normal-case tracking-wide">
+        <StoryTitle as="h3" className="mb-2 text-sm">
           Continue Your Climb
         </StoryTitle>
         <div className="flex items-center gap-3">
@@ -119,7 +126,9 @@ export function ExpeditionHero({
       {journeyPreview.length > 0 ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-caption font-semibold">Current Trail</p>
+            <StoryTitle as="h3" className="text-sm">
+              Current Trail
+            </StoryTitle>
             <AnalyticsLink
               href="/learn/world"
               className="text-caption font-medium text-primary hover:underline"
@@ -137,40 +146,28 @@ export function ExpeditionHero({
         </div>
       ) : null}
 
-      <DailyQuestBoard
-        daily={quests.daily}
-        variant="compact"
-        streakDays={stats.currentStreak}
-      />
-
       <CompanionBadge companion={companion} />
 
       {progressionPreview.primaryUnlock ? (
         <NextUnlockPreview unlock={progressionPreview.primaryUnlock} compact />
       ) : null}
 
-      <GlassPanel className="grid grid-cols-3 gap-2 px-3 py-3">
+      <div className="grid grid-cols-3 gap-2 rounded-card border border-glass-border bg-glass-bg/60 px-3 py-3 backdrop-blur-sm">
         <div className="flex items-center justify-center gap-1.5">
-          <span className="text-trail-glow text-body-sm" aria-hidden>
-            🔥
-          </span>
+          <UiIconImage name="flame" size={16} />
           <span className="text-body-sm font-medium">{stats.currentStreak}</span>
         </div>
         <div className="flex items-center justify-center gap-1.5 border-x border-glass-border">
-          <span className="text-xp-gold text-body-sm" aria-hidden>
-            ✦
-          </span>
+          <UiIconImage name="gem" size={16} />
           <span className="text-body-sm font-medium">
             {stats.totalXp.toLocaleString()}
           </span>
         </div>
         <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-          <span className="text-reward text-body-sm" aria-hidden>
-            ◆
-          </span>
+          <UiIconImage name="trophy" size={16} />
           <span className="text-body-sm font-medium">—</span>
         </div>
-      </GlassPanel>
+      </div>
     </div>
   );
 }

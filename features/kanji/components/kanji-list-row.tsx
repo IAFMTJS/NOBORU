@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowUpRight, Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { KanjiListEntry } from "@/features/kanji/types/kanji.types";
@@ -31,7 +30,7 @@ export function KanjiListRow({ entry, href }: KanjiListRowProps) {
       <div className="flex shrink-0 flex-col items-end gap-1">
         <div className="flex items-center gap-1 text-caption font-medium text-primary">
           {masteryPercent}%
-          <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+          <span className="text-xs opacity-70" aria-hidden>↗</span>
         </div>
         <div
           className={cn(
@@ -42,7 +41,7 @@ export function KanjiListRow({ entry, href }: KanjiListRowProps) {
           )}
           aria-label={entry.learned ? "Learned" : "Not yet learned"}
         >
-          {entry.learned ? <Check className="h-3.5 w-3.5" /> : null}
+          {entry.learned ? <span aria-hidden>✓</span> : null}
         </div>
       </div>
     </Link>

@@ -1,0 +1,22 @@
+{
+  "id": "icon_nav_dojo_v2",
+  "name": "nav dojo",
+  "version": "v2",
+  "category": "icons",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "icon",
+    "nav_dojo",
+    "v2"
+  ],
+  "usage_locations": [
+    "bottom-nav",
+    "immersive-navigation"
+  ],
+  "files": [
+    "icon_nav_dojo_v2.png"
+  ]
+}

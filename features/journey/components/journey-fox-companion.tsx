@@ -3,7 +3,7 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-import { NavFoxImage } from "@/components/media/nav-fox-image";
+import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import {
   computePathCoordinates,
   type PathGeometryOptions,
@@ -112,7 +112,14 @@ export function JourneyFoxCompanion({
               : { duration: 0.42, ease: "easeOut" }
         }
       >
-        <NavFoxImage tab="journey" variant="trail" priority />
+        <YamaExpressionImage
+          expression="adventure"
+          fit="sticker"
+          width={56}
+          height={56}
+          priority
+          className="h-14 w-14 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
+        />
       </motion.div>
 
       <AnimatePresence>

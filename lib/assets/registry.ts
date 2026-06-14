@@ -52,21 +52,29 @@ export const ASSET_REGISTRY = {
   icons: {
     appLight: "/icons/icon_app_light_v1.webp",
     appDark: "/icons/icon_app_dark_v1.webp",
-    navCamp: "/icons/icon_nav_camp_v1.webp",
-    navJourney: "/icons/icon_nav_journey_v1.webp",
-    navDojo: "/icons/icon_nav_dojo_v1.webp",
-    navWorld: "/icons/icon_nav_world_v1.webp",
-    navProfile: "/icons/icon_nav_profile_v1.webp",
-    navFoxCampDark: "/mascots/yama_nav_camp_dark_v1.webp",
-    navFoxCampLight: "/mascots/yama_nav_camp_light_v1.webp",
-    navFoxJourneyDark: "/mascots/yama_nav_journey_dark_v1.webp",
-    navFoxJourneyLight: "/mascots/yama_nav_journey_light_v1.webp",
-    navFoxDojoDark: "/mascots/yama_nav_dojo_dark_v1.webp",
-    navFoxDojoLight: "/mascots/yama_nav_dojo_light_v1.webp",
-    navFoxWorldDark: "/mascots/yama_nav_world_dark_v1.webp",
-    navFoxWorldLight: "/mascots/yama_nav_world_light_v1.webp",
-    navFoxProfileDark: "/mascots/yama_nav_profile_dark_v1.webp",
-    navFoxProfileLight: "/mascots/yama_nav_profile_light_v1.webp",
+    navCamp: "/icons/icon_nav_camp_v2.webp",
+    navJourney: "/icons/icon_nav_journey_v2.webp",
+    navDojo: "/icons/icon_nav_dojo_v2.webp",
+    navWorld: "/icons/icon_nav_world_v2.webp",
+    navProfile: "/icons/icon_nav_profile_v2.webp",
+    navFoxCampDark: "/mascots/yama_nav_camp_dark_v2.webp",
+    navFoxCampLight: "/mascots/yama_nav_camp_light_v2.webp",
+    navFoxJourneyDark: "/mascots/yama_nav_journey_dark_v2.webp",
+    navFoxJourneyLight: "/mascots/yama_nav_journey_light_v2.webp",
+    navFoxDojoDark: "/mascots/yama_nav_dojo_dark_v2.webp",
+    navFoxDojoLight: "/mascots/yama_nav_dojo_light_v2.webp",
+    navFoxWorldDark: "/mascots/yama_nav_world_dark_v2.webp",
+    navFoxWorldLight: "/mascots/yama_nav_world_light_v2.webp",
+    navFoxProfileDark: "/mascots/yama_nav_profile_dark_v2.webp",
+    navFoxProfileLight: "/mascots/yama_nav_profile_light_v2.webp",
+    uiChevronDown: "/icons/icon_ui_chevron_down_v2.webp",
+    uiMap: "/icons/icon_ui_map_v2.webp",
+    uiSettings: "/icons/icon_ui_settings_v2.webp",
+    uiFlame: "/icons/icon_ui_flame_v2.webp",
+    uiGem: "/icons/icon_ui_gem_v2.webp",
+    uiTrophy: "/icons/icon_ui_trophy_v2.webp",
+    uiGear: "/icons/icon_ui_gear_v2.webp",
+    uiCheckpoint: "/icons/icon_ui_checkpoint_v2.webp",
   },
   games: {
     wordMatch: "/games/game_word_match_v1.webp",
@@ -86,6 +94,14 @@ export const ASSET_REGISTRY = {
     trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v3.webp",
     authAtmosphereDark: "/ui/ui_auth_atmosphere_dark_v1.webp",
     authAtmosphereLight: "/ui/ui_auth_atmosphere_light_v1.webp",
+    campBaseDark: "/ui/ui_camp_base_night_v1.webp",
+    campBaseLight: "/ui/ui_camp_base_light_v1.webp",
+    dojoForestDark: "/ui/ui_dojo_forest_night_v1.webp",
+    shrineToriiNight: "/ui/ui_shrine_torii_night_v1.webp",
+    worldMapPeaks: "/ui/ui_world_map_peaks_v1.webp",
+    shopInterior: "/ui/ui_shop_trail_interior_v1.webp",
+    lessonCompleteGlow: "/ui/ui_lesson_complete_trail_glow_v1.webp",
+    checkpointShrine: "/ui/ui_checkpoint_shrine_close_v1.webp",
   },
   achievements: {
     firstStep: "/achievements/achievement_first_step_v1.webp",
@@ -242,6 +258,61 @@ export function getNavFoxPath(tab: string, theme: "light" | "dark" | string | un
   const mode = theme === "light" ? "Light" : "Dark";
   const key = `${tab}${mode}`;
   return NAV_FOX_TAB_TO_ASSET[key] ?? null;
+}
+
+const UI_ICON_PATHS: Record<string, string> = {
+  chevron_down: ASSET_REGISTRY.icons.uiChevronDown,
+  map: ASSET_REGISTRY.icons.uiMap,
+  settings: ASSET_REGISTRY.icons.uiSettings,
+  flame: ASSET_REGISTRY.icons.uiFlame,
+  gem: ASSET_REGISTRY.icons.uiGem,
+  trophy: ASSET_REGISTRY.icons.uiTrophy,
+  gear: ASSET_REGISTRY.icons.uiGear,
+  checkpoint: ASSET_REGISTRY.icons.uiCheckpoint,
+};
+
+export function getUiIconPath(name: string) {
+  return UI_ICON_PATHS[name] ?? null;
+}
+
+const SCENE_PATHS: Record<string, { dark: string; light: string }> = {
+  camp_base: {
+    dark: ASSET_REGISTRY.ui.campBaseDark,
+    light: ASSET_REGISTRY.ui.campBaseLight,
+  },
+  dojo_forest: {
+    dark: ASSET_REGISTRY.ui.dojoForestDark,
+    light: ASSET_REGISTRY.ui.dojoForestDark,
+  },
+  shrine_torii: {
+    dark: ASSET_REGISTRY.ui.shrineToriiNight,
+    light: ASSET_REGISTRY.ui.shrineToriiNight,
+  },
+  world_map_peaks: {
+    dark: ASSET_REGISTRY.ui.worldMapPeaks,
+    light: ASSET_REGISTRY.ui.worldMapPeaks,
+  },
+  shop_interior: {
+    dark: ASSET_REGISTRY.ui.shopInterior,
+    light: ASSET_REGISTRY.ui.shopInterior,
+  },
+  lesson_complete: {
+    dark: ASSET_REGISTRY.ui.lessonCompleteGlow,
+    light: ASSET_REGISTRY.ui.lessonCompleteGlow,
+  },
+  checkpoint_shrine: {
+    dark: ASSET_REGISTRY.ui.checkpointShrine,
+    light: ASSET_REGISTRY.ui.checkpointShrine,
+  },
+};
+
+export function getSceneArtPath(
+  scene: string,
+  theme: "light" | "dark" | string | undefined,
+) {
+  const paths = SCENE_PATHS[scene];
+  if (!paths) return null;
+  return theme === "light" ? paths.light : paths.dark;
 }
 
 export function getNavTabMascotExpression(tab: string) {

@@ -1,0 +1,10 @@
+{
+  "id": "ui_checkpoint_shrine_close_v1",
+  "name": "ui checkpoint shrine close",
+  "version": "v1",
+  "category": "ui",
+  "status": "approved",
+  "files": [
+    "ui_checkpoint_shrine_close_v1.png"
+  ]
+}

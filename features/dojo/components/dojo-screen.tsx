@@ -2,70 +2,31 @@
 
 import Link from "next/link";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
+import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
-import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
+import { cn } from "@/lib/utils";
 
 const TRAINING_GROUNDS = [
-  {
-    title: "Review Queue",
-    description: "Spaced repetition and weakness drills.",
-    href: "/review",
-    glyph: "◎",
-    location: "vocabulary_hall" as const,
-  },
-  {
-    title: "Kana Dojo",
-    description: "Hiragana and katakana recognition and writing.",
-    href: "/learn/hiragana",
-    glyph: "あ",
-    location: "kana_dojo" as const,
-  },
-  {
-    title: "Vocabulary Hall",
-    description: "Word recall, meaning, and production drills.",
-    href: "/learn/vocabulary",
-    glyph: "語",
-    location: "vocabulary_hall" as const,
-  },
-  {
-    title: "Grammar Shrine",
-    description: "Pattern recognition and sentence building.",
-    href: "/learn/grammar",
-    glyph: "寺",
-    location: "grammar_shrine" as const,
-  },
-  {
-    title: "Listening Pavilion",
-    description: "Ear training and comprehension practice.",
-    href: "/learn/listening",
-    glyph: "♪",
-    location: "listening_pavilion" as const,
-  },
-  {
-    title: "Kanji Grounds",
-    description: "Readings, radicals, and stroke mastery.",
-    href: "/learn/kanji",
-    glyph: "字",
-    location: "grammar_shrine" as const,
-  },
-  {
-    title: "Reading Library",
-    description: "Graded passages and comprehension checks.",
-    href: "/learn/reading",
-    glyph: "巻",
-    location: "grammar_shrine" as const,
-  },
+  { title: "Review Queue", description: "Spaced repetition and weakness drills.", href: "/review", icon: "checkpoint" as const },
+  { title: "Kana Dojo", description: "Hiragana and katakana recognition and writing.", href: "/learn/hiragana", icon: "gear" as const },
+  { title: "Vocabulary Hall", description: "Word recall, meaning, and production drills.", href: "/learn/vocabulary", icon: "gem" as const },
+  { title: "Grammar Shrine", description: "Pattern recognition and sentence building.", href: "/learn/grammar", icon: "trophy" as const },
+  { title: "Listening Pavilion", description: "Ear training and comprehension practice.", href: "/learn/listening", icon: "map" as const },
+  { title: "Kanji Grounds", description: "Readings, radicals, and stroke mastery.", href: "/learn/kanji", icon: "flame" as const },
+  { title: "Reading Library", description: "Graded passages and comprehension checks.", href: "/learn/reading", icon: "settings" as const },
 ] as const;
 
 function DojoHubTile({
-  glyph,
+  icon,
   title,
   description,
   href,
 }: {
-  glyph: string;
+  icon: (typeof TRAINING_GROUNDS)[number]["icon"];
   title: string;
   description: string;
   href: string;
@@ -75,13 +36,15 @@ function DojoHubTile({
       <Link href={href} className="focus-ring block space-y-3 p-4">
         <div className="flex items-start gap-3">
           <span
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-success/10 font-japanese text-lg text-success"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-success/10"
             aria-hidden
           >
-            {glyph}
+            <UiIconImage name={icon} size={22} />
           </span>
           <div className="min-w-0 space-y-1">
-            <p className="text-body-sm font-semibold">{title}</p>
+            <StoryTitle as="h3" className="text-sm">
+              {title}
+            </StoryTitle>
             <p className="text-caption text-muted-foreground">{description}</p>
           </div>
         </div>
@@ -92,15 +55,16 @@ function DojoHubTile({
 }
 
 export function DojoScreen() {
+  const presence = yamaService.resolveTrainingGroundsPresence("kana_dojo", 0);
+
   return (
     <IllustratedScreen
       scrim="minimal"
       background={
-        <RegionHeroImage
-          regionSlug="forest-trail"
+        <SceneImage
+          scene="dojo_forest"
           alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
+          className="absolute inset-0 min-h-dvh rounded-none"
         />
       }
     >
@@ -114,15 +78,27 @@ export function DojoScreen() {
           </p>
         </header>
 
-        <GlassPanel className="p-4">
-          <YamaTrainingPresence location="kana_dojo" size="md" className="mb-0" />
+        <GlassPanel className="flex items-start gap-3 p-4">
+          <YamaExpressionImage
+            expression="training"
+            fit="sticker"
+            width={72}
+            height={72}
+            className="h-[4.5rem] w-[4.5rem] shrink-0"
+          />
+          <div className="min-w-0 flex-1 space-y-1">
+            <p className="text-body-sm font-medium">{presence.message}</p>
+            <p className="text-caption text-muted-foreground">
+              Choose a hall to begin focused practice.
+            </p>
+          </div>
         </GlassPanel>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {TRAINING_GROUNDS.map((ground) => (
             <DojoHubTile
               key={ground.href}
-              glyph={ground.glyph}
+              icon={ground.icon}
               title={ground.title}
               description={ground.description}
               href={ground.href}

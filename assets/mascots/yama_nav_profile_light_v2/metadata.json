@@ -1,0 +1,25 @@
+{
+  "id": "yama_nav_profile_light_v2",
+  "name": "Yama Nav profile light",
+  "version": "v2",
+  "category": "mascots",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "yama",
+    "mascot",
+    "bottom-nav",
+    "profile",
+    "light",
+    "v2"
+  ],
+  "usage_locations": [
+    "bottom-nav",
+    "immersive-navigation"
+  ],
+  "files": [
+    "yama_nav_profile_light_v2.png"
+  ]
+}

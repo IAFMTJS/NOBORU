@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Mountain } from "lucide-react";
 
 import { stickerImageClass } from "@/lib/assets/image-presentation";
 import { getAchievementArtPath } from "@/lib/assets/registry";
@@ -40,6 +39,7 @@ function BadgePlaceholder({
   className,
   showLabel,
 }: Omit<AchievementBadgeProps, "slug">) {
+  const placeholderArt = getAchievementArtPath("first-step");
   return (
     <div
       className={cn(
@@ -57,7 +57,15 @@ function BadgePlaceholder({
         )}
         aria-hidden
       >
-        <Mountain className="h-1/2 w-1/2 text-trail-glow/70" strokeWidth={1.5} />
+        {placeholderArt ? (
+          <Image
+            src={placeholderArt}
+            alt=""
+            fill
+            className={stickerImageClass("opacity-40")}
+            sizes="48px"
+          />
+        ) : null}
       </div>
       {showLabel ? (
         <span className="max-w-[5.5rem] truncate text-center text-caption">

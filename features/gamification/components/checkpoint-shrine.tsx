@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Gem } from "lucide-react";
-
 import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import {
   GlassPanel,
   IllustratedScreen,
@@ -47,11 +47,10 @@ export function CheckpointShrine({
       scrim="full"
       background={
         <>
-          <RegionHeroImage
-            regionSlug="forest-trail"
+          <SceneImage
+            scene="checkpoint_shrine"
             alt=""
-            className="absolute inset-0 h-full min-h-[28rem] rounded-none"
-            hideOverlay
+            className="absolute inset-0 min-h-[28rem] rounded-none"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background/95" />
         </>
@@ -75,7 +74,7 @@ export function CheckpointShrine({
             </RewardChip>
             {gemsReward > 0 ? (
               <RewardChip variant="gem" className="px-3 py-1 text-base">
-                <Gem className="h-4 w-4" aria-hidden />
+                <UiIconImage name="gem" size={16} />
                 +{gemsReward}
               </RewardChip>
             ) : null}

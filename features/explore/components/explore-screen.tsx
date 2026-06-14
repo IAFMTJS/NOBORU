@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,7 +64,7 @@ function WorldSection({
           {glyph}
         </span>
         <div className="min-w-0 space-y-0.5">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm">
             {title}
           </StoryTitle>
           {description ? (
@@ -104,12 +105,20 @@ export function ExploreScreen({
     <IllustratedScreen
       scrim="minimal"
       background={
-        <RegionHeroImage
-          regionSlug="mount-n3"
-          alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
-        />
+        isWorld ? (
+          <SceneImage
+            scene="world_map_peaks"
+            alt=""
+            className="absolute inset-0 min-h-dvh rounded-none"
+          />
+        ) : (
+          <RegionHeroImage
+            regionSlug="mount-n3"
+            alt=""
+            className="absolute inset-0 h-full min-h-dvh rounded-none"
+            hideOverlay
+          />
+        )
       }
     >
       <PageContainer>

@@ -1,8 +1,9 @@
 import Link from "next/link";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { Button } from "@/components/ui/button";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { IllustratedScreen, StoryTitle } from "@/components/visual";
 import { AchievementBadge } from "@/features/achievements/components/achievement-badge";
 import { ACHIEVEMENT_RARITY_LABELS } from "@/features/achievements/constants/achievement.constants";
 import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
@@ -14,32 +15,43 @@ type AchievementShowcaseProps = {
   compact?: boolean;
 };
 
-function MilestoneCounters({
+function MilestoneRow({
   totalUnlocked,
   totalAvailable,
 }: {
   totalUnlocked: number;
   totalAvailable: number;
 }) {
+  const milestones = [1, 5, 10, 25, 50];
   return (
-    <GlassPanel className="grid grid-cols-3 gap-2 p-3 text-center">
-      <div>
+    <div className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 backdrop-blur-sm">
+      {milestones.map((milestone) => {
+        const reached = totalUnlocked >= milestone;
+        return (
+          <div key={milestone} className="flex flex-col items-center gap-1">
+            <UiIconImage
+              name="trophy"
+              size={reached ? 22 : 18}
+              className={cn(!reached && "opacity-40")}
+            />
+            <span
+              className={cn(
+                "text-caption tabular-nums",
+                reached ? "text-trail-glow" : "text-muted-foreground",
+              )}
+            >
+              {milestone}
+            </span>
+          </div>
+        );
+      })}
+      <div className="text-right">
         <p className="text-heading-5 font-semibold text-trail-glow tabular-nums">
-          {totalUnlocked}
+          {totalUnlocked}/{totalAvailable}
         </p>
-        <p className="text-caption text-muted-foreground">Unlocked</p>
+        <p className="text-caption text-muted-foreground">Earned</p>
       </div>
-      <div className="border-x border-glass-border">
-        <p className="text-heading-5 font-semibold tabular-nums">
-          {totalAvailable - totalUnlocked}
-        </p>
-        <p className="text-caption text-muted-foreground">Remaining</p>
-      </div>
-      <div>
-        <p className="text-heading-5 font-semibold tabular-nums">{totalAvailable}</p>
-        <p className="text-caption text-muted-foreground">Total</p>
-      </div>
-    </GlassPanel>
+    </div>
   );
 }
 
@@ -81,17 +93,8 @@ function BadgeGrid({
 function ShrineBackground() {
   return (
     <>
-      <RegionHeroImage
-        regionSlug="forest-trail"
-        alt=""
-        className="absolute inset-0 h-full min-h-dvh rounded-none"
-        hideOverlay
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/55 to-background/92" />
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-48 bg-trail-glow/8 blur-3xl"
-      />
+      <SceneImage scene="shrine_torii" alt="" className="absolute inset-0 min-h-dvh rounded-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/50 to-background/95" />
     </>
   );
 }
@@ -102,40 +105,21 @@ export function AchievementShowcase({
 }: AchievementShowcaseProps) {
   if (compact) {
     return (
-      <GlassPanel className="space-y-3 p-4">
-        <div className="space-y-0.5">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
-            Achievement Shrine
-          </StoryTitle>
-          <p className="text-caption text-muted-foreground">
-            {showcase.totalUnlocked}/{showcase.totalAvailable} unlocked
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-3">
-          {showcase.unlocked.slice(0, 6).map((achievement) => (
-            <AchievementBadge
-              key={achievement.id}
-              slug={achievement.slug}
-              name={achievement.name}
-              rarity={achievement.rarity}
-              showLabel
-              size="sm"
-            />
-          ))}
-          {showcase.unlocked.length === 0 ? (
-            <p className="w-full text-body-sm text-muted-foreground">
-              Complete lessons and reviews to earn your first badge.
+      <Link href="/achievements" className="focus-ring block overflow-hidden rounded-2xl">
+        <div className="relative min-h-[8rem]">
+          <SceneImage scene="shrine_torii" alt="Achievement shrine" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-3">
+            <p className="text-body-sm text-white">
+              {showcase.totalUnlocked}/{showcase.totalAvailable} unlocked
             </p>
-          ) : null}
+          </div>
         </div>
-        <Button variant="outline" size="sm" className="w-full" asChild>
-          <Link href="/achievements">View shrine</Link>
-        </Button>
-      </GlassPanel>
+      </Link>
     );
   }
 
-  const allAchievements = [...showcase.unlocked, ...showcase.locked];
+  const featured = showcase.unlocked[0] ?? showcase.locked[0] ?? null;
 
   return (
     <IllustratedScreen scrim="none" background={<ShrineBackground />}>
@@ -147,13 +131,29 @@ export function AchievementShowcase({
           </p>
         </header>
 
-        <MilestoneCounters
+        {featured ? (
+          <div className="flex flex-col items-center gap-3 py-4">
+            <AchievementBadge
+              slug={featured.slug}
+              name={featured.name}
+              rarity={featured.rarity}
+              unlocked={showcase.unlocked.some((a) => a.id === featured.id)}
+              size="lg"
+              showLabel
+            />
+            <p className="max-w-xs text-center text-body-sm text-muted-foreground">
+              {featured.description ?? featured.name}
+            </p>
+          </div>
+        ) : null}
+
+        <MilestoneRow
           totalUnlocked={showcase.totalUnlocked}
           totalAvailable={showcase.totalAvailable}
         />
 
         {showcase.unlocked.length === 0 ? (
-          <GlassPanel className="p-4">
+          <div className="rounded-xl border border-glass-border bg-glass-bg/60 p-4 backdrop-blur-sm">
             <YamaEmptyState
               surface="achievements"
               title="No achievements yet"
@@ -161,32 +161,26 @@ export function AchievementShowcase({
               actionHref="/learn"
               actionLabel="Continue climbing"
             />
-          </GlassPanel>
+          </div>
         ) : (
-          <GlassPanel className="space-y-3 p-4">
-            <StoryTitle as="h2" className="text-sm normal-case tracking-wide">
+          <div className="space-y-3 rounded-xl border border-glass-border bg-glass-bg/40 p-4 backdrop-blur-sm">
+            <StoryTitle as="h2" className="text-sm">
               Earned badges
             </StoryTitle>
             <BadgeGrid achievements={showcase.unlocked} unlocked />
-          </GlassPanel>
+          </div>
         )}
 
         {showcase.locked.length > 0 ? (
-          <GlassPanel className="space-y-3 border-dashed p-4">
-            <StoryTitle as="h2" className="text-sm normal-case tracking-wide">
+          <div className="space-y-3 rounded-xl border border-dashed border-glass-border bg-glass-bg/30 p-4 backdrop-blur-sm">
+            <StoryTitle as="h2" className="text-sm">
               Still to earn
             </StoryTitle>
             <p className="text-caption text-muted-foreground">
               Goals waiting on the trail ahead
             </p>
             <BadgeGrid achievements={showcase.locked} unlocked={false} />
-          </GlassPanel>
-        ) : null}
-
-        {allAchievements.length > 0 ? (
-          <p className="text-center text-caption text-muted-foreground">
-            Total achievements {showcase.totalUnlocked} / {showcase.totalAvailable}
-          </p>
+          </div>
         ) : null}
       </div>
     </IllustratedScreen>

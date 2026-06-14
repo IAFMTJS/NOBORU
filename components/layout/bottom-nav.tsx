@@ -24,10 +24,14 @@ export function BottomNav() {
       <div
         className={cn(
           "pointer-events-auto relative mx-auto flex max-w-lg items-end overflow-visible rounded-[1.35rem] border backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-500",
-          activeConfig.barSurfaceClass,
           activeConfig.barBorderClass,
           "shadow-[0_10px_40px_rgba(0,0,0,0.35)]",
         )}
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.75)), url(${activeConfig.barTexturePath})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
         <NavBarMascot tab={activeItem.navTab} />
 

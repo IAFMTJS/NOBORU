@@ -8,13 +8,7 @@ import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel, PrimaryClimbButton } from "@/components/visual";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { ReviewSessionHub } from "@/features/review/components/review-session-hub";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
@@ -246,38 +240,34 @@ export function ReviewSession({
       ) : null}
 
       {sessionComplete ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Sprint complete</CardTitle>
-            <CardDescription>
+        <GlassPanel className="space-y-3 border-success/30 p-4">
+          <div className="space-y-1">
+            <h2 className="text-heading-5 font-semibold">Sprint complete</h2>
+            <p className="text-body-sm text-muted-foreground">
               {sessionCompletedCount} review
               {sessionCompletedCount === 1 ? "" : "s"} finished
               {sessionEpEarned > 0 ? ` · +${sessionEpEarned} EP` : ""}
-              {session.dueCount > 0
-                ? ` · ${session.dueCount} still due`
-                : ""}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <YamaPresence
-              presence={yamaService.resolveCelebration("lesson_complete")}
-              size="md"
-              layout="vertical"
-              className="items-center"
-            />
-            {session.dueCount > 0 ? (
-              <Button className="w-full" asChild>
-                <Link href="/review">Continue reviewing</Link>
-              </Button>
-            ) : null}
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/learn">Continue Climbing</Link>
+              {session.dueCount > 0 ? ` · ${session.dueCount} still due` : ""}
+            </p>
+          </div>
+          <YamaPresence
+            presence={yamaService.resolveCelebration("lesson_complete")}
+            size="md"
+            layout="vertical"
+            className="items-center"
+          />
+          {session.dueCount > 0 ? (
+            <Button className="w-full" asChild>
+              <Link href="/review">Continue reviewing</Link>
             </Button>
-            <Button variant="ghost" className="w-full" asChild>
-              <Link href="/camp">Return to Camp</Link>
-            </Button>
-          </CardContent>
-        </Card>
+          ) : null}
+          <PrimaryClimbButton className="w-full" asChild>
+            <Link href="/learn">Continue Climbing</Link>
+          </PrimaryClimbButton>
+          <Button variant="ghost" className="w-full" asChild>
+            <Link href="/camp">Return to Camp</Link>
+          </Button>
+        </GlassPanel>
       ) : !sessionStarted && session.currentCard ? (
         <Button className="w-full" size="lg" onClick={() => setSessionStarted(true)}>
           Start Review
@@ -290,8 +280,8 @@ export function ReviewSession({
         />
       ) : (
         <StudyAtmosphere>
-        <Card className="border-border/60 bg-card/95 shadow-elevation-2">
-          <CardHeader>
+        <GlassPanel className="space-y-4 p-4">
+          <div className="space-y-2 text-center">
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Badge variant="outline" className="capitalize">
                 {session.currentCard.contentType}
@@ -303,40 +293,34 @@ export function ReviewSession({
                 {session.currentCard.masteryScore}% mastery
               </Badge>
             </div>
-            <CardDescription className="text-center">
+            <p className="text-caption text-muted-foreground">
               {session.currentCard.nextReviewLabel}
-            </CardDescription>
-            <CardTitle className="text-center text-heading-1">
+            </p>
+            <h2 className="text-heading-1">
               <span lang="ja" className="font-japanese">
                 {session.currentCard.term}
               </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 text-center">
+            </h2>
+          </div>
+          <div className="space-y-4 text-center">
             {revealed ? (
               <>
                 <p className="text-body-sm text-muted-foreground">
                   {session.currentCard.reading}
                 </p>
                 <p className="text-body">{session.currentCard.meaning}</p>
-                <div className="grid grid-cols-3 gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => void submitRating("again")}
-                  >
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <Button variant="outline" onClick={() => void submitRating("again")}>
                     Again
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => void submitRating("good")}
-                  >
+                  <Button variant="outline" onClick={() => void submitRating("good")}>
+                    Hard
+                  </Button>
+                  <Button onClick={() => void submitRating("good")}>
                     Good
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => void submitRating("strong")}
-                  >
-                    Strong
+                  <Button variant="secondary" onClick={() => void submitRating("strong")}>
+                    Easy
                   </Button>
                 </div>
               </>
@@ -345,17 +329,15 @@ export function ReviewSession({
                 Show Answer
               </Button>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </GlassPanel>
         </StudyAtmosphere>
       )}
 
       {session.recentHistory.length > 0 ? (
-        <Card className="shadow-elevation-1">
-          <CardHeader>
-            <CardTitle className="text-heading-6">Recent Reviews</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <GlassPanel className="space-y-3 p-4">
+          <h3 className="text-heading-6 font-semibold">Recent Reviews</h3>
+          <div className="space-y-3">
             {session.recentHistory.map((entry) => (
               <div
                 key={entry.id}
@@ -376,8 +358,8 @@ export function ReviewSession({
                 </Badge>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </GlassPanel>
       ) : null}
     </PageContainer>
   );

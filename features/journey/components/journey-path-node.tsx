@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { JourneyCheckpointCelebration } from "@/features/journey/components/journey-checkpoint-celebration";
 import { JourneyTrialTemple } from "@/features/journey/components/journey-trial-temple";
 import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
@@ -82,31 +83,18 @@ function CheckpointMarker({
   const marker = (
     <div
       className={cn(
-        "relative flex h-16 w-16 items-center justify-center rounded-lg border-[3px] backdrop-blur-sm",
+        "relative flex h-14 w-14 items-center justify-center rounded-full border-2",
         state === "completed"
-          ? "border-success bg-success/15 text-success trail-glow-success"
+          ? "border-success/80 bg-success/20 trail-glow-success"
           : state === "in_progress"
-            ? "border-trail-glow bg-trail-glow/15 text-heading-story trail-glow-warm"
+            ? "border-trail-glow bg-trail-glow/20 trail-glow-warm"
             : state === "available"
-              ? "border-warning bg-warning/15 text-warning trail-glow-warning"
-              : "border-white/25 bg-black/40 text-white/50",
+              ? "border-warning/80 bg-warning/15 trail-glow-warning"
+              : "border-white/20 bg-black/50",
         isCurrent && "scale-110 ring-2 ring-trail-glow/60 ring-offset-2 ring-offset-transparent",
       )}
     >
-      <svg viewBox="0 0 24 24" className="h-8 w-8" aria-hidden>
-        <path
-          d="M4 4V20"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path d="M4 6H14L11.5 10L15 14H4" fill="currentColor" />
-        <path
-          d="M4 14H14L11.5 18L15 22H4"
-          fill="currentColor"
-          opacity={0.55}
-        />
-      </svg>
+      <UiIconImage name="checkpoint" size={28} className="opacity-90" />
     </div>
   );
 

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Coins, Gem } from "lucide-react";
 
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { PageContainer } from "@/components/layout/page-container";
 import {
   GlassPanel,
@@ -25,7 +26,7 @@ export function ShopScreen({ catalog }: ShopScreenProps) {
     <IllustratedScreen
       scrim="full"
       background={
-        <div className="h-full bg-gradient-to-b from-background via-card/80 to-background" />
+        <SceneImage scene="shop_interior" alt="" className="absolute inset-0 min-h-dvh rounded-none" />
       }
     >
       <PageContainer className="space-y-5">
@@ -33,7 +34,7 @@ export function ShopScreen({ catalog }: ShopScreenProps) {
           href="/world"
           className="inline-flex items-center gap-1.5 text-body-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
+          <UiIconImage name="map" size={16} />
           World
         </Link>
 
@@ -48,11 +49,11 @@ export function ShopScreen({ catalog }: ShopScreenProps) {
           <span className="text-caption text-muted-foreground">Your balance</span>
           <div className="flex flex-wrap items-center gap-2">
             <RewardChip variant="xp">
-              <Coins className="h-3.5 w-3.5" aria-hidden />
+              <UiIconImage name="trophy" size={14} />
               {wallet.gold.toLocaleString()}
             </RewardChip>
             <RewardChip variant="gem">
-              <Gem className="h-3.5 w-3.5" aria-hidden />
+              <UiIconImage name="gem" size={14} />
               {wallet.gems}
             </RewardChip>
           </div>

@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { AchievementShowcase } from "@/features/achievements/components/achievement-showcase";
 import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
 import { PageContainer } from "@/components/layout/page-container";
@@ -13,12 +15,6 @@ import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
-
-const STAT_GLYPHS: Record<string, string> = {
-  XP: "✦",
-  Streak: "🔥",
-  Kanji: "字",
-};
 
 type ProfileScreenProps = {
   profile: ProfileViewModel;
@@ -55,9 +51,9 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
               <div className="flex items-end justify-between gap-3">
                 <div className="min-w-0 space-y-1">
                   <p className="text-caption text-white/75">Climber profile</p>
-                  <StoryTitle as="h1" className="truncate text-lg normal-case text-white">
+                  <h1 className="truncate text-heading-3 font-bold text-white">
                     {profile.displayName}
-                  </StoryTitle>
+                  </h1>
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge className="border-white/20 bg-white/10 text-white hover:bg-white/10">
                       {profile.levelLabel}
@@ -69,12 +65,12 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
                 </div>
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   className="shrink-0 text-white hover:bg-white/10 hover:text-white"
                   asChild
                 >
                   <Link href="/settings" aria-label="Settings">
-                    ⚙
+                    <UiIconImage name="gear" size={20} />
                   </Link>
                 </Button>
               </div>
@@ -97,14 +93,19 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
 
         <div className="grid grid-cols-3 gap-3">
           {profile.stats.map((stat) => {
-            const glyph = STAT_GLYPHS[stat.label] ?? "登";
+            const iconName =
+              stat.label === "Streak"
+                ? "flame"
+                : stat.label === "XP"
+                  ? "gem"
+                  : "trophy";
             return (
               <GlassPanel key={stat.label} className="space-y-2 p-4 text-center">
                 <div
-                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-base"
+                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary/10"
                   aria-hidden
                 >
-                  {glyph}
+                  <UiIconImage name={iconName} size={18} />
                 </div>
                 <p className="text-caption text-muted-foreground">{stat.label}</p>
                 <p className="text-heading-5">{stat.value}</p>
@@ -113,28 +114,38 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
           })}
         </div>
 
-        <GlassPanel className="space-y-3 p-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <StoryTitle as="h3" className="flex items-center gap-2 text-sm normal-case tracking-wide">
-              <span aria-hidden>🏆</span>
+            <StoryTitle as="h3" className="text-sm">
               Achievements
             </StoryTitle>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/achievements">View all</Link>
+              <Link href="/achievements">View shrine</Link>
             </Button>
           </div>
-          <AchievementShowcase showcase={achievements} compact />
-        </GlassPanel>
+          <Link href="/achievements" className="focus-ring block overflow-hidden rounded-2xl">
+            <div className="relative min-h-[10rem]">
+              <SceneImage scene="shrine_torii" alt="Achievement shrine preview" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4">
+                <p className="text-body-sm font-medium text-white">
+                  {achievements.totalUnlocked}/{achievements.totalAvailable} badges earned
+                </p>
+                <p className="text-caption text-white/70">Enter the torii shrine</p>
+              </div>
+            </div>
+          </Link>
+        </div>
 
         <GlassPanel className="space-y-3 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm">
             Edit Profile
           </StoryTitle>
           <ProfileEditSection initialDisplayName={profile.displayName} />
         </GlassPanel>
 
         <GlassPanel className="space-y-2 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm">
             Account
           </StoryTitle>
           <Button variant="outline" className="w-full" asChild>

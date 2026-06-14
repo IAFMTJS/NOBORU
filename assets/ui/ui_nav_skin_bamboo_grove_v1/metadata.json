@@ -1,0 +1,10 @@
+{
+  "id": "ui_nav_skin_bamboo_grove_v1",
+  "name": "ui nav skin bamboo grove",
+  "version": "v1",
+  "category": "ui",
+  "status": "approved",
+  "files": [
+    "ui_nav_skin_bamboo_grove_v1.png"
+  ]
+}

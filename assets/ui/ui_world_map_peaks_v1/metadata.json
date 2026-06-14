@@ -1,0 +1,10 @@
+{
+  "id": "ui_world_map_peaks_v1",
+  "name": "ui world map peaks",
+  "version": "v1",
+  "category": "ui",
+  "status": "approved",
+  "files": [
+    "ui_world_map_peaks_v1.png"
+  ]
+}

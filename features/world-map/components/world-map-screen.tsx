@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { WorldMapRegionNode } from "@/features/world-map/components/world-map-region-node";
@@ -24,11 +24,10 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
     <IllustratedScreen
       scrim="minimal"
       background={
-        <RegionHeroImage
-          regionSlug={data.currentRegionSlug}
+        <SceneImage
+          scene="world_map_peaks"
           alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
+          className="absolute inset-0 min-h-dvh rounded-none"
         />
       }
     >
