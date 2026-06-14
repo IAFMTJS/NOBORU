@@ -34,20 +34,25 @@ import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
 
 const DISCOVER_CATEGORIES = [
-  { label: "Culture", href: "/explore" },
-  { label: "History", href: "/explore" },
-  { label: "Folklore", href: "/explore" },
-  { label: "Food", href: "/explore" },
-  { label: "Anime", href: "/explore" },
-  { label: "Mythology", href: "/explore" },
+  { label: "Culture", href: "/world" },
+  { label: "History", href: "/world" },
+  { label: "Folklore", href: "/world" },
+  { label: "Food", href: "/world" },
+  { label: "Anime", href: "/world" },
+  { label: "Mythology", href: "/world" },
 ] as const;
 
 type ExploreScreenProps = {
   gameAvailability: GameAvailabilityViewModel;
   yama: YamaPresenceViewModel;
+  variant?: "world" | "explore";
 };
 
-export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
+export function ExploreScreen({
+  gameAvailability,
+  yama,
+  variant = "explore",
+}: ExploreScreenProps) {
   const [joiningLeague, setJoiningLeague] = useState(false);
 
   const hasMiniGame =
@@ -65,11 +70,17 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
     }
   }
 
+  const isWorld = variant === "world";
+
   return (
     <PageContainer>
       <ScreenHeader
-        title="Explore"
-        subtitle="Discover Japan — trials, culture, and fellow climbers"
+        title={isWorld ? "World" : "Explore"}
+        subtitle={
+          isWorld
+            ? "Discover Japan — regions, lore, trials, and fellow climbers"
+            : "Discover Japan — trials, culture, and fellow climbers"
+        }
       />
 
       <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
@@ -116,7 +127,7 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
             <Link href="/learn/world">Open world map</Link>
           </Button>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/camp">
+            <Link href="/world/fox-camp">
               <Tent className="mr-2 h-4 w-4" aria-hidden />
               Fox Camp
             </Link>
@@ -210,13 +221,13 @@ export function ExploreScreen({ gameAvailability, yama }: ExploreScreenProps) {
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>
             <Link href="/learn">
               <Mountain className="h-4 w-4" aria-hidden />
-              Learning Path
+              Journey
             </Link>
           </Button>
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>
-            <Link href="/review">
+            <Link href="/dojo">
               <Target className="h-4 w-4" aria-hidden />
-              Training Grounds
+              Dojo
             </Link>
           </Button>
           <Button variant="outline" className="h-auto flex-col gap-1 py-3" asChild>

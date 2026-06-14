@@ -22,6 +22,7 @@ import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { ListeningHubViewModel } from "@/features/listening/types/listening.types";
+import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
 type ListeningHubProps = {
   hub: ListeningHubViewModel;
@@ -49,6 +50,8 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
         title={contentHub.listeningTitle}
         subtitle={`${hub.completedCount} of ${hub.totalCount} listening activities on your trail`}
       />
+
+      <YamaTrainingPresence location="listening_pavilion" />
 
       <JlptLevelPills basePath="/learn/listening" activeLevel={jlptLevel} />
 

@@ -11,6 +11,7 @@ import { LessonNodeDetailSheet } from "@/features/learning/components/trail/less
 import { ClimbElevationIndicator } from "@/features/learning/components/trail/climb-elevation-indicator";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import { TrailMap } from "@/features/learning/components/trail/trail-map";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { LearningPathViewModel } from "@/features/learning/types/lesson.types";
 import {
   findLessonInRegion,
@@ -120,11 +121,14 @@ export function TrailFirstLearnScreen({
 
   if (!selectedRegion) {
     return (
-      <div className="p-4">
-        <p className="text-body-sm text-muted-foreground">
-          No learning regions are available yet.
-        </p>
-      </div>
+      <YamaEmptyState
+        surface="trail"
+        title="Trail not ready"
+        description="No learning regions are available yet. Check back soon or explore other areas."
+        actionHref="/camp"
+        actionLabel="Return home"
+        className="p-4"
+      />
     );
   }
 

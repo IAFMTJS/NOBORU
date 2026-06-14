@@ -1,0 +1,41 @@
+{
+  "id": "ui_trail_scroll_mount-n5_light_v3",
+  "name": "Trail Scroll Mount N5 Light",
+  "category": "ui",
+  "version": "v3",
+  "status": "approved",
+  "owner_agent": "UI Art Agent",
+  "creation_agent": "Region Art Agent",
+  "approved_by": "Art Director Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "supersedes": "ui_trail_scroll_mount-n5_light_v1",
+  "tags": [
+    "ui",
+    "trail",
+    "scroll",
+    "mount-n5",
+    "light-mode",
+    "immersive"
+  ],
+  "usage_locations": [
+    "journey-path-map",
+    "journey-screen"
+  ],
+  "dependencies": [
+    "region_mount_n5_v1",
+    "ui_trail_spine_light_v1"
+  ],
+  "dimensions": {
+    "width": 1536,
+    "height": 5120
+  },
+  "files": [
+    "ui_trail_scroll_mount-n5_light_v3.png",
+    "ui_trail_scroll_mount-n5_light_v3.webp"
+  ],
+  "design_notes": "Path-first Mount N5 scroll (light). Environment art with trail drawn from journey-path-contracts.json spine — path is authoritative.",
+  "anchor_contract": "journey-path-contracts.regions.mount-n5.spine.light",
+  "trail_segment_index": 0,
+  "max_lessons": 40
+}

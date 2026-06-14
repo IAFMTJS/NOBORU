@@ -41,6 +41,7 @@ export type LessonRow = {
   type: string;
   title: string;
   description: string | null;
+  order_index: number;
   difficulty: number;
   xp_reward: number;
   estimated_duration: number | null;

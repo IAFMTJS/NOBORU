@@ -41,7 +41,7 @@ export default async function EndgamePage() {
             <Link href="/learn/world">View world map</Link>
           </Button>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/explore">Seasonal events</Link>
+            <Link href="/world">Seasonal events</Link>
           </Button>
         </CardContent>
       </Card>

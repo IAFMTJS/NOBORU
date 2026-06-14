@@ -1,0 +1,22 @@
+{
+  "id": "icon_nav_journey_v1",
+  "name": "Nav Icon Journey",
+  "version": "v1",
+  "category": "icons",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "nav",
+    "bottom-nav",
+    "journey",
+    "immersive-nav"
+  ],
+  "usage_locations": [
+    "bottom-nav"
+  ],
+  "files": [
+    "icon_nav_journey_v1.png"
+  ]
+}

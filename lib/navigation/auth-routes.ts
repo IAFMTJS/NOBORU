@@ -1,5 +1,5 @@
 export const AUTH_ROUTES = {
-  home: "/home",
+  home: "/camp",
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
@@ -9,9 +9,13 @@ export const AUTH_ROUTES = {
 } as const;
 
 export const AUTH_REQUIRED_PREFIXES = [
+  "/camp",
   "/home",
   "/learn",
+  "/dojo",
   "/review",
+  "/world",
+  "/explore",
   "/games",
   "/community",
   "/profile",
@@ -25,9 +29,13 @@ export const ADMIN_ROUTE_PREFIXES = ["/admin"] as const;
 
 /** App routes that require completed onboarding. */
 export const ONBOARDING_REQUIRED_PREFIXES = [
+  "/camp",
   "/home",
   "/learn",
+  "/dojo",
   "/review",
+  "/world",
+  "/explore",
   "/games",
   "/community",
   "/profile",

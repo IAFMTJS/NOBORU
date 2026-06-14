@@ -1,0 +1,31 @@
+{
+  "id": "yama_adventure_hiking_dark_v1",
+  "name": "Yama Adventure Hiking Dark",
+  "version": "v1",
+  "category": "mascots",
+  "pack_id": "adventure",
+  "variant": "hiking",
+  "theme": "dark",
+  "expression": "adventure",
+  "owner_agent": "Mascot Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "yama",
+    "mascot",
+    "adventure",
+    "dark-mode",
+    "expansion"
+  ],
+  "usage_locations": [
+    "journey",
+    "explore",
+    "trail-progress"
+  ],
+  "design_notes": "Mascot expansion Phase 1. Same canonical proportions, colors, scarf, and markings as yama_main. Transparent sticker via assets:stickers pipeline.",
+  "files": [
+    "yama_adventure_hiking_dark_v1.png",
+    "yama_adventure_hiking_dark_v1.webp"
+  ]
+}

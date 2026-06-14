@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { HiraganaChartViewModel } from "@/features/hiragana/types/hiragana.types";
+import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 import { cn } from "@/lib/utils";
 
 type HiraganaChartProps = {
@@ -53,6 +54,8 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
           </Button>
         }
       />
+
+      <YamaTrainingPresence location="kana_dojo" />
 
       <Card className="shadow-elevation-1">
         <CardHeader>

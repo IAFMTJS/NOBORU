@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EmptyState } from "@/components/ui/empty-state";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { ReviewSessionHub } from "@/features/review/components/review-session-hub";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
@@ -274,7 +274,7 @@ export function ReviewSession({
               <Link href="/learn">Continue Climbing</Link>
             </Button>
             <Button variant="ghost" className="w-full" asChild>
-              <Link href="/home">Return Home</Link>
+              <Link href="/camp">Return to Camp</Link>
             </Button>
           </CardContent>
         </Card>
@@ -283,19 +283,11 @@ export function ReviewSession({
           Start Review
         </Button>
       ) : !session.currentCard ? (
-        <div className="space-y-4">
-          <YamaPresence
-            presence={yamaService.resolveReviewEmpty()}
-            size="md"
-            layout="vertical"
-            className="items-center"
-          />
-          <EmptyState
-            title="No reviews due"
-            description="Complete lessons to build your review queue. Scheduled reviews will appear here."
-            yamaExpression="encouraging"
-          />
-        </div>
+        <YamaEmptyState
+          surface="review"
+          title="No reviews due"
+          description="Complete lessons to build your review queue. Scheduled reviews will appear here."
+        />
       ) : (
         <StudyAtmosphere>
         <Card className="border-border/60 bg-card/95 shadow-elevation-2">

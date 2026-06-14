@@ -47,20 +47,21 @@ Noboru
 
 ---
 
-## Primary Navigation (6-Tab Bottom Nav)
+## Primary Navigation (Immersive 5-Tab Bottom Nav)
 
-From [uiux.mdc](../.cursor/rules/uiux.mdc):
+From [immersive-navigation-system.md](./immersive-navigation-system.md):
 
 | Tab | Purpose | Primary Content |
 |-----|---------|-----------------|
-| **Home** | Daily dashboard | Region, trail, continue learning, goals, elevation, quests |
-| **Learn** | Curriculum path | Regions, units, lessons, vocabulary/kanji/grammar |
-| **Review** | Spaced repetition | Due reviews, history, mastery, weak areas |
-| **Games** | Learning reinforcement | Educational mini-games |
-| **Community** | Social (post-MVP active) | Friends, challenges, leagues |
-| **Profile** | Identity & progress | Avatar, stats, achievements, account access |
+| **Camp** | Player headquarters | Daily goals, streak, continue learning, quests, Yama updates |
+| **Journey** | Main progression | World path, lessons, checkpoints, region progression |
+| **Dojo** | Training Grounds | Kana, vocabulary, grammar, listening, review queue, weakness drills |
+| **World** | Discovery | Regions, lore, trials, games, community, collectibles, achievements |
+| **Profile** | Player identity | Stats, achievements, customization, settings entry |
 
-Settings is accessed from Profile — not a seventh tab.
+Settings is accessed from Profile — not a sixth tab.
+
+Legacy routes `/home` and `/explore` redirect to `/camp` and `/world`.
 
 ---
 
@@ -73,9 +74,14 @@ Settings is accessed from Profile — not a seventh tab.
 | `/` | root | Public | Landing / redirect |
 | `/login` | `(auth)` | Public | Email login |
 | `/register` | `(auth)` | Public | Email registration |
-| `/home` | `(app)` | Protected | Daily dashboard |
-| `/learn` | `(app)` | Protected | Learning path hub |
-| `/review` | `(app)` | Protected | Review center |
+| `/` | root | Public | Landing / redirect to Camp |
+| `/camp` | `(app)` | Protected | Camp headquarters (daily dashboard) |
+| `/home` | `(app)` | Protected | Redirect → `/camp` |
+| `/learn` | `(app)` | Protected | Journey path hub |
+| `/dojo` | `(app)` | Protected | Training Grounds hub |
+| `/review` | `(app)` | Protected | Review session (Dojo child) |
+| `/world` | `(app)` | Protected | World discovery hub |
+| `/explore` | `(app)` | Protected | Redirect → `/world` |
 | `/games` | `(app)` | Protected | Game center |
 | `/community` | `(app)` | Protected | Community hub (placeholder MVP) |
 | `/profile` | `(app)` | Protected | User profile |

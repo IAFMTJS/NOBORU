@@ -186,53 +186,57 @@ No hidden critical features.
 
 PRIMARY NAVIGATION
 
-Bottom Navigation:
+Bottom Navigation (Immersive — see docs/immersive-navigation-system.md):
 
-Home
+Camp
 
-Learn
+Journey
 
-Review
+Dojo
 
-Games
-
-Community
+World
 
 Profile
 
 Maximum:
 
-6 primary items
+5 primary items
+
+Mountain Fox appears on the active tab with themed glow and subtle motion.
 
 ⸻
 
 NAVIGATION ITEM DEFINITIONS
 
-Home
+Camp
 
-Dashboard entry point.
+Player headquarters.
 
-Shows daily quest, level progress, upcoming lesson, and quick actions.
+Shows daily goals, streak, continue learning, quests, and Yama updates.
 
-Learn
+Journey
 
-Learning path, lessons, vocabulary, grammar, and kanji.
+Main progression path.
 
-Review
+Regions, lessons, checkpoints, and region progression.
 
-Spaced repetition and review queue.
+Dojo
 
-Games
+Training Grounds hub.
 
-Educational mini-games that reinforce mastery.
+Kana, vocabulary, grammar, listening, review queue, and weakness drills.
 
-Community
+World
 
-Social features, challenges, and leagues.
+Discovery system.
+
+Regions, lore, trials, games, community, collectibles, and achievements.
 
 Profile
 
-User identity, stats, achievements, and account access.
+Player identity.
+
+Stats, achievements, customization, and account access.
 
 ⸻
 

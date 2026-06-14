@@ -12,6 +12,7 @@ import { BETA_RELEASE } from "@/lib/release/beta.constants";
 import { OFFICIAL_RELEASE } from "@/lib/release/release.constants";
 import type { LeagueDashboardViewModel } from "@/features/leagues/types/league.types";
 import type { FriendsDashboardViewModel } from "@/features/friends/types/friends.types";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 
 export function CommunityScreen() {
   const [league, setLeague] = useState<LeagueDashboardViewModel | null>(null);
@@ -66,7 +67,7 @@ export function CommunityScreen() {
             <Badge variant="outline">Rank #{league.rank}</Badge>
           ) : null}
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/explore">Manage league in Explore</Link>
+            <Link href="/world">Manage league in World</Link>
           </Button>
         </CardContent>
       </Card>
@@ -86,7 +87,13 @@ export function CommunityScreen() {
               <span className="font-medium">{entry.displayName}</span> — {entry.activityLabel}
             </p>
           )) ?? (
-            <p className="text-body-sm text-muted-foreground">No activity yet.</p>
+            <YamaEmptyState
+              surface="notifications"
+              title="No activity yet"
+              description="Follow climbers to see their trail milestones here."
+              actionHref="/world"
+              actionLabel="Explore community"
+            />
           )}
         </CardContent>
       </Card>

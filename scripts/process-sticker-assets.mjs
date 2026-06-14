@@ -125,6 +125,9 @@ async function collectPngFiles(relativePath) {
       if (entry.isDirectory()) {
         await walk(entryPath);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".png")) {
+        if (entry.name.startsWith("_") || dir.includes(`${path.sep}_staging`)) {
+          continue;
+        }
         files.push(entryPath);
       }
     }

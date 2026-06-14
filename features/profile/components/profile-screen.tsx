@@ -85,7 +85,7 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
         <CardContent className="space-y-3 p-4">
           <TitleSelector />
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/camp">Visit Fox Camp</Link>
+            <Link href="/world/fox-camp">Visit Fox Camp</Link>
           </Button>
         </CardContent>
       </Card>

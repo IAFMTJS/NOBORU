@@ -1,7 +1,5 @@
-import { HomeDashboard } from "@/features/learning/components/home-dashboard";
-import { getHomeDashboard } from "@/lib/orchestration/home.orchestrator";
+import { redirect } from "next/navigation";
 
-export default async function HomePage() {
-  const data = await getHomeDashboard();
-  return <HomeDashboard data={data} />;
+export default function HomeRedirectPage() {
+  redirect("/camp");
 }

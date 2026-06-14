@@ -11,7 +11,7 @@ export default async function AdminLayout({
   const session = await getAdminSession();
 
   if (!session) {
-    redirect("/home");
+    redirect("/camp");
   }
 
   return <AdminShell role={session.role}>{children}</AdminShell>;

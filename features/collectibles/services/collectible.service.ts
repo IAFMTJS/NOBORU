@@ -57,7 +57,7 @@ class CollectibleService {
       label: next.name,
       progressPercent,
       remainingLabel: `${progress.earned}/${progress.total} ${next.category}s collected`,
-      href: "/camp",
+      href: "/world/fox-camp",
     };
   }
 

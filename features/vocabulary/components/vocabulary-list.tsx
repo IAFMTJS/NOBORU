@@ -22,6 +22,7 @@ import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
+import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
 function vocabularyLeadingGlyph(entry: { kana: string; kanji: string | null }) {
   return entry.kanji?.[0] ?? entry.kana[0] ?? "語";
@@ -54,6 +55,8 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         title={hub.vocabularyTitle}
         subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} words on your trail`}
       />
+
+      <YamaTrainingPresence location="vocabulary_hall" />
 
       <JlptLevelPills basePath="/learn/vocabulary" activeLevel={jlptLevel} />
 

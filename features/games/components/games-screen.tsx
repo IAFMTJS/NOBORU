@@ -148,7 +148,7 @@ export function GamesScreen({ availability }: GamesScreenProps) {
           ) : null}
 
           <GameCard
-            href="/explore"
+            href="/world"
             title="Explore Hub"
             description="Return to the full Explore hub for trials and study trails."
             icon={<Mountain className="h-5 w-5" aria-hidden />}

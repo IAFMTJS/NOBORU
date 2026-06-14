@@ -44,7 +44,7 @@ async function fetchPublishedRegionsWithCurriculum(): Promise<RegionWithUnits[]>
         ...unit,
         lessons: (unit.lessons ?? [])
           .filter((lesson) => lesson.status === "published")
-          .sort((a, b) => a.title.localeCompare(b.title)),
+          .sort((a, b) => a.order_index - b.order_index),
       })),
   }));
 }

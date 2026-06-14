@@ -18,6 +18,7 @@ import {
   isLessonScorePassing,
 } from "@/features/learning/constants/lesson.constants";
 import { LessonPassThresholdError } from "@/features/learning/errors/lesson.errors";
+import { journeyService } from "@/features/learning/services/journey.service";
 import {
   learningPathRepository,
   progressRepository,
@@ -141,6 +142,8 @@ class ProgressService {
     if (elevation?.epAwarded) {
       void leagueService.addWeeklyEp(input.userId, elevation.epAwarded);
     }
+
+    void journeyService.syncCurrentRegionToProfile(input.userId);
 
     return { ...result, elevation, achievements, quests, reviewItemsEnqueued };
   }

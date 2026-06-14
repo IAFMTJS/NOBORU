@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 
 type AchievementShowcaseProps = {
   showcase: AchievementShowcaseViewModel;
@@ -67,9 +68,13 @@ export function AchievementShowcase({
         </CardHeader>
         <CardContent className="space-y-3">
           {showcase.unlocked.length === 0 ? (
-            <p className="text-body-sm text-muted-foreground">
-              No achievements unlocked yet. Keep climbing.
-            </p>
+            <YamaEmptyState
+              surface="achievements"
+              title="No achievements yet"
+              description="Complete lessons and reviews to earn your first badge."
+              actionHref="/learn"
+              actionLabel="Continue climbing"
+            />
           ) : (
             showcase.unlocked.map((achievement) => (
               <div

@@ -7,18 +7,20 @@ import {
   type NoboruIconComponent,
 } from "@/components/icons";
 
+import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
+
 export type PrimaryNavItem = {
   href: string;
   label: string;
   icon: NoboruIconComponent;
-  navTab: "home" | "learn" | "review" | "explore" | "profile";
+  navTab: ImmersiveNavTab;
 };
 
-/** Matches approved mockups — 5-tab Explore model (uiux.mdc) */
+/** Immersive navigation — Camp · Journey · Dojo · World · Profile */
 export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
-  { href: "/home", label: "Home", icon: NoboruHomeIcon, navTab: "home" },
-  { href: "/learn", label: "Learn", icon: NoboruLearnIcon, navTab: "learn" },
-  { href: "/review", label: "Training", icon: NoboruReviewIcon, navTab: "review" },
-  { href: "/explore", label: "Explore", icon: NoboruExploreIcon, navTab: "explore" },
+  { href: "/camp", label: "Camp", icon: NoboruHomeIcon, navTab: "camp" },
+  { href: "/learn", label: "Journey", icon: NoboruLearnIcon, navTab: "journey" },
+  { href: "/dojo", label: "Dojo", icon: NoboruReviewIcon, navTab: "dojo" },
+  { href: "/world", label: "World", icon: NoboruExploreIcon, navTab: "world" },
   { href: "/profile", label: "Profile", icon: NoboruProfileIcon, navTab: "profile" },
 ];

@@ -1,0 +1,22 @@
+{
+  "id": "icon_nav_world_v1",
+  "name": "Nav Icon World",
+  "version": "v1",
+  "category": "icons",
+  "owner_agent": "Art Director Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "nav",
+    "bottom-nav",
+    "world",
+    "immersive-nav"
+  ],
+  "usage_locations": [
+    "bottom-nav"
+  ],
+  "files": [
+    "icon_nav_world_v1.png"
+  ]
+}

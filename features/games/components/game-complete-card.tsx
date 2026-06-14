@@ -58,7 +58,7 @@ export function GameCompleteCard({
           <Link href={backHref}>{backLabel}</Link>
         </Button>
         <Button variant="outline" className="w-full" asChild>
-          <Link href="/home">Return Home</Link>
+          <Link href="/camp">Return to Camp</Link>
         </Button>
       </CardContent>
     </Card>

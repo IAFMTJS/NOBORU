@@ -434,7 +434,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           </CardHeader>
           <CardContent className="space-y-4">
             <YamaPresence
-              presence={yamaService.resolveTeachPresence(stepIndex)}
+              presence={yamaService.resolveLessonIntroPresence(stepIndex)}
               size="sm"
             />
             <p className="text-body-sm text-muted-foreground">

@@ -3,11 +3,8 @@ import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
 import { streakService } from "@/features/achievements/services/streak.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
+import { journeyService } from "@/features/learning/services/journey.service";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import {
-  buildTrailPlacementRange,
-  flattenRegionTrailLessons,
-} from "@/features/learning/services/trail.service";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
 import { reviewRepository } from "@/features/review/repositories/review.repository";
@@ -84,34 +81,41 @@ class DashboardServerService {
       progressRows,
       passedTrialSlugs,
     );
+    const journeyPath = journeyService.buildJourneyPath(
+      learningPath.regions,
+      progressRows,
+      passedTrialSlugs,
+    );
 
+    const activeRegionSlug = journeyPath.position.currentRegionSlug;
     const currentRegionPath =
-      learningPath.regions.find(
-        (entry) => entry.slug === profile.currentRegionSlug,
-      ) ?? learningPath.regions[0];
+      learningPath.regions.find((entry) => entry.slug === activeRegionSlug) ??
+      learningPath.regions[0];
+    const currentRegionJourney =
+      journeyPath.regions.find((entry) => entry.slug === activeRegionSlug) ??
+      journeyPath.regions[0];
 
     const region = resolveDashboardRegion(
-      profile.currentRegionSlug,
+      activeRegionSlug,
       currentRegionPath?.name,
     );
 
-    const trailNodes = currentRegionPath
-      ? flattenRegionTrailLessons(currentRegionPath.units, {
-          regionLocked: currentRegionPath.availability === "locked",
-        })
-      : [];
-    const trailStartIndex = Math.max(
+    const previewStartIndex = Math.max(
       0,
-      trailNodes.findIndex((node) => node.state !== "completed"),
+      (currentRegionJourney?.currentNodeIndex ?? 0) - 1,
     );
-    const trailPreview = trailNodes.slice(trailStartIndex, trailStartIndex + 5);
+    const journeyPreview =
+      currentRegionJourney?.nodes
+        .filter((node) => node.kind !== "landmark")
+        .slice(previewStartIndex, previewStartIndex + 5) ?? [];
+    const currentJourneyNodeId = journeyPath.position.currentNodeId;
 
     const yama = yamaService.resolveHomePresence(
       {
         dailyQuestsCompleted: quests.daily.completedCount,
         dailyQuestsTotal: quests.daily.totalCount,
         regionProgressPercent: currentRegionPath?.progressPercent ?? 0,
-        hasInProgressTrailNode: trailPreview.some(
+        hasInProgressTrailNode: journeyPreview.some(
           (node) => node.state === "in_progress",
         ),
       },
@@ -134,7 +138,7 @@ class DashboardServerService {
         : null;
 
     const progressionPreview = buildProgressionPreview({
-      regionSlug: profile.currentRegionSlug,
+      regionSlug: activeRegionSlug,
       learningPath,
       elevation,
       trials,
@@ -163,16 +167,13 @@ class DashboardServerService {
       },
       quests,
       yama,
-      trailPreview,
-      trailPreviewPlacement: buildTrailPlacementRange(
-        trailStartIndex,
-        currentRegionPath?.lessonCount ?? trailNodes.length,
-      ),
+      journeyPreview,
+      currentJourneyNodeId,
       upcomingLesson: {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
-        href: profile.currentRegionSlug
-          ? regionTrailHref(profile.currentRegionSlug)
-          : "/learn",
+        href:
+          journeyPath.nextLessonHref ??
+          (activeRegionSlug ? regionTrailHref(activeRegionSlug) : "/learn"),
         lessonNumber: lessonPosition?.index ?? null,
         lessonCount: regionForNextLesson?.lessonCount ?? 0,
         estimatedDuration: learningPath.nextLesson?.estimatedDuration ?? null,

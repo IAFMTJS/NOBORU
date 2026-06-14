@@ -4,13 +4,14 @@
   "version": "v1",
   "category": "icons",
   "owner_agent": "Art Director Agent",
-  "created_at": "2026-06-12",
-  "updated_at": "2026-06-12",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
   "status": "approved",
   "tags": [
     "nav",
     "bottom-nav",
-    "profile"
+    "profile",
+    "immersive-nav"
   ],
   "usage_locations": [
     "bottom-nav"

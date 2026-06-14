@@ -567,11 +567,33 @@ Dark v2 expressions supersede dark v1 files still present in `public/mascots/`.
 
 ## Navigation Icons
 
-Custom WebP nav icons: `icon_nav_{home,learn,review,explore,profile}_v1`. Resolved via `getNavIconPath(tab)`.
+Immersive tab icons: `icon_nav_{camp,journey,dojo,world,profile}_v1`. Legacy aliases `{home,learn,review,explore}` remain for backward compatibility.
 
-**Usage:** `components/layout/bottom-nav.tsx`
+Resolved via `getNavIconPath(tab)`.
 
-**Pipeline:** Sticker (`npm run assets:stickers`)
+**Usage:** `components/layout/bottom-nav.tsx`, `components/media/nav-icon-image.tsx`
+
+**Pipeline:** `npm run assets:nav-fox`
+
+---
+
+## Navigation Fox Stickers
+
+Dedicated Mountain Fox poses for the active bottom-nav tab (dark + light each):
+
+| Asset ID | Tab | Source pose | Prop |
+|----------|-----|-------------|------|
+| `yama_nav_camp_{dark,light}_v1` | Camp | encouraging | campfire + warm glow |
+| `yama_nav_journey_{dark,light}_v1` | Journey | adventure hiking | trail markers |
+| `yama_nav_dojo_{dark,light}_v1` | Dojo | training stance | torii gate |
+| `yama_nav_world_{dark,light}_v1` | World | adventure hiking | compass |
+| `yama_nav_profile_{dark,light}_v1` | Profile | victorious | journal + star |
+
+Resolved via `getNavFoxPath(tab, theme)`.
+
+**Usage:** `components/media/nav-fox-image.tsx`, `components/layout/nav-tab-item.tsx`
+
+**Pipeline:** `npm run assets:nav-fox` (composites approved Yama PNGs + themed SVG props)
 
 ---
 
@@ -600,7 +622,7 @@ export const TRAIL_SCROLL_REGION_SLUGS = [
 ] as const;
 ```
 
-**Helpers:** `getMascotPath`, `getYamaExpressionPath`, `getAchievementArtPath`, `getGameArtPath`, `getNavIconPath`, `getRegionArtPath`, `getTrailSpineArtPath`, `getTrailScrollArtPath`, `getWordmarkPath`, `getAuthAtmospherePath`
+**Helpers:** `getMascotPath`, `getYamaExpressionPath`, `getNavIconPath`, `getNavFoxPath`, `getAchievementArtPath`, `getGameArtPath`, `getRegionArtPath`, `getTrailSpineArtPath`, `getTrailScrollArtPath`, `getWordmarkPath`, `getAuthAtmospherePath`
 
 **Rule:** UI components must import paths from `ASSET_REGISTRY` — never hardcode asset paths.
 

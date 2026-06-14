@@ -1,19 +1,18 @@
 import { Flame, Gem, Star } from "lucide-react";
 
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
+import { JourneyPreviewMap } from "@/features/learning/components/journey/journey-preview-map";
 import { ExpeditionHeroYama } from "@/features/learning/components/trail/expedition-hero-yama";
-import { TrailMap } from "@/features/learning/components/trail/trail-map";
 import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 import { NextUnlockPreview } from "@/components/progression/next-unlock-preview";
 import { CompanionBadge } from "@/features/companion/components/companion-badge";
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
-import type { TrailNodeViewModel, TrailPlacementRange } from "@/features/learning/types/trail.types";
+import type { JourneyNode } from "@/features/learning/types/journey.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 
 type ExpeditionHeroProps = {
@@ -25,8 +24,8 @@ type ExpeditionHeroProps = {
   continueHref: string;
   lessonNumber: number | null;
   lessonCount: number;
-  trailPreview: TrailNodeViewModel[];
-  trailPreviewPlacement: TrailPlacementRange;
+  journeyPreview: JourneyNode[];
+  currentJourneyNodeId: string | null;
   quests: QuestDashboardViewModel;
   yama: YamaPresenceViewModel;
   stats: {
@@ -46,8 +45,8 @@ export function ExpeditionHero({
   lessonNumber,
   lessonCount,
   regionProgressPercent,
-  trailPreview,
-  trailPreviewPlacement,
+  journeyPreview,
+  currentJourneyNodeId,
   quests,
   yama,
   stats,
@@ -115,12 +114,12 @@ export function ExpeditionHero({
         </Button>
       </div>
 
-      {trailPreview.length > 0 ? (
+      {journeyPreview.length > 0 ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
             <p className="text-caption font-semibold">Current Trail</p>
             <AnalyticsLink
-              href={regionTrailHref(regionSlug)}
+              href="/learn/world"
               className="text-caption font-medium text-primary hover:underline"
               eventName="trail_map_opened"
               eventProperties={{ source: "home_trail_preview" }}
@@ -128,13 +127,10 @@ export function ExpeditionHero({
               View map
             </AnalyticsLink>
           </div>
-          <TrailMap
-            nodes={trailPreview}
-            compact
-            minimal
+          <JourneyPreviewMap
             regionSlug={regionSlug}
-            placementRange={trailPreviewPlacement}
-            className="rounded-xl"
+            nodes={journeyPreview}
+            currentNodeId={currentJourneyNodeId}
           />
         </div>
       ) : null}

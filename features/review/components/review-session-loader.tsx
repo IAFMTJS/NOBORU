@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { YamaErrorState } from "@/features/yama/components/yama-error-state";
 import { YamaLoading } from "@/components/ui/yama-loading";
 import { ReviewSession } from "@/features/review/components/review-session";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
@@ -26,6 +27,7 @@ export function ReviewSessionLoader({
   const online = useOnlineStatus();
   const [bundle, setBundle] = useState(initialBundle);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     setBundle(initialBundle);
@@ -62,15 +64,17 @@ export function ReviewSessionLoader({
     return () => {
       cancelled = true;
     };
-  }, [initialBundle, online, userId]);
+  }, [initialBundle, online, userId, retryCount]);
 
   if (error) {
     return (
-      <div className="px-4 py-12 text-center">
-        <p className="text-body-sm text-destructive" role="alert">
-          {error}
-        </p>
-      </div>
+      <YamaErrorState
+        message={error}
+        onRetry={() => {
+          setError(null);
+          setRetryCount((count) => count + 1);
+        }}
+      />
     );
   }
 

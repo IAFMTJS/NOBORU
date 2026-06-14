@@ -3,10 +3,11 @@
 import Image from "next/image";
 
 import { getNavIconPath } from "@/lib/assets/registry";
+import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 import { cn } from "@/lib/utils";
 
 type NavIconImageProps = {
-  tab: "home" | "learn" | "review" | "explore" | "profile";
+  tab: ImmersiveNavTab;
   active?: boolean;
   className?: string;
 };
@@ -23,8 +24,8 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
       height={24}
       aria-hidden
       className={cn(
-        "h-5 w-5 shrink-0 object-contain transition-all",
-        active ? "opacity-100" : "opacity-45 grayscale",
+        "h-5 w-5 shrink-0 object-contain transition-all duration-300",
+        active ? "scale-110 opacity-100 drop-shadow-[0_0_6px_rgba(214,64,69,0.45)]" : "opacity-40 grayscale",
         className,
       )}
     />

@@ -7,6 +7,7 @@
  *   node scripts/generate-region-trail-scrolls.mjs --trail=2
  *   node scripts/generate-region-trail-scrolls.mjs --trail=2 --region=mount-n5
  *   node scripts/generate-region-trail-scrolls.mjs --all-trails
+ *   node scripts/generate-region-trail-scrolls.mjs --journey-v3
  */
 import { mkdir, writeFile, access, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -16,12 +17,25 @@ import sharp from "sharp";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 
+const JOURNEY_V3 = process.argv.includes("--journey-v3");
+
 const anchorContract = JSON.parse(
   await readFile(
     path.join(root, "lib/design-system/trail-path-anchors.json"),
     "utf8",
   ),
 );
+
+const journeyContract = JOURNEY_V3
+  ? JSON.parse(
+      await readFile(
+        path.join(root, "lib/design-system/journey-path-contracts.json"),
+        "utf8",
+      ),
+    )
+  : null;
+
+const pathContract = JOURNEY_V3 ? journeyContract : anchorContract;
 
 const WIDTH = anchorContract.scrollArtWidth;
 const HEIGHT = anchorContract.scrollArtHeight;
@@ -285,6 +299,7 @@ function parseArgs(argv) {
     trail: 1,
     allTrails: argv.includes("--all-trails"),
     region: null,
+    journeyV3: argv.includes("--journey-v3"),
   };
 
   for (const arg of argv) {
@@ -303,6 +318,9 @@ function resolveTargetRegions(flags) {
   if (flags.region) {
     return [flags.region];
   }
+  if (flags.journeyV3) {
+    return ALL_REGION_SLUGS;
+  }
   if (flags.trail >= 2) {
     return ALL_REGION_SLUGS;
   }
@@ -314,12 +332,12 @@ function slugToRegionAssetBase(slug) {
 }
 
 function resolvePathAnchors(regionSlug, theme, trailNumber) {
-  const region = anchorContract.regions[regionSlug];
+  const region = pathContract.regions[regionSlug];
   if (!region) {
     throw new Error(`Unknown region slug: ${regionSlug}`);
   }
   if (trailNumber <= 1) {
-    return region[theme];
+    return region.spine?.[theme] ?? region[theme];
   }
   const continuation = region.trails?.[trailNumber - 2]?.[theme];
   if (!continuation) {
@@ -329,6 +347,9 @@ function resolvePathAnchors(regionSlug, theme, trailNumber) {
 }
 
 function resolveAssetBase(regionSlug, theme, trailNumber) {
+  if (JOURNEY_V3 && trailNumber <= 1) {
+    return `ui_trail_scroll_${regionSlug}_${theme}_v3`;
+  }
   if (trailNumber <= 1) {
     return `ui_trail_scroll_${regionSlug}_${theme}_v1`;
   }
@@ -336,10 +357,23 @@ function resolveAssetBase(regionSlug, theme, trailNumber) {
 }
 
 function resolveAnchorContractKey(regionSlug, theme, trailNumber) {
+  if (JOURNEY_V3) {
+    if (trailNumber <= 1) {
+      return `journey-path-contracts.regions.${regionSlug}.spine.${theme}`;
+    }
+    return `journey-path-contracts.regions.${regionSlug}.trails[${trailNumber - 2}].${theme}`;
+  }
   if (trailNumber <= 1) {
     return `regions.${regionSlug}.${theme}`;
   }
   return `regions.${regionSlug}.trails[${trailNumber - 2}].${theme}`;
+}
+
+async function resolveFoothillsV2Base(theme) {
+  const base = `ui_trail_scroll_foothills_${theme}_v2`;
+  const pngPath = path.join(root, "assets", "ui", base, `${base}.png`);
+  await access(pngPath);
+  return readFile(pngPath);
 }
 
 function anchorToPixel(anchor) {
@@ -568,22 +602,28 @@ function buildBandsForRegion(slug, trailNumber) {
 
 async function generateScroll(regionSlug, theme, trailNumber) {
   const palette = REGION_PALETTES[regionSlug][theme];
-  const heroPath = await resolveHeroPath(regionSlug);
   const outBase = resolveAssetBase(regionSlug, theme, trailNumber);
   const outDir = path.join(root, "assets", "ui", outBase);
   const outPng = path.join(outDir, `${outBase}.png`);
   await mkdir(outDir, { recursive: true });
 
-  const bands = buildBandsForRegion(regionSlug, trailNumber);
-  const composites = [];
+  let canvas;
 
-  for (const band of bands) {
-    const plate = await loadHeroBand(heroPath, band, theme);
-    composites.push({ input: plate, top: band.top, left: 0 });
+  if (JOURNEY_V3 && trailNumber <= 1 && regionSlug === "foothills") {
+    canvas = await resolveFoothillsV2Base(theme);
+  } else {
+    const heroPath = await resolveHeroPath(regionSlug);
+    const bands = buildBandsForRegion(regionSlug, trailNumber);
+    const composites = [];
+
+    for (const band of bands) {
+      const plate = await loadHeroBand(heroPath, band, theme);
+      composites.push({ input: plate, top: band.top, left: 0 });
+    }
+
+    const sky = buildSkySvg(palette, theme, trailNumber);
+    canvas = await sharp(sky).composite(composites).png().toBuffer();
   }
-
-  const sky = buildSkySvg(palette, theme, trailNumber);
-  let canvas = await sharp(sky).composite(composites).png().toBuffer();
 
   const pathOverlay = buildPathOverlaySvg(palette, theme, regionSlug, trailNumber);
   canvas = await sharp(canvas)
@@ -599,13 +639,18 @@ async function generateScroll(regionSlug, theme, trailNumber) {
     id: outBase,
     name: `Trail Scroll ${label}${trailLabel} ${theme === "dark" ? "Dark" : "Light"}`,
     category: "ui",
-    version: "v1",
+    version: JOURNEY_V3 ? "v3" : "v1",
     status: "approved",
     owner_agent: "UI Art Agent",
-    creation_agent: "Region Art Agent",
+    creation_agent: JOURNEY_V3 ? "Region Art Agent" : "Region Art Agent",
     approved_by: "Art Director Agent",
-    created_at: "2026-06-13",
-    updated_at: "2026-06-13",
+    created_at: "2026-06-14",
+    updated_at: "2026-06-14",
+    supersedes: JOURNEY_V3
+      ? regionSlug === "foothills"
+        ? `ui_trail_scroll_${regionSlug}_${theme}_v2`
+        : `ui_trail_scroll_${regionSlug}_${theme}_v1`
+      : undefined,
     tags: [
       "ui",
       "trail",
@@ -615,11 +660,15 @@ async function generateScroll(regionSlug, theme, trailNumber) {
       "immersive",
       ...(trailNumber >= 2 ? [`trail-${trailNumber}`] : []),
     ],
-    usage_locations: ["trail-first-learn-screen", "trail-map-immersive"],
+    usage_locations: JOURNEY_V3
+      ? ["journey-path-map", "journey-screen"]
+      : ["trail-first-learn-screen", "trail-map-immersive"],
     dependencies: [slugToRegionAssetBase(regionSlug), `ui_trail_spine_${theme}_v1`],
     dimensions: { width: WIDTH, height: HEIGHT },
     files: [`${outBase}.png`, `${outBase}.webp`],
-    design_notes: `Vertical immersive ${label}${trailLabel} scroll (${theme}). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at ${resolveAnchorContractKey(regionSlug, theme, trailNumber)} in trail-path-anchors.json. Generated via generate-region-trail-scrolls.mjs.`,
+    design_notes: JOURNEY_V3
+      ? `Path-first ${label}${trailLabel} scroll (${theme}). Environment art with trail drawn from journey-path-contracts.json spine — path is authoritative.`
+      : `Vertical immersive ${label}${trailLabel} scroll (${theme}). Composed from region hero elevation bands with region palette, cross-faded segments, and 14 lantern waypoints at ${resolveAnchorContractKey(regionSlug, theme, trailNumber)} in trail-path-anchors.json. Generated via generate-region-trail-scrolls.mjs.`,
     anchor_contract: resolveAnchorContractKey(regionSlug, theme, trailNumber),
     trail_segment_index: trailNumber - 1,
     max_lessons: 40,
@@ -633,12 +682,16 @@ async function generateScroll(regionSlug, theme, trailNumber) {
 
 async function main() {
   const flags = parseArgs(process.argv.slice(2));
-  const trailNumbers = flags.allTrails ? [1, 2] : [flags.trail];
+  const trailNumbers = flags.journeyV3 ? [1] : flags.allTrails ? [1, 2] : [flags.trail];
   const regions = resolveTargetRegions(flags);
 
   for (const trailNumber of trailNumbers) {
     for (const regionSlug of regions) {
-      if (trailNumber === 1 && !PRIMARY_GENERATED_REGIONS.includes(regionSlug)) {
+      if (
+        trailNumber === 1 &&
+        !flags.journeyV3 &&
+        !PRIMARY_GENERATED_REGIONS.includes(regionSlug)
+      ) {
         continue;
       }
       for (const theme of THEMES) {

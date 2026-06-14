@@ -196,6 +196,7 @@ unit_id
 type
 title
 description
+order_index
 difficulty
 xp_reward
 estimated_duration

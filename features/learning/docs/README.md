@@ -13,9 +13,23 @@ Home dashboard, learning paths, lesson delivery, and progress tracking.
 
 ## Routes
 
-- `/learn` — region and unit overview
-- `/learn/[regionSlug]` — lessons in a region
+- `/learn` — path-first journey map (primary Learn experience)
+- `/learn/world` — spatial mountain world overview
+- `/learn/[regionSlug]` — redirects to `/learn?region=slug`
 - `/learn/lesson/[lessonId]` — interactive lesson player
+
+## Journey System
+
+Authoritative spec: `docs/world-map-learning-journey-system.md`
+
+- **Journey domain** — `journey.service.ts` builds ordered nodes with path positions, landmarks, and server-side lesson gating
+- **Profile sync** — `syncCurrentRegionToProfile()` updates `current_region_slug` after lesson completion
+- **Path contract** — `lib/design-system/journey-path-contracts.json` (authoritative spine; art follows path)
+- **Scroll art** — v3 path-aligned scrolls per region (`npm run assets:journey-path-scrolls`)
+- **Legacy anchors** — `trail-path-anchors.json` deprecated for journey; retained for legacy `TrailMap` only
+- **World map** — `features/world-map/` spatial mountain overview fed by `JourneyPathViewModel`
+- **Home preview** — `JourneyPreviewMap` on expedition hero (journey nodes, not artwork anchors)
+- **Legacy trail** — `components/trail/` retained for shared markers/sheets; Learn tab uses journey components
 
 ## Dependencies
 
@@ -50,5 +64,6 @@ Home dashboard, learning paths, lesson delivery, and progress tracking.
 ## Known Limitations
 
 - Ordering, tap-to-build, and fill-in-blank drill types deferred
-- Trail art assets use icon states; custom node art deferred to asset pipeline
+- Region artwork follows path geometry; full per-segment art pipeline deferred
+- Landmarks use label cycle constants; CMS-backed landmark metadata deferred
 - Global recall distractor pool not yet implemented

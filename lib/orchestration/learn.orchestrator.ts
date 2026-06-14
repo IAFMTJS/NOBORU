@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { learningPathService } from "@/features/learning/services/learning-path.service";
+import { journeyService } from "@/features/learning/services/journey.service";
 import { lessonService } from "@/features/learning/services/lesson.service";
 import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
 import { katakanaProgressService } from "@/features/katakana/services/katakana-progress.service";
@@ -38,6 +39,10 @@ import type {
   LessonSessionViewModel,
   RegionPathViewModel,
 } from "@/features/learning/types/lesson.types";
+import type {
+  JourneyPathViewModel,
+  JourneyRegionViewModel,
+} from "@/features/learning/types/journey.types";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 import { isJlptLevel, type JlptLevel } from "@/lib/content/types";
@@ -70,6 +75,44 @@ export async function getLearningPathWithContext(): Promise<{
 export async function getRegionPath(regionSlug: string): Promise<RegionPathViewModel> {
   const userId = await requireAuthenticatedUserId();
   const region = await learningPathService.getRegionPath(userId, regionSlug);
+
+  if (!region) {
+    redirect("/learn");
+  }
+
+  return region;
+}
+
+export async function getJourneyPath(): Promise<JourneyPathViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  return journeyService.getJourneyPath(userId);
+}
+
+export async function getJourneyPathWithContext(): Promise<{
+  journey: JourneyPathViewModel;
+  currentRegionSlug: string;
+}> {
+  const userId = await requireAuthenticatedUserId();
+  const [journey, profile] = await Promise.all([
+    journeyService.getJourneyPath(userId),
+    profileServerService.getProfileCore(),
+  ]);
+
+  return {
+    journey,
+    currentRegionSlug:
+      journey.position.currentRegionSlug ??
+      profile?.currentRegionSlug ??
+      journey.regions[0]?.slug ??
+      "foothills",
+  };
+}
+
+export async function getRegionJourney(
+  regionSlug: string,
+): Promise<JourneyRegionViewModel> {
+  const userId = await requireAuthenticatedUserId();
+  const region = await journeyService.getRegionJourney(userId, regionSlug);
 
   if (!region) {
     redirect("/learn");

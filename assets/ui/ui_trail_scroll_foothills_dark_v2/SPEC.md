@@ -1,6 +1,6 @@
 # Trail Scroll — Foothills — v2 (Dark)
 
-**Status:** PRODUCTION REPLACEMENT  
+**Status:** SUPERSEDED by `ui_trail_scroll_foothills_dark_v3`  
 **Version:** v2  
 **Supersedes:** `ui_trail_scroll_foothills_dark_v1`
 

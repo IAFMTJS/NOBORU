@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { YamaErrorState } from "@/features/yama/components/yama-error-state";
 import { YamaLoading } from "@/components/ui/yama-loading";
 import { LessonPlayer } from "@/features/learning/components/lesson-player";
 import type { LessonSessionViewModel } from "@/features/learning/types/lesson.types";
@@ -26,6 +27,7 @@ export function LessonSessionLoader({
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(!initialSession);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     if (!initialSession) return;
@@ -72,7 +74,7 @@ export function LessonSessionLoader({
     return () => {
       cancelled = true;
     };
-  }, [initialSession, lessonId, online]);
+  }, [initialSession, lessonId, online, retryCount]);
 
   if (loading && !session) {
     return <YamaLoading message="Loading lesson…" />;
@@ -80,11 +82,14 @@ export function LessonSessionLoader({
 
   if (error && !session) {
     return (
-      <div className="px-4 py-12 text-center">
-        <p className="text-body-sm text-destructive" role="alert">
-          {error}
-        </p>
-      </div>
+      <YamaErrorState
+        message={error}
+        onRetry={() => {
+          setError(null);
+          setLoading(true);
+          setRetryCount((count) => count + 1);
+        }}
+      />
     );
   }
 

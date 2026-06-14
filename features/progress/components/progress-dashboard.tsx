@@ -44,7 +44,7 @@ export function ProgressDashboard({
         subtitle="Your climb at a glance"
         action={
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/home">Home</Link>
+            <Link href="/camp">Camp</Link>
           </Button>
         }
       />

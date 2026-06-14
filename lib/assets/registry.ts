@@ -28,15 +28,49 @@ export const ASSET_REGISTRY = {
     yamaVictoriousLight: "/mascots/yama_victorious_light_v1.webp",
     yamaConfusedDark: "/mascots/yama_confused_dark_v1.webp",
     yamaConfusedLight: "/mascots/yama_confused_light_v1.webp",
+    yamaTeachingDark: "/mascots/yama_teaching_pointing_board_dark_v1.webp",
+    yamaTeachingLight: "/mascots/yama_teaching_pointing_board_light_v1.webp",
+    yamaSurprisedDark: "/mascots/yama_surprised_wide_eyes_dark_v1.webp",
+    yamaSurprisedLight: "/mascots/yama_surprised_wide_eyes_light_v1.webp",
+    yamaConcernedDark: "/mascots/yama_concerned_supportive_concern_dark_v1.webp",
+    yamaConcernedLight: "/mascots/yama_concerned_supportive_concern_light_v1.webp",
+    yamaDeterminedDark: "/mascots/yama_determined_ready_stance_dark_v1.webp",
+    yamaDeterminedLight: "/mascots/yama_determined_ready_stance_light_v1.webp",
+    yamaSleepingDark: "/mascots/yama_sleeping_resting_dark_v1.webp",
+    yamaSleepingLight: "/mascots/yama_sleeping_resting_light_v1.webp",
+    yamaSadDark: "/mascots/yama_sad_supportive_disappointed_dark_v1.webp",
+    yamaSadLight: "/mascots/yama_sad_supportive_disappointed_light_v1.webp",
+    yamaAdventureDark: "/mascots/yama_adventure_hiking_dark_v1.webp",
+    yamaAdventureLight: "/mascots/yama_adventure_hiking_light_v1.webp",
+    yamaTrainingDark: "/mascots/yama_training_demo_stance_dark_v1.webp",
+    yamaTrainingLight: "/mascots/yama_training_demo_stance_light_v1.webp",
+    yamaSeasonalDark: "/mascots/yama_seasonal_cherry_blossom_dark_v1.webp",
+    yamaSeasonalLight: "/mascots/yama_seasonal_cherry_blossom_light_v1.webp",
+    yamaRewardDark: "/mascots/yama_reward_presenting_badge_dark_v1.webp",
+    yamaRewardLight: "/mascots/yama_reward_presenting_badge_light_v1.webp",
   },
   icons: {
     appLight: "/icons/icon_app_light_v1.webp",
     appDark: "/icons/icon_app_dark_v1.webp",
+    navCamp: "/icons/icon_nav_camp_v1.webp",
+    navJourney: "/icons/icon_nav_journey_v1.webp",
+    navDojo: "/icons/icon_nav_dojo_v1.webp",
+    navWorld: "/icons/icon_nav_world_v1.webp",
+    navProfile: "/icons/icon_nav_profile_v1.webp",
     navHome: "/icons/icon_nav_home_v1.webp",
     navLearn: "/icons/icon_nav_learn_v1.webp",
     navReview: "/icons/icon_nav_review_v1.webp",
     navExplore: "/icons/icon_nav_explore_v1.webp",
-    navProfile: "/icons/icon_nav_profile_v1.webp",
+    navFoxCampDark: "/mascots/yama_nav_camp_dark_v1.webp",
+    navFoxCampLight: "/mascots/yama_nav_camp_light_v1.webp",
+    navFoxJourneyDark: "/mascots/yama_nav_journey_dark_v1.webp",
+    navFoxJourneyLight: "/mascots/yama_nav_journey_light_v1.webp",
+    navFoxDojoDark: "/mascots/yama_nav_dojo_dark_v1.webp",
+    navFoxDojoLight: "/mascots/yama_nav_dojo_light_v1.webp",
+    navFoxWorldDark: "/mascots/yama_nav_world_dark_v1.webp",
+    navFoxWorldLight: "/mascots/yama_nav_world_light_v1.webp",
+    navFoxProfileDark: "/mascots/yama_nav_profile_dark_v1.webp",
+    navFoxProfileLight: "/mascots/yama_nav_profile_light_v1.webp",
   },
   games: {
     wordMatch: "/games/game_word_match_v1.webp",
@@ -52,8 +86,8 @@ export const ASSET_REGISTRY = {
   ui: {
     trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
     trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
-    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v2.webp",
-    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v2.webp",
+    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v3.webp",
+    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v3.webp",
     authAtmosphereDark: "/ui/ui_auth_atmosphere_dark_v1.webp",
     authAtmosphereLight: "/ui/ui_auth_atmosphere_light_v1.webp",
   },
@@ -105,11 +139,28 @@ const GAME_SLUG_TO_ASSET: Record<string, string> = {
 };
 
 const NAV_TAB_TO_ASSET: Record<string, string> = {
+  camp: ASSET_REGISTRY.icons.navCamp,
+  journey: ASSET_REGISTRY.icons.navJourney,
+  dojo: ASSET_REGISTRY.icons.navDojo,
+  world: ASSET_REGISTRY.icons.navWorld,
+  profile: ASSET_REGISTRY.icons.navProfile,
   home: ASSET_REGISTRY.icons.navHome,
   learn: ASSET_REGISTRY.icons.navLearn,
   review: ASSET_REGISTRY.icons.navReview,
   explore: ASSET_REGISTRY.icons.navExplore,
-  profile: ASSET_REGISTRY.icons.navProfile,
+};
+
+const NAV_FOX_TAB_TO_ASSET: Record<string, string> = {
+  campDark: ASSET_REGISTRY.icons.navFoxCampDark,
+  campLight: ASSET_REGISTRY.icons.navFoxCampLight,
+  journeyDark: ASSET_REGISTRY.icons.navFoxJourneyDark,
+  journeyLight: ASSET_REGISTRY.icons.navFoxJourneyLight,
+  dojoDark: ASSET_REGISTRY.icons.navFoxDojoDark,
+  dojoLight: ASSET_REGISTRY.icons.navFoxDojoLight,
+  worldDark: ASSET_REGISTRY.icons.navFoxWorldDark,
+  worldLight: ASSET_REGISTRY.icons.navFoxWorldLight,
+  profileDark: ASSET_REGISTRY.icons.navFoxProfileDark,
+  profileLight: ASSET_REGISTRY.icons.navFoxProfileLight,
 };
 
 const REGION_SLUG_TO_ASSET: Record<string, string> = {
@@ -131,9 +182,19 @@ const YAMA_EXPRESSION_DARK: Record<string, string> = {
   supportive: ASSET_REGISTRY.mascots.yamaEncouragingDark,
   thinking: ASSET_REGISTRY.mascots.yamaThinkingDark,
   studying: ASSET_REGISTRY.mascots.yamaThinkingDark,
+  teaching: ASSET_REGISTRY.mascots.yamaTeachingDark,
+  surprised: ASSET_REGISTRY.mascots.yamaSurprisedDark,
+  concerned: ASSET_REGISTRY.mascots.yamaConcernedDark,
+  determined: ASSET_REGISTRY.mascots.yamaDeterminedDark,
+  sleeping: ASSET_REGISTRY.mascots.yamaSleepingDark,
+  confused: ASSET_REGISTRY.mascots.yamaConfusedDark,
+  sad: ASSET_REGISTRY.mascots.yamaSadDark,
+  adventure: ASSET_REGISTRY.mascots.yamaAdventureDark,
+  training: ASSET_REGISTRY.mascots.yamaTrainingDark,
+  seasonal: ASSET_REGISTRY.mascots.yamaSeasonalDark,
+  reward: ASSET_REGISTRY.mascots.yamaRewardDark,
   loading: ASSET_REGISTRY.mascots.yamaLoadingDark,
   victorious: ASSET_REGISTRY.mascots.yamaVictoriousDark,
-  confused: ASSET_REGISTRY.mascots.yamaConfusedDark,
 };
 
 const YAMA_EXPRESSION_LIGHT: Record<string, string> = {
@@ -144,9 +205,19 @@ const YAMA_EXPRESSION_LIGHT: Record<string, string> = {
   supportive: ASSET_REGISTRY.mascots.yamaEncouragingLight,
   thinking: ASSET_REGISTRY.mascots.yamaThinkingLight,
   studying: ASSET_REGISTRY.mascots.yamaThinkingLight,
+  teaching: ASSET_REGISTRY.mascots.yamaTeachingLight,
+  surprised: ASSET_REGISTRY.mascots.yamaSurprisedLight,
+  concerned: ASSET_REGISTRY.mascots.yamaConcernedLight,
+  determined: ASSET_REGISTRY.mascots.yamaDeterminedLight,
+  sleeping: ASSET_REGISTRY.mascots.yamaSleepingLight,
+  confused: ASSET_REGISTRY.mascots.yamaConfusedLight,
+  sad: ASSET_REGISTRY.mascots.yamaSadLight,
+  adventure: ASSET_REGISTRY.mascots.yamaAdventureLight,
+  training: ASSET_REGISTRY.mascots.yamaTrainingLight,
+  seasonal: ASSET_REGISTRY.mascots.yamaSeasonalLight,
+  reward: ASSET_REGISTRY.mascots.yamaRewardLight,
   loading: ASSET_REGISTRY.mascots.yamaLoadingLight,
   victorious: ASSET_REGISTRY.mascots.yamaVictoriousLight,
-  confused: ASSET_REGISTRY.mascots.yamaConfusedLight,
 };
 
 export function getMascotPath(theme: "light" | "dark" | string | undefined) {
@@ -175,6 +246,23 @@ export function getNavIconPath(tab: string) {
   return NAV_TAB_TO_ASSET[tab] ?? null;
 }
 
+export function getNavFoxPath(tab: string, theme: "light" | "dark" | string | undefined) {
+  const mode = theme === "light" ? "Light" : "Dark";
+  const key = `${tab}${mode}`;
+  return NAV_FOX_TAB_TO_ASSET[key] ?? null;
+}
+
+export function getNavTabMascotExpression(tab: string) {
+  const expressions: Record<string, string> = {
+    camp: "encouraging",
+    journey: "adventure",
+    dojo: "training",
+    world: "adventure",
+    profile: "victorious",
+  };
+  return expressions[tab] ?? "main";
+}
+
 export function getRegionArtPath(slug: string) {
   return REGION_SLUG_TO_ASSET[slug] ?? null;
 }
@@ -188,9 +276,16 @@ export function getTrailSpineArtPath(
     : ASSET_REGISTRY.ui.trailSpineDark;
 }
 
-/** Per-region scroll art version (defaults to v1). */
+/** Per-region scroll art version (path-first v3 from journey-path-contracts). */
 const TRAIL_SCROLL_VERSION_BY_REGION: Partial<Record<TrailScrollRegionSlug, string>> = {
-  foothills: "v2",
+  foothills: "v3",
+  "forest-trail": "v3",
+  "mount-n5": "v3",
+  "mount-n4": "v3",
+  "mount-n3": "v3",
+  "mount-n2": "v3",
+  "mount-n1": "v3",
+  "master-summit": "v3",
 };
 
 function buildTrailScrollPublicPath(

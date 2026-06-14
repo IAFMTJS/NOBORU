@@ -1,4 +1,5 @@
 import type { CollectibleViewModel } from "@/features/collectibles/types/collectible.types";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { cn } from "@/lib/utils";
 
 type CollectibleGalleryProps = {
@@ -21,9 +22,10 @@ export function CollectibleGallery({
 }: CollectibleGalleryProps) {
   if (collectibles.length === 0) {
     return (
-      <p className="text-body-sm text-muted-foreground">
-        No collectibles in this region yet.
-      </p>
+      <YamaEmptyState
+        title="No collectibles yet"
+        description="Explore this region to discover lanterns, relics, and other trail treasures."
+      />
     );
   }
 

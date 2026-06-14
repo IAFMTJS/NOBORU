@@ -1,5 +1,5 @@
 export const AUTH_ROUTES = {
-  home: "/home",
+  home: "/camp",
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",

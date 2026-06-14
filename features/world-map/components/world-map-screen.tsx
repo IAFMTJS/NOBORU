@@ -2,19 +2,23 @@
 
 import Link from "next/link";
 
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { ProgressBar } from "@/components/ui/progress-bar";
-import { REGION_VISUALS } from "@/lib/design-system/region-tokens";
+import { WorldMapRegionNode } from "@/features/world-map/components/world-map-region-node";
+import { WorldMapSpineConnector } from "@/features/world-map/components/world-map-spine-connector";
 import type { WorldMapViewModel } from "@/features/world-map/types/world-map.types";
+import { TRAIL_MAP_ART_ASPECT } from "@/lib/design-system/trail-path-anchors";
 import { cn } from "@/lib/utils";
 import { glassClass, resolveVisualTier } from "@/lib/performance/visual-tier";
 
 type WorldMapScreenProps = {
   data: WorldMapViewModel;
 };
+
+function resolveMapMinHeight(regionCount: number): string {
+  const rem = Math.max(28, regionCount * 4.25);
+  return `${rem}rem`;
+}
 
 export function WorldMapScreen({ data }: WorldMapScreenProps) {
   const tier = resolveVisualTier();
@@ -27,47 +31,37 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
         subtitle="The full climb — from Hiragana foothills to the celestial summit"
       />
 
-      <div className="relative space-y-3">
-        {data.regions.map((region, index) => {
-          const tokens = REGION_VISUALS[region.slug];
-          const isCurrent = region.slug === data.currentRegionSlug;
+      <div
+        className={cn(
+          "relative w-full overflow-hidden rounded-2xl border border-border/60",
+          glass,
+        )}
+        style={{
+          aspectRatio: String(TRAIL_MAP_ART_ASPECT),
+          minHeight: resolveMapMinHeight(data.regions.length),
+        }}
+        role="img"
+        aria-label="Mountain journey map showing regions along the climb path"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/40 to-primary/5"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-[8%] bottom-[4%] top-[4%] rounded-full bg-gradient-to-t from-muted/20 via-transparent to-primary/10 blur-2xl"
+          aria-hidden
+        />
 
-          return (
-            <Link
-              key={region.slug}
-              href={region.availability === "locked" ? "#" : region.href}
-              className={cn(
-                "block rounded-2xl border p-4 transition-opacity",
-                glass,
-                region.availability === "locked" && "pointer-events-none opacity-50",
-                isCurrent && "border-primary/40 ring-1 ring-primary/20",
-              )}
-              style={{
-                marginLeft: `${Math.min(index * 4, 24)}px`,
-              }}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <p className="font-medium">{region.name}</p>
-                  <p className="text-caption text-muted-foreground">
-                    {tokens?.badge ?? region.slug}
-                  </p>
-                </div>
-                <span className="text-caption capitalize">{region.availability}</span>
-              </div>
-              <ProgressBar
-                value={region.progressPercent}
-                className="mt-2"
-                showValue={false}
-              />
-            </Link>
-          );
-        })}
+        <WorldMapSpineConnector regions={data.regions} />
+
+        {data.regions.map((region) => (
+          <WorldMapRegionNode key={region.slug} region={region} />
+        ))}
       </div>
 
       <Link
-        href={regionTrailHref(data.currentRegionSlug)}
-        className="block text-center text-body-sm text-primary underline-offset-4 hover:underline"
+        href={data.returnTrailHref}
+        className="mt-4 block text-center text-body-sm text-primary underline-offset-4 hover:underline"
       >
         Return to current trail
       </Link>

@@ -1,0 +1,30 @@
+{
+  "id": "yama_sad_supportive_disappointed_dark_v1",
+  "name": "Yama Sad Supportive Dark",
+  "version": "v1",
+  "category": "mascots",
+  "pack_id": "sad",
+  "variant": "supportive_disappointed",
+  "theme": "dark",
+  "expression": "sad",
+  "owner_agent": "Mascot Agent",
+  "created_at": "2026-06-14",
+  "updated_at": "2026-06-14",
+  "status": "approved",
+  "tags": [
+    "yama",
+    "mascot",
+    "sad",
+    "dark-mode",
+    "expansion"
+  ],
+  "usage_locations": [
+    "lost-streaks",
+    "failed-challenges"
+  ],
+  "design_notes": "Mascot expansion Phase 1. Same canonical proportions, colors, scarf, and markings as yama_main. Transparent sticker via assets:stickers pipeline.",
+  "files": [
+    "yama_sad_supportive_disappointed_dark_v1.png",
+    "yama_sad_supportive_disappointed_dark_v1.webp"
+  ]
+}

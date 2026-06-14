@@ -15,6 +15,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
 import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.types";
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 
@@ -142,6 +144,13 @@ export function LessonNodeDetailSheet({
         </SheetHeader>
 
         <div className="space-y-4 py-4">
+          {node?.nodeKind === "checkpoint" ? (
+            <YamaPresence
+              presence={yamaService.resolveCheckpointPresence(node.state === "completed")}
+              size="sm"
+            />
+          ) : null}
+
           {previewLabels.length > 0 || lesson?.description || node.subtitle ? (
             <div className="rounded-xl border border-border/60 bg-card/90 p-4">
               <p className="mb-2 text-caption font-medium uppercase tracking-wide text-muted-foreground">

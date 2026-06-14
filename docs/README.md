@@ -19,6 +19,9 @@ Authoritative project documentation. All implementation must reference these doc
 | [personas.md](./personas.md) | Learner personas |
 | [user-flows.md](./user-flows.md) | Key user journeys |
 | [information-architecture.md](./information-architecture.md) | Routes, nav, content hierarchy |
+| [immersive-navigation-system.md](./immersive-navigation-system.md) | Bottom nav as in-world destinations |
+| [world-map-learning-journey-system.md](./world-map-learning-journey-system.md) | Journey map and learning path rebuild |
+| [training-grounds-system.md](./training-grounds-system.md) | Mastery practice separate from journey |
 
 ## Design
 
@@ -27,6 +30,7 @@ Authoritative project documentation. All implementation must reference these doc
 | [phase-a-visuals-plan.md](./phase-a-visuals-plan.md) | Visual audit, mockup parity, Phase A execution plan |
 | [design-system.md](./design-system.md) | Colors, typography, components |
 | [art-direction.md](./art-direction.md) | Visual identity, Yama, assets |
+| [mascot-expansion-system.md](./mascot-expansion-system.md) | Mountain Fox companion evolution |
 | [asset-pipeline.md](./asset-pipeline.md) | Asset creation workflow |
 | [asset-registry.md](./asset-registry.md) | Approved asset catalog |
 

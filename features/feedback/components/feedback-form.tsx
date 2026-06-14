@@ -107,7 +107,7 @@ export function FeedbackForm({ defaults, onSubmitted }: FeedbackFormProps) {
         </CardHeader>
         <CardContent>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/home">Back to Home</Link>
+            <Link href="/camp">Back to Camp</Link>
           </Button>
         </CardContent>
       </Card>

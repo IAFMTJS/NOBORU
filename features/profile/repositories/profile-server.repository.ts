@@ -40,6 +40,21 @@ class ProfileServerRepository {
     return data as ProfileRow;
   }
 
+  async updateCurrentRegionSlug(
+    userId: string,
+    regionSlug: string,
+  ): Promise<void> {
+    const supabase = await createServerClient();
+    const { error } = await supabase
+      .from("profiles")
+      .update({ current_region_slug: regionSlug })
+      .eq("user_id", userId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async ensureProfile(userId: string, displayName: string): Promise<ProfileRow> {
     const existing = await this.findByUserId(userId);
     if (existing) {
