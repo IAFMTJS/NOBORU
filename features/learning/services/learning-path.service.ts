@@ -167,22 +167,6 @@ class LearningPathService {
   ): LearningPathViewModel {
     return buildLearningPathFromData(regions, progressRows, passedTrialSlugs);
   }
-
-  async getRegionPath(
-    userId: string,
-    regionSlug: string,
-  ): Promise<RegionPathViewModel | null> {
-    const [region, progressRows, passedTrialSlugs] = await Promise.all([
-      learningPathRepository.findPublishedRegionBySlug(regionSlug),
-      getCachedProgressRows(userId),
-      this.getPassedTrialSlugs(userId),
-    ]);
-
-    if (!region) return null;
-
-    const path = buildLearningPathFromData([region], progressRows, passedTrialSlugs);
-    return path.regions[0] ?? null;
-  }
 }
 
 export const learningPathService = new LearningPathService();

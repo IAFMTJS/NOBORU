@@ -57,10 +57,6 @@ export const ASSET_REGISTRY = {
     navDojo: "/icons/icon_nav_dojo_v1.webp",
     navWorld: "/icons/icon_nav_world_v1.webp",
     navProfile: "/icons/icon_nav_profile_v1.webp",
-    navHome: "/icons/icon_nav_home_v1.webp",
-    navLearn: "/icons/icon_nav_learn_v1.webp",
-    navReview: "/icons/icon_nav_review_v1.webp",
-    navExplore: "/icons/icon_nav_explore_v1.webp",
     navFoxCampDark: "/mascots/yama_nav_camp_dark_v1.webp",
     navFoxCampLight: "/mascots/yama_nav_camp_light_v1.webp",
     navFoxJourneyDark: "/mascots/yama_nav_journey_dark_v1.webp",
@@ -144,10 +140,6 @@ const NAV_TAB_TO_ASSET: Record<string, string> = {
   dojo: ASSET_REGISTRY.icons.navDojo,
   world: ASSET_REGISTRY.icons.navWorld,
   profile: ASSET_REGISTRY.icons.navProfile,
-  home: ASSET_REGISTRY.icons.navHome,
-  learn: ASSET_REGISTRY.icons.navLearn,
-  review: ASSET_REGISTRY.icons.navReview,
-  explore: ASSET_REGISTRY.icons.navExplore,
 };
 
 const NAV_FOX_TAB_TO_ASSET: Record<string, string> = {

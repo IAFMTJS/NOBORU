@@ -37,7 +37,6 @@ import type {
 import type {
   LearningPathViewModel,
   LessonSessionViewModel,
-  RegionPathViewModel,
 } from "@/features/learning/types/lesson.types";
 import type {
   JourneyPathViewModel,
@@ -54,33 +53,6 @@ function resolveJlptLevel(value?: string | null): "n5" | "n4" {
 export async function getLearningPath(): Promise<LearningPathViewModel> {
   const userId = await requireAuthenticatedUserId();
   return learningPathService.getLearningPath(userId);
-}
-
-export async function getLearningPathWithContext(): Promise<{
-  path: LearningPathViewModel;
-  currentRegionSlug: string;
-}> {
-  const userId = await requireAuthenticatedUserId();
-  const [path, profile] = await Promise.all([
-    learningPathService.getLearningPath(userId),
-    profileServerService.getProfileCore(),
-  ]);
-
-  return {
-    path,
-    currentRegionSlug: profile?.currentRegionSlug ?? path.regions[0]?.slug ?? "foothills",
-  };
-}
-
-export async function getRegionPath(regionSlug: string): Promise<RegionPathViewModel> {
-  const userId = await requireAuthenticatedUserId();
-  const region = await learningPathService.getRegionPath(userId, regionSlug);
-
-  if (!region) {
-    redirect("/learn");
-  }
-
-  return region;
 }
 
 export async function getJourneyPath(): Promise<JourneyPathViewModel> {

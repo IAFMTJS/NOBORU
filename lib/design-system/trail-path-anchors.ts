@@ -7,7 +7,7 @@ import {
 /**
  * Percentage positions along the illustrated trail map artwork.
  * @deprecated For journey UI use journey-path-contracts.ts (path-first).
- * Legacy trail-map components still consume trail-path-anchors.json.
+ * Retained for scroll art dimensions and build scripts only.
  */
 export const TRAIL_MAP_ART_WIDTH = anchorContract.spineArtWidth;
 export const TRAIL_MAP_ART_HEIGHT = anchorContract.spineArtHeight;

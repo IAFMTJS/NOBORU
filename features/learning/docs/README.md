@@ -26,10 +26,10 @@ Authoritative spec: `docs/world-map-learning-journey-system.md`
 - **Profile sync** — `syncCurrentRegionToProfile()` updates `current_region_slug` after lesson completion
 - **Path contract** — `lib/design-system/journey-path-contracts.json` (authoritative spine; art follows path)
 - **Scroll art** — v3 path-aligned scrolls per region (`npm run assets:journey-path-scrolls`)
-- **Legacy anchors** — `trail-path-anchors.json` deprecated for journey; retained for legacy `TrailMap` only
+- **Legacy anchors** — `trail-path-anchors.json` deprecated for journey; retained for art dimensions and build scripts
 - **World map** — `features/world-map/` spatial mountain overview fed by `JourneyPathViewModel`
 - **Home preview** — `JourneyPreviewMap` on expedition hero (journey nodes, not artwork anchors)
-- **Legacy trail** — `components/trail/` retained for shared markers/sheets; Learn tab uses journey components
+- **Shared trail UI** — `components/trail/` markers, sheets, and elevation indicator reused by journey screens
 
 ## Dependencies
 
