@@ -10,14 +10,14 @@ import { cn } from "@/lib/utils";
 
 type NavFoxImageProps = {
   tab: ImmersiveNavTab;
-  active?: boolean;
+  variant?: "bar-anchor";
   className?: string;
   priority?: boolean;
 };
 
 export function NavFoxImage({
   tab,
-  active = true,
+  variant = "bar-anchor",
   className,
   priority,
 }: NavFoxImageProps) {
@@ -30,13 +30,16 @@ export function NavFoxImage({
     <Image
       src={src}
       alt=""
-      width={40}
-      height={40}
+      width={variant === "bar-anchor" ? 76 : 40}
+      height={variant === "bar-anchor" ? 76 : 40}
       priority={priority}
       aria-hidden
       className={cn(
-        stickerImageClass("h-9 w-9 shrink-0 object-contain transition-all duration-300"),
-        active ? "scale-105 opacity-100 drop-shadow-[0_0_8px_rgba(214,64,69,0.35)]" : "opacity-80",
+        stickerImageClass(
+          variant === "bar-anchor"
+            ? "h-[4.75rem] w-[4.75rem] shrink-0 object-contain object-bottom drop-shadow-[0_6px_14px_rgba(0,0,0,0.45)]"
+            : "h-9 w-9 shrink-0 object-contain transition-all duration-300",
+        ),
         className,
       )}
     />

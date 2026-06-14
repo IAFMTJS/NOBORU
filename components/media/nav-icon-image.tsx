@@ -25,7 +25,7 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
       aria-hidden
       className={cn(
         "h-5 w-5 shrink-0 object-contain transition-all duration-300",
-        active ? "scale-110 opacity-100 drop-shadow-[0_0_6px_rgba(214,64,69,0.45)]" : "opacity-40 grayscale",
+        active ? "scale-110 opacity-100 drop-shadow-[0_0_6px_rgba(255,255,255,0.35)]" : "opacity-55 saturate-[0.65]",
         className,
       )}
     />
