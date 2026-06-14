@@ -20,6 +20,8 @@
     "assets:stickers": "node scripts/process-sticker-assets.mjs",
     "assets:nav-icons": "node scripts/generate-nav-icons.mjs && node scripts/process-sticker-assets.mjs",
     "assets:nav-fox": "node scripts/generate-nav-fox-art.mjs && node scripts/process-sticker-assets.mjs",
+    "assets:icon-families": "node scripts/generate-icon-families.mjs",
+    "assets:generate-scenes": "node scripts/generate-scene-art.mjs",
     "assets:minigame-art": "node scripts/install-minigame-art.mjs && node scripts/process-sticker-assets.mjs",
     "assets:mascot-expansion": "node scripts/install-mascot-expansion-art.mjs && node scripts/process-sticker-assets.mjs",
     "assets:scenes": "node scripts/convert-scene-assets.mjs",
@@ -32,7 +34,8 @@
     "assets:journey-path-scrolls": "node scripts/build-journey-path-contracts.mjs && node scripts/generate-region-trail-scrolls.mjs --journey-v3 && node scripts/convert-scene-assets.mjs",
     "assets:calibrate-trail": "node scripts/calibrate-trail-anchors.mjs",
     "assets:calibrate-trail:all": "node scripts/calibrate-trail-anchors.mjs --all",
-    "assets:calibrate-trail2:all": "node scripts/calibrate-trail-anchors.mjs --all --trail=2"
+    "assets:calibrate-trail2:all": "node scripts/calibrate-trail-anchors.mjs --all --trail=2",
+    "qa:visual": "node scripts/visual-qa-guard.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

@@ -82,6 +82,13 @@ const UI_ICONS = {
   checkpoint: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${GOLD}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4 4v16"/><path d="M4 6h10l-2.5 4L14 14H4"/><circle cx="18" cy="6" r="2" fill="${GOLD}" stroke="none" opacity="0.8"/>
   </svg>`,
+  check: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${GOLD}" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l5 5L19 7"/></svg>`,
+  lock: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${STROKE}" stroke-width="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`,
+  arrow_left: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${STROKE}" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>`,
+  clock: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${STROKE}" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>`,
+  zap: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${GOLD}" stroke-width="1.5" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>`,
+  coins: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${GOLD}" stroke-width="1.5"><ellipse cx="9" cy="8" rx="6" ry="3"/><path d="M3 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8"/><path d="M3 12v4c0 1.7 2.7 3 6 3s6-1.3 6-3v-4"/></svg>`,
+  mountain: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${STROKE}" stroke-width="1.5" stroke-linejoin="round"><path d="M4 20 L10 8 L14 14 L18 6 L22 20 Z"/></svg>`,
 };
 
 function metadata(id, category, name, tags, files) {
@@ -165,6 +172,47 @@ async function composeNavFox(tab, theme) {
   console.log(`Generated fox ${path.relative(root, pngPath)}`);
 }
 
+async function composeTrailCompanion(theme) {
+  const sourceId =
+    theme === "light" ? "yama_adventure_hiking_light_v1" : "yama_adventure_hiking_dark_v1";
+  const id = `yama_trail_companion_${theme}_v1`;
+  const dir = path.join(root, "assets", "mascots", id);
+  await mkdir(dir, { recursive: true });
+
+  const sourcePath = await resolveSourceWebp(sourceId);
+  const pngPath = path.join(dir, `${id}.png`);
+
+  await sharp(sourcePath)
+    .resize(240, 240, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .extend({
+      top: 8,
+      bottom: 8,
+      left: 8,
+      right: 8,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .png()
+    .toFile(pngPath);
+
+  await writeFile(
+    path.join(dir, "metadata.json"),
+    JSON.stringify(
+      metadata(id, "mascots", `Yama Trail Companion ${theme}`, [
+        "yama",
+        "mascot",
+        "trail",
+        "companion",
+        theme,
+        "v1",
+      ], [`${id}.png`]),
+      null,
+      2,
+    ),
+  );
+
+  console.log(`Generated trail companion ${path.relative(root, pngPath)}`);
+}
+
 async function composeIcon(name, svg, category = "icons") {
   const id = `icon_${name}_${VERSION}`;
   const dir = path.join(root, "assets", category === "icons" ? "icons" : "icons", id);
@@ -197,6 +245,10 @@ async function main() {
 
   for (const [name, svg] of Object.entries(UI_ICONS)) {
     await composeIcon(`ui_${name}`, svg);
+  }
+
+  for (const theme of ["dark", "light"]) {
+    await composeTrailCompanion(theme);
   }
 
   console.log("Nav v2 art ready. Run: npm run assets:stickers");

@@ -1,4 +1,6 @@
 /** Core expression moods resolved by YamaService and mapped to asset paths. */
+import type { ReviewRating } from "@/features/review/types/review.types";
+
 export type YamaExpression =
   | "main"
   | "happy"
@@ -179,7 +181,7 @@ export type YamaPresenceContext =
   | { kind: "drill"; result: "correct" | "incorrect"; seed?: number }
   | {
       kind: "review";
-      rating?: "again" | "good" | "strong";
+      rating?: ReviewRating;
       empty?: boolean;
       seed?: number;
     }

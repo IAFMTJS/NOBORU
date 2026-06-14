@@ -73,7 +73,7 @@ export type ReviewSessionViewModel = {
   recentHistory: ReviewHistoryEntryViewModel[];
 };
 
-export type ReviewRating = "again" | "good" | "strong";
+export type ReviewRating = "again" | "hard" | "good" | "easy" | "strong";
 
 export type ReviewBatchSubmitItem = {
   reviewItemId: string;

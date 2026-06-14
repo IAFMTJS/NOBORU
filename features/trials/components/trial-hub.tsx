@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Lock, Mountain, Trophy } from "lucide-react";
-
 import { PageContainer } from "@/components/layout/page-container";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,11 +40,11 @@ function TrialCard({ trial }: { trial: TrialListEntryViewModel }) {
             <CardDescription>{trial.description}</CardDescription>
           </div>
           {locked ? (
-            <Lock className="h-5 w-5 text-muted-foreground" aria-hidden />
+            <UiIconImage name="lock" size={20} className="opacity-70" />
           ) : passed ? (
-            <Trophy className="h-5 w-5 text-success" aria-hidden />
+            <UiIconImage name="trophy" size={20} />
           ) : (
-            <Mountain className="h-5 w-5 text-primary" aria-hidden />
+            <UiIconImage name="mountain" size={20} />
           )}
         </div>
       </CardHeader>
@@ -93,6 +92,7 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title="Trials"
         subtitle="High-stakes challenges that validate real recall"
       />

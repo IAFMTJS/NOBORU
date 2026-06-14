@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/visual/drill-glass-card";
 import { Input } from "@/components/ui/input";
 import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
 import { JapaneseText } from "@/features/learning/components/japanese-text";

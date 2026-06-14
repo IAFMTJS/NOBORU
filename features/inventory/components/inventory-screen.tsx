@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowLeft } from "lucide-react";
-
 import { PageContainer } from "@/components/layout/page-container";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import {
   GlassPanel,
   IllustratedScreen,
@@ -82,9 +82,13 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
 
   return (
     <IllustratedScreen
-      scrim="full"
+      scrim="minimal"
       background={
-        <div className="h-full bg-gradient-to-b from-background via-card/70 to-background" />
+        <SceneImage
+          scene="shop_interior"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
       }
     >
       <PageContainer className="space-y-5">
@@ -92,7 +96,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
           href="/world"
           className="inline-flex items-center gap-1.5 text-body-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
+          <UiIconImage name="arrow_left" size={16} />
           World
         </Link>
 

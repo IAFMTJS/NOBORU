@@ -23,33 +23,61 @@ function MilestoneRow({
   totalAvailable: number;
 }) {
   const milestones = [1, 5, 10, 25, 50];
+  const nextMilestone = milestones.find((milestone) => totalUnlocked < milestone);
+
   return (
-    <div className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 backdrop-blur-sm">
-      {milestones.map((milestone) => {
-        const reached = totalUnlocked >= milestone;
-        return (
-          <div key={milestone} className="flex flex-col items-center gap-1">
-            <UiIconImage
-              name="trophy"
-              size={reached ? 22 : 18}
-              className={cn(!reached && "opacity-40")}
-            />
-            <span
-              className={cn(
-                "text-caption tabular-nums",
-                reached ? "text-trail-glow" : "text-muted-foreground",
-              )}
-            >
-              {milestone}
-            </span>
-          </div>
-        );
-      })}
-      <div className="text-right">
-        <p className="text-heading-5 font-semibold text-trail-glow tabular-nums">
-          {totalUnlocked}/{totalAvailable}
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <StoryTitle as="h2" className="text-sm">
+          Milestones
+        </StoryTitle>
+        <p className="text-caption text-muted-foreground tabular-nums">
+          {totalUnlocked}/{totalAvailable} earned
         </p>
-        <p className="text-caption text-muted-foreground">Earned</p>
+      </div>
+      <div className="relative rounded-xl border border-white/10 bg-black/40 px-4 py-4 backdrop-blur-sm">
+        <div
+          className="absolute left-8 right-8 top-[2.15rem] h-px bg-white/10"
+          aria-hidden
+        />
+        <div className="relative flex items-start justify-between gap-1">
+          {milestones.map((milestone) => {
+            const reached = totalUnlocked >= milestone;
+            const isNext = nextMilestone === milestone;
+            return (
+              <div key={milestone} className="flex flex-col items-center gap-1.5">
+                <span
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-full border bg-black/60",
+                    reached
+                      ? "border-trail-glow/50 text-trail-glow"
+                      : isNext
+                        ? "border-primary/40 text-primary"
+                        : "border-white/10 text-muted-foreground",
+                  )}
+                >
+                  <UiIconImage
+                    name="trophy"
+                    size={reached ? 18 : 16}
+                    className={cn(!reached && !isNext && "opacity-40")}
+                  />
+                </span>
+                <span
+                  className={cn(
+                    "text-caption tabular-nums",
+                    reached
+                      ? "font-medium text-trail-glow"
+                      : isNext
+                        ? "text-primary"
+                        : "text-muted-foreground",
+                  )}
+                >
+                  {milestone}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

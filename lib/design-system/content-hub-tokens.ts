@@ -3,7 +3,9 @@ export type ContentHubVariant =
   | "grammar"
   | "kanji"
   | "reading"
-  | "listening";
+  | "listening"
+  | "hiragana"
+  | "katakana";
 
 export type ContentHubTokens = {
   progressIndicator: string;
@@ -48,6 +50,18 @@ export const CONTENT_HUB_TOKENS: Record<ContentHubVariant, ContentHubTokens> = {
     leadingText: "text-info",
     progressCardBorder: "border-info/20",
   },
+  hiragana: {
+    progressIndicator: "bg-primary",
+    leadingBg: "border-primary/25 bg-primary/10",
+    leadingText: "text-primary",
+    progressCardBorder: "border-primary/20",
+  },
+  katakana: {
+    progressIndicator: "bg-trail-glow",
+    leadingBg: "border-trail-glow/25 bg-trail-glow/10",
+    leadingText: "text-heading-story",
+    progressCardBorder: "border-trail-glow/20",
+  },
 };
 
 export const CONTENT_HUB_BANNER_STYLES: Record<ContentHubVariant, ContentHubBannerStyle> = {
@@ -71,6 +85,14 @@ export const CONTENT_HUB_BANNER_STYLES: Record<ContentHubVariant, ContentHubBann
     gradient: "from-info/15 via-primary/5 to-card",
     border: "border-info/25",
   },
+  hiragana: {
+    gradient: "from-primary/20 via-primary/5 to-card",
+    border: "border-primary/25",
+  },
+  katakana: {
+    gradient: "from-trail-glow/20 via-primary/5 to-card",
+    border: "border-trail-glow/25",
+  },
 };
 
 export const CONTENT_HUB_ICONS: Record<ContentHubVariant, string> = {
@@ -79,4 +101,6 @@ export const CONTENT_HUB_ICONS: Record<ContentHubVariant, string> = {
   kanji: "漢",
   reading: "読",
   listening: "聴",
+  hiragana: "あ",
+  katakana: "ア",
 };

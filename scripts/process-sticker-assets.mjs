@@ -23,6 +23,9 @@ const STICKER_SOURCES = [
 
 const SKIP_MASCOT_PREFIXES = ["yama_main_"];
 
+/** Nav fox / trail companion PNGs are pre-composited with alpha — corner sampling eats light fur. */
+const SKIP_NAV_FOX_PREFIXES = ["yama_nav_", "yama_trail_companion_"];
+
 const OPTIONS = {
   /** RGB distance from sampled background → fully transparent */
   threshold: 42,
@@ -35,21 +38,34 @@ function colorDistance(r1, g1, b1, r2, g2, b2) {
   return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
 }
 
-function sampleBackground(data, width, height, channels) {
+function sampleBackground(data, width, height, channels, mode = "corners") {
   const points = [];
   const margin = Math.max(2, Math.floor(Math.min(width, height) * 0.02));
 
-  for (let x = margin; x < width - margin; x += Math.max(1, Math.floor(width / 12))) {
-    points.push([x, margin]);
-    points.push([x, height - 1 - margin]);
-  }
-  for (let y = margin; y < height - margin; y += Math.max(1, Math.floor(height / 12))) {
-    points.push([margin, y]);
-    points.push([width - 1 - margin, y]);
-  }
+  if (mode === "center") {
+    const cx = Math.floor(width / 2);
+    const cy = Math.floor(height / 2);
+    const radius = Math.max(4, Math.floor(Math.min(width, height) * 0.08));
+    for (let y = cy - radius; y <= cy + radius; y += Math.max(1, Math.floor(radius / 2))) {
+      for (let x = cx - radius; x <= cx + radius; x += Math.max(1, Math.floor(radius / 2))) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+          points.push([x, y]);
+        }
+      }
+    }
+  } else {
+    for (let x = margin; x < width - margin; x += Math.max(1, Math.floor(width / 12))) {
+      points.push([x, margin]);
+      points.push([x, height - 1 - margin]);
+    }
+    for (let y = margin; y < height - margin; y += Math.max(1, Math.floor(height / 12))) {
+      points.push([margin, y]);
+      points.push([width - 1 - margin, y]);
+    }
 
-  points.push([margin, margin], [width - 1 - margin, margin]);
-  points.push([margin, height - 1 - margin], [width - 1 - margin, height - 1 - margin]);
+    points.push([margin, margin], [width - 1 - margin, margin]);
+    points.push([margin, height - 1 - margin], [width - 1 - margin, height - 1 - margin]);
+  }
 
   let r = 0;
   let g = 0;
@@ -67,14 +83,30 @@ function sampleBackground(data, width, height, channels) {
   return { r: r / count, g: g / count, b: b / count };
 }
 
-async function removeSolidBackground(inputBuffer) {
+function usesNavFoxSampling(baseName) {
+  return SKIP_NAV_FOX_PREFIXES.some((prefix) => baseName.startsWith(prefix));
+}
+
+async function convertTransparentWebp(inputBuffer) {
+  return sharp(inputBuffer)
+    .ensureAlpha()
+    .webp({
+      quality: OPTIONS.webpQuality,
+      effort: 4,
+      alphaQuality: 100,
+      lossless: false,
+    })
+    .toBuffer();
+}
+
+async function removeSolidBackground(inputBuffer, samplingMode = "corners") {
   const { data, info } = await sharp(inputBuffer)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
 
   const { width, height, channels } = info;
-  const bg = sampleBackground(data, width, height, channels);
+  const bg = sampleBackground(data, width, height, channels, samplingMode);
   const { threshold, feather } = OPTIONS;
 
   for (let y = 0; y < height; y += 1) {
@@ -171,11 +203,13 @@ async function main() {
 
   for (const pngPath of pngFiles) {
     const input = await readFile(pngPath);
-    const webpBuffer = await removeSolidBackground(input);
-    const { assetWebp, publicWebp } = await publishWebp(pngPath, webpBuffer);
-    console.log(
-      `${path.relative(root, pngPath)} → ${path.relative(root, publicWebp)} (transparent)`,
-    );
+    const baseName = path.basename(pngPath, ".png");
+    const webpBuffer = usesNavFoxSampling(baseName)
+      ? await convertTransparentWebp(input)
+      : await removeSolidBackground(input);
+    const { publicWebp } = await publishWebp(pngPath, webpBuffer);
+    const mode = usesNavFoxSampling(baseName) ? "pre-composited alpha" : "transparent";
+    console.log(`${path.relative(root, pngPath)} → ${path.relative(root, publicWebp)} (${mode})`);
   }
 
   console.log("Done. Sticker assets now use alpha transparency.");

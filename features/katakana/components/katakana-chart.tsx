@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,7 @@ export function KatakanaChart({ chart }: KatakanaChartProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title="Katakana Chart"
         subtitle="Track every character on your Forest Trail climb."
         action={
@@ -53,6 +55,12 @@ export function KatakanaChart({ chart }: KatakanaChartProps) {
             <Link href="/learn/forest-trail">Back</Link>
           </Button>
         }
+      />
+
+      <ContentHubBanner
+        variant="katakana"
+        title="Katakana Chart"
+        subtitle={`${chart.learnedCount} of ${chart.totalCount} katakana learned`}
       />
 
       <YamaTrainingPresence location="kana_dojo" />

@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { JourneyPathNode } from "@/features/journey/components/journey-path-node";
+import { JourneyPathSpine } from "@/features/journey/components/journey-path-spine";
 import { computePathCoordinates } from "@/features/journey/components/path-geometry";
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
@@ -69,6 +70,11 @@ export function JourneyPreviewMap({
           className="relative w-full px-3 py-4"
           style={{ paddingBottom: `${Math.min(pathHeightPercent, 120)}%` }}
         >
+          <JourneyPathSpine
+            nodes={normalizedNodes}
+            regionSlug={regionSlug}
+            theme={resolvedTheme}
+          />
           <div className="absolute inset-0" role="list" aria-label="Trail preview">
             {normalizedNodes.map((node) => {
               const { x, y } = computePathCoordinates(

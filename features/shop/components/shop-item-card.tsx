@@ -1,6 +1,5 @@
-import { Gem, Coins } from "lucide-react";
-
 import { GlassPanel } from "@/components/visual";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { RewardChip } from "@/components/visual/reward-chip";
 import { Badge } from "@/components/ui/badge";
 import type { ShopItemViewModel } from "@/features/shop/types/shop.types";
@@ -50,9 +49,9 @@ export function ShopItemCard({ item, className }: ShopItemCardProps) {
           className="mt-auto w-fit"
         >
           {item.currency === "gems" ? (
-            <Gem className="h-3.5 w-3.5" aria-hidden />
+            <UiIconImage name="gem" size={14} />
           ) : (
-            <Coins className="h-3.5 w-3.5" aria-hidden />
+            <UiIconImage name="coins" size={14} />
           )}
           {item.price.toLocaleString()}
         </RewardChip>

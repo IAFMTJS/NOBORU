@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Lock } from "lucide-react";
-
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { REGION_VISUALS } from "@/lib/design-system/region-tokens";
 import type { WorldMapRegionViewModel } from "@/features/world-map/types/world-map.types";
@@ -53,7 +52,7 @@ export function WorldMapRegionNode({ region }: WorldMapRegionNodeProps) {
           ) : null}
         </div>
         {isLocked ? (
-          <Lock className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+          <UiIconImage name="lock" size={16} className="mt-0.5 opacity-70" />
         ) : (
           <span className="shrink-0 text-caption font-medium tabular-nums">
             {region.progressPercent}%

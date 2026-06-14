@@ -35,6 +35,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={contentHub.readingTitle}
         subtitle={contentHub.readingSubtitle}
         action={

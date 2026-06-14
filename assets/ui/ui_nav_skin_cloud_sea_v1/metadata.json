@@ -1,0 +1,10 @@
+{
+  "id": "ui_nav_skin_cloud_sea_v1",
+  "name": "ui nav skin cloud sea",
+  "version": "v1",
+  "category": "ui",
+  "status": "approved",
+  "files": [
+    "ui_nav_skin_cloud_sea_v1.png"
+  ]
+}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,7 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title="Hiragana Chart"
         subtitle="Track every character on your Foothills climb."
         action={
@@ -53,6 +55,12 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
             <Link href="/learn/foothills">Back</Link>
           </Button>
         }
+      />
+
+      <ContentHubBanner
+        variant="hiragana"
+        title="Hiragana Chart"
+        subtitle={`${chart.learnedCount} of ${chart.totalCount} hiragana learned`}
       />
 
       <YamaTrainingPresence location="kana_dojo" />

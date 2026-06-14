@@ -78,7 +78,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
         <OfflineSyncPanel />
 
         <GlassPanel className="space-y-3 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm tracking-wide">
             Support
           </StoryTitle>
           <ListRow
@@ -96,7 +96,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
         </GlassPanel>
 
         <GlassPanel className="space-y-2 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm tracking-wide">
             About
           </StoryTitle>
           <ListRow
@@ -111,7 +111,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
         </GlassPanel>
 
         <GlassPanel className="space-y-3 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm tracking-wide">
             Appearance
           </StoryTitle>
           <div className="space-y-2">
@@ -133,7 +133,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
         </GlassPanel>
 
         <GlassPanel className="space-y-2 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm tracking-wide">
             Study
           </StoryTitle>
           <ListRow
@@ -151,7 +151,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
         </GlassPanel>
 
         <GlassPanel className="space-y-3 p-4">
-          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+          <StoryTitle as="h3" className="text-sm tracking-wide">
             Account
           </StoryTitle>
           <ListRow primary="Email" secondary={settings.email} />

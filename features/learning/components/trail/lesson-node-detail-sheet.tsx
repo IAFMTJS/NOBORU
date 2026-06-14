@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Clock, Gem, Zap } from "lucide-react";
-
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -189,12 +188,12 @@ export function LessonNodeDetailSheet({
               <span className="font-medium text-foreground">{node.xpReward}</span>
             </span>
             <span className="inline-flex items-center gap-1 text-muted-foreground">
-              <Gem className="h-3.5 w-3.5" aria-hidden />
+              <UiIconImage name="gem" size={14} />
               <span className="font-medium text-foreground">—</span>
             </span>
             {lesson?.estimatedDuration ? (
               <span className="inline-flex items-center gap-1 text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" aria-hidden />
+                <UiIconImage name="clock" size={14} />
                 <span className="font-medium text-foreground">
                   {lesson.estimatedDuration} min
                 </span>
@@ -232,7 +231,7 @@ export function LessonNodeDetailSheet({
               </Button>
               <Button variant="outline" className="w-full" asChild>
                 <Link href="/review">
-                  <Zap className="mr-2 h-4 w-4" aria-hidden />
+                  <UiIconImage name="zap" size={16} className="mr-2" />
                   Practice
                 </Link>
               </Button>

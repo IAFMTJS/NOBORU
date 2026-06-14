@@ -9,7 +9,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/visual/drill-glass-card";
+import { FeedbackSparkOverlay } from "@/components/visual/feedback-spark-overlay";
 import { cn } from "@/lib/utils";
 import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
@@ -29,7 +30,8 @@ export function ChoiceRecallDrill({ step, onAnswer }: ChoiceRecallDrillProps) {
         : ("incorrect" as const);
 
   return (
-    <Card className="shadow-elevation-1">
+    <Card className="relative shadow-elevation-1">
+      <FeedbackSparkOverlay active={result === "correct"} />
       <CardHeader>
         <CardDescription>
           Recall · {step.index}/{step.total}

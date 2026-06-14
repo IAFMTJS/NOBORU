@@ -1,3 +1,4 @@
+import type { ReviewRating } from "@/features/review/types/review.types";
 import {
   calculateLevelFromTotalEp,
   epRequiredForNextLevel,
@@ -115,10 +116,12 @@ class ElevationService {
   async awardReviewRating(
     userId: string,
     reviewItemId: string,
-    rating: "again" | "good" | "strong",
+    rating: ReviewRating,
     clientEventId?: string,
   ): Promise<ElevationAwardViewModel | null> {
-    const amount = rating === "strong" ? 5 : rating === "good" ? 3 : 0;
+    const normalized = rating === "strong" || rating === "easy" ? "easy" : rating;
+    const amount =
+      normalized === "easy" ? 5 : normalized === "good" ? 3 : normalized === "hard" ? 2 : 0;
     if (amount === 0) return null;
 
     return this.awardEp({

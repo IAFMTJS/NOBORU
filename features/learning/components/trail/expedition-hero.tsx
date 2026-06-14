@@ -2,6 +2,7 @@ import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { CircularProgress } from "@/components/ui/circular-progress";
+import { ProgressBar } from "@/components/ui/progress-bar";
 import { GlassPanel } from "@/components/visual/glass-panel";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { StoryTitle } from "@/components/visual/story-title";
@@ -33,6 +34,11 @@ type ExpeditionHeroProps = {
     currentStreak: number;
     totalXp: number;
   };
+  profile?: {
+    displayName: string;
+    levelLabel: string;
+    xpProgressPercent: number;
+  };
   companion: CompanionViewModel;
   progressionPreview: ProgressionPreviewViewModel;
 };
@@ -51,6 +57,7 @@ export function ExpeditionHero({
   quests,
   yama,
   stats,
+  profile,
   companion,
   progressionPreview,
 }: ExpeditionHeroProps) {
@@ -78,6 +85,31 @@ export function ExpeditionHero({
               </p>
             </div>
             {yama ? <ExpeditionHeroYama yama={yama} /> : null}
+            {profile ? (
+              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/45 px-3 py-2 backdrop-blur-sm">
+                <div
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/25 text-sm font-semibold text-primary"
+                  aria-hidden
+                >
+                  {profile.displayName.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1 space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-caption font-medium text-white">
+                      {profile.displayName}
+                    </p>
+                    <span className="shrink-0 text-caption text-white/70">
+                      Lv {profile.levelLabel}
+                    </span>
+                  </div>
+                  <ProgressBar
+                    value={profile.xpProgressPercent}
+                    className="space-y-0"
+                    indicatorClassName="bg-trail-glow"
+                  />
+                </div>
+              </div>
+            ) : null}
             <DailyQuestBoard
               daily={quests.daily}
               weekly={quests.weekly}

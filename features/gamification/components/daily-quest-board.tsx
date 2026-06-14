@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Check } from "lucide-react";
-
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { GlassPanel, RewardChip, StoryTitle } from "@/components/visual";
 import type {
   DailyQuestsViewModel,
@@ -74,7 +73,7 @@ function QuestRow({
         )}
         aria-hidden
       >
-        {completed ? <Check className="h-3 w-3" /> : null}
+        {completed ? <UiIconImage name="check" size={12} /> : null}
       </span>
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex items-start justify-between gap-2">
@@ -167,7 +166,7 @@ function QuestSection({
   return (
     <>
       <div className="space-y-0.5 px-1">
-        <StoryTitle as="h3" className="text-sm normal-case tracking-wide text-amber-100">
+        <StoryTitle as="h3" className="text-sm tracking-wide text-amber-100">
           {title}
         </StoryTitle>
         <p className="text-caption text-amber-200/60">{subtitle}</p>

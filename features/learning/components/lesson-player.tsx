@@ -17,7 +17,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/visual/drill-glass-card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
@@ -460,13 +460,17 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
               <Badge variant="secondary">Already completed · {session.score}%</Badge>
             ) : null}
             {!started ? (
-              <Button className="w-full" loading={saving} onClick={() => void handleStart()}>
+              <PrimaryClimbButton
+                className="w-full"
+                loading={saving}
+                onClick={() => void handleStart()}
+              >
                 {session.progress === "completed" ? "Review Lesson" : "Start Lesson"}
-              </Button>
+              </PrimaryClimbButton>
             ) : (
-              <Button className="w-full" onClick={goNext}>
+              <PrimaryClimbButton className="w-full" onClick={goNext}>
                 Continue
-              </Button>
+              </PrimaryClimbButton>
             )}
           </CardContent>
         </Card>

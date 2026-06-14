@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState, type KeyboardEvent } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import {
@@ -11,6 +13,8 @@ import {
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import { yamaService } from "@/features/yama/services/yama.service";
+import { stickerImageClass } from "@/lib/assets/image-presentation";
+import { getYamaTrailCompanionPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
 type JourneyFoxCompanionProps = {
@@ -31,6 +35,48 @@ function resolveFoxPresence(node: JourneyNode) {
     return yamaService.resolveCheckpointPresence(node.state === "completed");
   }
   return yamaService.resolveTrailProgress(node.pathPosition * 100);
+}
+
+function TrailCompanionSprite({
+  className,
+  width = 56,
+  height = 56,
+  priority,
+}: {
+  className?: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+}) {
+  const { resolvedTheme } = useTheme();
+  const [useFallback, setUseFallback] = useState(false);
+  const src = getYamaTrailCompanionPath(resolvedTheme);
+
+  if (!src || useFallback) {
+    return (
+      <YamaExpressionImage
+        expression="adventure"
+        fit="sticker"
+        width={width}
+        height={height}
+        priority={priority}
+        className={className}
+      />
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={width}
+      height={height}
+      priority={priority}
+      aria-hidden
+      onError={() => setUseFallback(true)}
+      className={stickerImageClass(className)}
+    />
+  );
 }
 
 export function JourneyFoxCompanion({
@@ -112,11 +158,7 @@ export function JourneyFoxCompanion({
               : { duration: 0.42, ease: "easeOut" }
         }
       >
-        <YamaExpressionImage
-          expression="adventure"
-          fit="sticker"
-          width={56}
-          height={56}
+        <TrailCompanionSprite
           priority
           className="h-14 w-14 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
         />

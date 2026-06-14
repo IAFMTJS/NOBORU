@@ -1,3 +1,4 @@
+import type { ReviewRating } from "@/features/review/types/review.types";
 import {
   YAMA_CELEBRATION_MESSAGES,
   YAMA_CHECKPOINT_MESSAGES,
@@ -300,7 +301,7 @@ class YamaService {
   }
 
   resolveReviewFeedback(
-    rating: "again" | "good" | "strong",
+    rating: ReviewRating,
     seed = 0,
   ): YamaPresenceViewModel {
     if (rating === "again") {
@@ -310,10 +311,17 @@ class YamaService {
       );
     }
 
-    if (rating === "strong") {
+    if (rating === "strong" || rating === "easy") {
       return withPresence(
         "happy",
         pickMessage(YAMA_REVIEW_MESSAGES.strong, seed),
+      );
+    }
+
+    if (rating === "hard") {
+      return withPresence(
+        "encouraging",
+        pickMessage(YAMA_REVIEW_MESSAGES.good, seed),
       );
     }
 

@@ -1,5 +1,6 @@
 import { jsonError, jsonOk } from "@/lib/api/responses";
 import { requireAuthSession } from "@/lib/auth/require-session";
+import type { ReviewRating } from "@/features/review/types/review.types";
 import { reviewServerService } from "@/features/review/services/review-server.service";
 
 export async function POST(request: Request) {
@@ -10,7 +11,7 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       clientEventId?: string;
       reviewItemId?: string;
-      rating?: "again" | "good" | "strong";
+      rating?: ReviewRating;
     };
 
     if (!body.clientEventId) {

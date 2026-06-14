@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-
 import { PageContainer } from "@/components/layout/page-container";
+import { SceneImage } from "@/components/media/scene-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import {
   GlassPanel,
@@ -30,16 +30,11 @@ export function SeasonalEventScreen({ event }: SeasonalEventScreenProps) {
     <IllustratedScreen
       scrim="minimal"
       background={
-        <div className="h-full bg-gradient-to-b from-primary/15 via-background/90 to-background">
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 30%, hsl(var(--primary) / 0.25) 0%, transparent 50%), radial-gradient(circle at 80% 60%, hsl(var(--trail-glow) / 0.15) 0%, transparent 45%)",
-            }}
-            aria-hidden
-          />
-        </div>
+        <SceneImage
+          scene="world_map_peaks"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
       }
     >
       <PageContainer className="space-y-5">
@@ -47,7 +42,7 @@ export function SeasonalEventScreen({ event }: SeasonalEventScreenProps) {
           href="/world"
           className="inline-flex items-center gap-1.5 text-body-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
+          <UiIconImage name="arrow_left" size={16} />
           World
         </Link>
 

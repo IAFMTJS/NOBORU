@@ -34,6 +34,7 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={hub.kanjiTitle}
         subtitle={hub.kanjiSubtitle}
         action={

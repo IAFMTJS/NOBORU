@@ -1,13 +1,8 @@
 import Link from "next/link";
 
+import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
+import { GlassPanel, PrimaryClimbButton } from "@/components/visual";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import type { ReviewStatsViewModel } from "@/features/review/types/review.types";
 
 type ReviewSessionHubProps = {
@@ -23,20 +18,26 @@ const PRESET_MODES = [
 
 export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardTitle className="text-heading-6">Start a session</CardTitle>
-        <CardDescription>
-          {stats.dueCount} item{stats.dueCount === 1 ? "" : "s"} due for review
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <StudyAtmosphere>
+      <GlassPanel className="space-y-4 p-4">
+        <div className="space-y-1">
+          <h3 className="text-heading-6 font-semibold">Start a session</h3>
+          <p className="text-body-sm text-muted-foreground">
+            {stats.dueCount} item{stats.dueCount === 1 ? "" : "s"} due for review
+          </p>
+        </div>
         <div className="grid grid-cols-2 gap-2">
-          {PRESET_MODES.map((mode) => (
-            <Button key={mode.label} variant="outline" asChild>
-              <Link href={mode.href}>{mode.label}</Link>
-            </Button>
-          ))}
+          {PRESET_MODES.map((mode, index) =>
+            index === 0 ? (
+              <PrimaryClimbButton key={mode.label} asChild className="col-span-2">
+                <Link href={mode.href}>{mode.label}</Link>
+              </PrimaryClimbButton>
+            ) : (
+              <Button key={mode.label} variant="outline" asChild>
+                <Link href={mode.href}>{mode.label}</Link>
+              </Button>
+            ),
+          )}
         </div>
         {stats.weakAreas.length > 0 ? (
           <div className="space-y-2">
@@ -54,7 +55,7 @@ export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
             </div>
           </div>
         ) : null}
-      </CardContent>
-    </Card>
+      </GlassPanel>
+    </StudyAtmosphere>
   );
 }

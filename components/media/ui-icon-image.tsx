@@ -13,7 +13,14 @@ export type UiIconName =
   | "gem"
   | "trophy"
   | "gear"
-  | "checkpoint";
+  | "checkpoint"
+  | "check"
+  | "lock"
+  | "arrow_left"
+  | "clock"
+  | "zap"
+  | "coins"
+  | "mountain";
 
 type UiIconImageProps = {
   name: UiIconName;

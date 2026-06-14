@@ -37,7 +37,7 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
         />
       }
     >
-      <PageContainer className="space-y-5">
+      <PageContainer className="space-y-4">
         <GlassPanel className="overflow-hidden p-0">
           <div className="relative min-h-[10rem]">
             <RegionHeroImage
@@ -76,22 +76,21 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
               </div>
             </div>
           </div>
-        </GlassPanel>
-
-        <GlassPanel className="p-4">
-          <YamaPresence
-            presence={yama}
-            size="sm"
-            layout="horizontal"
-            bubbleClassName="border-glass-border bg-glass-bg/80"
-          />
+          <div className="border-t border-glass-border p-3">
+            <YamaPresence
+              presence={yama}
+              size="sm"
+              layout="horizontal"
+              bubbleClassName="border-glass-border bg-glass-bg/80"
+            />
+          </div>
         </GlassPanel>
 
         <GlassPanel className="space-y-3 p-4">
           <TitleSelector />
         </GlassPanel>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2 rounded-card border border-glass-border bg-glass-bg/60 px-2 py-3 backdrop-blur-sm">
           {profile.stats.map((stat) => {
             const iconName =
               stat.label === "Streak"
@@ -100,7 +99,7 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
                   ? "gem"
                   : "trophy";
             return (
-              <GlassPanel key={stat.label} className="space-y-2 p-4 text-center">
+              <div key={stat.label} className="space-y-1 px-2 text-center">
                 <div
                   className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary/10"
                   aria-hidden
@@ -109,12 +108,12 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
                 </div>
                 <p className="text-caption text-muted-foreground">{stat.label}</p>
                 <p className="text-heading-5">{stat.value}</p>
-              </GlassPanel>
+              </div>
             );
           })}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
             <StoryTitle as="h3" className="text-sm">
               Achievements
@@ -137,23 +136,24 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
           </Link>
         </div>
 
-        <GlassPanel className="space-y-3 p-4">
-          <StoryTitle as="h3" className="text-sm">
-            Edit Profile
-          </StoryTitle>
-          <ProfileEditSection initialDisplayName={profile.displayName} />
-        </GlassPanel>
-
-        <GlassPanel className="space-y-2 p-4">
-          <StoryTitle as="h3" className="text-sm">
-            Account
-          </StoryTitle>
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/progress">View Progress</Link>
-          </Button>
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/settings">Settings</Link>
-          </Button>
+        <GlassPanel className="space-y-4 p-4">
+          <div className="space-y-3">
+            <StoryTitle as="h3" className="text-sm">
+              Edit Profile
+            </StoryTitle>
+            <ProfileEditSection initialDisplayName={profile.displayName} />
+          </div>
+          <div className="space-y-2 border-t border-glass-border pt-4">
+            <StoryTitle as="h3" className="text-sm">
+              Account
+            </StoryTitle>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/progress">View Progress</Link>
+            </Button>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/settings">Settings</Link>
+            </Button>
+          </div>
         </GlassPanel>
       </PageContainer>
     </IllustratedScreen>

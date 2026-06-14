@@ -41,6 +41,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={hub.vocabularyTitle}
         subtitle={hub.vocabularySubtitle}
         action={

@@ -37,6 +37,7 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={hub.grammarTitle}
         subtitle={hub.grammarSubtitle}
         action={

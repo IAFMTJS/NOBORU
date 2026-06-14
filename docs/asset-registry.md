@@ -604,13 +604,57 @@ Dark v2 expressions supersede dark v1 files still present in `public/mascots/`.
 
 ## Navigation Icons
 
-Immersive tab icons: `icon_nav_{camp,journey,dojo,world,profile}_v1`. Legacy aliases `{home,learn,review,explore}` remain for backward compatibility.
+Immersive tab icons: `icon_nav_{camp,journey,dojo,world,profile}_v2` (v1 legacy aliases remain).
 
 Resolved via `getNavIconPath(tab)`.
 
 **Usage:** `components/layout/bottom-nav.tsx`, `components/media/nav-icon-image.tsx`
 
 **Pipeline:** `npm run assets:nav-fox`
+
+---
+
+## Icon Families v2 (Phase 1)
+
+Thin-line dojo/world icons and hub hero scenes from `scripts/generate-icon-families.mjs`.
+
+| Family | IDs | Helper |
+|--------|-----|--------|
+| Dojo | `icon_dojo_{kana,vocab,grammar,listening,review,kanji,reading}_v2` | `getDojoIconPath(slug)` |
+| World | `icon_world_{trials,games,social,shop,inventory,events,map}_v2` | `getWorldIconPath(slug)` |
+| Hub heroes | `icon_ui_hub_{vocabulary,kanji,grammar,reading,listening,hiragana,katakana}_v2` | `getHubArtPath(slug)` |
+
+**Pipeline:** `npm run assets:icon-families`
+
+---
+
+## Nav Pill Skins v1
+
+Optional immersive nav bar textures (`512×96`). Default tab skins in `immersive-nav.constants.ts`; seasonal extras below.
+
+| Skin ID | Asset ID |
+|---------|----------|
+| ember_night … stone_path | `ui_nav_skin_{skin}_v1` (5 defaults) |
+| sakura_bloom | `ui_nav_skin_sakura_bloom_v1` |
+| winter_summit | `ui_nav_skin_winter_summit_v1` |
+| lantern_festival | `ui_nav_skin_lantern_festival_v1` |
+| cherry_dawn | `ui_nav_skin_cherry_dawn_v1` |
+| cloud_sea | `ui_nav_skin_cloud_sea_v1` |
+
+**Resolver:** `resolveNavSkin(tab)` — `lib/navigation/nav-skin.resolver.ts`
+
+**Pipeline:** `npm run assets:generate-scenes`
+
+---
+
+## Trail Companion Mascot
+
+| Asset ID | Theme | Source pose |
+|----------|-------|-------------|
+| `yama_trail_companion_dark_v1` | dark | adventure hiking |
+| `yama_trail_companion_light_v1` | light | adventure hiking |
+
+**Helper:** `getTrailCompanionPath(theme)` — **Pipeline:** `npm run assets:nav-fox`
 
 ---
 
@@ -659,7 +703,7 @@ export const TRAIL_SCROLL_REGION_SLUGS = [
 ] as const;
 ```
 
-**Helpers:** `getMascotPath`, `getYamaExpressionPath`, `getNavIconPath`, `getNavFoxPath`, `getAchievementArtPath`, `getGameArtPath`, `getRegionArtPath`, `getTrailSpineArtPath`, `getTrailScrollArtPath`, `getWordmarkPath`, `getAuthAtmospherePath`
+**Helpers:** `getMascotPath`, `getYamaExpressionPath`, `getNavIconPath`, `getNavFoxPath`, `getDojoIconPath`, `getWorldIconPath`, `getHubArtPath`, `getTrailCompanionPath`, `getAchievementArtPath`, `getGameArtPath`, `getRegionArtPath`, `getTrailSpineArtPath`, `getTrailScrollArtPath`, `getWordmarkPath`, `getAuthAtmospherePath`
 
 **Rule:** UI components must import paths from `ASSET_REGISTRY` — never hardcode asset paths.
 

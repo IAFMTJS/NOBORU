@@ -204,6 +204,7 @@ export function ReviewSession({
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={quickSessionTarget ? "Spirit Trials" : "Training Grounds"}
         subtitle={
           weakOnly && contentType
@@ -313,13 +314,13 @@ export function ReviewSession({
                   <Button variant="outline" onClick={() => void submitRating("again")}>
                     Again
                   </Button>
-                  <Button variant="outline" onClick={() => void submitRating("good")}>
+                  <Button variant="outline" onClick={() => void submitRating("hard")}>
                     Hard
                   </Button>
                   <Button onClick={() => void submitRating("good")}>
                     Good
                   </Button>
-                  <Button variant="secondary" onClick={() => void submitRating("strong")}>
+                  <Button variant="secondary" onClick={() => void submitRating("easy")}>
                     Easy
                   </Button>
                 </div>

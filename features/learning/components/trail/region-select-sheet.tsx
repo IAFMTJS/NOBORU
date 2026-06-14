@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Lock, Map } from "lucide-react";
-
 import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { UiIconImage } from "@/components/media/ui-icon-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -83,9 +82,9 @@ export function RegionSelectSheet({
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-body-sm font-medium">{region.name}</p>
                       {locked ? (
-                        <Lock className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                        <UiIconImage name="lock" size={16} className="opacity-70" />
                       ) : selected ? (
-                        <Check className="h-4 w-4 shrink-0 text-success" aria-hidden />
+                        <UiIconImage name="check" size={16} />
                       ) : null}
                     </div>
                     <p className="text-caption text-muted-foreground">
@@ -147,9 +146,9 @@ export function RegionSelectSheet({
                       ) : null}
                     </div>
                     {locked ? (
-                      <Lock className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                      <UiIconImage name="lock" size={16} className="opacity-70" />
                     ) : selected ? (
-                      <Check className="h-4 w-4 shrink-0 text-success" aria-hidden />
+                      <UiIconImage name="check" size={16} />
                     ) : null}
                   </div>
                   <ProgressBar
@@ -169,7 +168,7 @@ export function RegionSelectSheet({
           <div className="flex flex-col gap-2">
             <Button variant="outline" className="w-full" asChild>
               <Link href="/learn/world">
-                <Map className="mr-2 h-4 w-4" aria-hidden />
+                <UiIconImage name="map" size={16} className="mr-2" />
                 Mountain world map
               </Link>
             </Button>

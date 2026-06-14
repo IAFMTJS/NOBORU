@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import { Button } from "@/components/ui/button";
 import { TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS } from "@/lib/assets/image-presentation";
 import { JourneyRegionScroll } from "@/features/journey/components/journey-region-scroll";
 import { JourneyStatusBar } from "@/features/journey/components/journey-status-bar";
@@ -21,7 +20,6 @@ import type { RegionPathViewModel } from "@/features/learning/types/lesson.types
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
-import { cn } from "@/lib/utils";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
 
 type JourneyScreenProps = {
@@ -195,31 +193,28 @@ export function JourneyScreen({
             levelLabel={profileStats.levelLabel}
             currentStreak={profileStats.currentStreak}
             totalXp={profileStats.totalXp}
+            regionName={selectedRegion.name}
+            completedCount={selectedRegion.completedCount}
+            lessonCount={selectedRegion.lessonCount}
+            progressPercent={selectedRegion.progressPercent}
+            onRegionClick={() => setRegionPickerOpen(true)}
           />
-        ) : null}
-
-        <header className="absolute inset-x-0 top-[4.5rem] z-30 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pb-2">
-          <span aria-hidden className="w-10" />
-          <button
-            type="button"
-            onClick={() => setRegionPickerOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-4 py-2 text-body-sm font-medium text-white backdrop-blur-sm"
-          >
-            {selectedRegion.name}
-            <UiIconImage name="chevron_down" size={16} className="opacity-80" />
-          </button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Settings"
-            className="ml-auto h-10 w-10 rounded-full border border-white/10 bg-black/30 text-foreground hover:bg-black/50 hover:text-foreground"
-            asChild
-          >
-            <Link href="/settings">
-              <UiIconImage name="settings" size={20} />
-            </Link>
-          </Button>
-        </header>
+        ) : (
+          <header className="absolute inset-x-4 top-4 z-30 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setRegionPickerOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-4 py-2 text-body-sm font-medium text-white backdrop-blur-sm"
+            >
+              {selectedRegion.name}
+              <UiIconImage name="chevron_down" size={16} className="opacity-80" />
+              <span className="ml-1 text-caption text-trail-glow">
+                {selectedRegion.completedCount}/{selectedRegion.lessonCount} ·{" "}
+                {selectedRegion.progressPercent}%
+              </span>
+            </button>
+          </header>
+        )}
 
         <JourneyRegionScroll
           region={selectedRegion}
@@ -236,13 +231,6 @@ export function JourneyScreen({
         >
           <UiIconImage name="map" size={22} />
         </Link>
-
-        <div
-          className="fixed bottom-[5.5rem] right-4 z-20 rounded-full border border-white/15 bg-black/40 px-3 py-1.5 text-caption text-white backdrop-blur-sm"
-        >
-          {selectedRegion.completedCount}/{selectedRegion.lessonCount} ·{" "}
-          {selectedRegion.progressPercent}%
-        </div>
       </div>
 
       <RegionSelectSheet

@@ -133,7 +133,7 @@ export function OnboardingWizard() {
 
           {step === 2 ? (
             <GlassPanel className="space-y-4 p-5">
-              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+              <StoryTitle as="h2" className="text-lg tracking-wide">
                 {ONBOARDING_COPY.goal.title}
               </StoryTitle>
               <div className="space-y-2">
@@ -155,7 +155,7 @@ export function OnboardingWizard() {
 
           {step === 3 ? (
             <GlassPanel className="space-y-4 p-5">
-              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+              <StoryTitle as="h2" className="text-lg tracking-wide">
                 {ONBOARDING_COPY.level.title}
               </StoryTitle>
               <div className="grid grid-cols-2 gap-2">
@@ -176,7 +176,7 @@ export function OnboardingWizard() {
 
           {step === 4 ? (
             <GlassPanel className="space-y-4 p-5">
-              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+              <StoryTitle as="h2" className="text-lg tracking-wide">
                 {ONBOARDING_COPY.dailyGoal.title}
               </StoryTitle>
               <div className="space-y-2">
@@ -197,7 +197,7 @@ export function OnboardingWizard() {
 
           {step === 5 ? (
             <GlassPanel className="space-y-4 p-5">
-              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+              <StoryTitle as="h2" className="text-lg tracking-wide">
                 {ONBOARDING_COPY.theme.title}
               </StoryTitle>
               <div className="space-y-2">
@@ -223,7 +223,7 @@ export function OnboardingWizard() {
                 <YamaAvatar expression="happy" size="xl" alt="Yama" priority />
               </div>
               <div className="space-y-2">
-                <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                <StoryTitle as="h2" className="text-lg tracking-wide">
                   {ONBOARDING_COPY.meetYama.title}
                 </StoryTitle>
                 <p className="text-body text-muted-foreground">
@@ -238,7 +238,7 @@ export function OnboardingWizard() {
               <p className="text-caption uppercase tracking-wide text-primary">
                 {FOOTHILLS_REGION.trail}
               </p>
-              <StoryTitle as="h2" className="text-xl normal-case tracking-wide">
+              <StoryTitle as="h2" className="text-xl tracking-wide">
                 {ONBOARDING_COPY.region.title}
               </StoryTitle>
               <p className="text-body text-muted-foreground">

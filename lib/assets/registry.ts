@@ -42,6 +42,8 @@ export const ASSET_REGISTRY = {
     yamaSadLight: "/mascots/yama_sad_supportive_disappointed_light_v1.webp",
     yamaAdventureDark: "/mascots/yama_adventure_hiking_dark_v1.webp",
     yamaAdventureLight: "/mascots/yama_adventure_hiking_light_v1.webp",
+    yamaTrailCompanionDark: "/mascots/yama_trail_companion_dark_v1.webp",
+    yamaTrailCompanionLight: "/mascots/yama_trail_companion_light_v1.webp",
     yamaTrainingDark: "/mascots/yama_training_demo_stance_dark_v1.webp",
     yamaTrainingLight: "/mascots/yama_training_demo_stance_light_v1.webp",
     yamaSeasonalDark: "/mascots/yama_seasonal_cherry_blossom_dark_v1.webp",
@@ -75,6 +77,34 @@ export const ASSET_REGISTRY = {
     uiTrophy: "/icons/icon_ui_trophy_v2.webp",
     uiGear: "/icons/icon_ui_gear_v2.webp",
     uiCheckpoint: "/icons/icon_ui_checkpoint_v2.webp",
+    uiCheck: "/icons/icon_ui_check_v2.webp",
+    uiLock: "/icons/icon_ui_lock_v2.webp",
+    uiArrowLeft: "/icons/icon_ui_arrow_left_v2.webp",
+    uiClock: "/icons/icon_ui_clock_v2.webp",
+    uiZap: "/icons/icon_ui_zap_v2.webp",
+    uiCoins: "/icons/icon_ui_coins_v2.webp",
+    uiMountain: "/icons/icon_ui_mountain_v2.webp",
+    dojoKana: "/icons/icon_dojo_kana_v2.webp",
+    dojoVocab: "/icons/icon_dojo_vocab_v2.webp",
+    dojoGrammar: "/icons/icon_dojo_grammar_v2.webp",
+    dojoListening: "/icons/icon_dojo_listening_v2.webp",
+    dojoReview: "/icons/icon_dojo_review_v2.webp",
+    dojoKanji: "/icons/icon_dojo_kanji_v2.webp",
+    dojoReading: "/icons/icon_dojo_reading_v2.webp",
+    worldTrials: "/icons/icon_world_trials_v2.webp",
+    worldGames: "/icons/icon_world_games_v2.webp",
+    worldSocial: "/icons/icon_world_social_v2.webp",
+    worldShop: "/icons/icon_world_shop_v2.webp",
+    worldInventory: "/icons/icon_world_inventory_v2.webp",
+    worldEvents: "/icons/icon_world_events_v2.webp",
+    worldMap: "/icons/icon_world_map_v2.webp",
+    hubVocabulary: "/icons/icon_ui_hub_vocabulary_v2.webp",
+    hubKanji: "/icons/icon_ui_hub_kanji_v2.webp",
+    hubGrammar: "/icons/icon_ui_hub_grammar_v2.webp",
+    hubReading: "/icons/icon_ui_hub_reading_v2.webp",
+    hubListening: "/icons/icon_ui_hub_listening_v2.webp",
+    hubHiragana: "/icons/icon_ui_hub_hiragana_v2.webp",
+    hubKatakana: "/icons/icon_ui_hub_katakana_v2.webp",
   },
   games: {
     wordMatch: "/games/game_word_match_v1.webp",
@@ -102,6 +132,16 @@ export const ASSET_REGISTRY = {
     shopInterior: "/ui/ui_shop_trail_interior_v1.webp",
     lessonCompleteGlow: "/ui/ui_lesson_complete_trail_glow_v1.webp",
     checkpointShrine: "/ui/ui_checkpoint_shrine_close_v1.webp",
+    navSkinEmberNight: "/ui/ui_nav_skin_ember_night_v1.webp",
+    navSkinTrailMist: "/ui/ui_nav_skin_trail_mist_v1.webp",
+    navSkinBambooGrove: "/ui/ui_nav_skin_bamboo_grove_v1.webp",
+    navSkinMoonlitTorii: "/ui/ui_nav_skin_moonlit_torii_v1.webp",
+    navSkinStonePath: "/ui/ui_nav_skin_stone_path_v1.webp",
+    navSkinSakuraBloom: "/ui/ui_nav_skin_sakura_bloom_v1.webp",
+    navSkinWinterSummit: "/ui/ui_nav_skin_winter_summit_v1.webp",
+    navSkinLanternFestival: "/ui/ui_nav_skin_lantern_festival_v1.webp",
+    navSkinCherryDawn: "/ui/ui_nav_skin_cherry_dawn_v1.webp",
+    navSkinCloudSea: "/ui/ui_nav_skin_cloud_sea_v1.webp",
   },
   achievements: {
     firstStep: "/achievements/achievement_first_step_v1.webp",
@@ -269,10 +309,85 @@ const UI_ICON_PATHS: Record<string, string> = {
   trophy: ASSET_REGISTRY.icons.uiTrophy,
   gear: ASSET_REGISTRY.icons.uiGear,
   checkpoint: ASSET_REGISTRY.icons.uiCheckpoint,
+  check: ASSET_REGISTRY.icons.uiCheck,
+  lock: ASSET_REGISTRY.icons.uiLock,
+  arrow_left: ASSET_REGISTRY.icons.uiArrowLeft,
+  clock: ASSET_REGISTRY.icons.uiClock,
+  zap: ASSET_REGISTRY.icons.uiZap,
+  coins: ASSET_REGISTRY.icons.uiCoins,
+  mountain: ASSET_REGISTRY.icons.uiMountain,
 };
 
 export function getUiIconPath(name: string) {
   return UI_ICON_PATHS[name] ?? null;
+}
+
+const DOJO_ICON_PATHS: Record<string, string> = {
+  kana: ASSET_REGISTRY.icons.dojoKana,
+  vocab: ASSET_REGISTRY.icons.dojoVocab,
+  grammar: ASSET_REGISTRY.icons.dojoGrammar,
+  listening: ASSET_REGISTRY.icons.dojoListening,
+  review: ASSET_REGISTRY.icons.dojoReview,
+  kanji: ASSET_REGISTRY.icons.dojoKanji,
+  reading: ASSET_REGISTRY.icons.dojoReading,
+  review_queue: ASSET_REGISTRY.icons.dojoReview,
+  kana_dojo: ASSET_REGISTRY.icons.dojoKana,
+  vocabulary_hall: ASSET_REGISTRY.icons.dojoVocab,
+  grammar_shrine: ASSET_REGISTRY.icons.dojoGrammar,
+  listening_pavilion: ASSET_REGISTRY.icons.dojoListening,
+  kanji_grounds: ASSET_REGISTRY.icons.dojoKanji,
+  reading_library: ASSET_REGISTRY.icons.dojoReading,
+};
+
+const WORLD_ICON_PATHS: Record<string, string> = {
+  trials: ASSET_REGISTRY.icons.worldTrials,
+  games: ASSET_REGISTRY.icons.worldGames,
+  social: ASSET_REGISTRY.icons.worldSocial,
+  shop: ASSET_REGISTRY.icons.worldShop,
+  inventory: ASSET_REGISTRY.icons.worldInventory,
+  events: ASSET_REGISTRY.icons.worldEvents,
+  map: ASSET_REGISTRY.icons.worldMap,
+  discover: ASSET_REGISTRY.icons.worldMap,
+  world_map: ASSET_REGISTRY.icons.worldMap,
+  community: ASSET_REGISTRY.icons.worldSocial,
+  collect: ASSET_REGISTRY.icons.worldInventory,
+  endgame: ASSET_REGISTRY.icons.worldTrials,
+  trails: ASSET_REGISTRY.icons.worldMap,
+};
+
+const HUB_ART_PATHS: Record<string, string> = {
+  vocabulary: ASSET_REGISTRY.icons.hubVocabulary,
+  kanji: ASSET_REGISTRY.icons.hubKanji,
+  grammar: ASSET_REGISTRY.icons.hubGrammar,
+  reading: ASSET_REGISTRY.icons.hubReading,
+  listening: ASSET_REGISTRY.icons.hubListening,
+  hiragana: ASSET_REGISTRY.icons.hubHiragana,
+  katakana: ASSET_REGISTRY.icons.hubKatakana,
+};
+
+export function getDojoIconPath(slug: string) {
+  return DOJO_ICON_PATHS[slug] ?? null;
+}
+
+export function getWorldIconPath(slug: string) {
+  return WORLD_ICON_PATHS[slug] ?? null;
+}
+
+export function getHubArtPath(slug: string) {
+  return HUB_ART_PATHS[slug] ?? null;
+}
+
+export function getTrailCompanionPath(theme: "light" | "dark" | string | undefined) {
+  return theme === "light"
+    ? ASSET_REGISTRY.mascots.yamaTrailCompanionLight
+    : ASSET_REGISTRY.mascots.yamaTrailCompanionDark;
+}
+
+/** Trail-map fox sticker — null when dedicated WebP is not yet in public/. */
+export function getYamaTrailCompanionPath(
+  theme: "light" | "dark" | string | undefined,
+) {
+  return getTrailCompanionPath(theme);
 }
 
 const SCENE_PATHS: Record<string, { dark: string; light: string }> = {

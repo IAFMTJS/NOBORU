@@ -182,6 +182,31 @@ const SCENES = {
     height: 96,
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><rect width="512" height="96" rx="24" fill="#1a1814"/><path d="M0 70 H512" stroke="#78716c" stroke-width="2" opacity="0.4"/></svg>`,
   },
+  ui_nav_skin_sakura_bloom: {
+    width: 512,
+    height: 96,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a1420"/><stop offset="100%" stop-color="#3d1a2e"/></linearGradient></defs><rect width="512" height="96" rx="24" fill="url(#g)"/><circle cx="80" cy="40" r="6" fill="#F472B6" opacity="0.5"/><circle cx="200" cy="55" r="5" fill="#FDA4AF" opacity="0.45"/><circle cx="360" cy="35" r="7" fill="#F472B6" opacity="0.4"/><circle cx="440" cy="50" r="4" fill="#FDA4AF" opacity="0.5"/></svg>`,
+  },
+  ui_nav_skin_winter_summit: {
+    width: 512,
+    height: 96,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs><rect width="512" height="96" rx="24" fill="url(#g)"/><path d="M0 70 L60 45 L120 70 Z" fill="#94a3b8" opacity="0.35"/><path d="M180 72 L260 38 L340 72 Z" fill="#cbd5e1" opacity="0.3"/><path d="M380 70 L440 48 L500 70 Z" fill="#94a3b8" opacity="0.35"/></svg>`,
+  },
+  ui_nav_skin_lantern_festival: {
+    width: 512,
+    height: 96,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><rect width="512" height="96" rx="24" fill="#1a1008"/><ellipse cx="128" cy="48" rx="14" ry="18" fill="#F6AE2D" opacity="0.35"/><ellipse cx="256" cy="44" rx="16" ry="20" fill="#D64045" opacity="0.3"/><ellipse cx="384" cy="50" rx="14" ry="18" fill="#F6AE2D" opacity="0.35"/><rect x="120" y="30" width="16" height="4" rx="1" fill="#78716c" opacity="0.5"/><rect x="248" y="26" width="16" height="4" rx="1" fill="#78716c" opacity="0.5"/><rect x="376" y="32" width="16" height="4" rx="1" fill="#78716c" opacity="0.5"/></svg>`,
+  },
+  ui_nav_skin_cherry_dawn: {
+    width: 512,
+    height: 96,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a2040"/><stop offset="50%" stop-color="#7c3a5c"/><stop offset="100%" stop-color="#1a1420"/></linearGradient></defs><rect width="512" height="96" rx="24" fill="url(#g)"/><ellipse cx="256" cy="20" rx="180" ry="30" fill="#FDA4AF" opacity="0.25"/></svg>`,
+  },
+  ui_nav_skin_cloud_sea: {
+    width: 512,
+    height: 96,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 96"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c4a6e"/><stop offset="100%" stop-color="#1e293b"/></linearGradient></defs><rect width="512" height="96" rx="24" fill="url(#g)"/><path d="M0 55 Q80 40 160 55 T320 55 T512 55" stroke="#7dd3fc" stroke-width="2" opacity="0.25" fill="none"/><path d="M0 70 Q100 58 200 70 T400 70 T512 70" stroke="#bae6fd" stroke-width="1.5" opacity="0.2" fill="none"/></svg>`,
+  },
 };
 
 async function writeScene(id, config) {

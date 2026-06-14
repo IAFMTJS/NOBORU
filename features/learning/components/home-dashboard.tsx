@@ -23,6 +23,11 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
         quests={data.quests}
         yama={data.yama}
         stats={data.stats}
+        profile={{
+          displayName: data.greeting.replace(/^Kon'nichiwa, /, ""),
+          levelLabel: data.level.label,
+          xpProgressPercent: data.elevation.progressPercent,
+        }}
         companion={data.companion}
         progressionPreview={data.progressionPreview}
       />

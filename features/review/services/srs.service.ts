@@ -12,6 +12,11 @@ export type SrsScheduleResult = {
   streakCount: number;
 };
 
+function normalizeRating(rating: ReviewRating): "again" | "hard" | "good" | "easy" {
+  if (rating === "strong") return "easy";
+  return rating;
+}
+
 export function applySrsRating(input: {
   state: ReviewState;
   rating: ReviewRating;
@@ -20,8 +25,9 @@ export function applySrsRating(input: {
   now?: Date;
 }): SrsScheduleResult {
   const now = input.now ?? new Date();
+  const rating = normalizeRating(input.rating);
 
-  if (input.rating === "again") {
+  if (rating === "again") {
     const nextReviewAt = new Date(now);
     nextReviewAt.setMinutes(nextReviewAt.getMinutes() + LEARNING_INTERVAL_MINUTES);
 
@@ -35,24 +41,22 @@ export function applySrsRating(input: {
   }
 
   const streakCount = input.streakCount + 1;
-  const intervalOffset = input.rating === "strong" ? 1 : 0;
-  const intervalIndex = Math.min(
-    streakCount - 1 + intervalOffset,
-    DAY_INTERVALS.length - 1,
+  const intervalOffset = rating === "easy" ? 1 : rating === "hard" ? -1 : 0;
+  const intervalIndex = Math.max(
+    0,
+    Math.min(streakCount - 1 + intervalOffset, DAY_INTERVALS.length - 1),
   );
   const intervalDays = DAY_INTERVALS[intervalIndex];
   const nextReviewAt = new Date(now);
   nextReviewAt.setDate(nextReviewAt.getDate() + intervalDays);
 
-  const masteryScore = Math.min(
-    100,
-    input.masteryScore + (input.rating === "strong" ? 12 : 8),
-  );
+  const masteryDelta = rating === "easy" ? 12 : rating === "good" ? 8 : 4;
+  const masteryScore = Math.min(100, input.masteryScore + masteryDelta);
 
   let state: ReviewState = "good";
   if (streakCount <= 1 && input.state === "new") {
     state = "learning";
-  } else if (streakCount >= 3 || input.rating === "strong") {
+  } else if (streakCount >= 3 || rating === "easy") {
     state = "strong";
   }
   if (masteryScore >= 90 && streakCount >= 5) {

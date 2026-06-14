@@ -36,6 +36,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title={contentHub.listeningTitle}
         subtitle={contentHub.listeningSubtitle}
         action={

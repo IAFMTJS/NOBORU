@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
@@ -17,22 +18,23 @@ import { GameCard } from "@/features/games/components/game-card";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
+import { getWorldIconPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
 const DISCOVER_CATEGORIES = [
-  { label: "Culture", glyph: "雅" },
-  { label: "History", glyph: "史" },
-  { label: "Folklore", glyph: "話" },
-  { label: "Food", glyph: "食" },
-  { label: "Anime", glyph: "映" },
-  { label: "Mythology", glyph: "神" },
+  { label: "Culture", glyph: "雅", iconSlug: "discover" },
+  { label: "History", glyph: "史", iconSlug: "discover" },
+  { label: "Folklore", glyph: "話", iconSlug: "discover" },
+  { label: "Food", glyph: "食", iconSlug: "discover" },
+  { label: "Anime", glyph: "映", iconSlug: "discover" },
+  { label: "Mythology", glyph: "神", iconSlug: "discover" },
 ] as const;
 
 const STUDY_TRAILS = [
-  { label: "Journey", href: "/learn", glyph: "登" },
-  { label: "Dojo", href: "/dojo", glyph: "道" },
-  { label: "Progress", href: "/progress", glyph: "進" },
-  { label: "Achievements", href: "/achievements", glyph: "誉" },
+  { label: "Journey", href: "/learn", glyph: "登", iconSlug: "trails" },
+  { label: "Dojo", href: "/dojo", glyph: "道", iconSlug: "trails" },
+  { label: "Progress", href: "/progress", glyph: "進", iconSlug: "trails" },
+  { label: "Achievements", href: "/achievements", glyph: "誉", iconSlug: "trails" },
 ] as const;
 
 type ExploreScreenProps = {
@@ -41,14 +43,43 @@ type ExploreScreenProps = {
   variant?: "world" | "explore";
 };
 
+function WorldSectionGlyph({
+  iconSlug,
+  glyph,
+}: {
+  iconSlug?: string;
+  glyph: string;
+}) {
+  const src = iconSlug ? getWorldIconPath(iconSlug) : null;
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt=""
+        width={22}
+        height={22}
+        aria-hidden
+        className="shrink-0 object-contain"
+      />
+    );
+  }
+  return (
+    <span className="font-japanese text-base text-primary" aria-hidden>
+      {glyph}
+    </span>
+  );
+}
+
 function WorldSection({
   glyph,
+  iconSlug,
   title,
   description,
   children,
   className,
 }: {
   glyph: string;
+  iconSlug?: string;
   title: string;
   description?: string;
   children: ReactNode;
@@ -58,10 +89,10 @@ function WorldSection({
     <GlassPanel className={cn("space-y-3 p-4", className)}>
       <div className="flex items-start gap-3">
         <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-primary/10 font-japanese text-base text-primary"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-primary/10"
           aria-hidden
         >
-          {glyph}
+          <WorldSectionGlyph iconSlug={iconSlug} glyph={glyph} />
         </span>
         <div className="min-w-0 space-y-0.5">
           <StoryTitle as="h3" className="text-sm">
@@ -144,6 +175,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="探"
+          iconSlug="discover"
           title="Discover Japan"
           description="Culture, folklore, and lore along the climb."
         >
@@ -168,6 +200,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="峰"
+          iconSlug="world_map"
           title="World Map"
           description="See the full mountain from foothills to celestial summit."
         >
@@ -178,6 +211,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="試"
+          iconSlug="trials"
           title="Trials"
           description="Timed regional challenges and boss proving grounds."
         >
@@ -188,6 +222,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="遊"
+          iconSlug="games"
           title="Mini-Games"
           description={
             hasMiniGame
@@ -235,7 +270,7 @@ export function ExploreScreen({
           </div>
         </WorldSection>
 
-        <WorldSection glyph="道" title="Study Trails">
+        <WorldSection glyph="道" iconSlug="trails" title="Study Trails">
           <div className="grid grid-cols-2 gap-2">
             {STUDY_TRAILS.map((trail) => (
               <Button
@@ -257,6 +292,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="仲"
+          iconSlug="community"
           title="Community"
           description="Opt-in leagues and fellow climbers."
         >
@@ -280,6 +316,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="集"
+          iconSlug="collect"
           title="Collect & Celebrate"
           description="Shop, seasonal festivals, and your climb journal."
         >
@@ -329,6 +366,7 @@ export function ExploreScreen({
 
         <WorldSection
           glyph="頂"
+          iconSlug="endgame"
           title="Endgame"
           description="Post-N1 mastery mountains and seasonal events."
         >

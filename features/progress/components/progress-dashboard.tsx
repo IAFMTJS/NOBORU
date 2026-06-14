@@ -40,6 +40,7 @@ export function ProgressDashboard({
   return (
     <PageContainer>
       <ScreenHeader
+        variant="story"
         title="Progress"
         subtitle="Your climb at a glance"
         action={

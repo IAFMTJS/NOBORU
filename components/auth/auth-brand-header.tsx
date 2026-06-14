@@ -17,7 +17,7 @@ export function AuthBrandHeader({ title, description }: AuthBrandHeaderProps) {
       <p className="font-japanese text-body-sm tracking-widest text-muted-foreground">
         登る
       </p>
-      <StoryTitle as="h1" className="mt-2 text-xl normal-case tracking-wide">
+      <StoryTitle as="h1" className="mt-2 text-xl tracking-wide">
         {title}
       </StoryTitle>
       <p className="mt-1 text-body-sm text-muted-foreground">{description}</p>

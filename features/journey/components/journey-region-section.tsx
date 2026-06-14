@@ -132,7 +132,7 @@ export function JourneyRegionSection({
             : { minHeight: `${pathHeightVh}vh` }
         }
       >
-        {showSyntheticSpine ? (
+        {showSyntheticSpine || (immersive && scrollArt && loadArtwork) ? (
           <JourneyPathSpine
             nodes={region.nodes}
             regionSlug={region.slug}
