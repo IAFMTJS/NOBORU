@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useMemo } from "react";
 
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import {
   AUTH_MESSAGES,
   AUTH_ROUTES,
@@ -22,7 +22,6 @@ import { useThemeSetting } from "@/features/settings/hooks/use-theme-setting";
 import type { SettingsViewModel } from "@/features/settings/types/settings.types";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
-import { ChevronLeft } from "lucide-react";
 
 type SettingsScreenProps = {
   settings: SettingsViewModel;
@@ -36,39 +35,52 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
   const yama = useMemo(() => yamaService.resolveProfilePresence(), []);
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title="Settings"
-        action={
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <RegionHeroImage
+          regionSlug="foothills"
+          alt=""
+          className="absolute inset-0 h-full min-h-dvh rounded-none"
+          hideOverlay
+        />
+      }
+    >
+      <PageContainer>
+        <header className="flex items-center justify-between gap-3">
+          <div className="space-y-1">
+            <StoryTitle as="h1" className="text-xl">
+              Settings
+            </StoryTitle>
+            <p className="text-body-sm text-muted-foreground">
+              Trail preferences and account
+            </p>
+          </div>
           <Link
             href="/profile"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border"
+            className="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-glass-border bg-glass-bg/80 px-3 text-body-sm font-medium backdrop-blur-md"
             aria-label="Back to profile"
           >
-            <ChevronLeft className="h-5 w-5" />
+            ←
           </Link>
-        }
-      />
+        </header>
 
-      <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
-        <CardContent className="p-4">
+        <GlassPanel className="p-4">
           <YamaPresence
             presence={yama}
             size="sm"
             layout="horizontal"
-            bubbleClassName="border-primary/20 bg-card/80"
+            bubbleClassName="border-glass-border bg-glass-bg/80"
           />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <PwaInstallPrompt />
-      <OfflineSyncPanel />
+        <PwaInstallPrompt />
+        <OfflineSyncPanel />
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Support</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        <GlassPanel className="space-y-3 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Support
+          </StoryTitle>
           <ListRow
             primary="Send feedback"
             secondary="Report bugs, trail UX, audio, or PWA issues"
@@ -81,14 +93,12 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
               Public beta {BETA_RELEASE.version}
             </p>
           ) : null}
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">About</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
+        <GlassPanel className="space-y-2 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            About
+          </StoryTitle>
           <ListRow
             primary={RELEASE.name}
             secondary={
@@ -98,14 +108,12 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             }
           />
           <ListRow primary="Launch date" secondary={RELEASE.launchedAt} />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Appearance</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        <GlassPanel className="space-y-3 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Appearance
+          </StoryTitle>
           <div className="space-y-2">
             <p className="text-body-sm font-medium">Theme</p>
             <p className="text-caption">
@@ -122,14 +130,12 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
               {error}
             </p>
           ) : null}
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Study</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
+        <GlassPanel className="space-y-2 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Study
+          </StoryTitle>
           <ListRow
             primary="Daily goal"
             secondary={`${settings.dailyGoalMinutes} min`}
@@ -142,14 +148,12 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             primary="Sound"
             secondary={settings.soundEnabled ? "Enabled" : "Disabled"}
           />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Account</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        <GlassPanel className="space-y-3 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Account
+          </StoryTitle>
           <ListRow primary="Email" secondary={settings.email} />
           <ListRow
             primary="Change password"
@@ -171,8 +175,8 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
           >
             {logoutLoading ? AUTH_MESSAGES.signOutLoading : AUTH_MESSAGES.signOut}
           </Button>
-        </CardContent>
-      </Card>
-    </PageContainer>
+        </GlassPanel>
+      </PageContainer>
+    </IllustratedScreen>
   );
 }

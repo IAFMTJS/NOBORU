@@ -1,7 +1,5 @@
-import { GamesScreen } from "@/features/games/components/games-screen";
-import { getGameAvailability } from "@/lib/orchestration/games.orchestrator";
+import { redirect } from "next/navigation";
 
-export default async function GamesPage() {
-  const availability = await getGameAvailability();
-  return <GamesScreen availability={availability} />;
+export default function GamesPage() {
+  redirect("/world");
 }

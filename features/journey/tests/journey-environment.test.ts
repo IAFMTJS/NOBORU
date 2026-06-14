@@ -32,6 +32,7 @@ describe("resolveJourneyVisualSettings", () => {
   it("enables full polish on high tier devices", () => {
     const settings = resolveJourneyVisualSettings("high");
     expect(settings.checkpointCelebration).toBe(true);
+    expect(settings.environmentLayers).toBe(true);
     expect(settings.weatherEffects).toBe(true);
     expect(settings.maxLoadedArtSections).toBe(0);
   });

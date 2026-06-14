@@ -47,7 +47,7 @@ class ChestService {
       label: daily.title,
       progressPercent: 100,
       remainingLabel: "Ready to open",
-      href: "/world/fox-camp",
+      href: "/world",
     };
   }
 

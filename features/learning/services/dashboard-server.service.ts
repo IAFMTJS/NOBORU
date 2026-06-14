@@ -3,7 +3,7 @@ import type { ProfileViewModel } from "@/features/profile/types/profile.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
 import { streakService } from "@/features/achievements/services/streak.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
-import { journeyService } from "@/features/learning/services/journey.service";
+import { journeyService } from "@/features/journey/services/journey.service";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";

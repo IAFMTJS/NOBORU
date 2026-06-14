@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ASSET_REGISTRY } from "@/lib/assets/registry";
@@ -10,6 +10,12 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-story",
+  weight: ["400", "600"],
 });
 
 export const metadata: Metadata = {
@@ -73,7 +79,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>        <ThemeProvider
+      <body className={`${inter.variable} ${lora.variable} font-sans`}>
+        <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem

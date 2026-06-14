@@ -49,9 +49,22 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
+- docs/art-direction.md
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Yama must match the white fox (kitsune) in canonical mockups:
+
+- **Nav integration:** Overlaps left edge of pill bottom bar — pose changes per themed skin (`mockup_navbar_concepts_v1.png`)
+- **Required expressions:** Teaching, Happy, Proud, Worried, Excited (`mockup_full_product_ux_v1.png`)
+- **Weather/context variants:** Sunny, Rainy, Night, Snowy where relevant (`mockup_gamification_screens_v1.png`)
+- **Trail companion:** Appears at current node and milestones — not every screen
+- **Style:** Premium painterly kitsune — soft white fur, red forehead sigil, mountain red scarf. Never chibi, never hyperactive.
 
 ## Architecture constraints
 

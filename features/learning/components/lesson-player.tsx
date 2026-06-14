@@ -94,13 +94,6 @@ const ListeningChallengePlayer = dynamic(
   { loading: () => <EmbeddedPlayerSkeleton /> },
 );
 
-const YamaCelebration = dynamic(
-  () =>
-    import("@/features/yama/components/yama-celebration").then(
-      (module) => module.YamaCelebration,
-    ),
-  { loading: () => null },
-);
 
 const AchievementUnlockFeedback = dynamic(
   () =>
@@ -114,6 +107,22 @@ const QuestCompleteFeedback = dynamic(
   () =>
     import("@/features/quests/components/quest-complete-feedback").then(
       (module) => module.QuestCompleteFeedback,
+    ),
+  { loading: () => null },
+);
+
+const LessonCompletePanel = dynamic(
+  () =>
+    import("@/features/gamification/components/lesson-complete-panel").then(
+      (module) => module.LessonCompletePanel,
+    ),
+  { loading: () => null },
+);
+
+const CheckpointShrine = dynamic(
+  () =>
+    import("@/features/gamification/components/checkpoint-shrine").then(
+      (module) => module.CheckpointShrine,
     ),
   { loading: () => null },
 );
@@ -606,76 +615,50 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       ) : null}
 
       {currentStep.kind === "complete" ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Lesson Complete</CardTitle>
-            <CardDescription>
-              Score {completedScore}% · Pass {session.passScore}% · {session.xpReward} XP earned
-              {elevationAward
-                ? ` · +${elevationAward.epAwarded} EP`
-                : ""}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <YamaCelebration
-              presence={
-                elevationAward?.leveledUp
-                  ? yamaService.resolveCelebration("level_up")
-                  : yamaService.resolveCelebration("lesson_complete")
-              }
-              title={
-                elevationAward?.leveledUp
-                  ? `Level ${elevationAward.currentLevel} reached`
-                  : "Trail node complete"
-              }
-            />
-            {elevationAward?.leveledUp ? (
-              <Badge variant="secondary">
-                Level up! Now level {elevationAward.currentLevel}
-              </Badge>
-            ) : null}
-            {elevationAward?.rewardsUnlocked.map((reward) => (
-              <Badge key={reward.level} variant="outline">
-                Unlocked: {reward.title}
-              </Badge>
-            ))}
-            <AchievementUnlockFeedback achievements={achievementUnlocks} />
-            <QuestCompleteFeedback completions={questCompletions} />
-            <LessonFeedbackPrompt
-              lessonId={session.lessonId}
-              regionSlug={session.regionSlug}
-              lessonType={session.type}
-              score={completedScore}
-            />
-            {session.nextLesson ? (
-              <Button className="w-full" asChild>
-                <Link href={session.nextLesson.href}>
-                  Next lesson · {session.nextLesson.title}
-                </Link>
-              </Button>
-            ) : null}
-            {reviewItemsEnqueued > 0 ? (
-              <Button variant="secondary" className="w-full" asChild>
-                <Link
-                  href={
-                    reviewItemsEnqueued > 5
-                      ? "/review"
-                      : `/review?limit=${Math.min(reviewItemsEnqueued, 5)}`
-                  }
-                >
-                  Review {reviewItemsEnqueued} new item
-                  {reviewItemsEnqueued === 1 ? "" : "s"}
-                </Link>
-              </Button>
-            ) : null}
-            <Button className="w-full" asChild>
-              <Link href={regionTrailHref(session.regionSlug)}>Back to trail</Link>
-            </Button>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href={regionTrailHref(session.regionSlug)}>Learning Path</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        session.type === "practice" ? (
+          <CheckpointShrine
+            xpReward={session.xpReward}
+            gemsReward={elevationAward ? 5 : 0}
+            itemsEarned={[{ label: "Lantern", icon: "🏮", quantity: 1 }]}
+            continueHref={regionTrailHref(session.regionSlug)}
+            footerSlot={
+              <>
+                <AchievementUnlockFeedback achievements={achievementUnlocks} />
+                <QuestCompleteFeedback completions={questCompletions} />
+                <LessonFeedbackPrompt
+                  lessonId={session.lessonId}
+                  regionSlug={session.regionSlug}
+                  lessonType={session.type}
+                  score={completedScore}
+                />
+              </>
+            }
+          />
+        ) : (
+          <LessonCompletePanel
+            score={completedScore}
+            passScore={session.passScore}
+            xpReward={session.xpReward}
+            regionSlug={session.regionSlug}
+            elevationAward={elevationAward}
+            nextLessonHref={session.nextLesson?.href ?? null}
+            nextLessonTitle={session.nextLesson?.title ?? null}
+            reviewItemsEnqueued={reviewItemsEnqueued}
+            trailHref={regionTrailHref(session.regionSlug)}
+            achievementSlot={
+              <AchievementUnlockFeedback achievements={achievementUnlocks} />
+            }
+            questSlot={<QuestCompleteFeedback completions={questCompletions} />}
+            feedbackSlot={
+              <LessonFeedbackPrompt
+                lessonId={session.lessonId}
+                regionSlug={session.regionSlug}
+                lessonType={session.type}
+                score={completedScore}
+              />
+            }
+          />
+        )
       ) : null}
       </MotionDiv>
       </StudyAtmosphere>

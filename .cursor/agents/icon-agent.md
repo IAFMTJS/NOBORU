@@ -48,9 +48,20 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Navigation and feature icons must match `assets/marketing/mockup_navbar_concepts_v1.png`:
+
+- **Style:** Minimalist thin-line, white/light gray default, gold/orange glow when active
+- **Nav set:** Camp (tent), Journey (mountains), Dojo (torii), World (pagoda/compass), Profile (fox silhouette)
+- **One family only** — no mixed Lucide/custom packs in learner UI
+- **Achievement icons:** Circular illustrated badges per `mockup_gamification_screens_v1.png` — lanterns, peaks, compasses, shrine motifs
 
 ## Architecture constraints
 

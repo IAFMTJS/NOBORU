@@ -62,9 +62,32 @@ When work falls outside your direct responsibilities, delegate to these subagent
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Canonical mockups (read before any visual decision)
+
+All in `assets/marketing/`. Binding until explicitly replaced by founder.
+
+| Mockup | File | Scope |
+|--------|------|-------|
+| Navbar | `mockup_navbar_concepts_v1.png` | Pill nav, mascot overlap, 5 tabs, themed skins |
+| Journey | `mockup_journey_core_flow_v1.png` | Trail, nodes, fog, weather, world map |
+| Product UX | `mockup_full_product_ux_v1.png` | Lessons, review, camp, feedback, shop, states |
+| Gamification | `mockup_gamification_screens_v1.png` | Achievements, quests, checkpoints, inventory |
+
+When mockups conflict with other docs, **mockups win** until founder says otherwise.
+
+## Visual compliance duties
+
+1. Open the relevant canonical mockup before approving or directing any asset or screen.
+2. Reject work that reads as flat SaaS, mixed icon packs, or off-brand atmosphere.
+3. Ensure all visual subagents cite mockup panels in proposals.
+4. Register new reference art in `docs/asset-registry.md`.
+5. Escalate mockup-vs-vision conflicts to founder — do not silently compromise.
 
 ## Architecture constraints
 

@@ -45,7 +45,7 @@ import {
   getRecallAnswer,
 } from "@/features/learning/utils/exercise-steps";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import { journeyService } from "@/features/learning/services/journey.service";
+import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 
 function groupExamplesByParentId<T extends { vocabulary_id?: string; kanji_id?: string; grammar_id?: string }>(

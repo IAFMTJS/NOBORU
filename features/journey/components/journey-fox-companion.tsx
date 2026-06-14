@@ -3,15 +3,14 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
+import { NavFoxImage } from "@/components/media/nav-fox-image";
 import {
   computePathCoordinates,
   type PathGeometryOptions,
 } from "@/features/journey/components/path-geometry";
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
-import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import { yamaService } from "@/features/yama/services/yama.service";
-import type { YamaExpression } from "@/features/yama/types/yama.types";
 import { cn } from "@/lib/utils";
 
 type JourneyFoxCompanionProps = {
@@ -21,22 +20,6 @@ type JourneyFoxCompanionProps = {
   interactionsEnabled?: boolean;
   idleMotionEnabled?: boolean;
 };
-
-function resolveFoxExpression(
-  node: JourneyNode,
-  evolutionSlug?: CompanionEvolutionSlug,
-): YamaExpression {
-  if (node.state === "completed") {
-    if (evolutionSlug === "celestial_fox" || evolutionSlug === "shrine_fox") {
-      return "celebrating";
-    }
-    return "happy";
-  }
-  if (node.state === "in_progress") return "adventure";
-  if (node.state === "available") return "encouraging";
-  if (node.kind === "checkpoint") return "determined";
-  return "adventure";
-}
 
 function resolveFoxOffset(x: number): number {
   const offsetX = x <= 50 ? x + 11 : x - 11;
@@ -53,7 +36,6 @@ function resolveFoxPresence(node: JourneyNode) {
 export function JourneyFoxCompanion({
   currentNode,
   geometryOptions,
-  evolutionSlug,
   interactionsEnabled = false,
   idleMotionEnabled = false,
 }: JourneyFoxCompanionProps) {
@@ -64,7 +46,6 @@ export function JourneyFoxCompanion({
     geometryOptions,
   );
   const foxX = resolveFoxOffset(x);
-  const expression = resolveFoxExpression(currentNode, evolutionSlug);
   const presence = useMemo(
     () => resolveFoxPresence(currentNode),
     [currentNode],
@@ -131,13 +112,7 @@ export function JourneyFoxCompanion({
               : { duration: 0.42, ease: "easeOut" }
         }
       >
-        <YamaAvatar
-          expression={expression}
-          size="lg"
-          fit="full"
-          alt=""
-          priority
-        />
+        <NavFoxImage tab="journey" variant="trail" priority />
       </motion.div>
 
       <AnimatePresence>

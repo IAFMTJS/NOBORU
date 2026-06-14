@@ -43,6 +43,8 @@ import type {
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
+import { streakService } from "@/features/achievements/services/streak.service";
+import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 import { isJlptLevel, type JlptLevel } from "@/lib/content/types";
 
@@ -63,11 +65,19 @@ export async function getJourneyPath(): Promise<JourneyPathViewModel> {
 export async function getJourneyPathWithContext(): Promise<{
   journey: JourneyPathViewModel;
   currentRegionSlug: string;
+  profileStats: {
+    displayName: string;
+    levelLabel: string;
+    currentStreak: number;
+    totalXp: number;
+  } | null;
 }> {
   const userId = await requireAuthenticatedUserId();
-  const [journey, profile] = await Promise.all([
+  const [journey, profile, currentStreak, elevation] = await Promise.all([
     journeyService.getJourneyPath(userId),
     profileServerService.getProfileCore(),
+    streakService.getCurrentStreak(userId),
+    elevationRepository.ensureElevation(userId),
   ]);
 
   return {
@@ -77,6 +87,14 @@ export async function getJourneyPathWithContext(): Promise<{
       profile?.currentRegionSlug ??
       journey.regions[0]?.slug ??
       "foothills",
+    profileStats: profile
+      ? {
+          displayName: profile.displayName,
+          levelLabel: profile.levelLabel,
+          currentStreak,
+          totalXp: elevation.total_ep,
+        }
+      : null,
   };
 }
 

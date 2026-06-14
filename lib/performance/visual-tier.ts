@@ -14,10 +14,10 @@ export function resolveVisualTier(): VisualTier {
 export function glassClass(tier: VisualTier): string {
   switch (tier) {
     case "high":
-      return "backdrop-blur-md bg-card/80";
+      return "glass-panel backdrop-blur-md";
     case "medium":
-      return "backdrop-blur-sm bg-card/90";
+      return "glass-panel backdrop-blur-sm bg-card/90";
     case "low":
-      return "bg-card/95";
+      return "bg-card/95 border-border";
   }
 }

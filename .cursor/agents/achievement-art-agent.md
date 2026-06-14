@@ -47,9 +47,23 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Achievement art must match `assets/marketing/mockup_gamification_screens_v1.png`:
+
+- **Achievement Shrine:** Torii at night, circular illustrated badges in a grid, milestone counters
+- **Badge style:** Circular, climb-themed motifs — lanterns, peaks, compasses, maps, summits
+- **Rarity:** Common (simple) → Legendary (glow/special effects) — never gacha-game chrome
+- **Checkpoint rewards:** Horizontal reward row layout — XP, gems, item icons
+- **Memory book:** Journal-style "firsts" entries with small illustrative thumbnails
+
+Badges are climbing milestones — earned, not handed out constantly.
 
 ## Architecture constraints
 

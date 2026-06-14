@@ -1,18 +1,18 @@
-import { Flame, Gem, Star } from "lucide-react";
-
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
-import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@/components/ui/circular-progress";
-import { JourneyPreviewMap } from "@/features/learning/components/journey/journey-preview-map";
+import { GlassPanel } from "@/components/visual/glass-panel";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
+import { StoryTitle } from "@/components/visual/story-title";
+import { JourneyPreviewMap } from "@/features/journey/components/journey-preview-map";
 import { ExpeditionHeroYama } from "@/features/learning/components/trail/expedition-hero-yama";
-import { TrailQuestCards } from "@/features/quests/components/trail-quest-cards";
+import { DailyQuestBoard } from "@/features/gamification/components/daily-quest-board";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 import { NextUnlockPreview } from "@/components/progression/next-unlock-preview";
 import { CompanionBadge } from "@/features/companion/components/companion-badge";
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
-import type { JourneyNode } from "@/features/learning/types/journey.types";
+import type { JourneyNode } from "@/features/journey/types/journey.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 
 type ExpeditionHeroProps = {
@@ -81,8 +81,10 @@ export function ExpeditionHero({
         </div>
       </div>
 
-      <div className="rounded-xl border border-border/50 bg-card p-3 shadow-elevation-1">
-        <p className="mb-2 text-caption font-semibold">Continue Your Climb</p>
+      <GlassPanel className="p-3">
+        <StoryTitle as="h3" className="mb-2 text-sm normal-case tracking-wide">
+          Continue Your Climb
+        </StoryTitle>
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1 space-y-0.5">
             <p className="truncate text-body-sm font-medium">
@@ -100,7 +102,7 @@ export function ExpeditionHero({
           />
         </div>
 
-        <Button size="default" className="mt-3 w-full" asChild>
+        <PrimaryClimbButton className="mt-3" asChild>
           <AnalyticsLink
             href={continueHref}
             eventName="trail_continue_clicked"
@@ -111,8 +113,8 @@ export function ExpeditionHero({
           >
             Continue Climbing
           </AnalyticsLink>
-        </Button>
-      </div>
+        </PrimaryClimbButton>
+      </GlassPanel>
 
       {journeyPreview.length > 0 ? (
         <div className="space-y-2">
@@ -135,7 +137,11 @@ export function ExpeditionHero({
         </div>
       ) : null}
 
-      <TrailQuestCards daily={quests.daily} variant="compact" />
+      <DailyQuestBoard
+        daily={quests.daily}
+        variant="compact"
+        streakDays={stats.currentStreak}
+      />
 
       <CompanionBadge companion={companion} />
 
@@ -143,22 +149,28 @@ export function ExpeditionHero({
         <NextUnlockPreview unlock={progressionPreview.primaryUnlock} compact />
       ) : null}
 
-      <div className="grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-card/80 px-3 py-3">
+      <GlassPanel className="grid grid-cols-3 gap-2 px-3 py-3">
         <div className="flex items-center justify-center gap-1.5">
-          <Flame className="h-4 w-4 shrink-0 text-warning" aria-hidden />
+          <span className="text-trail-glow text-body-sm" aria-hidden>
+            🔥
+          </span>
           <span className="text-body-sm font-medium">{stats.currentStreak}</span>
         </div>
-        <div className="flex items-center justify-center gap-1.5 border-x border-border/50">
-          <Star className="h-4 w-4 shrink-0 text-primary" aria-hidden />
+        <div className="flex items-center justify-center gap-1.5 border-x border-glass-border">
+          <span className="text-xp-gold text-body-sm" aria-hidden>
+            ✦
+          </span>
           <span className="text-body-sm font-medium">
             {stats.totalXp.toLocaleString()}
           </span>
         </div>
         <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-          <Gem className="h-4 w-4 shrink-0" aria-hidden />
+          <span className="text-reward text-body-sm" aria-hidden>
+            ◆
+          </span>
           <span className="text-body-sm font-medium">—</span>
         </div>
-      </div>
+      </GlassPanel>
     </div>
   );
 }

@@ -12,6 +12,7 @@ Authoritative rules for AI-assisted development in Cursor.
 
 | Rule | Activates On |
 |------|--------------|
+| [visual-reference.mdc](./visual-reference.mdc) | UI components, assets, visual agents — **BINDING mockup style** |
 | [uiux.mdc](./uiux.mdc) | `**/*.tsx`, components, app, feature components |
 | [frontend.mdc](./frontend.mdc) | TSX, components, app routes |
 | [backend.mdc](./backend.mdc) | services, API routes |

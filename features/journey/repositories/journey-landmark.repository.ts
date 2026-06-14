@@ -34,7 +34,17 @@ class JourneyLandmarkRepository {
       .eq("status", "published")
       .order("order_index", { ascending: true });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+      // Table may not exist until migration is applied — fall back to synthetic landmarks.
+      if (
+        error.code === "42P01" ||
+        error.message.includes("journey_landmarks") ||
+        error.message.includes("does not exist")
+      ) {
+        return [];
+      }
+      throw new Error(error.message);
+    }
     return ((data ?? []) as JourneyLandmarkRow[]).map(mapLandmarkRow);
   }
 }

@@ -1,26 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import {
-  BookOpen,
-  Brain,
-  Headphones,
-  Languages,
-  Sparkles,
-  Target,
-  Type,
-} from "lucide-react";
 
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
 const TRAINING_GROUNDS = [
@@ -28,88 +12,124 @@ const TRAINING_GROUNDS = [
     title: "Review Queue",
     description: "Spaced repetition and weakness drills.",
     href: "/review",
-    icon: Target,
+    glyph: "◎",
     location: "vocabulary_hall" as const,
   },
   {
     title: "Kana Dojo",
     description: "Hiragana and katakana recognition and writing.",
     href: "/learn/hiragana",
-    icon: Type,
+    glyph: "あ",
     location: "kana_dojo" as const,
   },
   {
     title: "Vocabulary Hall",
     description: "Word recall, meaning, and production drills.",
     href: "/learn/vocabulary",
-    icon: Languages,
+    glyph: "語",
     location: "vocabulary_hall" as const,
   },
   {
     title: "Grammar Shrine",
     description: "Pattern recognition and sentence building.",
     href: "/learn/grammar",
-    icon: BookOpen,
+    glyph: "寺",
     location: "grammar_shrine" as const,
   },
   {
     title: "Listening Pavilion",
     description: "Ear training and comprehension practice.",
     href: "/learn/listening",
-    icon: Headphones,
+    glyph: "♪",
     location: "listening_pavilion" as const,
   },
   {
     title: "Kanji Grounds",
     description: "Readings, radicals, and stroke mastery.",
     href: "/learn/kanji",
-    icon: Brain,
+    glyph: "字",
     location: "grammar_shrine" as const,
   },
   {
     title: "Reading Library",
     description: "Graded passages and comprehension checks.",
     href: "/learn/reading",
-    icon: Sparkles,
+    glyph: "巻",
     location: "grammar_shrine" as const,
   },
 ] as const;
 
+function DojoHubTile({
+  glyph,
+  title,
+  description,
+  href,
+}: {
+  glyph: string;
+  title: string;
+  description: string;
+  href: string;
+}) {
+  return (
+    <GlassPanel className="transition-colors hover:border-trail-glow/30">
+      <Link href={href} className="focus-ring block space-y-3 p-4">
+        <div className="flex items-start gap-3">
+          <span
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-success/10 font-japanese text-lg text-success"
+            aria-hidden
+          >
+            {glyph}
+          </span>
+          <div className="min-w-0 space-y-1">
+            <p className="text-body-sm font-semibold">{title}</p>
+            <p className="text-caption text-muted-foreground">{description}</p>
+          </div>
+        </div>
+        <p className="text-caption font-medium text-primary">Enter →</p>
+      </Link>
+    </GlassPanel>
+  );
+}
+
 export function DojoScreen() {
   return (
-    <PageContainer>
-      <ScreenHeader
-        title="Dojo"
-        subtitle="Training Grounds — deliberate practice for mastery"
-      />
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <RegionHeroImage
+          regionSlug="forest-trail"
+          alt=""
+          className="absolute inset-0 h-full min-h-dvh rounded-none"
+          hideOverlay
+        />
+      }
+    >
+      <PageContainer>
+        <header className="space-y-1">
+          <StoryTitle as="h1" className="text-xl">
+            Dojo
+          </StoryTitle>
+          <p className="text-body-sm text-muted-foreground">
+            Training Grounds — deliberate practice for mastery
+          </p>
+        </header>
 
-      <Card className="border-success/20 bg-gradient-to-br from-success/10 via-card to-card shadow-elevation-1">
-        <CardContent className="p-4">
-          <YamaTrainingPresence location="kana_dojo" size="md" />
-        </CardContent>
-      </Card>
+        <GlassPanel className="p-4">
+          <YamaTrainingPresence location="kana_dojo" size="md" className="mb-0" />
+        </GlassPanel>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        {TRAINING_GROUNDS.map((ground) => {
-          const Icon = ground.icon;
-          return (
-            <Card key={ground.href} className="shadow-elevation-1">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2">
-                  <Icon className="h-5 w-5 text-success" aria-hidden />
-                  <CardTitle className="text-base">{ground.title}</CardTitle>
-                </div>
-                <CardDescription>{ground.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full" variant="outline" asChild>
-                  <Link href={ground.href}>Enter</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </PageContainer>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {TRAINING_GROUNDS.map((ground) => (
+            <DojoHubTile
+              key={ground.href}
+              glyph={ground.glyph}
+              title={ground.title}
+              description={ground.description}
+              href={ground.href}
+            />
+          ))}
+        </div>
+      </PageContainer>
+    </IllustratedScreen>
   );
 }

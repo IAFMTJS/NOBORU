@@ -48,9 +48,23 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Tokens in `app/globals.css` and `tailwind.config.ts` must support the canonical mockup palette:
+
+- **Dark base:** Mountain Night `#0F1115` / surface `#171A21` / card `#1E232D`
+- **Functional glow:** Warm amber/gold CSS utilities for trail active, nav selected — not decorative
+- **Primary action:** Mountain Red `#D64045`
+- **Glass surfaces:** Semi-transparent card tokens with subtle border luminance for overlays on illustrated backgrounds
+- **Nav skins:** Theme variants must be swappable without structural change (see navbar mockup)
+
+Design dark mode first. Light mode adapts atmosphere — not a generic white inversion.
 
 ## Architecture constraints
 

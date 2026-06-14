@@ -43,7 +43,7 @@ export function buildProgressionPreview(
       label: input.companionNext.label,
       progressPercent: input.companionNext.progressPercent,
       remainingLabel: input.companionNext.remainingLabel,
-      href: "/world/fox-camp",
+      href: "/world",
     });
   }
 

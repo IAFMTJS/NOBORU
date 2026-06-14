@@ -37,6 +37,12 @@ Specialist
 ## Governance
 
 * docs/MASTER_PROMPT.md
+* docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 * .cursor/agents/AGENTS.md
 * .cursor/agents/SUBAGENTS.md
 * .cursor/rules/architecture.mdc
+* .cursor/rules/visual-reference.mdc
+
+## Mockup alignment
+
+Match mystical Japanese mountain journey aesthetic from canonical mockups. Cite relevant panel before proposing UI illustrations.

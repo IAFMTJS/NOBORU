@@ -49,9 +49,23 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Region art must match `assets/marketing/mockup_journey_core_flow_v1.png`:
+
+- **Trail spine:** Winding stone path with warm orange glow on active segments
+- **Atmosphere:** Fog of war on locked regions; cinematic torii transitions between regions
+- **Weather/time:** Same painterly style — sunny, rainy, night, snow, morning/evening variants
+- **World map:** Mountain peaks as region chapters — zoomed-out journey view
+- **Landmarks:** Shrines, lanterns, gates, camps — Japanese mountain folklore, never generic fantasy
+
+Each region is one continuous ascent — not disconnected game worlds.
 
 ## Architecture constraints
 

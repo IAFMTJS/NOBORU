@@ -39,7 +39,7 @@ export function resolveJourneyVisualSettings(
       return {
         parallaxMultiplier: 0.45,
         environmentLayers: true,
-        weatherEffects: true,
+        weatherEffects: false,
         ambientParticles: true,
         particleIntensity: "reduced",
         foxInteractions: true,
@@ -47,8 +47,8 @@ export function resolveJourneyVisualSettings(
         ambientSound: false,
         checkpointCelebration: false,
         trialTempleEffects: true,
-        lazyLoadRootMargin: "280px 0px",
-        maxLoadedArtSections: 4,
+        lazyLoadRootMargin: "480px 0px",
+        maxLoadedArtSections: 0,
       };
     case "low":
       return {

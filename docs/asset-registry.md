@@ -102,7 +102,8 @@ Generate trail-2 art: `npm run assets:region-scrolls-trail2`
 | `achievement_*_v1` (11 badges) | Achievement Badges | achievements | v1 | approved | both |
 | `region_*_v1` (8 regions) | Region Heroes | regions | v1 | approved | both |
 | `game_*_v1` (5 games) | Game Art | games | v1 | approved | both |
-| `mockup_product_collection_v1` | Product Mockup Collection | marketing | v1 | approved | both |
+| `mockup_canonical_collection_v1` | Canonical Mockup Collection (Binding) | marketing | v1 | approved | both |
+| `mockup_product_collection_v1` | Product Mockup Collection (legacy) | marketing | v1 | approved | both |
 | `mockup_home_learn_flow_dark_v1` | Home & Learn Flow Redesign | marketing | v1 | approved | dark |
 
 ---
@@ -296,6 +297,42 @@ Generate trail-2 art: `npm run assets:region-scrolls-trail2`
 | `mockup_home_learn_flow_dark_v1.png` | Home base camp + trail-first Learn flow (5 screens) |
 
 **Note:** Marketing mockups are design references — not served in production UI. They guide screen layout, spacing, and component placement.
+
+---
+
+### mockup_canonical_collection_v1
+
+| Field | Value |
+|-------|-------|
+| **ID** | `mockup_canonical_collection_v1` |
+| **Name** | Canonical Mockup Collection (Binding) |
+| **Category** | marketing |
+| **Version** | v1 |
+| **Status** | approved — **BINDING until founder revokes** |
+| **Owner Agent** | Art Director Agent |
+| **Created** | 2026-06-14 |
+| **Updated** | 2026-06-14 |
+
+**Source path:** `assets/marketing/`
+
+**Tags:** `mockup`, `ui-reference`, `binding`, `art-direction`
+
+**Usage locations:**
+
+- [mockup-reference-style.md](./mockup-reference-style.md) — authoritative visual specification
+- [.cursor/rules/visual-reference.mdc](../.cursor/rules/visual-reference.mdc) — binding Cursor rule
+- All visual agents under Art Director Agent
+
+**Files:**
+
+| File | Description |
+|------|-------------|
+| `mockup_navbar_concepts_v1.png` | Pill bottom nav, Yama mascot overlap, 5 tabs, 10 themed skin variants |
+| `mockup_journey_core_flow_v1.png` | Trail map, lesson nodes, fog, weather/time, world map, region transitions |
+| `mockup_full_product_ux_v1.png` | Lessons, review, camp hub, feedback, shop, social, system states |
+| `mockup_gamification_screens_v1.png` | Achievement shrine, daily quests, checkpoints, inventory, events, memory book |
+
+**Note:** These four mockups supersede legacy mockup collections when they conflict. See mockup-reference-style.md for revocation policy.
 
 ---
 

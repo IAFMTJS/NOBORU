@@ -744,15 +744,29 @@ Let’s begin your ascent.
 
 SCREEN VISUAL LANGUAGE
 
-All screens must match the approved product mockups.
+All screens must match the **four canonical mockups** (binding until founder revokes).
+
+Primary reference: docs/mockup-reference-style.md
 
 Reference assets:
+
+assets/marketing/mockup_navbar_concepts_v1.png
+
+assets/marketing/mockup_journey_core_flow_v1.png
+
+assets/marketing/mockup_full_product_ux_v1.png
+
+assets/marketing/mockup_gamification_screens_v1.png
+
+Legacy references (secondary when they conflict):
 
 assets/marketing/mockup_product_dark_v1.png
 
 assets/marketing/mockup_product_light_v1.png
 
 assets/marketing/mockup_supplementary_dark_v1.png
+
+assets/marketing/mockup_home_learn_flow_dark_v1.png
 
 ⸻
 

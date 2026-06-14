@@ -4,9 +4,15 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
+import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
-import { MascotImage } from "@/components/media/mascot-image";
 import { Button } from "@/components/ui/button";
+import {
+  GlassPanel,
+  IllustratedScreen,
+  PrimaryClimbButton,
+  StoryTitle,
+} from "@/components/visual";
 import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
 import { SelectionCard } from "@/features/onboarding/components/selection-card";
 import {
@@ -24,6 +30,7 @@ import {
   type OnboardingDraft,
 } from "@/features/onboarding/types/onboarding.types";
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
+import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import { cn } from "@/lib/utils";
 
 export function OnboardingWizard() {
@@ -91,7 +98,18 @@ export function OnboardingWizard() {
     (step === 7 && true);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <IllustratedScreen
+      scrim="full"
+      background={
+        <RegionHeroImage
+          regionSlug="foothills"
+          alt=""
+          className="absolute inset-0 h-full min-h-dvh rounded-none"
+          hideOverlay
+        />
+      }
+      className="flex min-h-dvh flex-col"
+    >
       <div className="px-4 pt-[max(1rem,env(safe-area-inset-top))]">
         <OnboardingProgress currentStep={step} />
       </div>
@@ -99,9 +117,9 @@ export function OnboardingWizard() {
       <div className="flex flex-1 flex-col justify-between px-4 py-8">
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center space-y-6">
           {step === 1 ? (
-            <div className="space-y-6 text-center">
-              <div className="relative mx-auto h-32 w-32">
-                <MascotImage alt="Yama" fill className="object-contain" priority />
+            <GlassPanel className="space-y-6 p-6 text-center">
+              <div className="mx-auto flex justify-center">
+                <YamaAvatar expression="adventure" size="xl" alt="Yama" priority />
               </div>
               <NoboruWordmark className="mx-auto" priority />
               <p className="text-body-sm text-muted-foreground">
@@ -110,12 +128,14 @@ export function OnboardingWizard() {
               <p className="text-body text-muted-foreground">
                 {ONBOARDING_COPY.welcome.tagline}
               </p>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 2 ? (
-            <div className="space-y-4">
-              <h2 className="text-heading-4">{ONBOARDING_COPY.goal.title}</h2>
+            <GlassPanel className="space-y-4 p-5">
+              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                {ONBOARDING_COPY.goal.title}
+              </StoryTitle>
               <div className="space-y-2">
                 {LEARNING_GOAL_OPTIONS.map((option) => {
                   const Icon = option.icon;
@@ -130,12 +150,14 @@ export function OnboardingWizard() {
                   );
                 })}
               </div>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 3 ? (
-            <div className="space-y-4">
-              <h2 className="text-heading-4">{ONBOARDING_COPY.level.title}</h2>
+            <GlassPanel className="space-y-4 p-5">
+              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                {ONBOARDING_COPY.level.title}
+              </StoryTitle>
               <div className="grid grid-cols-2 gap-2">
                 {PLACEMENT_OPTIONS.map((option) => (
                   <SelectionCard
@@ -149,12 +171,14 @@ export function OnboardingWizard() {
                   />
                 ))}
               </div>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 4 ? (
-            <div className="space-y-4">
-              <h2 className="text-heading-4">{ONBOARDING_COPY.dailyGoal.title}</h2>
+            <GlassPanel className="space-y-4 p-5">
+              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                {ONBOARDING_COPY.dailyGoal.title}
+              </StoryTitle>
               <div className="space-y-2">
                 {DAILY_GOAL_OPTIONS.map((option) => (
                   <SelectionCard
@@ -168,12 +192,14 @@ export function OnboardingWizard() {
                   />
                 ))}
               </div>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 5 ? (
-            <div className="space-y-4">
-              <h2 className="text-heading-4">{ONBOARDING_COPY.theme.title}</h2>
+            <GlassPanel className="space-y-4 p-5">
+              <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                {ONBOARDING_COPY.theme.title}
+              </StoryTitle>
               <div className="space-y-2">
                 {THEME_OPTIONS.map((option) => (
                   <SelectionCard
@@ -188,35 +214,37 @@ export function OnboardingWizard() {
                   />
                 ))}
               </div>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 6 ? (
-            <div className="space-y-6 text-center">
-              <div className="relative mx-auto h-40 w-40">
-                <MascotImage alt="Yama" fill className="object-contain" priority />
+            <GlassPanel className="space-y-6 p-6 text-center">
+              <div className="mx-auto flex justify-center">
+                <YamaAvatar expression="happy" size="xl" alt="Yama" priority />
               </div>
               <div className="space-y-2">
-                <h2 className="text-heading-4">{ONBOARDING_COPY.meetYama.title}</h2>
+                <StoryTitle as="h2" className="text-lg normal-case tracking-wide">
+                  {ONBOARDING_COPY.meetYama.title}
+                </StoryTitle>
                 <p className="text-body text-muted-foreground">
                   {ONBOARDING_COPY.meetYama.body}
                 </p>
               </div>
-            </div>
+            </GlassPanel>
           ) : null}
 
           {step === 7 ? (
-            <div className="space-y-6 text-center">
-              <div className="rounded-hero border border-primary/20 bg-primary/5 p-6">
-                <p className="text-caption uppercase tracking-wide text-primary">
-                  {FOOTHILLS_REGION.trail}
-                </p>
-                <h2 className="mt-2 text-heading-3">{ONBOARDING_COPY.region.title}</h2>
-                <p className="mt-3 text-body text-muted-foreground">
-                  {ONBOARDING_COPY.region.body}
-                </p>
-              </div>
-            </div>
+            <GlassPanel className="space-y-6 p-6 text-center">
+              <p className="text-caption uppercase tracking-wide text-primary">
+                {FOOTHILLS_REGION.trail}
+              </p>
+              <StoryTitle as="h2" className="text-xl normal-case tracking-wide">
+                {ONBOARDING_COPY.region.title}
+              </StoryTitle>
+              <p className="text-body text-muted-foreground">
+                {ONBOARDING_COPY.region.body}
+              </p>
+            </GlassPanel>
           ) : null}
 
           {error ? (
@@ -234,11 +262,7 @@ export function OnboardingWizard() {
           ) : null}
 
           {step < ONBOARDING_STEP_COUNT ? (
-            <Button
-              className="w-full"
-              disabled={!canContinue}
-              onClick={goNext}
-            >
+            <PrimaryClimbButton disabled={!canContinue} onClick={goNext}>
               {step === 1
                 ? ONBOARDING_COPY.welcome.cta
                 : step === 2
@@ -250,18 +274,17 @@ export function OnboardingWizard() {
                       : step === 5
                         ? ONBOARDING_COPY.theme.cta
                         : ONBOARDING_COPY.meetYama.cta}
-            </Button>
+            </PrimaryClimbButton>
           ) : (
-            <Button
-              className="w-full"
+            <PrimaryClimbButton
               loading={loading}
               onClick={() => void completeOnboarding()}
             >
               {ONBOARDING_COPY.region.cta}
-            </Button>
+            </PrimaryClimbButton>
           )}
         </div>
       </div>
-    </div>
+    </IllustratedScreen>
   );
 }

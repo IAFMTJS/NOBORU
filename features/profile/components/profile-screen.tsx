@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Flame, Gem, Mountain, Settings, Star, Trophy } from "lucide-react";
 
 import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { AchievementShowcase } from "@/features/achievements/components/achievement-showcase";
@@ -7,7 +6,7 @@ import type { AchievementShowcaseViewModel } from "@/features/achievements/types
 import { PageContainer } from "@/components/layout/page-container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { ProfileEditSection } from "@/features/profile/components/profile-edit-section";
 import { TitleSelector } from "@/features/profile/components/title-selector";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
@@ -15,10 +14,10 @@ import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 
-const STAT_ICONS: Record<string, typeof Flame> = {
-  XP: Gem,
-  Streak: Flame,
-  Kanji: Star,
+const STAT_GLYPHS: Record<string, string> = {
+  XP: "✦",
+  Streak: "🔥",
+  Kanji: "字",
 };
 
 type ProfileScreenProps = {
@@ -31,122 +30,121 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
   const region = getRegionVisuals(profile.currentRegionSlug);
 
   return (
-    <PageContainer>
-      <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-2xl">
-        <div className="relative min-h-[14rem]">
-          <RegionHeroImage
-            regionSlug={profile.currentRegionSlug}
-            alt={`${region.label} region`}
-            className="absolute inset-0 h-full min-h-[14rem] rounded-none"
-            hideOverlay
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
-          <div className="relative z-10 flex min-h-[14rem] flex-col justify-end p-4">
-            <div className="flex items-end justify-between gap-3">
-              <div className="min-w-0 space-y-1">
-                <p className="text-caption text-white/75">Climber profile</p>
-                <h1 className="truncate text-heading-4 text-white">{profile.displayName}</h1>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge className="border-white/20 bg-white/10 text-white hover:bg-white/10">
-                    {profile.levelLabel}
-                  </Badge>
-                  <Badge variant="outline" className="border-white/25 text-white/90">
-                    {region.label}
-                  </Badge>
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <RegionHeroImage
+          regionSlug={profile.currentRegionSlug}
+          alt=""
+          className="absolute inset-0 h-full min-h-dvh rounded-none"
+          hideOverlay
+        />
+      }
+    >
+      <PageContainer className="space-y-5">
+        <GlassPanel className="overflow-hidden p-0">
+          <div className="relative min-h-[10rem]">
+            <RegionHeroImage
+              regionSlug={profile.currentRegionSlug}
+              alt={`${region.label} region`}
+              className="absolute inset-0 h-full min-h-[10rem] rounded-none"
+              hideOverlay
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" />
+            <div className="relative z-10 flex min-h-[10rem] flex-col justify-end p-4">
+              <div className="flex items-end justify-between gap-3">
+                <div className="min-w-0 space-y-1">
+                  <p className="text-caption text-white/75">Climber profile</p>
+                  <StoryTitle as="h1" className="truncate text-lg normal-case text-white">
+                    {profile.displayName}
+                  </StoryTitle>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="border-white/20 bg-white/10 text-white hover:bg-white/10">
+                      {profile.levelLabel}
+                    </Badge>
+                    <Badge variant="outline" className="border-white/25 text-white/90">
+                      {region.label}
+                    </Badge>
+                  </div>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0 text-white hover:bg-white/10 hover:text-white"
+                  asChild
+                >
+                  <Link href="/settings" aria-label="Settings">
+                    ⚙
+                  </Link>
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 text-white hover:bg-white/10 hover:text-white"
-                asChild
-              >
-                <Link href="/settings" aria-label="Settings">
-                  <Settings className="h-5 w-5" />
-                </Link>
-              </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </GlassPanel>
 
-      <Card className="border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card shadow-elevation-1">
-        <CardContent className="p-4">
+        <GlassPanel className="p-4">
           <YamaPresence
             presence={yama}
             size="sm"
             layout="horizontal"
-            bubbleClassName="border-primary/20 bg-card/80"
+            bubbleClassName="border-glass-border bg-glass-bg/80"
           />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardContent className="space-y-3 p-4">
+        <GlassPanel className="space-y-3 p-4">
           <TitleSelector />
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/world/fox-camp">Visit Fox Camp</Link>
-          </Button>
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <div className="grid grid-cols-3 gap-3">
-        {profile.stats.map((stat) => {
-          const Icon = STAT_ICONS[stat.label] ?? Mountain;
-          return (
-            <Card
-              key={stat.label}
-              className="border-primary/10 bg-gradient-to-b from-card to-primary/5 shadow-elevation-1"
-            >
-              <CardContent className="space-y-2 p-4 text-center">
-                <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Icon className="h-4 w-4" aria-hidden />
+        <div className="grid grid-cols-3 gap-3">
+          {profile.stats.map((stat) => {
+            const glyph = STAT_GLYPHS[stat.label] ?? "登";
+            return (
+              <GlassPanel key={stat.label} className="space-y-2 p-4 text-center">
+                <div
+                  className="mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-base"
+                  aria-hidden
+                >
+                  {glyph}
                 </div>
                 <p className="text-caption text-muted-foreground">{stat.label}</p>
                 <p className="text-heading-5">{stat.value}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+              </GlassPanel>
+            );
+          })}
+        </div>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="flex items-center gap-2 text-heading-6">
-            <Trophy className="h-4 w-4 text-warning" aria-hidden />
-            Achievements
-          </CardTitle>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/achievements">View all</Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
+        <GlassPanel className="space-y-3 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <StoryTitle as="h3" className="flex items-center gap-2 text-sm normal-case tracking-wide">
+              <span aria-hidden>🏆</span>
+              Achievements
+            </StoryTitle>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/achievements">View all</Link>
+            </Button>
+          </div>
           <AchievementShowcase showcase={achievements} compact />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Edit Profile</CardTitle>
-        </CardHeader>
-        <CardContent>
+        <GlassPanel className="space-y-3 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Edit Profile
+          </StoryTitle>
           <ProfileEditSection initialDisplayName={profile.displayName} />
-        </CardContent>
-      </Card>
+        </GlassPanel>
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Account</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
+        <GlassPanel className="space-y-2 p-4">
+          <StoryTitle as="h3" className="text-sm normal-case tracking-wide">
+            Account
+          </StoryTitle>
           <Button variant="outline" className="w-full" asChild>
             <Link href="/progress">View Progress</Link>
           </Button>
           <Button variant="outline" className="w-full" asChild>
             <Link href="/settings">Settings</Link>
           </Button>
-        </CardContent>
-      </Card>
-    </PageContainer>
+        </GlassPanel>
+      </PageContainer>
+    </IllustratedScreen>
   );
 }

@@ -27,34 +27,40 @@ export function useJourneyAmbientSound(
         .webkitAudioContext;
     if (!AudioCtx) return;
 
+    let source: AudioBufferSourceNode | null = null;
     const context = new AudioCtx();
     contextRef.current = context;
 
-    const bufferSize = 2 * context.sampleRate;
-    const noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i += 1) {
-      output[i] = (Math.random() * 2 - 1) * 0.35;
+    try {
+      const bufferSize = 2 * context.sampleRate;
+      const noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i += 1) {
+        output[i] = (Math.random() * 2 - 1) * 0.35;
+      }
+
+      source = context.createBufferSource();
+      source.buffer = noiseBuffer;
+      source.loop = true;
+
+      const filter = context.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 420;
+
+      const gain = context.createGain();
+      gain.gain.value = 0.018;
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(context.destination);
+      source.start();
+    } catch {
+      void context.close();
+      contextRef.current = null;
     }
 
-    const source = context.createBufferSource();
-    source.buffer = noiseBuffer;
-    source.loop = true;
-
-    const filter = context.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 420;
-
-    const gain = context.createGain();
-    gain.gain.value = 0.018;
-
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(context.destination);
-    source.start();
-
     return () => {
-      source.stop();
+      source?.stop();
       void context.close();
       contextRef.current = null;
     };

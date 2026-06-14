@@ -7,7 +7,8 @@ import { ChevronDown, Map, Settings } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS } from "@/lib/assets/image-presentation";
-import { JourneyWorldScroll } from "@/features/journey/components/journey-world-scroll";
+import { JourneyRegionScroll } from "@/features/journey/components/journey-region-scroll";
+import { JourneyStatusBar } from "@/features/journey/components/journey-status-bar";
 import { ClimbElevationIndicator } from "@/features/learning/components/trail/climb-elevation-indicator";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
@@ -24,14 +25,18 @@ import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { cn } from "@/lib/utils";
 import { glassClass, resolveVisualTier } from "@/lib/performance/visual-tier";
 import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
-import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 
 type JourneyScreenProps = {
   journey: JourneyPathViewModel;
   initialRegionSlug: string;
   trials?: TrialListEntryViewModel[];
-  companionEvolutionSlug?: CompanionEvolutionSlug;
   soundEnabled?: boolean;
+  profileStats?: {
+    displayName: string;
+    levelLabel: string;
+    currentStreak: number;
+    totalXp: number;
+  } | null;
 };
 
 function resolveRegionTrial(
@@ -52,7 +57,7 @@ function resolveInitialRegion(
   initialRegionSlug: string,
 ) {
   const preferred = journey.regions.find((region) => region.slug === initialRegionSlug);
-  if (preferred) {
+  if (preferred && preferred.availability !== "locked") {
     return preferred;
   }
 
@@ -109,43 +114,26 @@ function countLessonPosition(
   return { index: index + 1, total: lessonNodes.length };
 }
 
-function resolveActiveRegion(
-  journey: JourneyPathViewModel,
-  selectedSlug: string,
-): JourneyRegionViewModel | null {
-  return (
-    journey.regions.find((region) => region.slug === selectedSlug) ??
-    journey.regions.find(
-      (region) => region.slug === journey.position.currentRegionSlug,
-    ) ??
-    journey.regions[0] ??
-    null
-  );
-}
-
 export function JourneyScreen({
   journey,
   initialRegionSlug,
   trials = [],
-  companionEvolutionSlug,
-  soundEnabled = true,
+  profileStats,
 }: JourneyScreenProps) {
   const router = useRouter();
   const defaultRegion = resolveInitialRegion(journey, initialRegionSlug);
   const [selectedSlug, setSelectedSlug] = useState(
     defaultRegion?.slug ?? initialRegionSlug,
   );
-  const [focusRegionSlug, setFocusRegionSlug] = useState<string | null>(null);
   const [regionPickerOpen, setRegionPickerOpen] = useState(false);
   const [regionsOverviewOpen, setRegionsOverviewOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<JourneyNode | null>(null);
-  const [selectedNodeRegion, setSelectedNodeRegion] =
-    useState<JourneyRegionViewModel | null>(null);
   const [nodeDetailOpen, setNodeDetailOpen] = useState(false);
   const visualTier = resolveVisualTier();
   const headerGlass = glassClass(visualTier);
 
-  const activeRegion = resolveActiveRegion(journey, selectedSlug);
+  const selectedRegion =
+    journey.regions.find((region) => region.slug === selectedSlug) ?? defaultRegion;
 
   useEffect(() => {
     const resolved = resolveInitialRegion(journey, initialRegionSlug);
@@ -162,8 +150,8 @@ export function JourneyScreen({
     }
   }, [router, selectedSlug]);
 
-  const regionTrial = activeRegion
-    ? resolveRegionTrial(trials, activeRegion.slug)
+  const regionTrial = selectedRegion
+    ? resolveRegionTrial(trials, selectedRegion.slug)
     : null;
 
   const regionSelectItems = useMemo(
@@ -173,8 +161,8 @@ export function JourneyScreen({
 
   const selectedTrailNode = selectedNode ? journeyNodeToTrailNode(selectedNode) : null;
   const selectedLessonPosition =
-    selectedNodeRegion && selectedNode
-      ? countLessonPosition(selectedNodeRegion.nodes, selectedNode.id)
+    selectedRegion && selectedNode
+      ? countLessonPosition(selectedRegion.nodes, selectedNode.id)
       : null;
 
   const { lesson: selectedLessonSummary } = useJourneyLessonSummary(
@@ -182,30 +170,12 @@ export function JourneyScreen({
     nodeDetailOpen,
   );
 
-  const handleNodeSelect = (
-    node: JourneyNode,
-    region: JourneyRegionViewModel,
-  ) => {
+  const handleNodeSelect = (node: JourneyNode) => {
     setSelectedNode(node);
-    setSelectedNodeRegion(region);
     setNodeDetailOpen(true);
   };
 
-  const handleSelectRegion = (slug: string) => {
-    setSelectedSlug(slug);
-    setFocusRegionSlug(slug);
-  };
-
-  const totalLessons = journey.regions.reduce(
-    (sum, region) => sum + region.lessonCount,
-    0,
-  );
-  const totalCompleted = journey.regions.reduce(
-    (sum, region) => sum + region.completedCount,
-    0,
-  );
-
-  if (!activeRegion) {
+  if (!selectedRegion) {
     return (
       <YamaEmptyState
         surface="trail"
@@ -223,24 +193,33 @@ export function JourneyScreen({
       <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-6rem)] min-h-0 flex-col">
         <div className={TRAIL_MAP_IMMERSIVE_HEADER_SCRIM_CLASS} aria-hidden />
 
-        <header className="absolute inset-x-0 top-0 z-30 flex shrink-0 items-center justify-between gap-2 px-4 pb-2 pt-4">
-          <h1 className="text-heading-4 text-foreground">Learn</h1>
+        {profileStats ? (
+          <JourneyStatusBar
+            displayName={profileStats.displayName}
+            levelLabel={profileStats.levelLabel}
+            currentStreak={profileStats.currentStreak}
+            totalXp={profileStats.totalXp}
+          />
+        ) : null}
+
+        <header className="absolute inset-x-0 top-[4.5rem] z-30 grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pb-2">
+          <span aria-hidden className="w-10" />
           <button
             type="button"
             onClick={() => setRegionPickerOpen(true)}
             className={cn(
-              "inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-body-sm font-medium text-white",
+              "inline-flex items-center gap-1 rounded-full border border-glass-border px-3 py-1.5 text-body-sm font-medium text-white",
               headerGlass,
             )}
           >
-            {activeRegion.name}
+            {selectedRegion.name}
             <ChevronDown className="h-4 w-4 opacity-70" aria-hidden />
           </button>
           <Button
             variant="ghost"
             size="icon"
             aria-label="Settings"
-            className="text-foreground hover:bg-black/20 hover:text-foreground"
+            className="ml-auto text-foreground hover:bg-black/20 hover:text-foreground"
             asChild
           >
             <Link href="/settings">
@@ -249,20 +228,17 @@ export function JourneyScreen({
           </Button>
         </header>
 
-        <JourneyWorldScroll
-          journey={journey}
-          focusRegionSlug={focusRegionSlug}
+        <JourneyRegionScroll
+          region={selectedRegion}
           trialHref={regionTrial?.href ?? null}
           trialTitle={regionTrial?.title ?? null}
-          companionEvolutionSlug={companionEvolutionSlug}
-          soundEnabled={soundEnabled}
           onNodeSelect={handleNodeSelect}
           className="min-h-0 flex-1"
         />
 
         <ClimbElevationIndicator
-          completedCount={activeRegion.completedCount}
-          lessonCount={activeRegion.lessonCount}
+          completedCount={selectedRegion.completedCount}
+          lessonCount={selectedRegion.lessonCount}
         />
 
         <Link
@@ -270,7 +246,7 @@ export function JourneyScreen({
           aria-label="View mountain world map"
           className={cn(
             "fixed bottom-[5.5rem] left-4 z-20 flex h-11 w-11 items-center justify-center",
-            "rounded-full border border-white/10 bg-black/50 text-white backdrop-blur-md",
+            "glass-panel rounded-full text-white",
           )}
         >
           <Map className="h-5 w-5" aria-hidden />
@@ -278,11 +254,10 @@ export function JourneyScreen({
 
         <div
           className={cn(
-            "fixed bottom-[5.5rem] right-4 z-20 rounded-full border border-white/10",
-            "bg-black/50 px-3 py-1.5 text-caption text-white backdrop-blur-md",
+            "fixed bottom-[5.5rem] right-4 z-20 rounded-full glass-panel px-3 py-1.5 text-caption text-white",
           )}
         >
-          {totalCompleted}/{totalLessons} lessons
+          {selectedRegion.completedCount}/{selectedRegion.lessonCount} lessons
         </div>
       </div>
 
@@ -291,7 +266,7 @@ export function JourneyScreen({
         onOpenChange={setRegionPickerOpen}
         regions={regionSelectItems}
         selectedSlug={selectedSlug}
-        onSelectRegion={handleSelectRegion}
+        onSelectRegion={setSelectedSlug}
         mode="picker"
       />
 
@@ -300,7 +275,7 @@ export function JourneyScreen({
         onOpenChange={setRegionsOverviewOpen}
         regions={regionSelectItems}
         selectedSlug={selectedSlug}
-        onSelectRegion={handleSelectRegion}
+        onSelectRegion={setSelectedSlug}
         mode="overview"
       />
 
@@ -310,10 +285,8 @@ export function JourneyScreen({
         node={selectedTrailNode}
         lesson={selectedLessonSummary}
         lessonNumber={selectedLessonPosition?.index ?? null}
-        lessonCount={
-          selectedLessonPosition?.total ?? selectedNodeRegion?.lessonCount ?? 0
-        }
-        regionName={selectedNodeRegion?.name ?? activeRegion.name}
+        lessonCount={selectedLessonPosition?.total ?? selectedRegion.lessonCount}
+        regionName={selectedRegion.name}
       />
     </>
   );

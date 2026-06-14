@@ -86,11 +86,11 @@ function CheckpointMarker({
         state === "completed"
           ? "border-success bg-success/15 text-success trail-glow-success"
           : state === "in_progress"
-            ? "border-primary bg-primary/15 text-primary trail-glow-primary"
+            ? "border-trail-glow bg-trail-glow/15 text-heading-story trail-glow-warm"
             : state === "available"
               ? "border-warning bg-warning/15 text-warning trail-glow-warning"
               : "border-white/25 bg-black/40 text-white/50",
-        isCurrent && "scale-110 ring-2 ring-primary/60 ring-offset-2 ring-offset-transparent",
+        isCurrent && "scale-110 ring-2 ring-trail-glow/60 ring-offset-2 ring-offset-transparent",
       )}
     >
       <svg viewBox="0 0 24 24" className="h-8 w-8" aria-hidden>
@@ -185,7 +185,7 @@ export function JourneyPathNode({
         size={isCurrent ? "lg" : "md"}
         className={cn(
           isCurrent &&
-            "ring-2 ring-primary/70 ring-offset-2 ring-offset-transparent trail-glow-primary",
+            "ring-2 ring-trail-glow/70 ring-offset-2 ring-offset-transparent trail-glow-warm",
         )}
       />
     </div>

@@ -382,28 +382,25 @@ export const YAMA_EXPRESSION_STYLES: Record<
   { imageClass: string; containerClass?: string }
 > = {
   main: { imageClass: "" },
-  happy: { imageClass: "scale-[1.28]" },
+  happy: { imageClass: "" },
   celebrating: {
     imageClass: "animate-[yama-celebrate_600ms_ease-out]",
     containerClass: "motion-reduce:animate-none",
   },
   encouraging: { imageClass: "" },
-  supportive: { imageClass: "opacity-95" },
-  thinking: { imageClass: "-rotate-3" },
+  supportive: { imageClass: "" },
+  thinking: { imageClass: "" },
   studying: { imageClass: "" },
-  teaching: { imageClass: "-rotate-1" },
-  surprised: { imageClass: "scale-[1.12]" },
-  concerned: { imageClass: "opacity-95" },
-  determined: { imageClass: "scale-[1.05]" },
-  sleeping: {
-    imageClass: "opacity-90",
-    containerClass: "motion-reduce:animate-none",
-  },
-  confused: { imageClass: "-rotate-6 scale-[0.98]" },
-  sad: { imageClass: "opacity-90 scale-[0.98]" },
+  teaching: { imageClass: "" },
+  surprised: { imageClass: "" },
+  concerned: { imageClass: "" },
+  determined: { imageClass: "" },
+  sleeping: { imageClass: "", containerClass: "motion-reduce:animate-none" },
+  confused: { imageClass: "" },
+  sad: { imageClass: "" },
   adventure: { imageClass: "" },
   training: { imageClass: "" },
-  seasonal: { imageClass: "scale-[1.05]" },
+  seasonal: { imageClass: "" },
   reward: {
     imageClass: "animate-[yama-celebrate_600ms_ease-out]",
     containerClass: "motion-reduce:animate-none",
@@ -413,7 +410,7 @@ export const YAMA_EXPRESSION_STYLES: Record<
     containerClass: "motion-reduce:animate-none",
   },
   victorious: {
-    imageClass: "animate-[yama-celebrate_600ms_ease-out] scale-[1.15]",
+    imageClass: "animate-[yama-celebrate_600ms_ease-out]",
     containerClass: "motion-reduce:animate-none",
   },
 };

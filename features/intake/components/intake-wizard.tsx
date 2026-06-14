@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-import { MascotImage } from "@/components/media/mascot-image";
+import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -103,8 +103,8 @@ export function IntakeWizard({ chartData }: IntakeWizardProps) {
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center space-y-6">
           {step === 1 ? (
             <div className="space-y-6 text-center">
-              <div className="relative mx-auto h-28 w-28">
-                <MascotImage alt="Yama" fill className="object-contain" priority />
+              <div className="mx-auto flex justify-center">
+                <YamaAvatar expression="teaching" size="xl" alt="Yama" priority />
               </div>
               <h1 className="text-heading-3">{INTAKE_COPY.intro.title}</h1>
               <p className="text-body text-muted-foreground">{INTAKE_COPY.intro.subtitle}</p>

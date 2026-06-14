@@ -597,6 +597,8 @@ Asset standards
 
 Visual guidelines
 
+Canonical mockup reference: docs/mockup-reference-style.md (BINDING until founder revokes)
+
 Success Metric:
 
 Every asset feels like it belongs to Noboru.

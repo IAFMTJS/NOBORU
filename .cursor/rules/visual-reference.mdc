@@ -1,0 +1,143 @@
+---
+description: BINDING Noboru visual reference — four canonical mockups govern all UI, art, and asset decisions until explicitly revoked by founder.
+globs: **/*.tsx, **/components/**, **/app/**, **/features/**/components/**, **/assets/**, **/public/**, **/.cursor/agents/**art*, **/.cursor/agents/**ui-art*, **/.cursor/agents/**icon*, **/.cursor/agents/**mascot*, **/.cursor/agents/**theme*, **/.cursor/agents/**region-art*, **/.cursor/agents/**achievement-art*
+alwaysApply: false
+---
+
+# NOBORU VISUAL REFERENCE RULE
+
+Version: 1.0
+
+Priority: **CRITICAL**
+
+Status: **BINDING — AUTHORITATIVE**
+
+Revocation: Only by explicit founder instruction. Until revoked, this rule and `docs/mockup-reference-style.md` override conflicting visual guidance.
+
+⸻
+
+PURPOSE
+
+Noboru's visual target is defined by **four canonical mockups**. Every screen, component, illustration, icon, and asset must converge toward this style.
+
+Agents and implementers must not invent alternate visual directions when mockup guidance exists.
+
+⸻
+
+CANONICAL MOCKUPS
+
+All in `assets/marketing/` — design reference only, not production-served:
+
+| File | ID | Scope |
+|------|-----|-------|
+| `mockup_navbar_concepts_v1.png` | `mockup_navbar_concepts_v1` | Pill nav, mascot overlap, 5 tabs, themed skins, active glow |
+| `mockup_journey_core_flow_v1.png` | `mockup_journey_core_flow_v1` | Trail map, nodes, fog, weather/time, world map, region transitions |
+| `mockup_full_product_ux_v1.png` | `mockup_full_product_ux_v1` | Lessons, review, camp, feedback, shop, social, system states |
+| `mockup_gamification_screens_v1.png` | `mockup_gamification_screens_v1` | Achievements, quests, checkpoints, inventory, events, memory book |
+
+**Full specification:** `docs/mockup-reference-style.md`
+
+Legacy mockups (`mockup_product_*`, `mockup_supplementary_*`, `mockup_home_learn_flow_*`) are secondary when they conflict with the four canonical mockups.
+
+⸻
+
+REQUIREMENTS
+
+Before creating or approving visual work:
+
+1. Read `docs/mockup-reference-style.md`
+2. Open the relevant canonical mockup for the screen or asset type
+3. Match atmosphere, hierarchy, and material language — not necessarily pixel positions
+
+Visual identity targets:
+
+* **Theme:** Mystical Japanese mountain journey — dark, painterly, atmospheric
+* **Backgrounds:** Illustrated environments on primary screens; UI on dark glass overlays
+* **Glow:** Warm amber/gold for active trail, current node, selected nav — functional only
+* **Primary CTA:** Mountain Red `#D64045` — one per screen
+* **Navigation:** 5-tab pill bar (Camp, Journey, Dojo, World, Profile) with Yama mascot overlap
+* **Trail:** Vertical glowing stone path with circular nodes; fog for locked regions
+* **Typography:** Serif for story titles; sans for UI; Noto Sans JP for Japanese content
+* **Icons:** Single thin-line family — no mixed icon packs in learner UI
+
+⸻
+
+CODING STANDARDS
+
+Implementation
+
+* Use design tokens from `app/globals.css` — no hardcoded hex outside token system
+* Illustrated backgrounds via approved assets in `assets/regions/`, `assets/ui/` — register new art in asset registry
+* Dark glass panels: semi-transparent surface tokens + subtle border luminance
+* Bottom nav: pill shape, safe-area aware, mascot integration per navbar mockup
+
+Assets
+
+* New illustrations must pass Art Director alignment against canonical mockups
+* Naming: `category_name_variant_version` per assets.mdc
+* Register in `docs/asset-registry.md` before production use
+
+Agents
+
+* Art Director Agent owns mockup compliance
+* Visual subagents (ui-art, icon, mascot, region-art, achievement-art) must cite mockup panel when proposing art
+* Theme Agent ensures tokens support mockup palette and glass surfaces
+
+⸻
+
+SUCCESS CRITERIA
+
+Visual work succeeds when:
+
+* Reviewers recognize the mockup world without seeing the logo
+* Primary screens use illustrated backgrounds + dark glass content layers
+* Trail/progress reads as glowing ascent, not a flat list
+* Nav matches pill + mascot + 5-tab structure from navbar mockup
+* New assets feel like they belong in the same painterly universe
+* Deviations are documented and founder-approved — not agent-improvised
+
+⸻
+
+FAILURE CRITERIA
+
+Stop and realign when:
+
+* Primary screens are flat card stacks on solid fills with no illustrated world
+* Navigation diverges from 5-tab pill + mascot mockup without founder approval
+* Mixed icon libraries in learner-facing UI
+* Glow used decoratively on inactive elements
+* New visual style invented without mockup reference
+* Legacy mockups or old docs cited over the four canonical mockups when they conflict
+
+⸻
+
+EXAMPLES
+
+Correct
+
+* Journey screen: vertical trail illustration, orange glow on active segment, circular nodes, fox at current lesson — per `mockup_journey_core_flow_v1.png`
+* Bottom nav: pill container, Yama overlapping left, Journey tab glowing orange — per `mockup_navbar_concepts_v1.png`
+* Lesson complete: dark overlay, +XP gold text, red Continue Climbing button — per `mockup_gamification_screens_v1.png`
+
+Incorrect
+
+* Learn screen as vertical list of Lucide icons on flat `#171A21` cards
+* 6-tab bottom bar with no mascot integration
+* Random purple gradient hero unrelated to mountain night palette
+* Implementing from `mockup_product_dark_v1.png` when it conflicts with journey core flow mockup
+
+⸻
+
+ANTI-PATTERNS
+
+Ignoring canonical mockups in favor of agent aesthetic preference
+
+Pixel-copying legacy mockups that contradict the four canonical references
+
+Flat SaaS dashboard aesthetic on learner primary screens
+
+Decorative glow, neon accents, or cyberpunk palette
+
+Creating assets before checking mockup-reference-style.md
+
+END OF visual-reference.mdc

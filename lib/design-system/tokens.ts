@@ -6,6 +6,10 @@
 
 export const colors = {
   mountainRed: "#D64045",
+  trailGlow: "#F6AE2D",
+  headingStory: "#E8A838",
+  reward: "#9B6FD4",
+  xpGold: "#F5C842",
   dark: {
     background: "#0F1115",
     surface: "#171A21",

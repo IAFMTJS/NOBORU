@@ -49,9 +49,24 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 ## Mandatory governance
 
 - docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 - .cursor/agents/AGENTS.md
 - .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+- .cursor/rules/visual-reference.mdc
+
+## Mockup alignment (required)
+
+Before creating loading screens, empty states, or illustrations:
+
+1. Read `docs/mockup-reference-style.md`.
+2. Match the **mystical Japanese mountain journey** aesthetic — painterly backgrounds, dark glass overlays, warm functional glow.
+3. Cite the relevant panel from:
+   - `assets/marketing/mockup_full_product_ux_v1.png` — system states, camp, lesson atmospheres
+   - `assets/marketing/mockup_gamification_screens_v1.png` — celebration, shrine, checkpoint moments
+   - `assets/marketing/mockup_journey_core_flow_v1.png` — trail and region transition art
+
+Yama in UI art: fellow climber at milestones — Teaching, Happy, Proud, Worried, Excited per mockup. Never chibi, never lecture-pose on every screen.
 
 ## Architecture constraints
 

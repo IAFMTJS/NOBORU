@@ -103,6 +103,21 @@ From [vision.md](./vision.md), [art-direction.md](./art-direction.md), and [uiux
 
 ## Approved Mockup Inventory
 
+### Canonical (BINDING — June 2026)
+
+Four mockups in `assets/marketing/` define the visual target until founder explicitly revokes. Full spec: [mockup-reference-style.md](./mockup-reference-style.md).
+
+| File | Coverage |
+|------|----------|
+| `mockup_navbar_concepts_v1.png` | Pill nav, mascot integration, 5 tabs, themed skins, active glow |
+| `mockup_journey_core_flow_v1.png` | Trail map, nodes, fog of war, weather/time, world map, region transitions |
+| `mockup_full_product_ux_v1.png` | Lessons, review, camp, feedback, shop, social, loading/empty/error |
+| `mockup_gamification_screens_v1.png` | Achievements, daily quests, checkpoints, inventory, seasonal events |
+
+Registry: `mockup_canonical_collection_v1` in [asset-registry.md](./asset-registry.md).
+
+### Legacy (secondary when conflicting with canonical)
+
 All mockups live in `assets/marketing/` (design reference — not served in production).
 
 | File | Coverage |
@@ -111,8 +126,6 @@ All mockups live in `assets/marketing/` (design reference — not served in prod
 | `mockup_product_light_v1.png` | Same 8 screens (light) |
 | `mockup_supplementary_dark_v1.png` | Onboarding welcome, Login, Kanji list, Settings, Admin (dark) |
 | `mockup_home_learn_flow_dark_v1.png` | Home base camp, trail-first Learn, node detail, region picker, all regions (dark) |
-
-**Total unique screen types mocked: 18**
 
 Registry: `mockup_product_collection_v1` in [asset-registry.md](./asset-registry.md).
 
@@ -522,9 +535,12 @@ Users and reviewers should say:
 
 | Resource | Path |
 |----------|------|
-| Primary dark mockup | `assets/marketing/mockup_product_dark_v1.png` |
-| Primary light mockup | `assets/marketing/mockup_product_light_v1.png` |
-| Supplementary mockup | `assets/marketing/mockup_supplementary_dark_v1.png` |
+| **Canonical mockups (binding)** | `assets/marketing/mockup_navbar_concepts_v1.png`, `mockup_journey_core_flow_v1.png`, `mockup_full_product_ux_v1.png`, `mockup_gamification_screens_v1.png` |
+| Mockup style spec | `docs/mockup-reference-style.md` |
+| Visual reference rule | `.cursor/rules/visual-reference.mdc` |
+| Legacy dark mockup | `assets/marketing/mockup_product_dark_v1.png` |
+| Legacy light mockup | `assets/marketing/mockup_product_light_v1.png` |
+| Legacy supplementary | `assets/marketing/mockup_supplementary_dark_v1.png` |
 | UI/UX authority | `.cursor/rules/uiux.mdc` |
 | Art direction | `docs/art-direction.md` |
 | Design system | `docs/design-system.md` |

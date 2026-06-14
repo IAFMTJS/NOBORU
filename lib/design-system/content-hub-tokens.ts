@@ -25,51 +25,51 @@ export const CONTENT_HUB_TOKENS: Record<ContentHubVariant, ContentHubTokens> = {
     progressCardBorder: "border-primary/20",
   },
   grammar: {
-    progressIndicator: "bg-violet-500",
-    leadingBg: "border-violet-500/25 bg-violet-500/10",
-    leadingText: "text-violet-600 dark:text-violet-300",
-    progressCardBorder: "border-violet-500/20",
+    progressIndicator: "bg-reward",
+    leadingBg: "border-reward/25 bg-reward/10",
+    leadingText: "text-reward",
+    progressCardBorder: "border-reward/20",
   },
   kanji: {
-    progressIndicator: "bg-amber-500",
-    leadingBg: "border-amber-500/25 bg-amber-500/10",
-    leadingText: "text-amber-700 dark:text-amber-200",
-    progressCardBorder: "border-amber-500/20",
+    progressIndicator: "bg-trail-glow",
+    leadingBg: "border-trail-glow/25 bg-trail-glow/10",
+    leadingText: "text-heading-story",
+    progressCardBorder: "border-trail-glow/20",
   },
   reading: {
-    progressIndicator: "bg-emerald-500",
-    leadingBg: "border-emerald-500/25 bg-emerald-500/10",
-    leadingText: "text-emerald-700 dark:text-emerald-300",
-    progressCardBorder: "border-emerald-500/20",
+    progressIndicator: "bg-success",
+    leadingBg: "border-success/25 bg-success/10",
+    leadingText: "text-success",
+    progressCardBorder: "border-success/20",
   },
   listening: {
-    progressIndicator: "bg-sky-500",
-    leadingBg: "border-sky-500/25 bg-sky-500/10",
-    leadingText: "text-sky-700 dark:text-sky-300",
-    progressCardBorder: "border-sky-500/20",
+    progressIndicator: "bg-info",
+    leadingBg: "border-info/25 bg-info/10",
+    leadingText: "text-info",
+    progressCardBorder: "border-info/20",
   },
 };
 
 export const CONTENT_HUB_BANNER_STYLES: Record<ContentHubVariant, ContentHubBannerStyle> = {
   vocabulary: {
-    gradient: "from-primary/15 via-rose-500/5 to-card",
+    gradient: "from-primary/15 via-primary/5 to-card",
     border: "border-primary/25",
   },
   grammar: {
-    gradient: "from-violet-500/15 via-primary/5 to-card",
-    border: "border-violet-500/25",
+    gradient: "from-reward/15 via-primary/5 to-card",
+    border: "border-reward/25",
   },
   kanji: {
-    gradient: "from-amber-500/15 via-primary/5 to-card",
-    border: "border-amber-500/25",
+    gradient: "from-trail-glow/15 via-primary/5 to-card",
+    border: "border-trail-glow/25",
   },
   reading: {
-    gradient: "from-emerald-500/15 via-primary/5 to-card",
-    border: "border-emerald-500/25",
+    gradient: "from-success/15 via-primary/5 to-card",
+    border: "border-success/25",
   },
   listening: {
-    gradient: "from-sky-500/15 via-primary/5 to-card",
-    border: "border-sky-500/25",
+    gradient: "from-info/15 via-primary/5 to-card",
+    border: "border-info/25",
   },
 };
 

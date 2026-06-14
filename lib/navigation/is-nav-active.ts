@@ -6,7 +6,6 @@ const WORLD_CHILD_PREFIXES = [
   "/progress",
   "/endgame",
   "/learn/world",
-  "/world/fox-camp",
   "/explore",
 ] as const;
 

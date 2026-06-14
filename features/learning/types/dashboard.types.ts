@@ -3,7 +3,7 @@ import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.type
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
-import type { JourneyNode } from "@/features/learning/types/journey.types";
+import type { JourneyNode } from "@/features/journey/types/journey.types";
 
 export type HomeDashboardViewModel = {
   greeting: string;

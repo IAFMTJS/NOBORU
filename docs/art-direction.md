@@ -2,9 +2,11 @@ art-direction.md
 
 NOBORU ART DIRECTION SYSTEM
 
-Version: 1.0
+Version: 1.1
 
 Status: AUTHORITATIVE
+
+**Visual execution target:** [mockup-reference-style.md](./mockup-reference-style.md) — BINDING until founder explicitly revokes. The four canonical mockups in `assets/marketing/` override conflicting guidance in this document.
 
 This document governs all visual identity, illustrations, mascots, icons, achievements, regions, enemies, assets, promotional material, and future generated artwork within Noboru.
 

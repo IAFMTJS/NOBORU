@@ -24,7 +24,7 @@ const SIZE_CLASSES = {
 
 const RING_STYLES: Record<TrailNodeState, string> = {
   completed: "border-success bg-success/20 text-success trail-glow-success",
-  in_progress: "border-primary bg-primary/20 text-primary trail-glow-primary",
+  in_progress: "border-trail-glow bg-trail-glow/20 text-heading-story trail-glow-warm",
   available: "border-warning bg-warning/20 text-warning trail-glow-warning",
   locked: "border-border/80 bg-background/70 text-muted-foreground",
 };

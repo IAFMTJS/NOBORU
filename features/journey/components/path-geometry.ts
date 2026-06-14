@@ -4,6 +4,7 @@ import {
   getJourneyPathSpine,
 } from "@/lib/design-system/journey-path-contracts";
 import { resolveRegionScrollMinHeightVh } from "@/features/journey/constants/journey.constants";
+import { hasTrailScrollArt } from "@/lib/assets/registry";
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 
 export type PathGeometryOptions = {
@@ -48,6 +49,7 @@ export function resolveJourneyMapScrollHeight(
   regionSlug: string,
   nodes: JourneyNode[],
   options: PathGeometryOptions,
+  immersive = false,
 ): number {
   const spine = getJourneyPathSpine(regionSlug, {
     theme: options.theme,
@@ -63,6 +65,10 @@ export function resolveJourneyMapScrollHeight(
   const minY = allYs.length > 0 ? Math.min(...allYs) : 0;
   const maxY = allYs.length > 0 ? Math.max(...allYs) : 100;
   const spreadVh = Math.max(100, maxY - minY + 20);
+
+  if (immersive && hasTrailScrollArt(regionSlug)) {
+    return spreadVh;
+  }
 
   const tierMinVh = resolveRegionScrollMinHeightVh(regionSlug);
   return Math.max(spreadVh, tierMinVh);

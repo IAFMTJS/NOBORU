@@ -60,7 +60,7 @@ export function TrailMapArtwork({
       return (
         <div
           className={cn(
-            "pointer-events-none absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60",
+            "pointer-events-none absolute inset-0 bg-background/20",
             className,
           )}
           aria-hidden
@@ -71,7 +71,7 @@ export function TrailMapArtwork({
     return (
       <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
         <div
-          className="absolute inset-x-0 top-0 h-[108%]"
+          className="absolute inset-x-0 top-0 w-full"
           style={
             parallaxOffsetPx
               ? { transform: `translate3d(0, ${-parallaxOffsetPx}px, 0)` }
@@ -81,7 +81,8 @@ export function TrailMapArtwork({
           <Image
             src={scrollSrc}
             alt=""
-            fill
+            width={1200}
+            height={2400}
             className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
             sizes="100vw"
             priority={priority}
@@ -92,7 +93,7 @@ export function TrailMapArtwork({
           className={cn(
             TRAIL_MAP_SCRIM_CLASS,
             scrim === "minimal"
-              ? "from-transparent via-transparent to-background/20"
+              ? "from-transparent via-transparent to-background/15"
               : "from-background/10 via-transparent to-background/40",
           )}
         />

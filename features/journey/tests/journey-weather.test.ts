@@ -30,12 +30,11 @@ describe("resolveJourneyWeatherProfile", () => {
 });
 
 describe("resolveJourneyVisualSettings phase 5", () => {
-  it("enables weather, particles, fox motion, and sound on high tier", () => {
+  it("enables fox interactions, weather, and sound on high tier", () => {
     const settings = resolveJourneyVisualSettings("high");
     expect(settings.weatherEffects).toBe(true);
-    expect(settings.ambientParticles).toBe(true);
+    expect(settings.environmentLayers).toBe(true);
     expect(settings.foxInteractions).toBe(true);
-    expect(settings.foxIdleMotion).toBe(true);
     expect(settings.ambientSound).toBe(true);
   });
 
@@ -47,11 +46,9 @@ describe("resolveJourneyVisualSettings phase 5", () => {
     expect(settings.ambientSound).toBe(false);
   });
 
-  it("keeps reduced particles on medium tier without ambient sound", () => {
+  it("loads all visible trail art on medium tier", () => {
     const settings = resolveJourneyVisualSettings("medium");
-    expect(settings.weatherEffects).toBe(true);
-    expect(settings.particleIntensity).toBe("reduced");
-    expect(settings.ambientSound).toBe(false);
+    expect(settings.maxLoadedArtSections).toBe(0);
     expect(settings.foxInteractions).toBe(true);
   });
 });

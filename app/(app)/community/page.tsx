@@ -1,5 +1,5 @@
-import { CommunityScreen } from "@/features/community/components/community-screen";
+import { redirect } from "next/navigation";
 
 export default function CommunityPage() {
-  return <CommunityScreen />;
+  redirect("/world");
 }

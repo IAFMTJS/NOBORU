@@ -57,6 +57,22 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        trail: {
+          glow: "hsl(var(--trail-glow))",
+        },
+        heading: {
+          story: "hsl(var(--heading-story))",
+        },
+        reward: {
+          DEFAULT: "hsl(var(--reward))",
+        },
+        xp: {
+          gold: "hsl(var(--xp-gold))",
+        },
+        glass: {
+          bg: "hsl(var(--glass-bg))",
+          border: "hsl(var(--glass-border))",
+        },
         mountain: {
           red: "#D64045",
         },
@@ -84,6 +100,11 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         japanese: ["var(--font-noto-sans-jp)", "var(--font-inter)", "system-ui", "sans-serif"],
+        story: ["var(--font-story)", "Georgia", "serif"],
+      },
+      boxShadow: {
+        "trail-glow": "0 0 14px hsl(var(--trail-glow) / 0.45)",
+        "nav-active": "0 0 20px hsl(var(--trail-glow) / 0.35)",
       },
       fontSize: {
         "heading-1": ["3rem", { lineHeight: "1.1", fontWeight: "600" }],

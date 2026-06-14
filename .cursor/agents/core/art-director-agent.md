@@ -47,6 +47,19 @@ Every asset feels like it belongs to Noboru.
 ## Governance
 
 * docs/MASTER_PROMPT.md
+* docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
 * .cursor/agents/AGENTS.md
 * .cursor/agents/SUBAGENTS.md
 * .cursor/rules/architecture.mdc
+* .cursor/rules/visual-reference.mdc
+
+## Canonical mockups
+
+| File | Scope |
+|------|-------|
+| `assets/marketing/mockup_navbar_concepts_v1.png` | Pill nav, mascot, 5 tabs, themed skins |
+| `assets/marketing/mockup_journey_core_flow_v1.png` | Trail, nodes, fog, weather, world map |
+| `assets/marketing/mockup_full_product_ux_v1.png` | Lessons, review, camp, feedback, states |
+| `assets/marketing/mockup_gamification_screens_v1.png` | Achievements, quests, checkpoints, inventory |
+
+When mockups conflict with other docs, mockups win until founder revokes.
