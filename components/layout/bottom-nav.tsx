@@ -2,32 +2,46 @@
 
 import { usePathname } from "next/navigation";
 
+import { NavBarMascot } from "@/components/layout/nav-bar-mascot";
 import { NavTabItem } from "@/components/layout/nav-tab-item";
-import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
+import { IMMERSIVE_NAV_TAB_CONFIG } from "@/lib/navigation/immersive-nav.constants";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
+import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
+import { cn } from "@/lib/utils";
 
 export function BottomNav() {
   const pathname = usePathname();
+  const activeItem =
+    PRIMARY_NAV_ITEMS.find((item) => isNavActive(pathname, item.href)) ??
+    PRIMARY_NAV_ITEMS[0];
+  const activeConfig = IMMERSIVE_NAV_TAB_CONFIG[activeItem.navTab];
 
   return (
     <nav
       aria-label="Primary navigation"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-primary/15 bg-gradient-to-t from-surface via-surface/98 to-surface/95 backdrop-blur-md"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-8"
     >
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/25 to-transparent"
-        aria-hidden
-      />
-      <div className="mx-auto flex max-w-lg items-end justify-around px-1 pb-[env(safe-area-inset-bottom)] pt-1">
-        {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => (
-          <NavTabItem
-            key={href}
-            href={href}
-            label={label}
-            navTab={navTab}
-            isActive={isNavActive(pathname, href)}
-          />
-        ))}
+        className={cn(
+          "pointer-events-auto relative mx-auto flex max-w-lg items-end overflow-visible rounded-[1.35rem] border backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-500",
+          activeConfig.barSurfaceClass,
+          activeConfig.barBorderClass,
+          "shadow-[0_10px_40px_rgba(0,0,0,0.35)]",
+        )}
+      >
+        <NavBarMascot tab={activeItem.navTab} />
+
+        <div className="flex min-h-[3.65rem] flex-1 items-end justify-around gap-0 px-1 pb-1.5 pt-1.5">
+          {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => (
+            <NavTabItem
+              key={href}
+              href={href}
+              label={label}
+              navTab={navTab}
+              isActive={isNavActive(pathname, href)}
+            />
+          ))}
+        </div>
       </div>
     </nav>
   );

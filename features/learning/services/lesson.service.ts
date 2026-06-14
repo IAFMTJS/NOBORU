@@ -749,6 +749,37 @@ class LessonService {
     return labels;
   }
 
+  async getLessonSummary(
+    lessonId: string,
+    userId: string,
+  ): Promise<LessonSummaryViewModel | null> {
+    const lesson = await learningPathRepository.findPublishedLessonById(lessonId);
+    if (!lesson) return null;
+
+    const regionAccessible = await learningPathService.isRegionAccessible(
+      userId,
+      lesson.unit.region.slug,
+    );
+    if (!regionAccessible) return null;
+
+    const progress = await progressRepository.findByUserAndLesson(
+      userId,
+      lessonId,
+    );
+
+    return {
+      id: lesson.id,
+      unitId: lesson.unit_id,
+      type: lesson.type,
+      title: lesson.title,
+      description: lesson.description,
+      xpReward: lesson.xp_reward,
+      estimatedDuration: lesson.estimated_duration,
+      progress: progress?.status ?? "not_started",
+      score: progress?.score ?? 0,
+    };
+  }
+
   async getNextIncompleteLesson(
     userId: string,
   ): Promise<LessonSummaryViewModel | null> {

@@ -1,4 +1,4 @@
-import type { JourneyPathViewModel } from "@/features/learning/types/journey.types";
+import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import type { RegionSlug } from "@/lib/design-system/regions";
 import { getWorldJourneySpine } from "@/lib/design-system/journey-path-contracts";

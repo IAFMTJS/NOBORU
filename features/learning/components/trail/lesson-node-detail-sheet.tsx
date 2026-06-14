@@ -15,7 +15,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { TrailNodeMarker } from "@/features/learning/components/trail/trail-node-marker";
-import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { YamaCelebration } from "@/features/yama/components/yama-celebration";
 import { yamaService } from "@/features/yama/services/yama.service";
 import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.types";
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
@@ -135,7 +135,12 @@ export function LessonNodeDetailSheet({
                 </Badge>
                 {node.nodeKind === "checkpoint" ? (
                   <Badge variant="outline" className="border-warning/50 text-warning">
-                    Exam
+                    Shrine Exam
+                  </Badge>
+                ) : null}
+                {node.nodeKind === "checkpoint" && node.state === "completed" ? (
+                  <Badge variant="secondary" className="border-success/40 text-success">
+                    Checkpoint cleared
                   </Badge>
                 ) : null}
               </div>
@@ -144,10 +149,15 @@ export function LessonNodeDetailSheet({
         </SheetHeader>
 
         <div className="space-y-4 py-4">
-          {node?.nodeKind === "checkpoint" ? (
-            <YamaPresence
-              presence={yamaService.resolveCheckpointPresence(node.state === "completed")}
-              size="sm"
+          {node?.nodeKind === "checkpoint" && node.state === "completed" ? (
+            <YamaCelebration
+              presence={yamaService.resolveCheckpointPresence(true)}
+              title="Checkpoint cleared!"
+            />
+          ) : node?.nodeKind === "checkpoint" ? (
+            <YamaCelebration
+              presence={yamaService.resolveCheckpointPresence(false)}
+              title="Shrine Exam ahead"
             />
           ) : null}
 
@@ -209,7 +219,15 @@ export function LessonNodeDetailSheet({
                     lessonTitle: node.label,
                   }}
                 >
-                  {node.state === "completed" ? "Review Lesson" : "Continue Lesson"}
+                  {node.nodeKind === "checkpoint"
+                    ? node.state === "completed"
+                      ? "Review Exam"
+                      : "Begin Checkpoint"
+                    : node.state === "completed"
+                      ? "Review Lesson"
+                      : node.state === "available"
+                        ? "Start Lesson"
+                        : "Continue Lesson"}
                 </AnalyticsLink>
               </Button>
               <Button variant="outline" className="w-full" asChild>

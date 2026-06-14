@@ -25,6 +25,10 @@ type TrailMapArtworkProps = {
   trailSegmentIndex?: number;
   /** Lighter scrim when segments stack into one continuous climb. */
   scrim?: "full" | "minimal";
+  /** Vertical parallax offset in pixels for immersive scroll art. */
+  parallaxOffsetPx?: number;
+  /** When false, skip loading heavy scroll artwork (lazy region loading). */
+  loadArtwork?: boolean;
   /** Focal point for scroll art cropped into a compact card (percent 0–100). */
   scrollCropFocus?: { x: number; y: number };
 };
@@ -38,6 +42,8 @@ export function TrailMapArtwork({
   regionSlug,
   trailSegmentIndex = 0,
   scrim = "full",
+  parallaxOffsetPx = 0,
+  loadArtwork = true,
   scrollCropFocus,
 }: TrailMapArtworkProps) {
   const scrollSrc =
@@ -50,16 +56,38 @@ export function TrailMapArtwork({
   const compactScrollSrc = !immersive && scrollSrc && trailSegmentIndex > 0 ? scrollSrc : null;
 
   if (immersive && scrollSrc) {
+    if (!loadArtwork) {
+      return (
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background/60",
+            className,
+          )}
+          aria-hidden
+        />
+      );
+    }
+
     return (
       <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
-        <Image
-          src={scrollSrc}
-          alt=""
-          fill
-          className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
-          sizes="100vw"
-          priority={priority}
-        />
+        <div
+          className="absolute inset-x-0 top-0 h-[108%]"
+          style={
+            parallaxOffsetPx
+              ? { transform: `translate3d(0, ${-parallaxOffsetPx}px, 0)` }
+              : undefined
+          }
+        >
+          <Image
+            src={scrollSrc}
+            alt=""
+            fill
+            className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
+            sizes="100vw"
+            priority={priority}
+            loading={priority ? undefined : "lazy"}
+          />
+        </div>
         <div
           className={cn(
             TRAIL_MAP_SCRIM_CLASS,

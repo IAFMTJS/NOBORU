@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { LANDMARK_EVERY_N_LESSONS } from "@/features/learning/constants/journey.constants";
+import { LANDMARK_EVERY_N_LESSONS } from "@/features/journey/constants/journey.constants";
 import {
   buildRegionJourney,
   canAccessLessonInPath,
   canAccessLessonInRegion,
   resolveNodeKind,
-} from "@/features/learning/services/journey.service";
-import type { RegionJourneyInput } from "@/features/learning/types/journey.types";
+} from "@/features/journey/services/journey.service";
+import type { RegionJourneyInput } from "@/features/journey/types/journey.types";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
 
@@ -105,6 +105,40 @@ describe("buildRegionJourney", () => {
     expect(lessonNodes[0]?.pathPosition).toBeCloseTo(0.04, 2);
     expect(lessonNodes[1]?.pathPosition).toBeCloseTo(0.5, 2);
     expect(lessonNodes[2]?.pathPosition).toBeCloseTo(0.96, 2);
+  });
+
+  it("uses CMS landmarks when provided", () => {
+    const lessons = Array.from({ length: 6 }, (_, index) =>
+      makeLesson(`lesson-${index + 1}`, "vocabulary"),
+    );
+
+    const region = makeRegion({
+      id: "region-cms",
+      slug: "foothills",
+      lessonCount: lessons.length,
+      units: [{ lessons }],
+    });
+
+    const journey = buildRegionJourney(region, [], new Set(), {
+      cmsLandmarks: [
+        {
+          id: "landmark-cms-1",
+          regionId: "region-cms",
+          slug: "village-gate",
+          label: "Hinori Village",
+          subtitle: "First rest stop",
+          kind: "village",
+          triggerAfterLessonCount: 3,
+          pathPosition: 0.42,
+          orderIndex: 0,
+        },
+      ],
+    });
+
+    const landmarks = journey.nodes.filter((node) => node.kind === "landmark");
+    expect(landmarks).toHaveLength(1);
+    expect(landmarks[0]?.label).toBe("Hinori Village");
+    expect(landmarks[0]?.pathPosition).toBeCloseTo(0.42, 2);
   });
 
   it("inserts landmarks every N lessons", () => {

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { learningPathService } from "@/features/learning/services/learning-path.service";
-import { journeyService } from "@/features/learning/services/journey.service";
+import { journeyService } from "@/features/journey/services/journey.service";
 import { lessonService } from "@/features/learning/services/lesson.service";
 import { hiraganaProgressService } from "@/features/hiragana/services/hiragana-progress.service";
 import { katakanaProgressService } from "@/features/katakana/services/katakana-progress.service";
@@ -41,7 +41,7 @@ import type {
 import type {
   JourneyPathViewModel,
   JourneyRegionViewModel,
-} from "@/features/learning/types/journey.types";
+} from "@/features/journey/types/journey.types";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 import { isJlptLevel, type JlptLevel } from "@/lib/content/types";
