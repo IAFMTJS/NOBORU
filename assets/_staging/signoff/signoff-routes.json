@@ -1,0 +1,79 @@
+{
+  "viewport": { "width": 390, "height": 844 },
+  "dodCriteria": [
+    { "id": "environment", "label": "1. Painterly full-bleed environment (not flat or photo wallpaper)" },
+    { "id": "glass", "label": "2. Content on glass overlays composited in the world" },
+    { "id": "storyTitle", "label": "3. Section titles use gold serif StoryTitle" },
+    { "id": "primaryCta", "label": "4. One red PrimaryClimbButton where mockup shows one" },
+    { "id": "stickerAlpha", "label": "5. Clean sticker alpha — no white halos" },
+    { "id": "noLucide", "label": "6. No Lucide on learner-primary chrome" },
+    { "id": "composition", "label": "7. Composition + atmosphere match mockup panel" }
+  ],
+  "routes": [
+    {
+      "slug": "camp",
+      "path": "/camp",
+      "tier": "A",
+      "mockupRef": "ref_camp_dawn_v1",
+      "mockupPanel": "home_learn_flow HOME / Product UX §16",
+      "priority": 1
+    },
+    {
+      "slug": "learn-foothills",
+      "path": "/learn?region=foothills",
+      "tier": "A",
+      "mockupRef": "ref_journey_trail_scroll_v1",
+      "mockupPanel": "journey_core §1 Short Trail",
+      "priority": 2
+    },
+    {
+      "slug": "learn-forest-trail",
+      "path": "/learn?region=forest-trail",
+      "tier": "A",
+      "mockupRef": "ref_journey_trail_scroll_v1",
+      "mockupPanel": "journey_core §3 Forest Trail",
+      "priority": 3
+    },
+    {
+      "slug": "navbar-camp",
+      "path": "/camp",
+      "tier": "A",
+      "mockupRef": "ref_nav_pill_ember_night_v1",
+      "mockupPanel": "navbar_concepts §1 ember_night",
+      "captureNote": "Crop or frame bottom nav + fox only",
+      "priority": 4
+    },
+    {
+      "slug": "world",
+      "path": "/world",
+      "tier": "A",
+      "mockupRef": "ref_journey_world_map_v1",
+      "mockupPanel": "journey_core §8 World Map",
+      "priority": 5
+    },
+    {
+      "slug": "profile",
+      "path": "/profile",
+      "tier": "A",
+      "mockupRef": "ref_camp_night_v1",
+      "mockupPanel": "Product UX profile / lantern path",
+      "priority": 6
+    },
+    {
+      "slug": "achievements",
+      "path": "/achievements",
+      "tier": "A",
+      "mockupRef": "ref_achievements_shrine_v1",
+      "mockupPanel": "gamification §1 Achievement Shrine",
+      "priority": 7
+    },
+    {
+      "slug": "dojo",
+      "path": "/dojo",
+      "tier": "A",
+      "mockupRef": "ref_dojo_hub_v1",
+      "mockupPanel": "Product UX dojo hub",
+      "priority": 8
+    }
+  ]
+}

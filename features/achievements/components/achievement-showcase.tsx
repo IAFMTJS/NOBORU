@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 import { SceneImage } from "@/components/media/scene-image";
-import { UiIconImage } from "@/components/media/ui-icon-image";
-import { Button } from "@/components/ui/button";
 import { IllustratedScreen, StoryTitle } from "@/components/visual";
 import { AchievementBadge } from "@/features/achievements/components/achievement-badge";
 import { ACHIEVEMENT_RARITY_LABELS } from "@/features/achievements/constants/achievement.constants";
@@ -45,31 +43,15 @@ function MilestoneRow({
             const reached = totalUnlocked >= milestone;
             const isNext = nextMilestone === milestone;
             return (
-              <div key={milestone} className="flex flex-col items-center gap-1.5">
+              <div key={milestone} className="flex flex-col items-center">
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full border bg-black/60",
+                    "flex h-9 w-9 items-center justify-center rounded-full border bg-black/60 text-sm font-semibold tabular-nums",
                     reached
                       ? "border-trail-glow/50 text-trail-glow"
                       : isNext
                         ? "border-primary/40 text-primary"
                         : "border-white/10 text-muted-foreground",
-                  )}
-                >
-                  <UiIconImage
-                    name="trophy"
-                    size={reached ? 18 : 16}
-                    className={cn(!reached && !isNext && "opacity-40")}
-                  />
-                </span>
-                <span
-                  className={cn(
-                    "text-caption tabular-nums",
-                    reached
-                      ? "font-medium text-trail-glow"
-                      : isNext
-                        ? "text-primary"
-                        : "text-muted-foreground",
                   )}
                 >
                   {milestone}

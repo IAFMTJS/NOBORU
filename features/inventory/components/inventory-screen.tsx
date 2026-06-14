@@ -85,7 +85,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
       scrim="minimal"
       background={
         <SceneImage
-          scene="shop_interior"
+          scene="inventory_backpack"
           alt=""
           className="absolute inset-0 min-h-dvh rounded-none"
         />

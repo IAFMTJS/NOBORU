@@ -7,6 +7,7 @@ import {
   type TrailScrollRegionSlug,
   hasTrailScrollArt as regionHasTrailScrollArt,
 } from "@/lib/design-system/regions";
+import { getResolvedAsset, getResolvedTrailScrollPath } from "@/lib/assets/resolve-versioned-asset";
 
 export { TRAIL_SCROLL_REGION_SLUGS, type TrailScrollRegionSlug } from "@/lib/design-system/regions";
 
@@ -42,8 +43,8 @@ export const ASSET_REGISTRY = {
     yamaSadLight: "/mascots/yama_sad_supportive_disappointed_light_v1.webp",
     yamaAdventureDark: "/mascots/yama_adventure_hiking_dark_v1.webp",
     yamaAdventureLight: "/mascots/yama_adventure_hiking_light_v1.webp",
-    yamaTrailCompanionDark: "/mascots/yama_trail_companion_dark_v1.webp",
-    yamaTrailCompanionLight: "/mascots/yama_trail_companion_light_v1.webp",
+    yamaTrailCompanionDark: getResolvedAsset("mascots.yamaTrailCompanionDark"),
+    yamaTrailCompanionLight: getResolvedAsset("mascots.yamaTrailCompanionLight"),
     yamaTrainingDark: "/mascots/yama_training_demo_stance_dark_v1.webp",
     yamaTrainingLight: "/mascots/yama_training_demo_stance_light_v1.webp",
     yamaSeasonalDark: "/mascots/yama_seasonal_cherry_blossom_dark_v1.webp",
@@ -59,8 +60,8 @@ export const ASSET_REGISTRY = {
     navDojo: "/icons/icon_nav_dojo_v2.webp",
     navWorld: "/icons/icon_nav_world_v2.webp",
     navProfile: "/icons/icon_nav_profile_v2.webp",
-    navFoxCampDark: "/mascots/yama_nav_camp_dark_v2.webp",
-    navFoxCampLight: "/mascots/yama_nav_camp_light_v2.webp",
+    navFoxCampDark: getResolvedAsset("icons.navFoxCampDark"),
+    navFoxCampLight: getResolvedAsset("icons.navFoxCampLight"),
     navFoxJourneyDark: "/mascots/yama_nav_journey_dark_v2.webp",
     navFoxJourneyLight: "/mascots/yama_nav_journey_light_v2.webp",
     navFoxDojoDark: "/mascots/yama_nav_dojo_dark_v2.webp",
@@ -120,15 +121,19 @@ export const ASSET_REGISTRY = {
   ui: {
     trailSpineDark: "/ui/ui_trail_spine_dark_v1.webp",
     trailSpineLight: "/ui/ui_trail_spine_light_v1.webp",
-    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v3.webp",
-    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v3.webp",
+    trailScrollFoothillsDark: "/ui/ui_trail_scroll_foothills_dark_v4.webp",
+    trailScrollFoothillsLight: "/ui/ui_trail_scroll_foothills_light_v4.webp",
     authAtmosphereDark: "/ui/ui_auth_atmosphere_dark_v1.webp",
     authAtmosphereLight: "/ui/ui_auth_atmosphere_light_v1.webp",
-    campBaseDark: "/ui/ui_camp_base_night_v1.webp",
-    campBaseLight: "/ui/ui_camp_base_light_v1.webp",
-    dojoForestDark: "/ui/ui_dojo_forest_night_v1.webp",
-    shrineToriiNight: "/ui/ui_shrine_torii_night_v1.webp",
-    worldMapPeaks: "/ui/ui_world_map_peaks_v1.webp",
+    campBaseDark: getResolvedAsset("ui.campBaseDark"),
+    campBaseLight: getResolvedAsset("ui.campBaseLight"),
+    dojoForestDark: getResolvedAsset("ui.dojoForestDark"),
+    shrineToriiNight: getResolvedAsset("ui.shrineToriiNight"),
+    worldMapPeaks: getResolvedAsset("ui.worldMapPeaks"),
+    questBoardCampOverlay: getResolvedAsset("ui.questBoardCampOverlay"),
+    nodeLessonCircle: getResolvedAsset("ui.nodeLessonCircle"),
+    nodeCheckpointCircle: getResolvedAsset("ui.nodeCheckpointCircle"),
+    nodeTrialCircle: getResolvedAsset("ui.nodeTrialCircle"),
     shopInterior: "/ui/ui_shop_trail_interior_v1.webp",
     lessonCompleteGlow: "/ui/ui_lesson_complete_trail_glow_v1.webp",
     checkpointShrine: "/ui/ui_checkpoint_shrine_close_v1.webp",
@@ -142,6 +147,16 @@ export const ASSET_REGISTRY = {
     navSkinLanternFestival: "/ui/ui_nav_skin_lantern_festival_v1.webp",
     navSkinCherryDawn: "/ui/ui_nav_skin_cherry_dawn_v1.webp",
     navSkinCloudSea: "/ui/ui_nav_skin_cloud_sea_v1.webp",
+    memoryBookJournal: getResolvedAsset("ui.memoryBookJournal"),
+    seasonalSakura: getResolvedAsset("ui.seasonalSakura"),
+    socialGathering: getResolvedAsset("ui.socialGathering"),
+    inventoryBackpack: getResolvedAsset("ui.inventoryBackpack"),
+    reviewAtmosphereDark: getResolvedAsset("ui.reviewAtmosphereDark"),
+    reviewAtmosphereLight: getResolvedAsset("ui.reviewAtmosphereLight"),
+    studyAtmosphereDark: getResolvedAsset("ui.studyAtmosphereDark"),
+    studyAtmosphereLight: getResolvedAsset("ui.studyAtmosphereLight"),
+    profileLanternPathDark: getResolvedAsset("ui.profileLanternPathDark"),
+    profileLanternPathLight: getResolvedAsset("ui.profileLanternPathLight"),
   },
   achievements: {
     firstStep: "/achievements/achievement_first_step_v1.webp",
@@ -377,6 +392,19 @@ export function getHubArtPath(slug: string) {
   return HUB_ART_PATHS[slug] ?? null;
 }
 
+export function getQuestBoardOverlayPath() {
+  return ASSET_REGISTRY.ui.questBoardCampOverlay;
+}
+
+export function getJourneyNodeArtPath(kind: "lesson" | "checkpoint" | "trial") {
+  const map = {
+    lesson: ASSET_REGISTRY.ui.nodeLessonCircle,
+    checkpoint: ASSET_REGISTRY.ui.nodeCheckpointCircle,
+    trial: ASSET_REGISTRY.ui.nodeTrialCircle,
+  };
+  return map[kind];
+}
+
 export function getTrailCompanionPath(theme: "light" | "dark" | string | undefined) {
   return theme === "light"
     ? ASSET_REGISTRY.mascots.yamaTrailCompanionLight
@@ -419,6 +447,34 @@ const SCENE_PATHS: Record<string, { dark: string; light: string }> = {
     dark: ASSET_REGISTRY.ui.checkpointShrine,
     light: ASSET_REGISTRY.ui.checkpointShrine,
   },
+  memory_book_journal: {
+    dark: ASSET_REGISTRY.ui.memoryBookJournal,
+    light: ASSET_REGISTRY.ui.memoryBookJournal,
+  },
+  seasonal_sakura: {
+    dark: ASSET_REGISTRY.ui.seasonalSakura,
+    light: ASSET_REGISTRY.ui.seasonalSakura,
+  },
+  social_gathering: {
+    dark: ASSET_REGISTRY.ui.socialGathering,
+    light: ASSET_REGISTRY.ui.socialGathering,
+  },
+  inventory_backpack: {
+    dark: ASSET_REGISTRY.ui.inventoryBackpack,
+    light: ASSET_REGISTRY.ui.inventoryBackpack,
+  },
+  review_atmosphere: {
+    dark: ASSET_REGISTRY.ui.reviewAtmosphereDark,
+    light: ASSET_REGISTRY.ui.reviewAtmosphereLight,
+  },
+  study_atmosphere: {
+    dark: ASSET_REGISTRY.ui.studyAtmosphereDark,
+    light: ASSET_REGISTRY.ui.studyAtmosphereLight,
+  },
+  profile_lantern_path: {
+    dark: ASSET_REGISTRY.ui.profileLanternPathDark,
+    light: ASSET_REGISTRY.ui.profileLanternPathLight,
+  },
 };
 
 export function getSceneArtPath(
@@ -454,26 +510,14 @@ export function getTrailSpineArtPath(
     : ASSET_REGISTRY.ui.trailSpineDark;
 }
 
-/** Per-region scroll art version (path-first v3 from journey-path-contracts). */
-const TRAIL_SCROLL_VERSION_BY_REGION: Partial<Record<TrailScrollRegionSlug, string>> = {
-  foothills: "v3",
-  "forest-trail": "v3",
-  "mount-n5": "v3",
-  "mount-n4": "v3",
-  "mount-n3": "v3",
-  "mount-n2": "v3",
-  "mount-n1": "v3",
-  "master-summit": "v3",
-};
-
+/** Trail scroll paths resolved via asset-version-manifest (v4→v1 fallback). */
 function buildTrailScrollPublicPath(
   regionSlug: TrailScrollRegionSlug,
   theme: "light" | "dark",
   trailSegmentIndex = 0,
 ): string {
-  const version = TRAIL_SCROLL_VERSION_BY_REGION[regionSlug] ?? "v1";
   if (trailSegmentIndex === 0) {
-    return `/ui/ui_trail_scroll_${regionSlug}_${theme}_${version}.webp`;
+    return getResolvedTrailScrollPath(regionSlug, theme) ?? `/ui/ui_trail_scroll_${regionSlug}_${theme}_v1.webp`;
   }
   return `/ui/ui_trail_scroll_${regionSlug}_trail-${trailSegmentIndex + 1}_${theme}_v1.webp`;
 }

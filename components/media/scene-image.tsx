@@ -13,7 +13,14 @@ export type SceneId =
   | "world_map_peaks"
   | "shop_interior"
   | "lesson_complete"
-  | "checkpoint_shrine";
+  | "checkpoint_shrine"
+  | "memory_book_journal"
+  | "seasonal_sakura"
+  | "social_gathering"
+  | "inventory_backpack"
+  | "review_atmosphere"
+  | "study_atmosphere"
+  | "profile_lantern_path";
 
 type SceneImageProps = {
   scene: SceneId;

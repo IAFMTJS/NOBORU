@@ -3,18 +3,13 @@ import Link from "next/link";
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { HiraganaChartViewModel } from "@/features/hiragana/types/hiragana.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
+import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
 
 type HiraganaChartProps = {
@@ -39,12 +34,14 @@ const SECTION_ORDER = [
 ];
 
 export function HiraganaChart({ chart }: HiraganaChartProps) {
+  const tokens = CONTENT_HUB_TOKENS.hiragana;
   const sections = SECTION_ORDER.map((label) => ({
     label,
     entries: chart.entries.filter((entry) => entry.rowLabel === label),
   })).filter((section) => section.entries.length > 0);
 
   return (
+    <IllustratedScreen scrim="minimal">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -65,30 +62,28 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
 
       <YamaTrainingPresence location="kana_dojo" />
 
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-          <CardDescription>
+      <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
+        <div className="space-y-1">
+          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <p className="text-body-sm text-muted-foreground">
             {chart.learnedCount} of {chart.totalCount} hiragana learned
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProgressBar
-            value={chart.progressPercent}
-            label="Hiragana mastery"
-            showValue
-          />
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ProgressBar
+          value={chart.progressPercent}
+          label="Hiragana mastery"
+          showValue
+          indicatorClassName={tokens.progressIndicator}
+        />
+      </GlassPanel>
 
       <div className="space-y-6">
         {sections.map((section) => (
-          <Card key={section.label} className="shadow-elevation-1">
-            <CardHeader>
-              <CardTitle className="text-heading-6">{section.label}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+          <GlassPanel key={section.label} className="space-y-3 p-4">
+            <StoryTitle as="h2" className="text-sm">
+              {section.label}
+            </StoryTitle>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                 {section.entries.map((entry) => (
                   <div
                     key={entry.id}
@@ -111,10 +106,10 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+          </GlassPanel>
         ))}
       </div>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

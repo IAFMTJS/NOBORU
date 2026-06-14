@@ -3,7 +3,6 @@ import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { CircularProgress } from "@/components/ui/circular-progress";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { GlassPanel } from "@/components/visual/glass-panel";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { StoryTitle } from "@/components/visual/story-title";
 import { JourneyPreviewMap } from "@/features/journey/components/journey-preview-map";
@@ -39,6 +38,9 @@ type ExpeditionHeroProps = {
     levelLabel: string;
     xpProgressPercent: number;
   };
+  achievementCount?: number;
+  reviewQueueCount?: number;
+  dailyGoalLabel?: string;
   companion: CompanionViewModel;
   progressionPreview: ProgressionPreviewViewModel;
 };
@@ -58,6 +60,9 @@ export function ExpeditionHero({
   yama,
   stats,
   profile,
+  achievementCount = 0,
+  reviewQueueCount = 0,
+  dailyGoalLabel,
   companion,
   progressionPreview,
 }: ExpeditionHeroProps) {
@@ -69,24 +74,30 @@ export function ExpeditionHero({
   return (
     <div className="space-y-5">
       <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-2xl">
-        <div className="relative min-h-[24rem]">
+        <div className="relative min-h-[28rem]">
           <SceneImage
             scene="camp_base"
             alt={`${regionName} base camp`}
-            className="absolute inset-0 min-h-[24rem] rounded-none"
+            className="absolute inset-0 min-h-[28rem] rounded-none"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/80" />
-          <div className="relative z-10 flex min-h-[24rem] flex-col justify-between p-4">
-            <div className="space-y-1 pr-4">
-              <p className="text-body-sm text-white/85">{greeting}</p>
-              <p className="text-heading-3 font-bold text-white">
-                Ready for today&apos;s climb?
-              </p>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-black/65" />
+          <div className="relative z-10 flex min-h-[28rem] flex-col gap-3 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1">
+                <p className="text-body-sm text-white/85">{greeting}</p>
+                <StoryTitle as="h2" className="text-xl text-white">
+                  Ready for today&apos;s climb?
+                </StoryTitle>
+                {dailyGoalLabel ? (
+                  <p className="text-caption text-white/70">{dailyGoalLabel}</p>
+                ) : null}
+              </div>
+              {yama ? <ExpeditionHeroYama yama={yama} /> : null}
             </div>
-            {yama ? <ExpeditionHeroYama yama={yama} /> : null}
+
             {profile ? (
-              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/45 px-3 py-2 backdrop-blur-sm">
+              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-3 py-2 backdrop-blur-sm">
                 <div
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/25 text-sm font-semibold text-primary"
                   aria-hidden
@@ -108,52 +119,77 @@ export function ExpeditionHero({
                     indicatorClassName="bg-trail-glow"
                   />
                 </div>
+                <div className="flex shrink-0 items-center gap-2 border-l border-white/10 pl-3 text-caption text-white/90">
+                  <span className="inline-flex items-center gap-0.5" title="Current streak">
+                    <UiIconImage name="flame" size={12} />
+                    {stats.currentStreak}
+                  </span>
+                  <span className="inline-flex items-center gap-0.5 text-reward" title="Total XP">
+                    <UiIconImage name="gem" size={12} />
+                    {stats.totalXp.toLocaleString()}
+                  </span>
+                  <span className="inline-flex items-center gap-0.5" title="Achievements">
+                    <UiIconImage name="trophy" size={12} />
+                    {achievementCount}
+                  </span>
+                </div>
               </div>
             ) : null}
-            <DailyQuestBoard
-              daily={quests.daily}
-              weekly={quests.weekly}
-              variant="camp"
-              streakDays={stats.currentStreak}
-            />
+
+            <div className="flex-1" />
+
+            <div className="flex items-end justify-between gap-3">
+              <div className="min-w-0 max-w-[45%] flex-1 space-y-2">
+                <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/35 px-3 py-2 backdrop-blur-sm">
+                  <CircularProgress
+                    value={regionProgressPercent}
+                    size={40}
+                    strokeWidth={3}
+                    className="shrink-0 text-trail-glow"
+                  />
+                  <div className="min-w-0 space-y-0.5">
+                    <StoryTitle as="h3" className="text-xs text-white/90">
+                      Continue Your Climb
+                    </StoryTitle>
+                    <p className="truncate text-caption font-medium text-white">
+                      {regionName} · {continueLessonTitle}
+                    </p>
+                    {lessonLabel ? (
+                      <p className="text-[10px] text-white/60">{lessonLabel}</p>
+                    ) : null}
+                    {reviewQueueCount > 0 ? (
+                      <p className="text-[10px] text-trail-glow">
+                        {reviewQueueCount} review{reviewQueueCount === 1 ? "" : "s"} due
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+                <PrimaryClimbButton className="w-full shadow-lg" asChild>
+                  <AnalyticsLink
+                    href={continueHref}
+                    eventName="trail_continue_clicked"
+                    eventProperties={{
+                      source: "home_expedition_hero",
+                      lessonTitle: continueLessonTitle,
+                    }}
+                  >
+                    Continue Climbing
+                  </AnalyticsLink>
+                </PrimaryClimbButton>
+              </div>
+
+              <div className="w-[min(100%,15rem)] shrink-0">
+                <DailyQuestBoard
+                  daily={quests.daily}
+                  weekly={quests.weekly}
+                  variant="camp"
+                  streakDays={stats.currentStreak}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <GlassPanel className="p-3">
-        <StoryTitle as="h3" className="mb-2 text-sm">
-          Continue Your Climb
-        </StoryTitle>
-        <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1 space-y-0.5">
-            <p className="truncate text-body-sm font-medium">
-              {regionName} · {continueLessonTitle}
-            </p>
-            {lessonLabel ? (
-              <p className="text-caption text-muted-foreground">{lessonLabel}</p>
-            ) : null}
-          </div>
-          <CircularProgress
-            value={regionProgressPercent}
-            size={48}
-            strokeWidth={4}
-            className="shrink-0"
-          />
-        </div>
-
-        <PrimaryClimbButton className="mt-3" asChild>
-          <AnalyticsLink
-            href={continueHref}
-            eventName="trail_continue_clicked"
-            eventProperties={{
-              source: "home_expedition",
-              lessonTitle: continueLessonTitle,
-            }}
-          >
-            Continue Climbing
-          </AnalyticsLink>
-        </PrimaryClimbButton>
-      </GlassPanel>
 
       {journeyPreview.length > 0 ? (
         <div className="space-y-2">
@@ -183,23 +219,6 @@ export function ExpeditionHero({
       {progressionPreview.primaryUnlock ? (
         <NextUnlockPreview unlock={progressionPreview.primaryUnlock} compact />
       ) : null}
-
-      <div className="grid grid-cols-3 gap-2 rounded-card border border-glass-border bg-glass-bg/60 px-3 py-3 backdrop-blur-sm">
-        <div className="flex items-center justify-center gap-1.5">
-          <UiIconImage name="flame" size={16} />
-          <span className="text-body-sm font-medium">{stats.currentStreak}</span>
-        </div>
-        <div className="flex items-center justify-center gap-1.5 border-x border-glass-border">
-          <UiIconImage name="gem" size={16} />
-          <span className="text-body-sm font-medium">
-            {stats.totalXp.toLocaleString()}
-          </span>
-        </div>
-        <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-          <UiIconImage name="trophy" size={16} />
-          <span className="text-body-sm font-medium">—</span>
-        </div>
-      </div>
     </div>
   );
 }

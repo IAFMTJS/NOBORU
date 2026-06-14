@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { AchievementShowcase } from "@/features/achievements/components/achievement-showcase";
@@ -29,28 +28,23 @@ export function ProfileScreen({ profile, achievements, yama }: ProfileScreenProp
     <IllustratedScreen
       scrim="minimal"
       background={
-        <RegionHeroImage
-          regionSlug={profile.currentRegionSlug}
+        <SceneImage
+          scene="profile_lantern_path"
           alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
+          className="absolute inset-0 min-h-dvh rounded-none"
         />
       }
     >
       <PageContainer className="space-y-4">
         <GlassPanel className="overflow-hidden p-0">
-          <div className="relative min-h-[10rem]">
-            <RegionHeroImage
-              regionSlug={profile.currentRegionSlug}
-              alt={`${region.label} region`}
-              className="absolute inset-0 h-full min-h-[10rem] rounded-none"
-              hideOverlay
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" />
-            <div className="relative z-10 flex min-h-[10rem] flex-col justify-end p-4">
+          <div className="relative min-h-[11rem]">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/25 to-transparent" />
+            <div className="relative z-10 flex min-h-[11rem] flex-col justify-end p-4">
               <div className="flex items-end justify-between gap-3">
                 <div className="min-w-0 space-y-1">
-                  <p className="text-caption text-white/75">Climber profile</p>
+                  <StoryTitle as="h2" className="text-xs text-white/80">
+                    Climber profile
+                  </StoryTitle>
                   <h1 className="truncate text-heading-3 font-bold text-white">
                     {profile.displayName}
                   </h1>

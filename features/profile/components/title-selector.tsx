@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StoryTitle } from "@/components/visual";
 import type { TitleViewModel } from "@/features/profile/types/title.types";
 
 export function TitleSelector() {
@@ -36,7 +37,10 @@ export function TitleSelector() {
   if (titles.length === 0) return null;
 
   return (
-    <CardSection title="Titles" className="space-y-2">
+    <div className="space-y-2">
+      <StoryTitle as="h3" className="text-sm">
+        Titles
+      </StoryTitle>
       {titles.map((title) => (
         <div key={title.id} className="flex items-center justify-between gap-2">
           <div>
@@ -44,10 +48,13 @@ export function TitleSelector() {
             <p className="text-caption text-muted-foreground">Level {title.level}</p>
           </div>
           {title.equipped ? (
-            <Badge variant="secondary">Equipped</Badge>
+            <Badge className="border-trail-glow/40 bg-trail-glow/15 text-trail-glow">
+              Equipped
+            </Badge>
           ) : (
             <Button
               size="sm"
+              className="border-trail-glow/50 bg-trail-glow/15 text-trail-glow hover:bg-trail-glow/25"
               variant="outline"
               loading={loading}
               onClick={() => void equip(title.id)}
@@ -57,23 +64,6 @@ export function TitleSelector() {
           )}
         </div>
       ))}
-    </CardSection>
-  );
-}
-
-function CardSection({
-  title,
-  children,
-  className,
-}: {
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      <p className="mb-2 text-body-sm font-medium">{title}</p>
-      {children}
     </div>
   );
 }

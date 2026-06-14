@@ -9,19 +9,23 @@ type NavBarMascotProps = {
   tab: ImmersiveNavTab;
 };
 
+/** Dedicated left mascot slot — fox never overlaps tab labels (mockup navbar concepts). */
 export function NavBarMascot({ tab }: NavBarMascotProps) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <div className="relative w-[4.75rem] shrink-0 self-end pl-0.5" aria-hidden>
-      <div className="relative h-[3.25rem]">
+    <div
+      className="pointer-events-none relative z-10 w-[4.25rem] shrink-0 self-end"
+      aria-hidden
+    >
+      <div className="relative flex h-[3.5rem] items-end justify-center pb-0.5">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={tab}
-            className="absolute -top-5 bottom-0 left-1/2 w-[4.75rem] -translate-x-1/2"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 6, scale: 0.92 }}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 4, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4, scale: 0.94 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -3, scale: 0.96 }}
             transition={{ duration: 0.28, ease: "easeOut" }}
           >
             <NavFoxImage tab={tab} variant="bar-anchor" priority />

@@ -71,7 +71,7 @@ export function TrailMapArtwork({
     return (
       <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
         <div
-          className="absolute inset-x-0 top-0 w-full"
+          className="absolute inset-0"
           style={
             parallaxOffsetPx
               ? { transform: `translate3d(0, ${-parallaxOffsetPx}px, 0)` }
@@ -81,8 +81,7 @@ export function TrailMapArtwork({
           <Image
             src={scrollSrc}
             alt=""
-            width={1200}
-            height={2400}
+            fill
             className={cn(TRAIL_MAP_IMMERSIVE_IMAGE_CLASS, imageClassName)}
             sizes="100vw"
             priority={priority}

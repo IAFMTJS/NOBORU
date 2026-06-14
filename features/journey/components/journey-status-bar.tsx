@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
+import { StoryTitle } from "@/components/visual/story-title";
 import { cn } from "@/lib/utils";
 
 type JourneyStatusBarProps = {
@@ -53,13 +54,15 @@ export function JourneyStatusBar({
       <button
         type="button"
         onClick={onRegionClick}
-        className="mx-auto inline-flex min-w-0 max-w-[40%] shrink items-center gap-1 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 text-caption font-medium text-white sm:max-w-none sm:px-3 sm:py-1.5 sm:text-body-sm"
+        className="mx-auto inline-flex min-w-0 max-w-[40%] shrink items-center gap-1 rounded-full border border-white/15 bg-black/30 px-2.5 py-1 sm:max-w-none sm:px-3 sm:py-1.5"
       >
-        <span className="truncate">{regionName}</span>
+        <StoryTitle as="h3" className="truncate text-xs sm:text-sm text-white">
+          {regionName}
+        </StoryTitle>
         <UiIconImage name="chevron_down" size={14} className="shrink-0 opacity-80" />
       </button>
 
-      <p className="hidden shrink-0 text-caption tabular-nums text-trail-glow md:block">
+      <p className="shrink-0 text-[10px] tabular-nums text-trail-glow sm:text-caption">
         {completedCount}/{lessonCount} · {progressPercent}%
       </p>
 

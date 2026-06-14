@@ -8,6 +8,7 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const FEATURES_DIR = path.join(ROOT, "features");
+const APP_AUTH_DIR = path.join(ROOT, "app", "(auth)");
 
 const LUCIDE_ALLOWLIST = new Set([
   "features/admin",
@@ -40,7 +41,14 @@ function isLucideAllowed(filePath) {
 const errors = [];
 
 const featureFiles = await walk(FEATURES_DIR);
-for (const file of featureFiles) {
+let authFiles = [];
+try {
+  authFiles = await walk(APP_AUTH_DIR);
+} catch {
+  authFiles = [];
+}
+
+for (const file of [...featureFiles, ...authFiles]) {
   const rel = path.relative(ROOT, file).replace(/\\/g, "/");
   const content = await readFile(file, "utf8");
 
@@ -53,6 +61,17 @@ for (const file of featureFiles) {
     /StoryTitle[^>]*normal-case|normal-case[^>]*StoryTitle/.test(content)
   ) {
     errors.push(`${rel}: StoryTitle must not use normal-case override`);
+  }
+  if (
+    content.includes("RegionHeroImage") &&
+    /scene="(shop_interior|world_map_peaks)"/.test(content) === false &&
+    /profile-screen|settings-screen|inventory|memory-book|social|events/.test(rel) &&
+    !rel.includes("profile-screen.tsx")
+  ) {
+    // Region hero stand-in on non-profile illustrated screens
+    if (/RegionHeroImage/.test(content) && /settings-screen|inventory-screen/.test(rel)) {
+      errors.push(`${rel}: RegionHeroImage stand-in on illustrated screen (use SceneImage)`);
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
-import { GlassPanel, PrimaryClimbButton } from "@/components/visual";
+import { GlassPanel, PrimaryClimbButton, StoryTitle } from "@/components/visual";
 import { Button } from "@/components/ui/button";
 import type { ReviewStatsViewModel } from "@/features/review/types/review.types";
 
@@ -21,7 +21,9 @@ export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
     <StudyAtmosphere>
       <GlassPanel className="space-y-4 p-4">
         <div className="space-y-1">
-          <h3 className="text-heading-6 font-semibold">Start a session</h3>
+          <StoryTitle as="h3" className="text-sm">
+            Start a session
+          </StoryTitle>
           <p className="text-body-sm text-muted-foreground">
             {stats.dueCount} item{stats.dueCount === 1 ? "" : "s"} due for review
           </p>

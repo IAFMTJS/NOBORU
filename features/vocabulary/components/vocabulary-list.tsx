@@ -7,20 +7,15 @@ import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
+import { cn } from "@/lib/utils";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
@@ -39,6 +34,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
   const tokens = CONTENT_HUB_TOKENS.vocabulary;
 
   return (
+    <IllustratedScreen scrim="minimal">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -61,28 +57,26 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
 
       <JlptLevelPills basePath="/learn/vocabulary" activeLevel={jlptLevel} />
 
-      <Card className={tokens.progressCardBorder}>
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-          <CardDescription>
+      <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
+        <div className="space-y-1">
+          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <p className="text-body-sm text-muted-foreground">
             {list.learnedCount} of {list.totalCount} {levelLabel} words learned
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProgressBar
-            value={list.progressPercent}
-            label="Vocabulary mastery"
-            showValue
-            indicatorClassName={tokens.progressIndicator}
-          />
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ProgressBar
+          value={list.progressPercent}
+          label="Vocabulary mastery"
+          showValue
+          indicatorClassName={tokens.progressIndicator}
+        />
+      </GlassPanel>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-heading-6">Word List</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <GlassPanel className="space-y-3 p-4">
+        <StoryTitle as="h2" className="text-sm">
+          Word List
+        </StoryTitle>
+        <div className="space-y-2">
           {list.entries.map((entry) => (
             <Link
               key={entry.id}
@@ -112,8 +106,9 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
               />
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

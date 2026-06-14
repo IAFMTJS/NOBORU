@@ -1,6 +1,7 @@
 {
   "regionSlug": "master-summit",
   "theme": "light",
+  "trailNumber": 1,
   "source": "trail-path-anchors.json",
   "lanternCount": 14,
   "anchors": [

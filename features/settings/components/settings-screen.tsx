@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
+import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { Button } from "@/components/ui/button";
 import { ListRow } from "@/components/ui/list-row";
@@ -38,11 +38,10 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
     <IllustratedScreen
       scrim="minimal"
       background={
-        <RegionHeroImage
-          regionSlug="foothills"
+        <SceneImage
+          scene="profile_lantern_path"
           alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
+          className="absolute inset-0 min-h-dvh rounded-none"
         />
       }
     >

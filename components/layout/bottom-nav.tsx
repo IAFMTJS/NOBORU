@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { NavBarMascot } from "@/components/layout/nav-bar-mascot";
 import { NavTabItem } from "@/components/layout/nav-tab-item";
-import { IMMERSIVE_NAV_TAB_CONFIG } from "@/lib/navigation/immersive-nav.constants";
+import { resolveNavSkinWithContext } from "@/lib/navigation/nav-skin.resolver";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
 import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ export function BottomNav() {
   const activeItem =
     PRIMARY_NAV_ITEMS.find((item) => isNavActive(pathname, item.href)) ??
     PRIMARY_NAV_ITEMS[0];
-  const activeConfig = IMMERSIVE_NAV_TAB_CONFIG[activeItem.navTab];
+  const activeConfig = resolveNavSkinWithContext(pathname ?? "/camp");
 
   return (
     <nav
@@ -24,6 +24,7 @@ export function BottomNav() {
       <div
         className={cn(
           "pointer-events-auto relative mx-auto flex max-w-lg items-end overflow-visible rounded-[1.35rem] border backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-500",
+          activeConfig.barSurfaceClass,
           activeConfig.barBorderClass,
           "shadow-[0_10px_40px_rgba(0,0,0,0.35)]",
         )}
@@ -35,7 +36,7 @@ export function BottomNav() {
       >
         <NavBarMascot tab={activeItem.navTab} />
 
-        <div className="flex min-h-[3.65rem] flex-1 items-end justify-around gap-0 px-1 pb-1.5 pt-1.5">
+        <div className="flex min-h-[3.5rem] min-w-0 flex-1 items-end justify-around gap-0 px-1 pb-1.5 pt-1.5 pl-0">
           {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => (
             <NavTabItem
               key={href}

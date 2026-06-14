@@ -19,9 +19,9 @@ export const TRAIL_MAP_IMAGE_CLASS =
 export const TRAIL_MAP_CARD_IMAGE_CLASS =
   "object-contain object-center";
 
-/** Immersive Learn — preserve full scroll art so node anchors match painted path. */
+/** Immersive Learn — cover scroll art edge-to-edge; object-top keeps path anchors aligned. */
 export const TRAIL_MAP_IMMERSIVE_IMAGE_CLASS =
-  "object-contain object-top w-full h-auto min-h-full";
+  "h-full w-full object-cover object-top";
 
 /** Keeps lesson labels readable over bright/dark trail art. */
 export const TRAIL_MAP_SCRIM_CLASS =

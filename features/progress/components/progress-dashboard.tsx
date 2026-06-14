@@ -3,8 +3,10 @@ import Link from "next/link";
 import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 
 import { CircularProgress } from "@/components/ui/circular-progress";
+import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, IllustratedScreen } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +40,16 @@ export function ProgressDashboard({
   quests,
 }: ProgressDashboardProps) {
   return (
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <SceneImage
+          scene="study_atmosphere"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
+      }
+    >
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -50,14 +62,14 @@ export function ProgressDashboard({
         }
       />
 
-      <Card className="border-primary/20 shadow-elevation-1 dark:shadow-elevation-2">
-        <CardHeader>
-          <CardTitle>Overall Mastery</CardTitle>
-          <CardDescription>
+      <GlassPanel className="space-y-4 border-primary/20 p-4">
+        <div className="space-y-1">
+          <h2 className="text-heading-6 font-semibold">Overall Mastery</h2>
+          <p className="text-body-sm text-muted-foreground">
             Average progress across all learning domains
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
+          </p>
+        </div>
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-between">
           <CircularProgress
             value={dashboard.overallMasteryPercent}
             label="Overall mastery"
@@ -78,8 +90,8 @@ export function ProgressDashboard({
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
 
       <ElevationSummary summary={dashboard.elevation} />
 
@@ -156,5 +168,6 @@ export function ProgressDashboard({
         <ReviewStatsPanel stats={dashboard.reviewStats} />
       </div>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

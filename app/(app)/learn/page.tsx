@@ -10,10 +10,11 @@ export default async function LearnPage({
 }) {
   const userId = await requireAuthenticatedUserId();
   const { region: regionQuery } = await searchParams;
-  const [{ journey, currentRegionSlug, profileStats }, trials] = await Promise.all([
-    getJourneyPathWithContext(),
-    trialService.listTrials(userId),
-  ]);
+  const [{ journey, currentRegionSlug, profileStats, companionEvolutionSlug }, trials] =
+    await Promise.all([
+      getJourneyPathWithContext(),
+      trialService.listTrials(userId),
+    ]);
 
   return (
     <JourneyScreen
@@ -21,6 +22,7 @@ export default async function LearnPage({
       initialRegionSlug={regionQuery ?? currentRegionSlug}
       trials={trials}
       profileStats={profileStats}
+      companionEvolutionSlug={companionEvolutionSlug}
     />
   );
 }

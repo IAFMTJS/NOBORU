@@ -1,5 +1,5 @@
 import { AuthBrandHeader } from "@/components/auth/auth-brand-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { RegisterForm } from "@/features/authentication/components/register-form";
 
 export default function RegisterPage() {
@@ -9,14 +9,12 @@ export default function RegisterPage() {
         title="Join the climb"
         description="Create your account and begin your ascent."
       />
-      <Card>
-        <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RegisterForm />
-        </CardContent>
-      </Card>
+      <GlassPanel className="space-y-4 p-5">
+        <StoryTitle as="h2" className="text-sm">
+          Create Account
+        </StoryTitle>
+        <RegisterForm />
+      </GlassPanel>
     </div>
   );
 }

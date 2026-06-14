@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-06-14T20:05:30.616Z",
+  "crops": [
+    {
+      "id": "ref_camp_dawn_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_camp_dawn_v1.png",
+      "width": 298,
+      "height": 858
+    },
+    {
+      "id": "ref_camp_night_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_camp_night_v1.png",
+      "width": 298,
+      "height": 458
+    },
+    {
+      "id": "ref_daily_quests_board_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_daily_quests_board_v1.png",
+      "width": 228,
+      "height": 210
+    },
+    {
+      "id": "ref_achievements_shrine_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_achievements_shrine_v1.png",
+      "width": 298,
+      "height": 458
+    },
+    {
+      "id": "ref_inventory_grid_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_inventory_grid_v1.png",
+      "width": 298,
+      "height": 458
+    },
+    {
+      "id": "ref_seasonal_event_banner_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_seasonal_event_banner_v1.png",
+      "width": 298,
+      "height": 458
+    },
+    {
+      "id": "ref_journey_trail_scroll_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_journey_trail_scroll_v1.png",
+      "width": 248,
+      "height": 458
+    },
+    {
+      "id": "ref_journey_world_map_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_journey_world_map_v1.png",
+      "width": 248,
+      "height": 318
+    },
+    {
+      "id": "ref_journey_status_bar_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_journey_status_bar_v1.png",
+      "width": 298,
+      "height": 72
+    },
+    {
+      "id": "ref_nav_pill_ember_night_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_ember_night_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_trail_mist_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_trail_mist_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_bamboo_grove_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_bamboo_grove_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_moonlit_torii_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_moonlit_torii_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_stone_path_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_stone_path_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_sakura_bloom_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_sakura_bloom_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_winter_summit_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_winter_summit_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_pill_lantern_festival_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_pill_lantern_festival_v1.png",
+      "width": 752,
+      "height": 44
+    },
+    {
+      "id": "ref_nav_fox_camp_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_nav_fox_camp_v1.png",
+      "width": 200,
+      "height": 108
+    },
+    {
+      "id": "ref_dojo_hub_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_dojo_hub_v1.png",
+      "width": 485,
+      "height": 310
+    },
+    {
+      "id": "ref_review_calm_v1",
+      "outPath": "D:\\NOBORU\\assets\\_staging\\mockup-refs\\ref_review_calm_v1.png",
+      "width": 485,
+      "height": 310
+    }
+  ]
+}

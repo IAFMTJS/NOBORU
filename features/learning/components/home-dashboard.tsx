@@ -28,6 +28,9 @@ export function HomeDashboard({ data }: HomeDashboardProps) {
           levelLabel: data.level.label,
           xpProgressPercent: data.elevation.progressPercent,
         }}
+        achievementCount={data.recentAchievements.length}
+        reviewQueueCount={data.reviewQueueCount}
+        dailyGoalLabel={data.dailyGoal.label}
         companion={data.companion}
         progressionPreview={data.progressionPreview}
       />

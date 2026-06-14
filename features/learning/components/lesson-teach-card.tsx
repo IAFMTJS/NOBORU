@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/visual/drill-glass-card";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { LessonTeachStep } from "@/features/learning/types/lesson.types";
 
@@ -22,7 +22,7 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "vocabulary") {
     return (
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardDescription>
             Vocabulary · {step.index}/{step.total}
@@ -66,7 +66,7 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "hiragana") {
     return (
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardDescription>
             Hiragana · {step.index}/{step.total}
@@ -92,7 +92,7 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "katakana") {
     return (
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardDescription>
             Katakana · {step.index}/{step.total}
@@ -118,7 +118,7 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "kanji") {
     return (
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardDescription>
             Kanji · {step.index}/{step.total}
@@ -170,7 +170,7 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "grammar") {
     return (
-      <Card className="shadow-elevation-1">
+      <Card>
         <CardHeader>
           <CardDescription>
             Grammar · {step.index}/{step.total}

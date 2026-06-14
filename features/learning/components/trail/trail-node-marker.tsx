@@ -72,19 +72,7 @@ function MarkerGlyph({
     case "in_progress":
       return (
         <svg viewBox="0 0 16 16" className={className} aria-hidden>
-          <path
-            d="M3 12 8 3 13 12Z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M8 7.5V10"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-          />
+          <path d="M5.5 3.75 12.25 8 5.5 12.25Z" fill="currentColor" />
         </svg>
       );
     case "available":

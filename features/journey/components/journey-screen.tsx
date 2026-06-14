@@ -11,6 +11,7 @@ import { JourneyStatusBar } from "@/features/journey/components/journey-status-b
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
 import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import { useJourneyLessonSummary } from "@/features/journey/hooks/use-journey-lesson-summary";
+import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import type {
   JourneyNode,
   JourneyPathViewModel,
@@ -33,6 +34,7 @@ type JourneyScreenProps = {
     currentStreak: number;
     totalXp: number;
   } | null;
+  companionEvolutionSlug?: CompanionEvolutionSlug | null;
 };
 
 function resolveRegionTrial(
@@ -115,6 +117,7 @@ export function JourneyScreen({
   initialRegionSlug,
   trials = [],
   profileStats,
+  companionEvolutionSlug,
 }: JourneyScreenProps) {
   const router = useRouter();
   const defaultRegion = resolveInitialRegion(journey, initialRegionSlug);
@@ -221,12 +224,17 @@ export function JourneyScreen({
           trialHref={regionTrial?.href ?? null}
           trialTitle={regionTrial?.title ?? null}
           onNodeSelect={handleNodeSelect}
+          companionEvolutionSlug={companionEvolutionSlug ?? undefined}
           className="min-h-0 flex-1"
         />
 
         <Link
           href="/learn/world"
-          aria-label="View mountain world map"
+          aria-label="View all regions"
+          onClick={(event) => {
+            event.preventDefault();
+            setRegionsOverviewOpen(true);
+          }}
           className="fixed bottom-[5.5rem] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur-sm"
         >
           <UiIconImage name="map" size={22} />

@@ -641,7 +641,7 @@ Optional immersive nav bar textures (`512×96`). Default tab skins in `immersive
 | cherry_dawn | `ui_nav_skin_cherry_dawn_v1` |
 | cloud_sea | `ui_nav_skin_cloud_sea_v1` |
 
-**Resolver:** `resolveNavSkin(tab)` — `lib/navigation/nav-skin.resolver.ts`
+**Resolver:** `resolveNavSkin(tab)`, `resolveNavSkinWithContext(route, season?)` — `lib/navigation/nav-skin.resolver.ts` (10 skins via `NAV_PILL_SKIN_IDS`)
 
 **Pipeline:** `npm run assets:generate-scenes`
 
@@ -660,21 +660,27 @@ Optional immersive nav bar textures (`512×96`). Default tab skins in `immersive
 
 ## Navigation Fox Stickers
 
-Dedicated Mountain Fox poses for the active bottom-nav tab (dark + light each):
+Dedicated Mountain Fox poses for the active bottom-nav tab (dark + light each). **v2** is current production; v1 remains as legacy aliases in `assets/mascots/`.
 
-| Asset ID | Tab | Source pose | Prop |
-|----------|-----|-------------|------|
-| `yama_nav_camp_{dark,light}_v1` | Camp | encouraging | campfire + warm glow |
-| `yama_nav_journey_{dark,light}_v1` | Journey | adventure hiking | trail markers |
-| `yama_nav_dojo_{dark,light}_v1` | Dojo | training stance | torii gate |
-| `yama_nav_world_{dark,light}_v1` | World | adventure hiking | compass |
-| `yama_nav_profile_{dark,light}_v1` | Profile | victorious | journal + star |
+| Asset ID | Tab | Source pose | Public path (v2) |
+|----------|-----|-------------|------------------|
+| `yama_nav_camp_{dark,light}_v2` | Camp | encouraging | `/mascots/yama_nav_camp_{dark,light}_v2.webp` |
+| `yama_nav_journey_{dark,light}_v2` | Journey | adventure hiking | `/mascots/yama_nav_journey_{dark,light}_v2.webp` |
+| `yama_nav_dojo_{dark,light}_v2` | Dojo | training stance | `/mascots/yama_nav_dojo_{dark,light}_v2.webp` |
+| `yama_nav_world_{dark,light}_v2` | World | adventure hiking | `/mascots/yama_nav_world_{dark,light}_v2.webp` |
+| `yama_nav_profile_{dark,light}_v2` | Profile | victorious | `/mascots/yama_nav_profile_{dark,light}_v2.webp` |
 
-Resolved via `getNavFoxPath(tab, theme)`.
+**Authoring:** `assets/mascots/yama_nav_{tab}_{theme}_v2/` — transparent PNG composited from approved Yama poses (no full-canvas background rect).
+
+**Legacy v1 IDs:** `yama_nav_*_v1` — superseded; do not wire new UI to v1 paths.
+
+Resolved via `getNavFoxPath(tab, theme)` → v2 paths in `lib/assets/registry.ts`.
 
 **Usage:** `components/media/nav-fox-image.tsx`, `components/layout/nav-tab-item.tsx`
 
-**Pipeline:** `npm run assets:nav-fox` (composites approved Yama PNGs + themed SVG props)
+**Pipeline:** `npm run assets:nav-fox` (generates v2 PNGs + runs sticker WebP pass; pre-composited nav fox skips corner alpha sampling)
+
+**QA:** `npm run assets:alpha-qa` — border near-white check (nav fox excluded; light fur at edges is intentional)
 
 ---
 

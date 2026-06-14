@@ -4,7 +4,9 @@ Binding reference: [mockup-reference-style.md](./mockup-reference-style.md)
 
 Use this checklist for Art Director sign-off before marking any route **mockup-complete**.
 
-Automated guard: `npm run qa:visual` (Lucide in learner features, StoryTitle overrides).
+Automated guards: `npm run qa:visual`, `npm run assets:alpha-qa`
+
+Screenshot workflow: [screenshot-signoff-workflow.md](./screenshot-signoff-workflow.md)
 
 ## Per-asset checks
 
@@ -15,17 +17,30 @@ Automated guard: `npm run qa:visual` (Lucide in learner features, StoryTitle ove
 
 ## Per-route checks (Tier A)
 
-Compare live screenshot side-by-side with mockup panel at 390×844.
+Compare live screenshot side-by-side with mockup panel at 390×844. Run `npm run qa:signoff` after dropping PNGs in `assets/_staging/signoff/`.
 
-| Route | Mockup panel | Pass |
-|-------|--------------|------|
-| `/camp` | Product UX §16 | [ ] AD sign-off pending |
-| `/learn` | Journey core flow | [ ] AD sign-off pending |
-| `/dojo` | Product UX dojo | [ ] AD sign-off pending |
-| `/world` | Product UX world | [ ] AD sign-off pending |
-| `/profile` | Product UX profile | [ ] AD sign-off pending |
-| `/achievements` | Gamification §1 | [ ] AD sign-off pending |
-| Navbar (all tabs) | Navbar concepts | [ ] AD sign-off pending |
+| Route | Slug | Mockup panel | Screenshot | 7/7 DoD | AD |
+|-------|------|--------------|------------|---------|-----|
+| `/camp` | `camp` | home_learn HOME / UX §16 | [ ] | [ ] | pending |
+| `/learn` (Foothills) | `learn-foothills` | journey §1 | [ ] | [ ] | pending |
+| `/learn` (Forest Trail) | `learn-forest-trail` | journey §3 | [ ] | [ ] | pending |
+| Navbar (Camp tab) | `navbar-camp` | navbar §1 ember_night | [ ] | [ ] | pending |
+| `/world` | `world` | journey §8 | [ ] | [ ] | pending |
+| `/profile` | `profile` | lantern path | [ ] | [ ] | pending |
+| `/achievements` | `achievements` | gamification §1 | [ ] | [ ] | pending |
+| `/dojo` | `dojo` | Product UX dojo | [ ] | [ ] | pending |
+
+### DoD criteria (all 7 required)
+
+| # | Criterion |
+|---|-----------|
+| 1 | Painterly full-bleed environment |
+| 2 | Glass overlays composited in world |
+| 3 | Gold serif `StoryTitle` section titles |
+| 4 | One `PrimaryClimbButton` primary CTA |
+| 5 | Clean sticker alpha |
+| 6 | No Lucide on learner chrome |
+| 7 | Composition matches mockup panel |
 
 ## Per-route checks (Tier B)
 

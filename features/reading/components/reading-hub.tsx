@@ -7,20 +7,15 @@ import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
+import { cn } from "@/lib/utils";
 import type { ReadingHubViewModel } from "@/features/reading/types/reading.types";
 
 type ReadingHubProps = {
@@ -33,6 +28,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
   const tokens = CONTENT_HUB_TOKENS.reading;
 
   return (
+    <IllustratedScreen scrim="minimal">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -53,29 +49,31 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
 
       <JlptLevelPills basePath="/learn/reading" activeLevel={jlptLevel} />
 
-      <Card className={tokens.progressCardBorder}>
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-          <CardDescription>
+      <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
+        <div className="space-y-1">
+          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <p className="text-body-sm text-muted-foreground">
             {hub.completedCount} of {hub.totalCount} readings complete
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProgressBar
-            value={hub.progressPercent}
-            label="Reading comprehension"
-            showValue
-            indicatorClassName={tokens.progressIndicator}
-          />
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ProgressBar
+          value={hub.progressPercent}
+          label="Reading comprehension"
+          showValue
+          indicatorClassName={tokens.progressIndicator}
+        />
+      </GlassPanel>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-heading-6">Stories</CardTitle>
-          <CardDescription>Read short passages and answer questions.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <GlassPanel className="space-y-3 p-4">
+        <div className="space-y-0.5">
+          <StoryTitle as="h2" className="text-sm">
+            Stories
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">
+            Read short passages and answer questions.
+          </p>
+        </div>
+        <div className="space-y-2">
           {hub.stories.map((story) => (
             <Link
               key={story.id}
@@ -96,15 +94,19 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
               />
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-heading-6">Dialogs</CardTitle>
-          <CardDescription>Practice conversations with guided choices.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <GlassPanel className="space-y-3 p-4">
+        <div className="space-y-0.5">
+          <StoryTitle as="h2" className="text-sm">
+            Dialogs
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">
+            Practice conversations with guided choices.
+          </p>
+        </div>
+        <div className="space-y-2">
           {hub.dialogues.map((dialogue) => (
             <Link
               key={dialogue.id}
@@ -125,8 +127,9 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
               />
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

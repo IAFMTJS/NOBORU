@@ -132,7 +132,7 @@ export function JourneyRegionSection({
             : { minHeight: `${pathHeightVh}vh` }
         }
       >
-        {showSyntheticSpine || (immersive && scrollArt && loadArtwork) ? (
+        {showSyntheticSpine ? (
           <JourneyPathSpine
             nodes={region.nodes}
             regionSlug={region.slug}
@@ -153,7 +153,7 @@ export function JourneyRegionSection({
             const isCurrent = currentNode?.id === node.id;
             const discoveryOpacity =
               node.state === "locked"
-                ? 0.35
+                ? 0.28
                 : isCurrent
                   ? 1
                   : immersive
@@ -210,6 +210,12 @@ export function JourneyRegionSection({
             evolutionSlug={companionEvolutionSlug}
             interactionsEnabled={visualSettings.foxInteractions}
             idleMotionEnabled={visualSettings.foxIdleMotion}
+          />
+        ) : null}
+        {region.nodes.some((node) => node.state === "locked") ? (
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[45%] bg-gradient-to-b from-background/70 via-background/25 to-transparent backdrop-blur-[2px]"
+            aria-hidden
           />
         ) : null}
       </div>

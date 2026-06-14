@@ -42,6 +42,8 @@ import type {
   JourneyPathViewModel,
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
+import { companionService } from "@/features/companion/services/companion.service";
+import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
 import { streakService } from "@/features/achievements/services/streak.service";
 import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
@@ -71,13 +73,15 @@ export async function getJourneyPathWithContext(): Promise<{
     currentStreak: number;
     totalXp: number;
   } | null;
+  companionEvolutionSlug: CompanionEvolutionSlug | null;
 }> {
   const userId = await requireAuthenticatedUserId();
-  const [journey, profile, currentStreak, elevation] = await Promise.all([
+  const [journey, profile, currentStreak, elevation, companion] = await Promise.all([
     journeyService.getJourneyPath(userId),
     profileServerService.getProfileCore(),
     streakService.getCurrentStreak(userId),
     elevationRepository.ensureElevation(userId),
+    companionService.getCompanion(userId),
   ]);
 
   return {
@@ -95,6 +99,7 @@ export async function getJourneyPathWithContext(): Promise<{
           totalXp: elevation.total_ep,
         }
       : null,
+    companionEvolutionSlug: companion?.evolutionSlug ?? null,
   };
 }
 

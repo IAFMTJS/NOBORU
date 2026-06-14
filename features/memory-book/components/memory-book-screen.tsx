@@ -25,7 +25,7 @@ export function MemoryBookScreen({ memoryBook }: MemoryBookScreenProps) {
       scrim="minimal"
       background={
         <SceneImage
-          scene="shop_interior"
+          scene="memory_book_journal"
           alt=""
           className="absolute inset-0 min-h-dvh rounded-none"
         />

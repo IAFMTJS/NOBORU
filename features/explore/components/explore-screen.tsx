@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
+import { ScreenHeader } from "@/components/layout/screen-header";
 import { Button } from "@/components/ui/button";
 import {
   GlassPanel,
@@ -40,8 +40,34 @@ const STUDY_TRAILS = [
 type ExploreScreenProps = {
   gameAvailability: GameAvailabilityViewModel;
   yama: YamaPresenceViewModel;
-  variant?: "world" | "explore";
 };
+
+function DiscoverCategoryTile({
+  label,
+  glyph,
+  iconSlug,
+}: {
+  label: string;
+  glyph: string;
+  iconSlug: string;
+}) {
+  const src = getWorldIconPath(iconSlug);
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-glass-border bg-glass-bg/50 px-3 py-4 text-center opacity-75">
+      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-glass-border bg-primary/10">
+        {src ? (
+          <Image src={src} alt="" width={28} height={28} aria-hidden className="object-contain" />
+        ) : (
+          <span className="font-japanese text-lg text-primary" aria-hidden>
+            {glyph}
+          </span>
+        )}
+      </span>
+      <span className="text-body-sm font-medium">{label}</span>
+      <span className="text-caption text-muted-foreground">Coming soon</span>
+    </div>
+  );
+}
 
 function WorldSectionGlyph({
   iconSlug,
@@ -111,7 +137,6 @@ function WorldSection({
 export function ExploreScreen({
   gameAvailability,
   yama,
-  variant = "explore",
 }: ExploreScreenProps) {
   const [joiningLeague, setJoiningLeague] = useState(false);
 
@@ -130,39 +155,23 @@ export function ExploreScreen({
     }
   }
 
-  const isWorld = variant === "world";
-
   return (
     <IllustratedScreen
-      scrim="minimal"
+      scrim="none"
       background={
-        isWorld ? (
-          <SceneImage
-            scene="world_map_peaks"
-            alt=""
-            className="absolute inset-0 min-h-dvh rounded-none"
-          />
-        ) : (
-          <RegionHeroImage
-            regionSlug="mount-n3"
-            alt=""
-            className="absolute inset-0 h-full min-h-dvh rounded-none"
-            hideOverlay
-          />
-        )
+        <SceneImage
+          scene="world_map_peaks"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
       }
     >
       <PageContainer>
-        <header className="space-y-1">
-          <StoryTitle as="h1" className="text-xl">
-            {isWorld ? "World" : "Explore"}
-          </StoryTitle>
-          <p className="text-body-sm text-muted-foreground">
-            {isWorld
-              ? "Discover Japan — regions, lore, trials, and fellow climbers"
-              : "Discover Japan — trials, culture, and fellow climbers"}
-          </p>
-        </header>
+        <ScreenHeader
+          variant="story"
+          title="World"
+          subtitle="Discover Japan — regions, lore, trials, and fellow climbers"
+        />
 
         <GlassPanel className="p-4">
           <YamaPresence
@@ -179,21 +188,14 @@ export function ExploreScreen({
           title="Discover Japan"
           description="Culture, folklore, and lore along the climb."
         >
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {DISCOVER_CATEGORIES.map((cat) => (
-              <Button
+              <DiscoverCategoryTile
                 key={cat.label}
-                variant="outline"
-                className="h-auto justify-start gap-2 py-2.5"
-                asChild
-              >
-                <Link href="/world">
-                  <span className="font-japanese text-sm" aria-hidden>
-                    {cat.glyph}
-                  </span>
-                  {cat.label}
-                </Link>
-              </Button>
+                label={cat.label}
+                glyph={cat.glyph}
+                iconSlug={cat.iconSlug}
+              />
             ))}
           </div>
         </WorldSection>

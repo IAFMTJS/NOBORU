@@ -7,20 +7,15 @@ import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
+import { cn } from "@/lib/utils";
 import type { ListeningHubViewModel } from "@/features/listening/types/listening.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
@@ -34,6 +29,7 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
   const tokens = CONTENT_HUB_TOKENS.listening;
 
   return (
+    <IllustratedScreen scrim="minimal">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -56,29 +52,31 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
 
       <JlptLevelPills basePath="/learn/listening" activeLevel={jlptLevel} />
 
-      <Card className={tokens.progressCardBorder}>
-        <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
-          <CardDescription>
+      <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
+        <div className="space-y-1">
+          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <p className="text-body-sm text-muted-foreground">
             {hub.completedCount} of {hub.totalCount} listening activities complete
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProgressBar
-            value={hub.progressPercent}
-            label="Listening comprehension"
-            showValue
-            indicatorClassName={tokens.progressIndicator}
-          />
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ProgressBar
+          value={hub.progressPercent}
+          label="Listening comprehension"
+          showValue
+          indicatorClassName={tokens.progressIndicator}
+        />
+      </GlassPanel>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-heading-6">Audio Lessons</CardTitle>
-          <CardDescription>Listen to a phrase and answer one question.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <GlassPanel className="space-y-3 p-4">
+        <div className="space-y-0.5">
+          <StoryTitle as="h2" className="text-sm">
+            Audio Lessons
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">
+            Listen to a phrase and answer one question.
+          </p>
+        </div>
+        <div className="space-y-2">
           {hub.exercises.map((exercise) => (
             <Link
               key={exercise.id}
@@ -99,15 +97,19 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
               />
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-heading-6">Listening Challenges</CardTitle>
-          <CardDescription>Complete several listening exercises in a row.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <GlassPanel className="space-y-3 p-4">
+        <div className="space-y-0.5">
+          <StoryTitle as="h2" className="text-sm">
+            Listening Challenges
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">
+            Complete several listening exercises in a row.
+          </p>
+        </div>
+        <div className="space-y-2">
           {hub.challenges.map((challenge) => (
             <Link
               key={challenge.id}
@@ -131,8 +133,9 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
               />
             </Link>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </GlassPanel>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

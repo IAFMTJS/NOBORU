@@ -35,7 +35,19 @@
     "assets:calibrate-trail": "node scripts/calibrate-trail-anchors.mjs",
     "assets:calibrate-trail:all": "node scripts/calibrate-trail-anchors.mjs --all",
     "assets:calibrate-trail2:all": "node scripts/calibrate-trail-anchors.mjs --all --trail=2",
-    "qa:visual": "node scripts/visual-qa-guard.mjs"
+    "qa:visual": "node scripts/visual-qa-guard.mjs",
+    "assets:alpha-qa": "node scripts/visual-asset-alpha-qa.mjs",
+    "assets:validate-crops": "node scripts/validate-mockup-crops.mjs",
+    "assets:crop-mockups": "node scripts/crop-mockup-panels.mjs",
+    "assets:generate-mockup-art": "node scripts/crop-mockup-panels.mjs && node scripts/generate-mockup-production-art.mjs",
+    "assets:ingest-mockup": "node scripts/ingest-mockup-art.mjs",
+    "assets:ingest-mockup:check": "node scripts/ingest-mockup-art.mjs --check",
+    "assets:sync-version-manifest": "node scripts/sync-asset-version-manifest.mjs",
+    "assets:mockup-art": "npm run assets:generate-mockup-art && npm run assets:ingest-mockup && node scripts/convert-scene-assets.mjs && npm run assets:sync-version-manifest",
+    "qa:signoff:composite": "node scripts/build-signoff-composites.mjs",
+    "qa:signoff:report": "node scripts/signoff-report.mjs",
+    "qa:signoff": "npm run qa:signoff:composite && npm run qa:signoff:report",
+    "assets:mockup-parity": "npm run assets:validate-crops && npm run assets:ingest-mockup:check && npm run assets:nav-fox && npm run assets:icon-families && npm run assets:generate-scenes && npm run assets:stickers && npm run assets:alpha-qa"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

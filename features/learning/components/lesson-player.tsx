@@ -6,7 +6,7 @@ import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { LessonLayout } from "@/components/layout/lesson-layout";
-import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
+import { SceneImage } from "@/components/media/scene-image";
 import { MotionDiv } from "@/components/motion/motion-div";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,7 @@ import {
 } from "@/components/visual/drill-glass-card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
+import { IllustratedScreen } from "@/components/visual/illustrated-screen";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
@@ -423,7 +424,18 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
-      <StudyAtmosphere>
+      <IllustratedScreen
+        scrim="minimal"
+        className="min-h-0 rounded-2xl"
+        background={
+          <SceneImage
+            scene="study_atmosphere"
+            alt=""
+            className="absolute inset-0 rounded-2xl"
+            fill
+          />
+        }
+      >
       <MotionDiv
         key={stepIndex}
         {...fadeInUp}
@@ -666,7 +678,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         )
       ) : null}
       </MotionDiv>
-      </StudyAtmosphere>
+      </IllustratedScreen>
     </LessonLayout>
   );
 }

@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/visual/drill-glass-card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { LessonKnowledgeInventoryStep } from "@/features/learning/types/lesson.types";
 
@@ -26,7 +26,7 @@ export function KnowledgeInventoryCard({ step }: KnowledgeInventoryCardProps) {
       : Math.round((step.learnedCount / step.totalCount) * 100);
 
   return (
-    <Card className="shadow-elevation-1">
+    <Card>
       <CardHeader>
         <CardDescription>Your trail inventory</CardDescription>
         <CardTitle className="text-heading-5">

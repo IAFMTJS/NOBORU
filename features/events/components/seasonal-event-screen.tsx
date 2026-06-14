@@ -31,7 +31,7 @@ export function SeasonalEventScreen({ event }: SeasonalEventScreenProps) {
       scrim="minimal"
       background={
         <SceneImage
-          scene="world_map_peaks"
+          scene="seasonal_sakura"
           alt=""
           className="absolute inset-0 min-h-dvh rounded-none"
         />

@@ -6,13 +6,7 @@ import { useMemo, useState } from "react";
 
 import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { OnboardingProgress } from "@/features/onboarding/components/onboarding-progress";
 import { KanaSelectionGrid } from "@/features/intake/components/kana-selection-grid";
 import { VocabularySelectionList } from "@/features/intake/components/vocabulary-selection-list";
@@ -149,12 +143,14 @@ export function IntakeWizard({ chartData }: IntakeWizardProps) {
                   {INTAKE_COPY.summary.subtitle}
                 </p>
               </div>
-              <Card className="shadow-elevation-1">
-                <CardHeader>
-                  <CardTitle>Your inventory</CardTitle>
-                  <CardDescription>Practice will scaffold from these items</CardDescription>
-                </CardHeader>
-                <CardContent className="grid grid-cols-3 gap-3 text-center">
+              <GlassPanel className="space-y-4 p-4">
+                <div className="space-y-1">
+                  <h3 className="text-heading-6 font-semibold">Your inventory</h3>
+                  <p className="text-body-sm text-muted-foreground">
+                    Practice will scaffold from these items
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center">
                   <div>
                     <p className="text-heading-4">{summary.hiraganaCount}</p>
                     <p className="text-caption text-muted-foreground">Hiragana</p>
@@ -167,8 +163,8 @@ export function IntakeWizard({ chartData }: IntakeWizardProps) {
                     <p className="text-heading-4">{summary.vocabularyCount}</p>
                     <p className="text-caption text-muted-foreground">Words</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </GlassPanel>
               <p className="text-body-sm text-muted-foreground">
                 <strong className="font-medium text-foreground">Practice what you know</strong>{" "}
                 uses only kana and words you selected, with romaji and English hints.

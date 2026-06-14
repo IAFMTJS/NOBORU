@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { PageContainer } from "@/components/layout/page-container";
-import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
+import { SceneImage } from "@/components/media/scene-image";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GlassPanel, PrimaryClimbButton } from "@/components/visual";
+import { GlassPanel, IllustratedScreen, PrimaryClimbButton } from "@/components/visual";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { ReviewSessionHub } from "@/features/review/components/review-session-hub";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
@@ -202,6 +202,16 @@ export function ReviewSession({
   }
 
   return (
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <SceneImage
+          scene="review_atmosphere"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
+      }
+    >
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -280,7 +290,6 @@ export function ReviewSession({
           description="Complete lessons to build your review queue. Scheduled reviews will appear here."
         />
       ) : (
-        <StudyAtmosphere>
         <GlassPanel className="space-y-4 p-4">
           <div className="space-y-2 text-center">
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -332,7 +341,6 @@ export function ReviewSession({
             )}
           </div>
         </GlassPanel>
-        </StudyAtmosphere>
       )}
 
       {session.recentHistory.length > 0 ? (
@@ -363,5 +371,6 @@ export function ReviewSession({
         </GlassPanel>
       ) : null}
     </PageContainer>
+    </IllustratedScreen>
   );
 }

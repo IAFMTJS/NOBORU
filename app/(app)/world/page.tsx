@@ -5,5 +5,5 @@ import { getGameAvailability } from "@/lib/orchestration/games.orchestrator";
 export default async function WorldPage() {
   const gameAvailability = await getGameAvailability();
   const yama = yamaService.resolveExplorePresence();
-  return <ExploreScreen gameAvailability={gameAvailability} yama={yama} variant="world" />;
+  return <ExploreScreen gameAvailability={gameAvailability} yama={yama} />;
 }

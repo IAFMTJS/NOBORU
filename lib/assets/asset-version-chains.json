@@ -1,0 +1,84 @@
+{
+  "trailScrollVersionOrder": ["v4", "v3", "v2", "v1"],
+  "trailScrollRegionSlugs": [
+    "foothills",
+    "forest-trail",
+    "mount-n5",
+    "mount-n4",
+    "mount-n3",
+    "mount-n2",
+    "mount-n1",
+    "master-summit"
+  ],
+  "chains": {
+    "ui.campBaseDark": ["/ui/ui_camp_base_night_v2.webp", "/ui/ui_camp_base_night_v1.webp"],
+    "ui.campBaseLight": ["/ui/ui_camp_base_light_v2.webp", "/ui/ui_camp_base_light_v1.webp"],
+    "ui.dojoForestDark": ["/ui/ui_dojo_forest_night_v2.webp", "/ui/ui_dojo_forest_night_v1.webp"],
+    "ui.shrineToriiNight": ["/ui/ui_shrine_torii_night_v2.webp", "/ui/ui_shrine_torii_night_v1.webp"],
+    "ui.worldMapPeaks": ["/ui/ui_world_map_peaks_v2.webp", "/ui/ui_world_map_peaks_v1.webp"],
+    "ui.questBoardCampOverlay": ["/ui/ui_quest_board_camp_overlay_v1.webp"],
+    "ui.nodeLessonCircle": ["/ui/ui_node_lesson_circle_v1.webp"],
+    "ui.nodeCheckpointCircle": ["/ui/ui_node_checkpoint_circle_v1.webp"],
+    "ui.nodeTrialCircle": ["/ui/ui_node_trial_circle_v1.webp"],
+    "ui.profileLanternPathDark": [
+      "/ui/ui_profile_lantern_path_v1.webp",
+      "/ui/ui_camp_base_night_v2.webp",
+      "/ui/ui_camp_base_night_v1.webp"
+    ],
+    "ui.profileLanternPathLight": [
+      "/ui/ui_profile_lantern_path_v1.webp",
+      "/ui/ui_camp_base_light_v2.webp",
+      "/ui/ui_camp_base_light_v1.webp"
+    ],
+    "ui.reviewAtmosphereDark": [
+      "/ui/ui_review_atmosphere_v1.webp",
+      "/ui/ui_auth_atmosphere_dark_v1.webp"
+    ],
+    "ui.reviewAtmosphereLight": [
+      "/ui/ui_review_atmosphere_v1.webp",
+      "/ui/ui_auth_atmosphere_light_v1.webp"
+    ],
+    "ui.studyAtmosphereDark": [
+      "/ui/ui_study_atmosphere_v1.webp",
+      "/ui/ui_auth_atmosphere_dark_v1.webp"
+    ],
+    "ui.studyAtmosphereLight": [
+      "/ui/ui_study_atmosphere_v1.webp",
+      "/ui/ui_auth_atmosphere_light_v1.webp"
+    ],
+    "ui.memoryBookJournal": [
+      "/ui/ui_memory_book_journal_v1.webp",
+      "/ui/ui_shop_trail_interior_v1.webp"
+    ],
+    "ui.seasonalSakura": [
+      "/ui/ui_seasonal_sakura_v1.webp",
+      "/ui/ui_world_map_peaks_v2.webp",
+      "/ui/ui_world_map_peaks_v1.webp"
+    ],
+    "ui.socialGathering": [
+      "/ui/ui_social_gathering_v1.webp",
+      "/ui/ui_world_map_peaks_v2.webp",
+      "/ui/ui_world_map_peaks_v1.webp"
+    ],
+    "ui.inventoryBackpack": [
+      "/ui/ui_inventory_backpack_v1.webp",
+      "/ui/ui_shop_trail_interior_v1.webp"
+    ],
+    "icons.navFoxCampDark": [
+      "/mascots/yama_nav_camp_dark_v3.webp",
+      "/mascots/yama_nav_camp_dark_v2.webp"
+    ],
+    "icons.navFoxCampLight": [
+      "/mascots/yama_nav_camp_light_v3.webp",
+      "/mascots/yama_nav_camp_light_v2.webp"
+    ],
+    "mascots.yamaTrailCompanionDark": [
+      "/mascots/yama_trail_companion_dark_v2.webp",
+      "/mascots/yama_trail_companion_dark_v1.webp"
+    ],
+    "mascots.yamaTrailCompanionLight": [
+      "/mascots/yama_trail_companion_light_v2.webp",
+      "/mascots/yama_trail_companion_light_v1.webp"
+    ]
+  }
+}

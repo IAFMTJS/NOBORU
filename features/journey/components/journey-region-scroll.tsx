@@ -7,6 +7,7 @@ import { useReducedMotion } from "framer-motion";
 
 import { JourneyRegionSection } from "@/features/journey/components/journey-region-section";
 import { resolveJourneyVisualSettings } from "@/features/journey/constants/journey-visual.constants";
+import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import type {
   JourneyNode,
   JourneyRegionViewModel,
@@ -19,6 +20,7 @@ type JourneyRegionScrollProps = {
   trialHref?: string | null;
   trialTitle?: string | null;
   onNodeSelect?: (node: JourneyNode) => void;
+  companionEvolutionSlug?: CompanionEvolutionSlug;
   className?: string;
 };
 
@@ -27,6 +29,7 @@ export function JourneyRegionScroll({
   trialHref,
   trialTitle,
   onNodeSelect,
+  companionEvolutionSlug,
   className,
 }: JourneyRegionScrollProps) {
   const { resolvedTheme } = useTheme();
@@ -132,6 +135,7 @@ export function JourneyRegionScroll({
         artPriority
         visualSettings={visualSettings}
         showFox
+        companionEvolutionSlug={companionEvolutionSlug}
         onNodeSelect={onNodeSelect}
         immersive
       />

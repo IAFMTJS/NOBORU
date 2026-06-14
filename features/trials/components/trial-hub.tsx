@@ -1,16 +1,11 @@
 import Link from "next/link";
+import { SceneImage } from "@/components/media/scene-image";
 import { PageContainer } from "@/components/layout/page-container";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TrialPerformancePanel } from "@/features/trials/components/trial-performance-panel";
 import {
@@ -32,23 +27,23 @@ function TrialCard({ trial }: { trial: TrialListEntryViewModel }) {
   const passed = trial.availability === "passed";
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1">
-            <CardTitle className="text-heading-6">{trial.title}</CardTitle>
-            <CardDescription>{trial.description}</CardDescription>
-          </div>
-          {locked ? (
-            <UiIconImage name="lock" size={20} className="opacity-70" />
-          ) : passed ? (
-            <UiIconImage name="trophy" size={20} />
-          ) : (
-            <UiIconImage name="mountain" size={20} />
-          )}
+    <GlassPanel className="space-y-3 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <StoryTitle as="h3" className="text-sm">
+            {trial.title}
+          </StoryTitle>
+          <p className="text-body-sm text-muted-foreground">{trial.description}</p>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+        {locked ? (
+          <UiIconImage name="lock" size={20} className="opacity-70" />
+        ) : passed ? (
+          <UiIconImage name="trophy" size={20} />
+        ) : (
+          <UiIconImage name="mountain" size={20} />
+        )}
+      </div>
+      <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           <Badge variant="outline">{TRIAL_KIND_LABELS[trial.kind]}</Badge>
           <Badge variant="secondary">{trial.bossName}</Badge>
@@ -78,8 +73,8 @@ function TrialCard({ trial }: { trial: TrialListEntryViewModel }) {
             </Link>
           )}
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </GlassPanel>
   );
 }
 
@@ -90,6 +85,16 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
   );
 
   return (
+    <IllustratedScreen
+      scrim="minimal"
+      background={
+        <SceneImage
+          scene="study_atmosphere"
+          alt=""
+          className="absolute inset-0 min-h-dvh rounded-none"
+        />
+      }
+    >
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -113,5 +118,6 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
         ))}
       </div>
     </PageContainer>
+    </IllustratedScreen>
   );
 }

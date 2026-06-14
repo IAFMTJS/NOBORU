@@ -68,7 +68,6 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
         className={cn(
           "relative flex h-8 w-8 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-300",
           isActive ? cn(config.activeIconRingClass, config.activeGlowClass) : "bg-transparent",
-          isActive && !prefersReducedMotion && navTab === "world" && "motion-safe:animate-[spin_12s_linear_infinite]",
         )}
       >
         <NavIconImage tab={navTab} active={isActive} className={isActive ? "h-[18px] w-[18px]" : "h-5 w-5"} />

@@ -9,7 +9,7 @@ export default function UpdatePasswordPage() {
         <div className="mx-auto mb-4 flex justify-center">
           <YamaAvatar expression="main" size="lg" alt="Yama" priority />
         </div>
-        <StoryTitle as="h1" className="text-xl normal-case tracking-wide">
+        <StoryTitle as="h1" className="text-xl">
           Set a new password
         </StoryTitle>
         <p className="mt-1 text-body-sm text-muted-foreground">
@@ -17,7 +17,7 @@ export default function UpdatePasswordPage() {
         </p>
       </div>
       <GlassPanel className="space-y-4 p-5">
-        <StoryTitle as="h2" className="text-sm normal-case tracking-wide">
+        <StoryTitle as="h2" className="text-sm">
           Update Password
         </StoryTitle>
         <UpdatePasswordForm />

@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { GlassPanel, RewardChip, StoryTitle } from "@/components/visual";
+import { getQuestBoardOverlayPath } from "@/lib/assets/registry";
 import type {
   DailyQuestsViewModel,
   WeeklyQuestsViewModel,
@@ -18,23 +20,45 @@ type DailyQuestBoardProps = {
 
 const STREAK_MILESTONES = [7, 14, 30, 50] as const;
 
-function QuestBoardFrame({ children }: { children: ReactNode }) {
+function QuestBoardFrame({
+  children,
+  variant,
+}: {
+  children: ReactNode;
+  variant?: "camp" | "compact";
+}) {
+  const overlaySrc = variant === "camp" ? getQuestBoardOverlayPath() : null;
+
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-card border-2 border-amber-900/50 p-3",
-        "bg-gradient-to-b from-amber-950/70 via-amber-950/85 to-amber-950/95",
+        !overlaySrc &&
+          "bg-gradient-to-b from-amber-950/70 via-amber-950/85 to-amber-950/95",
         "shadow-[inset_0_1px_0_rgb(255_255_255/0.06),inset_0_-2px_8px_rgb(0_0_0/0.35)]",
       )}
     >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-30"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(90deg, transparent, transparent 3px, rgb(0 0 0 / 0.08) 3px, rgb(0 0 0 / 0.08) 4px)",
-        }}
-      />
+      {overlaySrc ? (
+        <>
+          <Image
+            src={overlaySrc}
+            alt=""
+            fill
+            className="object-cover object-top"
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-black/35" aria-hidden />
+        </>
+      ) : (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-30"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(90deg, transparent, transparent 3px, rgb(0 0 0 / 0.08) 3px, rgb(0 0 0 / 0.08) 4px)",
+          }}
+        />
+      )}
       <div className="relative space-y-3">{children}</div>
     </div>
   );
@@ -93,9 +117,9 @@ function QuestRow({
           <ProgressBar
             value={current}
             max={target}
-            label={title}
+            label={`${title} progress`}
             showValue
-            className="h-1.5"
+            className="h-1.5 [&_.text-muted-foreground]:sr-only"
           />
         ) : (
           <p className="text-caption text-success/80">Complete</p>
@@ -129,12 +153,12 @@ function StreakTimeline({ streakDays }: { streakDays: number }) {
             <div key={milestone} className="flex flex-1 flex-col items-center gap-1">
               <span
                 className={cn(
-                  "text-lg",
+                  "flex h-5 w-5 items-center justify-center",
                   reached ? "text-trail-glow" : "text-muted-foreground/40",
                 )}
                 aria-hidden
               >
-                🔥
+                <UiIconImage name="flame" size={16} />
               </span>
               <span
                 className={cn(
@@ -199,7 +223,7 @@ export function DailyQuestBoard({
 
   return (
     <div className="space-y-3">
-      <QuestBoardFrame>
+      <QuestBoardFrame variant={variant}>
         <QuestSection
           title="Today's Quests"
           subtitle={`${daily.completedCount}/${daily.totalCount} complete`}
@@ -215,7 +239,9 @@ export function DailyQuestBoard({
           />
         ) : null}
       </QuestBoardFrame>
-      {!compact && streakDays > 0 ? <StreakTimeline streakDays={streakDays} /> : null}
+      {!compact && variant !== "camp" && streakDays > 0 ? (
+        <StreakTimeline streakDays={streakDays} />
+      ) : null}
     </div>
   );
 }
