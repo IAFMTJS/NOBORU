@@ -47,6 +47,15 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  icons: {
+    icon: [
+      {
+        url: "/art/brand/icon-app-dark.webp",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    apple: "/art/brand/icon-app-dark.webp",
+  },
 };
 
 export const viewport: Viewport = {

@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "assets:generate": "node scripts/art-direction/generate.mjs",
-    "assets:publish-source": "node scripts/art-direction/publish-source.mjs"
+    "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
+    "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",
