@@ -86,6 +86,14 @@ export const NAV_TAB_ICON_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
   profile: { category: "ui/icons/nav", id: "icon-nav-profile-fox-active-gold" },
 };
 
+export const NAV_TAB_ICON_INACTIVE_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
+  camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-inactive" },
+  journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-inactive" },
+  dojo: { category: "ui/icons/nav", id: "icon-nav-dojo-torii-inactive" },
+  world: { category: "ui/icons/nav", id: "icon-nav-world-pagoda-inactive" },
+  profile: { category: "ui/icons/nav", id: "icon-nav-profile-fox-inactive" },
+};
+
 export const NAV_TAB_MASCOT_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
   camp: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
   journey: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },

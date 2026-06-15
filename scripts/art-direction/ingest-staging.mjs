@@ -37,6 +37,8 @@ const CATEGORY_BY_PREFIX = [
   ["icon-node-", "ui/icons/nodes"],
   ["icon-ui-", "ui/icons/ui"],
   ["reward-", "rewards"],
+  ["item-", "props/inventory"],
+  ["particle-", "props/particles"],
   ["brand-", "brand"],
 ];
 
@@ -63,7 +65,7 @@ async function main() {
 
   for (const file of files) {
     const id = path.parse(file).name;
-    if (!/^(bg-|char-|nav-|icon-|brand-|reward-)/.test(id)) {
+    if (!/^(bg-|char-|nav-|icon-|brand-|reward-|item-|particle-)/.test(id)) {
       continue;
     }
     const category = resolveCategory(id);

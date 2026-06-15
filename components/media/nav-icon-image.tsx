@@ -16,7 +16,7 @@ type NavIconImageProps = {
 };
 
 export function NavIconImage({ tab, active = false, className }: NavIconImageProps) {
-  const src = getNavIconPath(tab);
+  const src = getNavIconPath(tab, active);
   const config = IMMERSIVE_NAV_TAB_CONFIG[tab];
   if (!src) return null;
 

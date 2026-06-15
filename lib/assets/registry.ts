@@ -10,6 +10,7 @@ import {
   HUB_ART_ASSETS,
   NAV_SKIN_TEXTURE_ASSETS,
   NAV_TAB_ICON_ASSETS,
+  NAV_TAB_ICON_INACTIVE_ASSETS,
   NAV_TAB_MASCOT_ASSETS,
   REGION_HERO_ASSETS,
   REGION_TRAIL_SCROLL_ASSETS,
@@ -64,9 +65,10 @@ export function getGameArtPath(slug?: string): string | null {
   return ref ? resolveArtAsset(ref) : null;
 }
 
-export function getNavIconPath(tab?: string): string | null {
+export function getNavIconPath(tab?: string, active = true): string | null {
   if (!tab) return null;
-  const ref = NAV_TAB_ICON_ASSETS[tab as ImmersiveNavTab];
+  const key = tab as ImmersiveNavTab;
+  const ref = active ? NAV_TAB_ICON_ASSETS[key] : NAV_TAB_ICON_INACTIVE_ASSETS[key];
   return ref ? resolveArtAsset(ref) : null;
 }
 
