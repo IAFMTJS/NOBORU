@@ -3,7 +3,7 @@
  * Generates art-direction assets into assets/art/ and public/art/.
  * Painterly SVG → WebP. Does not use mockup crops or legacy ui_* paths.
  */
-import { mkdir, writeFile, copyFile } from "node:fs/promises";
+import { access, copyFile, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -13,14 +13,24 @@ import { drawAssetSvg } from "./draw.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
+const SOURCE_ROOT = path.join(ROOT, "assets", "art", "_source");
 
 async function ensureDir(dir) {
   await mkdir(dir, { recursive: true });
 }
 
+async function resolveSourcePng(category, id) {
+  const sourcePath = path.join(SOURCE_ROOT, category, `${id}.png`);
+  try {
+    await access(sourcePath);
+    return sourcePath;
+  } catch {
+    return null;
+  }
+}
+
 async function generateOne(entry) {
   const { category, id } = entry;
-  const svg = drawAssetSvg(entry);
   const sourceDir = path.join(ROOT, "assets", "art", category);
   const publicDir = path.join(ROOT, "public", "art", category);
   await ensureDir(sourceDir);
@@ -30,6 +40,23 @@ async function generateOne(entry) {
   const webpPath = path.join(sourceDir, `${id}.webp`);
   const publicPath = path.join(publicDir, `${id}.webp`);
 
+  const authoredSource = await resolveSourcePng(category, id);
+  if (authoredSource) {
+    await copyFile(authoredSource, pngPath);
+    await sharp(authoredSource).webp({ quality: 88, effort: 4 }).toFile(webpPath);
+    await copyFile(webpPath, publicPath);
+    const meta = await sharp(authoredSource).metadata();
+    return {
+      id,
+      category,
+      width: meta.width ?? null,
+      height: meta.height ?? null,
+      publicPath: `/art/${category}/${id}.webp`,
+      source: "authored",
+    };
+  }
+
+  const svg = drawAssetSvg(entry);
   const buffer = Buffer.from(svg);
   const image = sharp(buffer, { density: 144 });
   const meta = await image.metadata();
@@ -44,6 +71,7 @@ async function generateOne(entry) {
     width: meta.width ?? null,
     height: meta.height ?? null,
     publicPath: `/art/${category}/${id}.webp`,
+    source: "procedural",
   };
 }
 

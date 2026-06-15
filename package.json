@@ -16,7 +16,8 @@
     "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "assets:generate": "node scripts/art-direction/generate.mjs"
+    "assets:generate": "node scripts/art-direction/generate.mjs",
+    "assets:publish-source": "node scripts/art-direction/publish-source.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",
