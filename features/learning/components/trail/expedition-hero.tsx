@@ -73,7 +73,7 @@ export function ExpeditionHero({
 
   return (
     <div className="space-y-5">
-      <div className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-2xl">
+      <div className="relative left-1/2 w-screen max-w-none -translate-x-1/2 overflow-hidden">
         <div className="relative min-h-[28rem]">
           <SceneImage
             scene="camp_base"
@@ -89,9 +89,6 @@ export function ExpeditionHero({
                 <StoryTitle as="h2" className="text-xl text-white">
                   Ready for today&apos;s climb?
                 </StoryTitle>
-                {dailyGoalLabel ? (
-                  <p className="text-caption text-white/70">{dailyGoalLabel}</p>
-                ) : null}
               </div>
               {yama ? <ExpeditionHeroYama yama={yama} /> : null}
             </div>

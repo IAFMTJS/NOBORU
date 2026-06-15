@@ -272,12 +272,14 @@ class TrialService {
     });
 
     const achievements = await achievementService.afterStudyActivity(userId);
-    const quests = await questService.recordActivities(userId, [
-      { type: "trial_complete", amount: 1 },
-      ...(elevation
-        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
-        : []),
-    ]);
+    const quests = passed
+      ? await questService.recordActivities(userId, [
+          { type: "trial_complete", amount: 1 },
+          ...(elevation
+            ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+            : []),
+        ])
+      : [];
 
     if (passed && isFirstPass) {
       await companionService.awardBondXp(userId, "trial_pass");

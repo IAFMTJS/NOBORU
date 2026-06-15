@@ -93,8 +93,8 @@ function QuestRow({
           <ProgressBar
             value={current}
             max={target}
-            label={title}
             showValue
+            valueLabel={`${current}/${target}`}
             className="h-1.5"
           />
         ) : (

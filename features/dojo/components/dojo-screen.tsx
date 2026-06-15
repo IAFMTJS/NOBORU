@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SceneImage } from "@/components/media/scene-image";
-import { YamaExpressionImage } from "@/components/media/yama-expression-image";
+import { YamaAvatar } from "@/features/yama/components/yama-avatar";
 import { PageContainer } from "@/components/layout/page-container";
 import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { yamaService } from "@/features/yama/services/yama.service";
@@ -12,13 +12,55 @@ import { getDojoIconPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
 const TRAINING_GROUNDS = [
-  { title: "Review Queue", description: "Spaced repetition and weakness drills.", href: "/review", iconSlug: "review_queue" },
-  { title: "Kana Dojo", description: "Hiragana and katakana recognition and writing.", href: "/learn/hiragana", iconSlug: "kana_dojo" },
-  { title: "Vocabulary Hall", description: "Word recall, meaning, and production drills.", href: "/learn/vocabulary", iconSlug: "vocabulary_hall" },
-  { title: "Grammar Shrine", description: "Pattern recognition and sentence building.", href: "/learn/grammar", iconSlug: "grammar_shrine" },
-  { title: "Listening Pavilion", description: "Ear training and comprehension practice.", href: "/learn/listening", iconSlug: "listening_pavilion" },
-  { title: "Kanji Grounds", description: "Readings, radicals, and stroke mastery.", href: "/learn/kanji", iconSlug: "kanji_grounds" },
-  { title: "Reading Library", description: "Graded passages and comprehension checks.", href: "/learn/reading", iconSlug: "reading_library" },
+  {
+    title: "Review Queue",
+    description:
+      "Spaced repetition sessions built from your weak spots. Ratings adjust when each word, kanji, or pattern returns.",
+    href: "/review",
+    iconSlug: "review_queue",
+  },
+  {
+    title: "Kana Dojo",
+    description:
+      "Master hiragana and katakana rows, then apply them in short production drills on the foothills trail camps.",
+    href: "/learn/hiragana",
+    iconSlug: "kana_dojo",
+  },
+  {
+    title: "Vocabulary Hall",
+    description:
+      "Browse JLPT-tagged word lists, track what you have learned, and revisit items due for recall.",
+    href: "/learn/vocabulary",
+    iconSlug: "vocabulary_hall",
+  },
+  {
+    title: "Grammar Shrine",
+    description:
+      "Study patterns with natural example sentences, then reinforce them through trail lessons and reviews.",
+    href: "/learn/grammar",
+    iconSlug: "grammar_shrine",
+  },
+  {
+    title: "Listening Pavilion",
+    description:
+      "Train your ear with graded audio lessons and timed comprehension challenges at your level.",
+    href: "/learn/listening",
+    iconSlug: "listening_pavilion",
+  },
+  {
+    title: "Kanji Grounds",
+    description:
+      "Explore readings, radicals, and stroke order — add tough characters to your review queue anytime.",
+    href: "/learn/kanji",
+    iconSlug: "kanji_grounds",
+  },
+  {
+    title: "Reading Library",
+    description:
+      "Work through graded passages and dialogues with furigana support and comprehension checks.",
+    href: "/learn/reading",
+    iconSlug: "reading_library",
+  },
 ] as const;
 
 function DojoHallIcon({
@@ -102,13 +144,7 @@ export function DojoScreen() {
         </header>
 
         <GlassPanel className="flex items-start gap-3 p-4">
-          <YamaExpressionImage
-            expression="training"
-            fit="sticker"
-            width={72}
-            height={72}
-            className="h-[4.5rem] w-[4.5rem] shrink-0"
-          />
+          <YamaAvatar expression="training" size="lg" priority />
           <div className="min-w-0 flex-1 space-y-1">
             <p className="text-body-sm font-medium">{presence.message}</p>
             <p className="text-caption text-muted-foreground">

@@ -22,3 +22,5 @@ npm run assets:generate
 ```
 
 **Reference mockups** live in `assets/marketing/` — use them as visual reference when creating sources. Do not crop mockup panels into production backgrounds.
+
+**Generated examples** (not production-ready) live in `assets/marketing/generated-examples/` — do not publish or copy into `_source/`.

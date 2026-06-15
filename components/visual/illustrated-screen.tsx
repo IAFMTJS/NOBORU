@@ -5,11 +5,14 @@ import { cn } from "@/lib/utils";
 type IllustratedScreenProps = HTMLAttributes<HTMLDivElement> & {
   background?: ReactNode;
   scrim?: "minimal" | "full" | "none";
+  /** Stretch illustrated backgrounds to viewport width inside narrow shells. */
+  fullBleedBackground?: boolean;
 };
 
 export function IllustratedScreen({
   background,
   scrim = "minimal",
+  fullBleedBackground = Boolean(background),
   className,
   children,
   ...props
@@ -17,7 +20,15 @@ export function IllustratedScreen({
   return (
     <div className={cn("relative min-h-dvh overflow-hidden", className)} {...props}>
       {background ? (
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-y-0",
+            fullBleedBackground
+              ? "left-1/2 w-screen max-w-none -translate-x-1/2"
+              : "inset-x-0",
+          )}
+          aria-hidden
+        >
           {background}
         </div>
       ) : null}

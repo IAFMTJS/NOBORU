@@ -15,20 +15,19 @@ import {
   StoryTitle,
 } from "@/components/visual";
 import { GameCard } from "@/features/games/components/game-card";
+import { DISCOVER_CATEGORIES } from "@/features/discover/constants/discover-content";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { GameAvailabilityViewModel } from "@/features/games/types/game.types";
 import { getWorldIconPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
-const DISCOVER_CATEGORIES = [
-  { label: "Culture", glyph: "雅", iconSlug: "discover" },
-  { label: "History", glyph: "史", iconSlug: "discover" },
-  { label: "Folklore", glyph: "話", iconSlug: "discover" },
-  { label: "Food", glyph: "食", iconSlug: "discover" },
-  { label: "Anime", glyph: "映", iconSlug: "discover" },
-  { label: "Mythology", glyph: "神", iconSlug: "discover" },
-] as const;
+const DISCOVER_CATEGORIES_TILES = DISCOVER_CATEGORIES.map((category) => ({
+  label: category.label,
+  glyph: category.glyph,
+  iconSlug: category.iconSlug,
+  href: `/world/discover/${category.slug}`,
+}));
 
 const STUDY_TRAILS = [
   { label: "Journey", href: "/learn", glyph: "登", iconSlug: "trails" },
@@ -46,14 +45,19 @@ function DiscoverCategoryTile({
   label,
   glyph,
   iconSlug,
+  href,
 }: {
   label: string;
   glyph: string;
   iconSlug: string;
+  href: string;
 }) {
   const src = getWorldIconPath(iconSlug);
   return (
-    <div className="flex flex-col items-center gap-2 rounded-xl border border-glass-border bg-glass-bg/50 px-3 py-4 text-center opacity-75">
+    <Link
+      href={href}
+      className="focus-ring flex flex-col items-center gap-2 rounded-xl border border-glass-border bg-glass-bg/50 px-3 py-4 text-center transition-colors hover:border-trail-glow/40"
+    >
       <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-glass-border bg-primary/10">
         {src ? (
           <Image src={src} alt="" width={28} height={28} aria-hidden className="object-contain" />
@@ -64,8 +68,8 @@ function DiscoverCategoryTile({
         )}
       </span>
       <span className="text-body-sm font-medium">{label}</span>
-      <span className="text-caption text-muted-foreground">Coming soon</span>
-    </div>
+      <span className="text-caption text-trail-glow">Explore</span>
+    </Link>
   );
 }
 
@@ -157,7 +161,7 @@ export function ExploreScreen({
 
   return (
     <IllustratedScreen
-      scrim="none"
+      scrim="minimal"
       background={
         <SceneImage
           scene="world_map_peaks"
@@ -189,12 +193,13 @@ export function ExploreScreen({
           description="Culture, folklore, and lore along the climb."
         >
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {DISCOVER_CATEGORIES.map((cat) => (
+            {DISCOVER_CATEGORIES_TILES.map((cat) => (
               <DiscoverCategoryTile
                 key={cat.label}
                 label={cat.label}
                 glyph={cat.glyph}
                 iconSlug={cat.iconSlug}
+                href={cat.href}
               />
             ))}
           </div>

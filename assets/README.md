@@ -3,7 +3,8 @@
 | Location | Purpose |
 |----------|---------|
 | `assets/marketing/mockup_*.png` | Design references only — never served in-app |
-| `assets/art/_source/` | **Authoritative painterly PNG sources** (mockup-referenced) |
+| `assets/marketing/generated-examples/` | AI style examples — reference only, never served |
+| `assets/art/_source/` | **Authoritative painterly PNG sources** (production-ready exports) |
 | `assets/art/` | Published PNG/WebP per [art-direction/06](../art-direction/06_asset_inventory_and_naming.md) |
 | `public/art/` | Served at `/art/*` |
 

@@ -84,12 +84,8 @@ export function ApplicationDrill({ step, onAnswer }: ApplicationDrillProps) {
         <CardDescription>{resolveDescription(step.direction)}</CardDescription>
         <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
         {showJapaneseDisplay ? (
-          <JapaneseText
-            text={step.display}
-            romaji={step.displayHint ?? undefined}
-            className="text-body-sm"
-          />
-        ) : step.displayHint ? (
+          <JapaneseText text={step.display} className="text-body-sm" />
+        ) : step.direction === "to_japanese" && step.displayHint ? (
           <p className="text-body-sm text-muted-foreground">{step.displayHint}</p>
         ) : null}
       </CardHeader>

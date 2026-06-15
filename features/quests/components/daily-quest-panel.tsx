@@ -61,8 +61,8 @@ export function DailyQuestPanel({ quests, compact = false }: DailyQuestPanelProp
           <ProgressBar
             value={nextQuest.current}
             max={nextQuest.target}
-            label={nextQuest.title}
             showValue
+            valueLabel={`${nextQuest.current}/${nextQuest.target}`}
           />
           <Button className="w-full" asChild>
             <Link href={nextQuest.href}>Continue Quest</Link>
@@ -99,8 +99,8 @@ export function DailyQuestPanel({ quests, compact = false }: DailyQuestPanelProp
             <ProgressBar
               value={quest.current}
               max={quest.target}
-              label={quest.title}
               showValue
+              valueLabel={`${quest.current}/${quest.target}`}
             />
             {!quest.completed ? (
               <Button variant="outline" size="sm" asChild>

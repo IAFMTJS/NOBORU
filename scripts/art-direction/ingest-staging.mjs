@@ -32,6 +32,9 @@ const CATEGORY_BY_PREFIX = [
   ["char-noboru-cosmetic-", "characters/noboru/cosmetics"],
   ["char-noboru-", "characters/noboru/base"],
   ["nav-", "ui/navbars"],
+  ["panel-", "ui/panels"],
+  ["button-", "ui/buttons"],
+  ["progress-", "ui/progress"],
   ["icon-app-", "brand"],
   ["icon-nav-", "ui/icons/nav"],
   ["icon-node-", "ui/icons/nodes"],
@@ -65,7 +68,7 @@ async function main() {
 
   for (const file of files) {
     const id = path.parse(file).name;
-    if (!/^(bg-|char-|nav-|icon-|brand-|reward-|item-|particle-)/.test(id)) {
+    if (!/^(bg-|char-|nav-|icon-|brand-|reward-|item-|particle-|panel-|button-|progress-)/.test(id)) {
       continue;
     }
     const category = resolveCategory(id);

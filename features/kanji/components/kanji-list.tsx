@@ -6,7 +6,8 @@ import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { ContentHubScreen } from "@/components/visual/content-hub-screen";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { KanjiListRow } from "@/features/kanji/components/kanji-list-row";
@@ -27,7 +28,7 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
   const tokens = CONTENT_HUB_TOKENS.kanji;
 
   return (
-    <IllustratedScreen scrim="minimal">
+    <ContentHubScreen scene="shrine_torii">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -78,6 +79,6 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
         </div>
       </GlassPanel>
     </PageContainer>
-    </IllustratedScreen>
+    </ContentHubScreen>
   );
 }

@@ -17,6 +17,8 @@ Legacy supplementary boards: `mockup_product_*`, `mockup_supplementary_dark_v1`,
 
 **Do not** crop or ingest these mockups as production backgrounds. Use them as reference only; produce separate illustrated assets per [06_asset_inventory_and_naming.md](./06_asset_inventory_and_naming.md).
 
+AI-generated style batches (not production building blocks) belong in `assets/marketing/generated-examples/` — never in `public/art/`.
+
 All four sheets are `1536x1024` and use a dark fantasy mobile-game presentation board with many phone-sized screen concepts.
 
 ## Document Map

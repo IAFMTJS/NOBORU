@@ -1,3 +1,4 @@
+export { ContentHubScreen } from "./content-hub-screen";
 export { FeedbackSparkOverlay } from "./feedback-spark-overlay";
 export { GlassPanel } from "./glass-panel";
 export { IllustratedScreen } from "./illustrated-screen";

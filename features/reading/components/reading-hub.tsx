@@ -7,7 +7,8 @@ import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { ContentHubScreen } from "@/components/visual/content-hub-screen";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ListRow } from "@/components/ui/list-row";
@@ -28,7 +29,7 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
   const tokens = CONTENT_HUB_TOKENS.reading;
 
   return (
-    <IllustratedScreen scrim="minimal">
+    <ContentHubScreen scene="study_atmosphere">
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -130,6 +131,6 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
         </div>
       </GlassPanel>
     </PageContainer>
-    </IllustratedScreen>
+    </ContentHubScreen>
   );
 }

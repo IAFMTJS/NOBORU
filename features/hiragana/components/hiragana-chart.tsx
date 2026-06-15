@@ -3,7 +3,8 @@ import Link from "next/link";
 import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { PageContainer } from "@/components/layout/page-container";
 import { ScreenHeader } from "@/components/layout/screen-header";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { ContentHubScreen } from "@/components/visual/content-hub-screen";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -41,7 +42,7 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
   })).filter((section) => section.entries.length > 0);
 
   return (
-    <IllustratedScreen scrim="minimal">
+    <ContentHubScreen>
     <PageContainer>
       <ScreenHeader
         variant="story"
@@ -110,6 +111,6 @@ export function HiraganaChart({ chart }: HiraganaChartProps) {
         ))}
       </div>
     </PageContainer>
-    </IllustratedScreen>
+    </ContentHubScreen>
   );
 }

@@ -8,8 +8,8 @@ import { useTheme } from "next-themes";
 
 
 
+import { CharacterStickerFrame } from "@/components/media/character-sticker-frame";
 import { getNavFoxPath } from "@/lib/assets/registry";
-
 import { resolveCharacterStickerPresentation } from "@/lib/assets/image-presentation";
 
 import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
@@ -53,12 +53,9 @@ export function NavFoxImage({
 
 
   const sizeClass =
-
     variant === "bar-anchor"
-
-      ? "h-[3.25rem] w-[3.25rem] shrink-0"
-
-      : "h-14 w-14 shrink-0";
+      ? "h-[4.5rem] w-[4.5rem] shrink-0"
+      : "h-16 w-16 shrink-0";
 
 
 
@@ -88,34 +85,26 @@ export function NavFoxImage({
 
 
 
+  const px = variant === "bar-anchor" ? 72 : 64;
+
   return (
-
-    <Image
-
-      src={src}
-
-      alt=""
-
-      width={variant === "bar-anchor" ? 52 : 56}
-
-      height={variant === "bar-anchor" ? 52 : 56}
-
-      priority={priority}
-
-      aria-hidden
-
-      className={cn(sizeClass, "object-contain drop-shadow-md", className)}
-
-      style={{
-
-        objectFit: presentation.objectFit,
-
-        objectPosition: presentation.objectPosition,
-
-      }}
-
-    />
-
+    <CharacterStickerFrame className={cn(sizeClass, className)}>
+      <Image
+        src={src}
+        alt=""
+        width={px}
+        height={px}
+        priority={priority}
+        aria-hidden
+        className="h-full w-full drop-shadow-md"
+        style={{
+          objectFit: presentation.objectFit,
+          objectPosition: presentation.objectPosition,
+          transform: `scale(${presentation.scale})`,
+          transformOrigin: "center bottom",
+        }}
+      />
+    </CharacterStickerFrame>
   );
 
 }

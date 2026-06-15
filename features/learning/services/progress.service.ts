@@ -120,25 +120,32 @@ class ProgressService {
       achievementService.afterStudyActivity(input.userId),
     ]);
 
-    const questEvents = [
-      { type: "lesson_complete" as const, amount: 1 },
-      ...(newVocabularyCount > 0
-        ? [{ type: "vocabulary_learned" as const, amount: newVocabularyCount }]
-        : []),
-      ...(elevation
-        ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
-        : []),
-    ];
+    const questEvents = isFirstCompletion
+      ? [
+          { type: "lesson_complete" as const, amount: 1 },
+          ...(newVocabularyCount > 0
+            ? [{ type: "vocabulary_learned" as const, amount: newVocabularyCount }]
+            : []),
+          ...(elevation
+            ? [{ type: "ep_earned" as const, amount: elevation.epAwarded }]
+            : []),
+        ]
+      : [];
 
-    const quests = await questService.recordActivities(input.userId, questEvents);
+    const quests =
+      questEvents.length > 0
+        ? await questService.recordActivities(input.userId, questEvents)
+        : [];
 
-    void companionService.awardBondXp(input.userId, "lesson_complete");
-    void chestService.claimDailyOnStudy(input.userId);
-    void friendsService.recordActivity(
-      input.userId,
-      "lesson_complete",
-      `Completed ${lesson.title}`,
-    );
+    if (isFirstCompletion) {
+      void companionService.awardBondXp(input.userId, "lesson_complete");
+      void chestService.claimDailyOnStudy(input.userId);
+      void friendsService.recordActivity(
+        input.userId,
+        "lesson_complete",
+        `Completed ${lesson.title}`,
+      );
+    }
     if (elevation?.epAwarded) {
       void leagueService.addWeeklyEp(input.userId, elevation.epAwarded);
     }

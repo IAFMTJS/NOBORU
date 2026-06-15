@@ -35,8 +35,8 @@ function resolveFoxPresence(node: JourneyNode) {
 
 function TrailCompanionSprite({
   className,
-  width = 64,
-  height = 64,
+  width = 80,
+  height = 80,
   priority,
 }: {
   className?: string;
@@ -137,7 +137,7 @@ export function JourneyFoxCompanion({
       >
         <TrailCompanionSprite
           priority
-          className="h-14 w-14 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
+          className="h-20 w-20 drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
         />
       </motion.div>
 

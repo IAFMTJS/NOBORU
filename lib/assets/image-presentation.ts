@@ -13,9 +13,13 @@ export type TrailScrollPresentation = {
 };
 
 export type CharacterStickerPresentation = {
-  objectFit: "contain";
+  objectFit: "cover";
   objectPosition: string;
+  /** Zoom past square canvas padding in source art. */
+  scale: number;
 };
+
+export const CHARACTER_STICKER_SCALE = 2.25;
 
 export function resolveTrailScrollPresentation(options?: {
   scrollCropFocus?: { x: number; y: number };
@@ -36,8 +40,9 @@ export function resolveTrailScrollPresentation(options?: {
 
 export function resolveCharacterStickerPresentation(): CharacterStickerPresentation {
   return {
-    objectFit: "contain",
+    objectFit: "cover",
     objectPosition: "center bottom",
+    scale: CHARACTER_STICKER_SCALE,
   };
 }
 

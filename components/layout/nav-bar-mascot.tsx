@@ -15,10 +15,10 @@ export function NavBarMascot({ tab }: NavBarMascotProps) {
 
   return (
     <div
-      className="pointer-events-none relative z-10 w-[4.25rem] shrink-0 self-end"
+      className="pointer-events-none relative z-10 w-[5.25rem] shrink-0 self-end"
       aria-hidden
     >
-      <div className="relative flex h-[3.5rem] items-end justify-center pb-0.5">
+      <div className="relative flex h-[4.75rem] items-end justify-center pb-0.5">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={tab}

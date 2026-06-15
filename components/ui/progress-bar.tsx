@@ -8,6 +8,8 @@ type ProgressBarProps = {
   max?: number;
   label?: string;
   showValue?: boolean;
+  /** When set, shown instead of percent when showValue is true. */
+  valueLabel?: string;
   className?: string;
   indicatorClassName?: string;
 };
@@ -17,10 +19,12 @@ export function ProgressBar({
   max = 100,
   label,
   showValue = false,
+  valueLabel,
   className,
   indicatorClassName,
 }: ProgressBarProps) {
   const percent = Math.min(100, Math.max(0, Math.round((value / max) * 100)));
+  const displayValue = valueLabel ?? `${percent}%`;
 
   return (
     <div className={cn("space-y-2", className)}>
@@ -31,7 +35,7 @@ export function ProgressBar({
           ) : (
             <span />
           )}
-          {showValue ? <span className="font-medium">{percent}%</span> : null}
+          {showValue ? <span className="font-medium">{displayValue}</span> : null}
         </div>
       )}
       <Progress

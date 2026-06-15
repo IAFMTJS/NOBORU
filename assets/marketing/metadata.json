@@ -11,6 +11,7 @@
   "usage_locations": [
     "docs/mockup-reference-style.md"
   ],
+  "generated_examples_dir": "generated-examples/",
   "files": [
     "mockup_navbar_concepts_v1.png",
     "mockup_journey_core_flow_v1.png",

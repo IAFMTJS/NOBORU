@@ -92,7 +92,8 @@ export function JourneyRegionSection({
       data-journey-region-section={region.slug}
       aria-label={`${region.name} trail`}
       className={cn(
-        "relative mx-auto w-full max-w-lg",
+        "relative w-full",
+        immersive ? "max-w-none" : "mx-auto max-w-lg",
         immersive ? "pb-24 pt-0" : "px-4 py-6",
         !loadArtwork && "bg-gradient-to-b",
         !loadArtwork && visuals.gradient,
