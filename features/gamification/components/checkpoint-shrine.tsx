@@ -10,6 +10,10 @@ import {
   RewardChip,
   StoryTitle,
 } from "@/components/visual";
+import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
+import { JOURNEY_WORLD_ASSETS } from "@/lib/assets/art-mappings";
 import { cn } from "@/lib/utils";
 
 export type CheckpointRewardItem = {
@@ -57,11 +61,24 @@ export function CheckpointShrine({
       }
     >
       <div className="space-y-4 p-4">
-        <header className="space-y-1 text-center">
+        <header className="space-y-3 text-center">
+          <WorldArtImage
+            asset={JOURNEY_WORLD_ASSETS.region_gate}
+            alt=""
+            width={120}
+            height={80}
+            className="mx-auto opacity-90"
+          />
           <StoryTitle as="h2">{title}</StoryTitle>
           <p className="text-body-sm text-muted-foreground">
             Shrine cleared — rewards await on the trail ahead.
           </p>
+          <YamaPresence
+            presence={yamaService.resolveCheckpointPresence(true)}
+            size="md"
+            layout="vertical"
+            className="items-center"
+          />
         </header>
 
         <GlassPanel className="space-y-4 p-4">

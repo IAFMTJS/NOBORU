@@ -1,6 +1,8 @@
 import type { AchievementRarity } from "@/lib/content/types";
 import type { ProgressionPreviewViewModel } from "@/lib/progression/preview.types";
+import type { ChestEligibilityViewModel } from "@/features/chests/types/chest.types";
 import type { CompanionViewModel } from "@/features/companion/types/companion.types";
+import type { ShrineProtectionViewModel } from "@/features/streak-protection/types/shrine-protection.types";
 import type { YamaPresenceViewModel } from "@/features/yama/types/yama.types";
 import type { QuestDashboardViewModel } from "@/features/quests/types/quest.types";
 import type { JourneyNode } from "@/features/journey/types/journey.types";
@@ -59,4 +61,6 @@ export type HomeDashboardViewModel = {
     progressPercent: number;
     label: string;
   };
+  chests: ChestEligibilityViewModel[];
+  shrineProtection: ShrineProtectionViewModel;
 };

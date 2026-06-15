@@ -5,3 +5,12 @@ export { IllustratedScreen } from "./illustrated-screen";
 export { PrimaryClimbButton } from "./primary-climb-button";
 export { RewardChip } from "./reward-chip";
 export { StoryTitle } from "./story-title";
+export {
+  CampCampfire,
+  CampQuestBoardHotspot,
+  CampRewardChest,
+  CampShrineHotspot,
+  WorldArtImage,
+  type CampRewardChestState,
+  type CampfireIntensity,
+} from "./world";

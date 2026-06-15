@@ -11,7 +11,7 @@ export function QuestCompleteFeedback({ completions }: QuestCompleteFeedbackProp
   if (completions.length === 0) return null;
 
   return (
-    <div className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
+    <div className="motion-reward space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
       <YamaReaction presence={yamaService.resolveQuestReaction()} />
       <p className="text-body-sm font-medium">Quest complete</p>
       {completions.map((quest) => (

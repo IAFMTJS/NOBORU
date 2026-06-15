@@ -11,11 +11,19 @@ import {
   StoryTitle,
 } from "@/components/visual";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { yamaService } from "@/features/yama/services/yama.service";
 import { cn } from "@/lib/utils";
 
 export type LearnedItemPreview = {
   japanese: string;
   meaning: string;
+};
+
+export type LessonCompleteTrailPreview = {
+  regionSlug: string;
+  nextNodeLabel: string | null;
+  unlocksRegionSlug?: string | null;
 };
 
 export type LessonCompletePanelProps = {
@@ -33,6 +41,7 @@ export type LessonCompletePanelProps = {
   nextLessonTitle?: string | null;
   reviewItemsEnqueued?: number;
   trailHref: string;
+  trailPreview?: LessonCompleteTrailPreview | null;
   className?: string;
 };
 
@@ -51,6 +60,7 @@ export function LessonCompletePanel({
   nextLessonTitle = null,
   reviewItemsEnqueued = 0,
   trailHref,
+  trailPreview = null,
   className,
 }: LessonCompletePanelProps) {
   const title =
@@ -75,7 +85,13 @@ export function LessonCompletePanel({
       }
     >
       <div className="space-y-4 p-4">
-        <header className="space-y-2 text-center">
+        <header className="space-y-3 text-center">
+          <YamaPresence
+            presence={yamaService.resolveCelebration("lesson_complete")}
+            size="md"
+            layout="vertical"
+            className="items-center"
+          />
           <StoryTitle as="h2">{title}</StoryTitle>
           <RewardChip variant="xp" className="px-4 py-1 text-lg">
             +{xpReward} XP
@@ -114,6 +130,28 @@ export function LessonCompletePanel({
                 </li>
               ))}
             </ul>
+          </GlassPanel>
+        ) : null}
+
+        {trailPreview ? (
+          <GlassPanel className="space-y-2 p-4 text-center">
+            <p className="text-caption font-semibold uppercase tracking-wide text-muted-foreground">
+              Trail ahead
+            </p>
+            {trailPreview.unlocksRegionSlug ? (
+              <p className="text-body-sm text-trail-glow">
+                A new region opens on the mountain
+              </p>
+            ) : null}
+            {trailPreview.nextNodeLabel ? (
+              <p className="text-body-sm text-foreground">
+                Next up: {trailPreview.nextNodeLabel}
+              </p>
+            ) : (
+              <p className="text-body-sm text-muted-foreground">
+                Continue climbing in {trailPreview.regionSlug.replace(/-/g, " ")}
+              </p>
+            )}
           </GlassPanel>
         ) : null}
 

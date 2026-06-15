@@ -1,5 +1,5 @@
-import { DojoScreen } from "@/features/dojo/components/dojo-screen";
+import { redirect } from "next/navigation";
 
-export default function DojoPage() {
-  return <DojoScreen />;
+export default function DojoRedirectPage() {
+  redirect("/study");
 }

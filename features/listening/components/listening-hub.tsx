@@ -1,18 +1,10 @@
-import Link from "next/link";
-
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
-import { ContentHubBanner } from "@/components/ui/content-hub-banner";
-import { ContentHubLeading } from "@/components/ui/content-hub-leading";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
+import { StudyShelfRow } from "@/features/dojo/components/study-shelf-row";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { ContentHubScreen } from "@/components/visual/content-hub-screen";
 import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
@@ -30,34 +22,20 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
   const tokens = CONTENT_HUB_TOKENS.listening;
 
   return (
-    <ContentHubScreen scene="dojo_forest">
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={contentHub.listeningTitle}
-        subtitle={contentHub.listeningSubtitle}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(contentHub.regionSlug)}>Back</Link>
-          </Button>
-        }
-      />
-
-      <ContentHubBanner
-        variant="listening"
-        title={contentHub.listeningTitle}
-        subtitle={`${hub.completedCount} of ${hub.totalCount} listening activities on your trail`}
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={contentHub.listeningTitle}
+      subtitle={`${hub.completedCount} of ${hub.totalCount} listening activities on your trail`}
+    >
       <YamaTrainingPresence location="listening_pavilion" />
 
       <JlptLevelPills basePath="/learn/listening" activeLevel={jlptLevel} />
 
       <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
         <div className="space-y-1">
-          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <h2 className="text-heading-6 font-semibold">Pavilion progress</h2>
           <p className="text-body-sm text-muted-foreground">
-            {hub.completedCount} of {hub.totalCount} listening activities complete
+            {hub.completedCount} of {hub.totalCount} lanterns lit along the path
           </p>
         </div>
         <ProgressBar
@@ -71,54 +49,64 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
       <GlassPanel className="space-y-3 p-4">
         <div className="space-y-0.5">
           <StoryTitle as="h2" className="text-sm">
-            Audio Lessons
+            Lantern exercises
           </StoryTitle>
           <p className="text-caption text-muted-foreground">
-            Listen to a phrase and answer one question.
+            Listen beneath the pavilion lanterns.
           </p>
         </div>
         <div className="space-y-2">
-          {hub.exercises.map((exercise) => (
-            <Link
-              key={exercise.id}
-              href={`/learn/listening/exercises/${exercise.slug}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={<ContentHubLeading variant="listening" glyph="聴" />}
+          {hub.exercises.length === 0 ? (
+            <YamaEmptyState
+              surface="generic"
+              title="Lantern exercises await discovery"
+              description="Listening posts will light up as exercises unlock in this pavilion."
+            />
+          ) : (
+            hub.exercises.map((exercise) => (
+              <StudyShelfRow
+                key={exercise.id}
+                href={`/learn/listening/exercises/${exercise.slug}`}
+                variant="listening"
+                glyph="聴"
                 primary={exercise.title}
                 secondary={`${exercise.estimatedDuration} min`}
                 trailing={
                   exercise.completed ? (
                     <Badge variant="secondary">{exercise.score}%</Badge>
                   ) : (
-                    <Badge variant="outline">New</Badge>
+                    <Badge variant="outline">Unheard</Badge>
                   )
                 }
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
       </GlassPanel>
 
       <GlassPanel className="space-y-3 p-4">
         <div className="space-y-0.5">
           <StoryTitle as="h2" className="text-sm">
-            Listening Challenges
+            Challenge routes
           </StoryTitle>
           <p className="text-caption text-muted-foreground">
-            Complete several listening exercises in a row.
+            Longer listening paths through the mist.
           </p>
         </div>
         <div className="space-y-2">
-          {hub.challenges.map((challenge) => (
-            <Link
-              key={challenge.id}
-              href={`/learn/listening/challenges/${challenge.slug}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={<ContentHubLeading variant="listening" glyph="挑" />}
+          {hub.challenges.length === 0 ? (
+            <YamaEmptyState
+              surface="trail"
+              title="Challenge routes hidden in mist"
+              description="Longer listening paths reveal themselves as you progress."
+            />
+          ) : (
+            hub.challenges.map((challenge) => (
+              <StudyShelfRow
+                key={challenge.id}
+                href={`/learn/listening/challenges/${challenge.slug}`}
+                variant="listening"
+                glyph="挑"
                 primary={challenge.title}
                 secondary={
                   challenge.description ??
@@ -128,15 +116,14 @@ export function ListeningHub({ hub, jlptLevel = "n5" }: ListeningHubProps) {
                   challenge.completed ? (
                     <Badge variant="secondary">{challenge.score}%</Badge>
                   ) : (
-                    <Badge variant="outline">New</Badge>
+                    <Badge variant="outline">Awaiting</Badge>
                   )
                 }
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
       </GlassPanel>
-    </PageContainer>
-    </ContentHubScreen>
+    </StudyHubLayout>
   );
 }

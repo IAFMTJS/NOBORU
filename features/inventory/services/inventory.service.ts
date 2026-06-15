@@ -9,7 +9,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Lantern",
     description: "A warm light that reveals the path ahead.",
     category: "consumable",
-    iconLabel: "🏮",
+    assetKey: "lantern",
     quantity: 3,
   },
   {
@@ -17,7 +17,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Onigiri",
     description: "Trail rations for a steady climb.",
     category: "consumable",
-    iconLabel: "🍙",
+    assetKey: "onigiri",
     quantity: 5,
   },
   {
@@ -25,7 +25,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Dango",
     description: "Sweet reward after a long lesson.",
     category: "consumable",
-    iconLabel: "🍡",
+    assetKey: "dango",
     quantity: 2,
   },
   {
@@ -33,7 +33,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Daruma",
     description: "A charm for focused study sessions.",
     category: "consumable",
-    iconLabel: "🎎",
+    assetKey: "daruma",
     quantity: 1,
   },
   {
@@ -41,7 +41,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Fox Scarf",
     description: "A cozy scarf for Yama on cold summits.",
     category: "cosmetic",
-    iconLabel: "🧣",
+    assetKey: "scarf",
     quantity: 1,
     equipped: true,
   },
@@ -50,7 +50,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Summit Banner",
     description: "Profile banner celebrating your highest peak.",
     category: "cosmetic",
-    iconLabel: "⛰️",
+    assetKey: "scroll",
     quantity: 1,
   },
   {
@@ -58,7 +58,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Shrine Bell",
     description: "A gentle chime when you complete daily quests.",
     category: "cosmetic",
-    iconLabel: "🔔",
+    assetKey: "stone_lantern",
     quantity: 1,
   },
   {
@@ -66,7 +66,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Lantern Trail",
     description: "Warm amber glow along your path at night.",
     category: "trail",
-    iconLabel: "🏮",
+    assetKey: "lantern",
     quantity: 1,
     equipped: true,
   },
@@ -75,7 +75,7 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Sakura Petals",
     description: "Soft petals drift along your climb during spring.",
     category: "trail",
-    iconLabel: "🌸",
+    assetKey: "sakura",
     quantity: 1,
   },
   {
@@ -83,15 +83,58 @@ const PLACEHOLDER_INVENTORY: InventoryItemViewModel[] = [
     name: "Ember Path",
     description: "Glowing embers mark each completed step.",
     category: "trail",
-    iconLabel: "✨",
+    assetKey: "stone_lantern",
     quantity: 1,
   },
 ];
 
 class InventoryService {
+  private items: InventoryItemViewModel[] = PLACEHOLDER_INVENTORY.map((item) => ({
+    ...item,
+  }));
+
   getInventory(): InventoryViewModel {
-    return { items: PLACEHOLDER_INVENTORY };
+    return { items: this.items.map((item) => ({ ...item })) };
   }
+
+  grantFromShop(shopItem: {
+    id: string;
+    name: string;
+    description: string;
+    category: InventoryItemViewModel["category"] | "seasonal";
+  }): void {
+    const assetKey = mapShopCategoryToAssetKey(shopItem.id, shopItem.category);
+    const existing = this.items.find((item) => item.id === shopItem.id);
+    if (existing) {
+      existing.quantity += 1;
+      return;
+    }
+
+    this.items.push({
+      id: shopItem.id,
+      name: shopItem.name,
+      description: shopItem.description,
+      category:
+        shopItem.category === "seasonal" ? "trail" : shopItem.category,
+      assetKey,
+      quantity: 1,
+    });
+  }
+}
+
+function mapShopCategoryToAssetKey(
+  id: string,
+  category: string,
+): InventoryItemViewModel["assetKey"] {
+  if (id.includes("lantern")) return "lantern";
+  if (id.includes("scarf")) return "scarf";
+  if (id.includes("sakura")) return "sakura";
+  if (id.includes("tea")) return "onigiri";
+  if (id.includes("banner")) return "scroll";
+  if (id.includes("bell")) return "stone_lantern";
+  if (category === "consumable") return "dango";
+  if (category === "cosmetic") return "scarf";
+  return "scroll";
 }
 
 export const inventoryService = new InventoryService();

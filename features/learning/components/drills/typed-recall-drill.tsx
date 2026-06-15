@@ -2,16 +2,10 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { isRecallAnswerCorrect } from "@/features/learning/utils/recall-answers";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
@@ -19,9 +13,14 @@ import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
 type TypedRecallDrillProps = {
   step: LessonRecallStep;
   onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
 };
 
-export function TypedRecallDrill({ step, onAnswer }: TypedRecallDrillProps) {
+export function TypedRecallDrill({
+  step,
+  onAnswer,
+  disabled = false,
+}: TypedRecallDrillProps) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
   const acceptedAnswers = step.acceptedAnswers ?? [];
@@ -33,43 +32,45 @@ export function TypedRecallDrill({ step, onAnswer }: TypedRecallDrillProps) {
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>
-          Type your answer · {step.index}/{step.total}
-        </CardDescription>
-        <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
-        <JapaneseText text={step.display} size="xl" />
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Input
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="Type your answer"
-          disabled={result !== null}
-          autoComplete="off"
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && result === null && input.trim()) {
-              submit();
-            }
-          }}
-        />
-        <DrillFeedbackBanner
-          result={result}
-          message={
-            result === "correct"
-              ? "Correct!"
-              : result === "incorrect"
-                ? `Expected: ${acceptedAnswers[0]}`
-                : undefined
-          }
-        />
-        {result === null ? (
-          <Button className="w-full" disabled={!input.trim()} onClick={submit}>
-            Check Answer
-          </Button>
-        ) : null}
-      </CardContent>
-    </Card>
+    <LessonDrillLayout
+      prompt={`${step.prompt} · ${step.index}/${step.total}`}
+      result={result}
+      hero={<JapaneseText text={step.display} size="hero" className="text-foreground" />}
+      footer={
+        <>
+          <Input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            placeholder="Type your answer"
+            disabled={disabled || result !== null}
+            autoComplete="off"
+            className="border-white/15 bg-black/30"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && result === null && input.trim()) {
+                submit();
+              }
+            }}
+          />
+          {result === null ? (
+            <PrimaryClimbButton
+              className="w-full"
+              disabled={!input.trim() || disabled}
+              onClick={submit}
+            >
+              Check answer
+            </PrimaryClimbButton>
+          ) : null}
+        </>
+      }
+      explanation={
+        result === "incorrect" ? (
+          <LessonExplanationPanel
+            className="mt-3"
+            message="Not quite — here is the right answer."
+            correctAnswer={acceptedAnswers[0]}
+          />
+        ) : null
+      }
+    />
   );
 }

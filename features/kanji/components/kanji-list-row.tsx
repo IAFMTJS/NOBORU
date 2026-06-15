@@ -14,7 +14,7 @@ export function KanjiListRow({ entry, href }: KanjiListRowProps) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-elevation-1 transition-colors hover:border-primary/30 hover:bg-accent/20"
+      className="flex items-center gap-3 rounded-xl border border-white/12 bg-black/40 p-3 shadow-elevation-1 transition-colors hover:border-trail-glow/30 hover:bg-black/55"
     >
       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-secondary/80 font-japanese text-heading-2">
         {entry.character}

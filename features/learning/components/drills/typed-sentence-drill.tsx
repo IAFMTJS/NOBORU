@@ -2,22 +2,17 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
 
 type TypedSentenceDrillProps = {
   prompt: string;
   display: string;
   acceptedAnswers: string[];
   onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
 };
 
 function normalizeAnswer(value: string): string {
@@ -29,6 +24,7 @@ export function TypedSentenceDrill({
   display,
   acceptedAnswers,
   onAnswer,
+  disabled = false,
 }: TypedSentenceDrillProps) {
   const [value, setValue] = useState("");
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
@@ -43,31 +39,42 @@ export function TypedSentenceDrill({
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>Sentence production</CardDescription>
-        <CardTitle className="text-heading-5">{prompt}</CardTitle>
-        <p className="text-body-sm text-muted-foreground">{display}</p>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <Input
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-          placeholder="Type the Japanese sentence"
-          disabled={result !== null}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") handleSubmit();
-          }}
-        />
-        <Button
-          className="w-full"
-          disabled={!value.trim() || result !== null}
-          onClick={handleSubmit}
-        >
-          Check sentence
-        </Button>
-        <DrillFeedbackBanner result={result} />
-      </CardContent>
-    </Card>
+    <LessonDrillLayout
+      prompt={prompt}
+      result={result}
+      hero={
+        <p className="max-w-md text-body text-muted-foreground">{display}</p>
+      }
+      footer={
+        <>
+          <Input
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            placeholder="Type the Japanese sentence"
+            disabled={disabled || result !== null}
+            className="border-white/15 bg-black/30"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") handleSubmit();
+            }}
+          />
+          <PrimaryClimbButton
+            className="w-full"
+            disabled={!value.trim() || result !== null || disabled}
+            onClick={handleSubmit}
+          >
+            Check sentence
+          </PrimaryClimbButton>
+        </>
+      }
+      explanation={
+        result === "incorrect" ? (
+          <LessonExplanationPanel
+            className="mt-3"
+            message="Not quite — here is the correct sentence."
+            correctAnswer={acceptedAnswers[0]}
+          />
+        ) : null
+      }
+    />
   );
 }

@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
 import { SceneImage } from "@/components/media/scene-image";
-import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GlassPanel, IllustratedScreen, PrimaryClimbButton } from "@/components/visual";
+import { GlassPanel, IllustratedScreen, PrimaryClimbButton, StoryTitle } from "@/components/visual";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { ReviewSessionHub } from "@/features/review/components/review-session-hub";
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
@@ -212,24 +210,25 @@ export function ReviewSession({
         />
       }
     >
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={quickSessionTarget ? "Spirit Trials" : "Training Grounds"}
-        subtitle={
-          weakOnly && contentType
-            ? `Weak ${contentType} sprint · ${session.dueCount} due overall`
-            : quickSessionTarget
-              ? `${sessionCompletedCount}/${quickSessionTarget} in this sprint · ${session.dueCount} due overall`
-              : `${session.dueCount} item${session.dueCount === 1 ? "" : "s"} due`
-        }
-      />
+      <div className="space-y-4 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(3.75rem+env(safe-area-inset-top))]">
+        <header className="space-y-1 text-center">
+          <StoryTitle as="h1" className="text-trail-glow">
+            {quickSessionTarget ? "Spirit Trials" : "Mountain Review"}
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">
+            {weakOnly && contentType
+              ? `Weak ${contentType} sprint · ${session.dueCount} due overall`
+              : quickSessionTarget
+                ? `${sessionCompletedCount}/${quickSessionTarget} in this sprint · ${session.dueCount} due overall`
+                : `${session.dueCount} item${session.dueCount === 1 ? "" : "s"} due`}
+          </p>
+        </header>
 
       {!sessionStarted && session.currentCard ? (
         <ReviewSessionHub stats={session.stats} />
       ) : null}
 
-      {sessionStarted || !session.currentCard ? (
+      {sessionComplete ? (
         <ReviewStatsPanel stats={session.stats} />
       ) : null}
 
@@ -290,27 +289,19 @@ export function ReviewSession({
           description="Complete lessons to build your review queue. Scheduled reviews will appear here."
         />
       ) : (
-        <GlassPanel className="space-y-4 p-4">
+        <GlassPanel className="space-y-4 border-trail-glow/20 p-4">
           <div className="space-y-2 text-center">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <Badge variant="outline" className="capitalize">
-                {session.currentCard.contentType}
-              </Badge>
-              <Badge variant="secondary">
-                {formatReviewStateLabel(session.currentCard.state)}
-              </Badge>
-              <Badge variant="outline">
-                {session.currentCard.masteryScore}% mastery
-              </Badge>
-            </div>
-            <p className="text-caption text-muted-foreground">
-              {session.currentCard.nextReviewLabel}
+            <p className="text-caption font-medium uppercase tracking-widest text-trail-glow/80">
+              {formatReviewStateLabel(session.currentCard.state)} · {session.currentCard.contentType}
             </p>
-            <h2 className="text-heading-1">
+            <h2 className="font-story text-4xl font-bold text-heading-story sm:text-5xl">
               <span lang="ja" className="font-japanese">
                 {session.currentCard.term}
               </span>
             </h2>
+            <p className="text-caption text-muted-foreground">
+              {session.currentCard.nextReviewLabel}
+            </p>
           </div>
           <div className="space-y-4 text-center">
             {revealed ? (
@@ -370,7 +361,7 @@ export function ReviewSession({
           </div>
         </GlassPanel>
       ) : null}
-    </PageContainer>
+      </div>
     </IllustratedScreen>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 
+import { NavFoxImage } from "@/components/media/nav-fox-image";
 import { NavIconImage } from "@/components/media/nav-icon-image";
 import {
   IMMERSIVE_NAV_TAB_CONFIG,
@@ -23,24 +24,24 @@ function NavTabParticles({ tab, active }: { tab: ImmersiveNavTab; active: boolea
 
   if (!active || prefersReducedMotion) return null;
 
-  const particleCount = tab === "camp" ? 3 : 2;
+  const particleCount = tab === "camp" ? 4 : 3;
 
   return (
-    <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl" aria-hidden>
+    <span className="pointer-events-none absolute inset-0 overflow-visible" aria-hidden>
       {Array.from({ length: particleCount }).map((_, index) => (
         <motion.span
           key={index}
-          className={cn("absolute h-1 w-1 rounded-full", config.particleClass)}
-          initial={{ opacity: 0.2, y: 8, x: 8 + index * 10 }}
+          className={cn("absolute h-1.5 w-1.5 rounded-full", config.particleClass)}
+          initial={{ opacity: 0.2, y: 12, x: 6 + index * 8 }}
           animate={{
-            opacity: [0.15, 0.7, 0.15],
-            y: [8, -2, 8],
-            x: [8 + index * 10, 10 + index * 10, 6 + index * 10],
+            opacity: [0.2, 0.85, 0.2],
+            y: [12, -4, 12],
+            x: [6 + index * 8, 10 + index * 8, 4 + index * 8],
           }}
           transition={{
-            duration: tab === "world" ? 4 : 2.8,
+            duration: tab === "bag" ? 4 : 2.6,
             repeat: Infinity,
-            delay: index * 0.4,
+            delay: index * 0.35,
             ease: "easeInOut",
           }}
         />
@@ -49,6 +50,7 @@ function NavTabParticles({ tab, active }: { tab: ImmersiveNavTab; active: boolea
   );
 }
 
+/** Mockup 1 — fox overlaps the active destination tab with glow emphasis. */
 export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
   const config = IMMERSIVE_NAV_TAB_CONFIG[navTab];
   const prefersReducedMotion = useReducedMotion();
@@ -58,32 +60,69 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
       href={href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "focus-ring relative flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl px-0.5 py-1 text-[10px] font-semibold tracking-wide transition-colors",
+        "focus-ring relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-0.5 pb-1 pt-0 text-[10px] font-semibold tracking-wide transition-colors",
         isActive ? config.activeLabelClass : "text-muted-foreground/80 hover:text-foreground/90",
       )}
     >
+      {isActive ? (
+        <div
+          className="pointer-events-none absolute -top-[3.5rem] left-1/2 z-20 flex -translate-x-1/2 flex-col items-center"
+          aria-hidden
+        >
+          <motion.div
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 6, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.32, ease: "easeOut" }}
+            className="relative"
+          >
+            <span
+              className={cn(
+                "absolute -inset-3 rounded-full blur-2xl",
+                config.activeGlowClass,
+                "opacity-70",
+              )}
+            />
+            <NavFoxImage tab={navTab} variant="bar-anchor" priority />
+          </motion.div>
+        </div>
+      ) : null}
+
       <NavTabParticles tab={navTab} active={isActive} />
 
       <span
         className={cn(
-          "relative flex h-8 w-8 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-300",
-          isActive ? cn(config.activeIconRingClass, config.activeGlowClass) : "bg-transparent",
+          "relative z-10 mt-7 flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-300",
+          isActive
+            ? cn(
+                config.activeIconRingClass,
+                config.activeGlowClass,
+                "scale-110 ring-2",
+              )
+            : "bg-transparent",
         )}
       >
-        <NavIconImage tab={navTab} active={isActive} className={isActive ? "h-[18px] w-[18px]" : "h-5 w-5"} />
+        <NavIconImage
+          tab={navTab}
+          active={isActive}
+          className={cn(
+            isActive ? cn("h-[18px] w-[18px]", config.activeIconDropShadow) : "h-5 w-5",
+          )}
+        />
       </span>
 
-      <span className="relative truncate leading-none">{label}</span>
+      <span className={cn("relative z-10 truncate leading-none", isActive && "font-bold")}>
+        {label}
+      </span>
 
       {isActive ? (
         <motion.span
           aria-hidden
           layoutId="nav-active-indicator"
-          className={cn("h-1 w-1 rounded-full", config.activeIndicatorClass)}
+          className={cn("relative z-10 h-1.5 w-1.5 rounded-full", config.activeIndicatorClass)}
           transition={{ type: "spring", stiffness: 420, damping: 32 }}
         />
       ) : (
-        <span className="h-1 w-1" aria-hidden />
+        <span className="h-1.5 w-1.5" aria-hidden />
       )}
     </Link>
   );

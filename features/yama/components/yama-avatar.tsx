@@ -3,6 +3,7 @@
 import { YamaExpressionImage } from "@/components/media/yama-expression-image";
 import { YAMA_EXPRESSION_STYLES } from "@/features/yama/constants/yama.constants";
 import type { YamaExpression, YamaSize } from "@/features/yama/types/yama.types";
+import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 import { cn } from "@/lib/utils";
 
 const SIZE_CLASSES: Record<YamaSize, string> = {
@@ -23,6 +24,7 @@ const SIZE_PX: Record<YamaSize, string> = {
 
 type YamaAvatarProps = {
   expression?: YamaExpression;
+  poseId?: NoboruPoseId;
   size?: YamaSize;
   fit?: "sticker" | "full";
   alt?: string;
@@ -32,6 +34,7 @@ type YamaAvatarProps = {
 
 export function YamaAvatar({
   expression = "main",
+  poseId,
   size = "md",
   fit = "sticker",
   alt = "Yama",
@@ -51,6 +54,7 @@ export function YamaAvatar({
     >
       <YamaExpressionImage
         expression={expression}
+        poseId={poseId}
         alt={alt}
         fill
         fit={fit}

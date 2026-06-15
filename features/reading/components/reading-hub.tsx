@@ -1,18 +1,10 @@
-import Link from "next/link";
-
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
-import { ContentHubBanner } from "@/components/ui/content-hub-banner";
-import { ContentHubLeading } from "@/components/ui/content-hub-leading";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
+import { StudyShelfRow } from "@/features/dojo/components/study-shelf-row";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { ContentHubScreen } from "@/components/visual/content-hub-screen";
 import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
@@ -29,32 +21,18 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
   const tokens = CONTENT_HUB_TOKENS.reading;
 
   return (
-    <ContentHubScreen scene="study_atmosphere">
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={contentHub.readingTitle}
-        subtitle={contentHub.readingSubtitle}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(contentHub.regionSlug)}>Back</Link>
-          </Button>
-        }
-      />
-
-      <ContentHubBanner
-        variant="reading"
-        title={contentHub.readingTitle}
-        subtitle={`${hub.completedCount} of ${hub.totalCount} readings on your trail`}
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={contentHub.readingTitle}
+      subtitle={`${hub.completedCount} of ${hub.totalCount} readings on your trail`}
+    >
       <JlptLevelPills basePath="/learn/reading" activeLevel={jlptLevel} />
 
       <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
         <div className="space-y-1">
-          <h2 className="text-heading-6 font-semibold">Your Progress</h2>
+          <h2 className="text-heading-6 font-semibold">Library progress</h2>
           <p className="text-body-sm text-muted-foreground">
-            {hub.completedCount} of {hub.totalCount} readings complete
+            {hub.completedCount} of {hub.totalCount} readings discovered
           </p>
         </div>
         <ProgressBar
@@ -68,69 +46,78 @@ export function ReadingHub({ hub, jlptLevel = "n5" }: ReadingHubProps) {
       <GlassPanel className="space-y-3 p-4">
         <div className="space-y-0.5">
           <StoryTitle as="h2" className="text-sm">
-            Stories
+            Story scrolls
           </StoryTitle>
           <p className="text-caption text-muted-foreground">
-            Read short passages and answer questions.
+            Unroll passages from the library shelf.
           </p>
         </div>
         <div className="space-y-2">
-          {hub.stories.map((story) => (
-            <Link
-              key={story.id}
-              href={`/learn/reading/stories/${story.slug}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={<ContentHubLeading variant="reading" glyph="読" />}
+          {hub.stories.length === 0 ? (
+            <YamaEmptyState
+              surface="search"
+              title="Story scrolls await discovery"
+              description="Passages will appear on this shelf as reading content unlocks on your trail."
+            />
+          ) : (
+            hub.stories.map((story) => (
+              <StudyShelfRow
+                key={story.id}
+                href={`/learn/reading/stories/${story.slug}`}
+                variant="reading"
+                glyph="読"
                 primary={story.title}
                 secondary={story.summary ?? `${story.estimatedReadTime} min read`}
                 trailing={
                   story.completed ? (
                     <Badge variant="secondary">{story.score}%</Badge>
                   ) : (
-                    <Badge variant="outline">New</Badge>
+                    <Badge variant="outline">Unread</Badge>
                   )
                 }
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
       </GlassPanel>
 
       <GlassPanel className="space-y-3 p-4">
         <div className="space-y-0.5">
           <StoryTitle as="h2" className="text-sm">
-            Dialogs
+            Conversation paths
           </StoryTitle>
           <p className="text-caption text-muted-foreground">
-            Practice conversations with guided choices.
+            Meet travelers along the reading pavilion.
           </p>
         </div>
         <div className="space-y-2">
-          {hub.dialogues.map((dialogue) => (
-            <Link
-              key={dialogue.id}
-              href={`/learn/reading/dialogs/${dialogue.slug}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={<ContentHubLeading variant="reading" glyph="話" />}
+          {hub.dialogues.length === 0 ? (
+            <YamaEmptyState
+              surface="generic"
+              title="Travelers await discovery"
+              description="Conversation paths open when dialogue practice unlocks along the pavilion."
+            />
+          ) : (
+            hub.dialogues.map((dialogue) => (
+              <StudyShelfRow
+                key={dialogue.id}
+                href={`/learn/reading/dialogs/${dialogue.slug}`}
+                variant="reading"
+                glyph="話"
                 primary={dialogue.title}
                 secondary={dialogue.description ?? "Conversation practice"}
                 trailing={
                   dialogue.completed ? (
                     <Badge variant="secondary">{dialogue.score}%</Badge>
                   ) : (
-                    <Badge variant="outline">New</Badge>
+                    <Badge variant="outline">Awaiting</Badge>
                   )
                 }
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
       </GlassPanel>
-    </PageContainer>
-    </ContentHubScreen>
+    </StudyHubLayout>
   );
 }

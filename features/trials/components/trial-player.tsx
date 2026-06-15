@@ -3,18 +3,11 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { TRIAL_GRADE_LABELS, TRIAL_KIND_LABELS } from "@/features/trials/constants/trial.constants";
@@ -117,109 +110,115 @@ export function TrialPlayer({ session }: TrialPlayerProps) {
     return yamaService.resolveCelebration(result.passed ? "trial_boss" : "lesson_complete");
   }, [result]);
 
+  const headerAction = session.timeLimitSeconds ? (
+    <TrialTimer
+      timeLimitSeconds={session.timeLimitSeconds}
+      running={started && !finished && !result}
+      onExpired={handleExpired}
+    />
+  ) : null;
+
   if (result) {
     return (
-      <PageContainer>
-        <ScreenHeader title={session.title} subtitle={`${session.bossName} Trial`} />
-        <Card className={result.passed ? "border-success/30" : "border-destructive/30"}>
-          <CardHeader>
-            <CardTitle>{result.passed ? "Trial Cleared" : "Trial Incomplete"}</CardTitle>
-            <CardDescription>
+      <StudyHubLayout
+        scene="shrine_torii"
+        title={session.title}
+        subtitle={`${session.bossName} Trial`}
+        backHref="/trials"
+        backLabel="Trials"
+      >
+        <GlassPanel
+          className={
+            result.passed ? "space-y-4 border-success/30 p-4" : "space-y-4 border-destructive/30 p-4"
+          }
+        >
+          <div className="space-y-1">
+            <StoryTitle as="h2" className="text-lg">
+              {result.passed ? "Trial Cleared" : "Trial Incomplete"}
+            </StoryTitle>
+            <p className="text-body-sm text-muted-foreground">
               Score {result.scorePercent}% · Pass mark {session.passScore}%
               {result.grade ? ` · ${TRIAL_GRADE_LABELS[result.grade]}` : ""}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <YamaCelebration
-              presence={celebrationPresence}
-              title={result.passed ? "Summit foothold secured" : "Review and climb again"}
-            />
-            {result.epAwarded ? (
-              <Badge variant="secondary">+{result.epAwarded} EP</Badge>
-            ) : null}
-            <AchievementUnlockFeedback achievements={result.achievements} />
-            <QuestCompleteFeedback completions={result.quests} />
-            {!result.passed && result.reviewRecommendations.length > 0 ? (
-              <div className="space-y-2 rounded-lg border border-border p-3">
-                <p className="text-body-sm font-medium">Review recommendations</p>
-                <ul className="list-disc space-y-1 pl-5 text-body-sm text-muted-foreground">
-                  {result.reviewRecommendations.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-            <Button className="w-full" asChild>
-              <Link href="/trials">Back to Trials</Link>
+            </p>
+          </div>
+          <YamaCelebration
+            presence={celebrationPresence}
+            title={result.passed ? "Summit foothold secured" : "Review and climb again"}
+          />
+          {result.epAwarded ? (
+            <Badge variant="secondary">+{result.epAwarded} EP</Badge>
+          ) : null}
+          <AchievementUnlockFeedback achievements={result.achievements} />
+          <QuestCompleteFeedback completions={result.quests} />
+          {!result.passed && result.reviewRecommendations.length > 0 ? (
+            <div className="space-y-2 rounded-lg border border-border p-3">
+              <p className="text-body-sm font-medium">Review recommendations</p>
+              <ul className="list-disc space-y-1 pl-5 text-body-sm text-muted-foreground">
+                {result.reviewRecommendations.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+          <Button className="w-full" asChild>
+            <Link href="/trials">Back to Trials</Link>
+          </Button>
+          {!result.passed ? (
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/review">Open Review Queue</Link>
             </Button>
-            {!result.passed ? (
-              <Button variant="outline" className="w-full" asChild>
-                <Link href="/review">Open Review Queue</Link>
-              </Button>
-            ) : null}
-          </CardContent>
-        </Card>
-      </PageContainer>
+          ) : null}
+        </GlassPanel>
+      </StudyHubLayout>
     );
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={session.title}
-        subtitle={`${TRIAL_KIND_LABELS[session.kind]} · ${session.bossName}`}
-        action={
-          session.timeLimitSeconds ? (
-            <TrialTimer
-              timeLimitSeconds={session.timeLimitSeconds}
-              running={started && !finished}
-              onExpired={handleExpired}
-            />
-          ) : null
-        }
-      />
-
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardDescription>{session.description}</CardDescription>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">Pass {session.passScore}%</Badge>
-            <Badge variant="outline">{session.steps.length} challenges</Badge>
-            <Badge variant="outline">+{session.epReward} EP on first pass</Badge>
+    <StudyHubLayout
+      scene="shrine_torii"
+      title={session.title}
+      subtitle={`${TRIAL_KIND_LABELS[session.kind]} · ${session.bossName}`}
+      backHref="/trials"
+      backLabel="Trials"
+      action={headerAction}
+    >
+      <GlassPanel className="space-y-4 p-4">
+        <p className="text-body-sm text-muted-foreground">{session.description}</p>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="outline">Pass {session.passScore}%</Badge>
+          <Badge variant="outline">{session.steps.length} challenges</Badge>
+          <Badge variant="outline">+{session.epReward} EP on first pass</Badge>
+        </div>
+        <ProgressBar value={progressPercent} label="Trial progress" showValue />
+        {error ? (
+          <p className="text-body-sm text-destructive" role="alert">
+            {error}
+          </p>
+        ) : null}
+        {timeExpired ? (
+          <p className="text-body-sm text-warning-foreground" role="status">
+            Time expired. Saving your progress…
+          </p>
+        ) : null}
+        {!started ? (
+          <div className="space-y-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+            <p className="text-body font-medium">{session.bossName} awaits</p>
+            <p className="text-body-sm text-muted-foreground">
+              {session.steps.length} phases · Pass {session.passScore}% to clear the gate
+            </p>
+            <Button className="w-full" onClick={() => setStarted(true)}>
+              Face the Boss
+            </Button>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ProgressBar value={progressPercent} label="Trial progress" showValue />
-          {error ? (
-            <p className="text-body-sm text-destructive" role="alert">
-              {error}
+        ) : currentStep ? (
+          <>
+            <p className="text-caption text-muted-foreground">
+              Phase {stepIndex + 1} of {session.steps.length}
             </p>
-          ) : null}
-          {timeExpired ? (
-            <p className="text-body-sm text-warning-foreground" role="status">
-              Time expired. Saving your progress…
-            </p>
-          ) : null}
-          {!started ? (
-            <div className="space-y-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
-              <p className="text-body font-medium">{session.bossName} awaits</p>
-              <p className="text-body-sm text-muted-foreground">
-                {session.steps.length} phases · Pass {session.passScore}% to clear the gate
-              </p>
-              <Button className="w-full" onClick={() => setStarted(true)}>
-                Face the Boss
-              </Button>
-            </div>
-          ) : currentStep ? (
-            <>
-              <p className="text-caption text-muted-foreground">
-                Phase {stepIndex + 1} of {session.steps.length}
-              </p>
-              <TrialStepCard step={currentStep} onAnswer={handleAnswer} />
-            </>
-          ) : null}
-        </CardContent>
-      </Card>
-    </PageContainer>
+            <TrialStepCard step={currentStep} onAnswer={handleAnswer} />
+          </>
+        ) : null}
+      </GlassPanel>
+    </StudyHubLayout>
   );
 }

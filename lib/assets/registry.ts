@@ -5,6 +5,7 @@ import {
   ACHIEVEMENT_ART_ASSETS,
   AUTH_ATMOSPHERE_ASSET,
   BRAND_WORDMARK_ASSET,
+  CAMP_WORLD_ASSETS,
   DOJO_ICON_ASSETS,
   GAME_ART_ASSETS,
   HUB_ART_ASSETS,
@@ -19,9 +20,11 @@ import {
   TRAIL_SPINE_ASSET,
   UI_ICON_ASSETS,
   WORLD_ICON_ASSETS,
+  NOBORU_POSE_ASSETS,
   YAMA_EXPRESSION_ASSETS,
   resolveArtAsset,
 } from "@/lib/assets/art-mappings";
+import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 import type { SceneId } from "@/components/media/scene-image";
 import {
   TRAIL_SCROLL_REGION_SLUGS,
@@ -46,8 +49,20 @@ export function getMascotPath(theme?: string): string {
   return resolveArtAsset(TRAIL_COMPANION_ASSET);
 }
 
-export function getYamaExpressionPath(expression?: string, theme?: string): string | null {
+export function getNoboruPosePath(poseId?: NoboruPoseId): string | null {
+  if (!poseId) return null;
+  const ref = NOBORU_POSE_ASSETS[poseId];
+  return ref ? resolveArtAsset(ref) : null;
+}
+
+export function getYamaExpressionPath(
+  expression?: string,
+  theme?: string,
+  poseId?: NoboruPoseId,
+): string | null {
   void theme;
+  const posePath = getNoboruPosePath(poseId);
+  if (posePath) return posePath;
   if (!expression) return resolveArtAsset(YAMA_EXPRESSION_ASSETS.main);
   const ref = YAMA_EXPRESSION_ASSETS[expression as keyof typeof YAMA_EXPRESSION_ASSETS];
   return ref ? resolveArtAsset(ref) : null;
@@ -103,6 +118,13 @@ export function getHubArtPath(slug?: string): string | null {
   return ref ? resolveArtAsset(ref) : null;
 }
 
+export function getCampWorldArtPath(
+  key?: keyof typeof CAMP_WORLD_ASSETS,
+): string | null {
+  if (!key) return null;
+  return resolveArtAsset(CAMP_WORLD_ASSETS[key]);
+}
+
 export function getTrailCompanionPath(theme?: string): string | null {
   void theme;
   return resolveArtAsset(TRAIL_COMPANION_ASSET);
@@ -121,10 +143,10 @@ export function getSceneArtPath(scene?: string, theme?: string): string | null {
 
 export function getNavTabMascotExpression(tab: string): string {
   const expressions: Record<string, string> = {
-    camp: "encouraging",
     journey: "adventure",
-    dojo: "training",
-    world: "adventure",
+    camp: "encouraging",
+    study: "studying",
+    bag: "adventure",
     profile: "victorious",
   };
   return expressions[tab] ?? "main";

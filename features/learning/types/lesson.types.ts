@@ -273,6 +273,8 @@ export type LessonStep =
 
 export type LessonSessionViewModel = {
   lessonId: string;
+  /** Journey trail node id — matches lesson id for lesson nodes. */
+  trailNodeId: string;
   unitId: string;
   regionSlug: string;
   title: string;
@@ -288,6 +290,8 @@ export type LessonSessionViewModel = {
     title: string;
     href: string;
   } | null;
+  /** Region slug revealed when this lesson completes the current region. */
+  unlocksRegionSlug?: string | null;
 };
 
 export type LessonSummaryViewModel = {

@@ -1,11 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import type { ReviewStatsViewModel } from "@/features/review/types/review.types";
 
@@ -21,39 +15,37 @@ export function ReviewStatsPanel({ stats }: ReviewStatsPanelProps) {
 
   return (
     <div className="space-y-4">
-      <Card className="shadow-elevation-1">
-        <CardHeader>
-          <CardTitle>Review Queue</CardTitle>
-          <CardDescription>
+      <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+        <div className="space-y-1">
+          <p className="font-medium">Review Queue</p>
+          <p className="text-caption text-muted-foreground">
             {stats.dueCount} due · {stats.learningCount} learning ·{" "}
             {stats.masteredCount} mastered
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProgressBar
-            value={masteryPercent}
-            label="Items at mastered or legendary"
-            showValue
-          />
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ProgressBar
+          value={masteryPercent}
+          label="Items at mastered or legendary"
+          showValue
+        />
+      </GlassPanel>
 
       {stats.weakAreas.length > 0 ? (
-        <Card className="shadow-elevation-1">
-          <CardHeader>
-            <CardTitle className="text-heading-6">Weak Areas</CardTitle>
-            <CardDescription>
+        <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+          <div className="space-y-1">
+            <p className="text-heading-6 font-medium">Weak Areas</p>
+            <p className="text-caption text-muted-foreground">
               Focus extra practice on these content types.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
             {stats.weakAreas.map((area) => (
               <Badge key={area.contentType} variant="outline">
                 {area.label} · {area.count}
               </Badge>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </GlassPanel>
       ) : null}
     </div>
   );

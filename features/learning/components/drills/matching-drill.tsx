@@ -2,21 +2,15 @@
 
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { cn } from "@/lib/utils";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
 import type { LessonMatchingStep } from "@/features/learning/types/lesson.types";
 
 type MatchingDrillProps = {
   step: LessonMatchingStep;
   onAnswer: (correct: boolean, wrongAttempts?: number) => void;
+  disabled?: boolean;
 };
 
 function shuffleItems<T>(items: T[]): T[] {
@@ -28,7 +22,7 @@ function shuffleItems<T>(items: T[]): T[] {
   return copy;
 }
 
-export function MatchingDrill({ step, onAnswer }: MatchingDrillProps) {
+export function MatchingDrill({ step, onAnswer, disabled = false }: MatchingDrillProps) {
   const answerOptions = useMemo(
     () => shuffleItems(step.pairs.map((pair) => pair.answer)),
     [step.pairs],
@@ -37,10 +31,11 @@ export function MatchingDrill({ step, onAnswer }: MatchingDrillProps) {
   const [selectedPromptId, setSelectedPromptId] = useState<string | null>(null);
   const [matchedPromptIds, setMatchedPromptIds] = useState<string[]>([]);
   const [wrongAttempts, setWrongAttempts] = useState(0);
+  const [glowPairId, setGlowPairId] = useState<string | null>(null);
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
 
   function handleAnswerClick(answer: string) {
-    if (!selectedPromptId || result !== null) return;
+    if (!selectedPromptId || result === "correct" || disabled) return;
 
     const pair = step.pairs.find((entry) => entry.id === selectedPromptId);
     if (!pair) return;
@@ -48,7 +43,9 @@ export function MatchingDrill({ step, onAnswer }: MatchingDrillProps) {
     if (pair.answer === answer) {
       const nextMatched = [...matchedPromptIds, selectedPromptId];
       setMatchedPromptIds(nextMatched);
+      setGlowPairId(selectedPromptId);
       setSelectedPromptId(null);
+      window.setTimeout(() => setGlowPairId(null), 600);
 
       if (nextMatched.length === step.pairs.length) {
         setResult("correct");
@@ -64,65 +61,69 @@ export function MatchingDrill({ step, onAnswer }: MatchingDrillProps) {
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>
-          Matching drill · {step.index}/{step.total}
-        </CardDescription>
-        <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+    <LessonDrillLayout
+      prompt={`${step.prompt} · ${step.index}/${step.total}`}
+      result={result}
+      hero={
+        <div className="space-y-2">
+          <p className="font-story text-sm text-trail-glow">Trail pairing stones</p>
+          <p className="text-body-sm text-muted-foreground">
+            Select a prompt stone, then its matching answer
+          </p>
+        </div>
+      }
+      footer={
+        <div className="relative grid gap-4 sm:grid-cols-2">
+          {glowPairId ? (
+            <span
+              className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-px w-[42%] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-transparent via-trail-glow/70 to-transparent motion-safe:animate-pulse"
+              aria-hidden
+            />
+          ) : null}
           <div className="space-y-2">
-            <p className="text-caption text-muted-foreground">Japanese</p>
-            {step.pairs.map((pair) => {
-              const matched = matchedPromptIds.includes(pair.id);
-              const selected = selectedPromptId === pair.id;
-              return (
-                <Button
-                  key={pair.id}
-                  type="button"
-                  variant="outline"
-                  className={cn(
-                    "h-auto w-full justify-start whitespace-normal px-4 py-3 text-left",
-                    selected && "border-primary bg-primary/5",
-                    matched && "border-success/40 bg-success/10",
-                  )}
-                  disabled={matched || result === "correct"}
-                  onClick={() => setSelectedPromptId(pair.id)}
-                >
-                  {pair.prompt}
-                </Button>
-              );
-            })}
+            <p className="text-center text-caption text-muted-foreground">Prompts</p>
+            <TrailAnswerPad
+              ariaLabel="Matching prompts"
+              options={step.pairs.map((pair) => {
+                const matched = matchedPromptIds.includes(pair.id);
+                const selected = selectedPromptId === pair.id;
+                const glowing = glowPairId === pair.id;
+                let state: "default" | "selected" | "correct" | "disabled" = "default";
+                if (matched || glowing) state = "correct";
+                else if (selected) state = "selected";
+                else if (result === "correct" || disabled) state = "disabled";
+
+                return {
+                  id: pair.id,
+                  label: pair.prompt,
+                  state,
+                  onSelect:
+                    matched || result === "correct" || disabled
+                      ? undefined
+                      : () => setSelectedPromptId(pair.id),
+                };
+              })}
+            />
           </div>
           <div className="space-y-2">
-            <p className="text-caption text-muted-foreground">Meanings / readings</p>
-            {answerOptions.map((answer) => (
-              <Button
-                key={answer}
-                type="button"
-                variant="outline"
-                className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
-                disabled={!selectedPromptId || result === "correct"}
-                onClick={() => handleAnswerClick(answer)}
-              >
-                {answer}
-              </Button>
-            ))}
+            <p className="text-center text-caption text-muted-foreground">Answers</p>
+            <TrailAnswerPad
+              ariaLabel="Matching answers"
+              options={answerOptions.map((answer) => ({
+                id: answer,
+                label: answer,
+                state:
+                  !selectedPromptId || result === "correct" || disabled ? "disabled" : "default",
+                shake: result === "incorrect",
+                onSelect:
+                  !selectedPromptId || result === "correct" || disabled
+                    ? undefined
+                    : () => handleAnswerClick(answer),
+              }))}
+            />
           </div>
         </div>
-        <DrillFeedbackBanner
-          result={result}
-          message={
-            result === "correct"
-              ? "All matched!"
-              : result === "incorrect"
-                ? "That pair does not match."
-                : undefined
-          }
-        />
-      </CardContent>
-    </Card>
+      }
+    />
   );
 }

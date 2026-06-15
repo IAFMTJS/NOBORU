@@ -3,17 +3,14 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { UiIconImage } from "@/components/media/ui-icon-image";
+import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
+import { CharacterStage } from "@/components/visual/world/character-stage";
+import { WorldDialogueBubble } from "@/components/visual/world-dialogue-bubble";
+import { PrimaryClimbButton, StoryTitle } from "@/components/visual";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonShell } from "@/features/learning/components/lesson/lesson-shell";
+import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { DialogueDetailViewModel } from "@/features/reading/types/reading.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
@@ -125,98 +122,94 @@ export function DialoguePlayer({
     setCurrentNodeId(nextNode.id);
   }
 
-  const content = (
-    <div className="space-y-4">
-      {error ? <p className="text-caption text-destructive">{error}</p> : null}
+  function renderConversation() {
+    if (finished) {
+      return (
+        <div className="mx-auto max-w-md space-y-4 rounded-2xl border border-success/30 bg-black/45 p-5 text-center">
+          <StoryTitle as="h2" className="text-lg">
+            Conversation complete
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">Score {score}%</p>
+          {!embedded ? (
+            <PrimaryClimbButton asChild className="w-full">
+              <Link href="/learn/reading">Return to reading trail</Link>
+            </PrimaryClimbButton>
+          ) : null}
+        </div>
+      );
+    }
 
-      {!finished && currentNode ? (
-        <>
-          <Card className="shadow-elevation-1">
-            <CardHeader>
-              <CardDescription>{currentNode.speaker}</CardDescription>
-              <CardTitle className="text-heading-4 leading-relaxed">
-                {currentNode.japaneseText}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+    if (!currentNode) return null;
+
+    return (
+      <LessonDrillLayout
+        prompt={dialogue.title}
+        hero={
+          <div className="grid w-full max-w-md gap-4 sm:grid-cols-[5rem_1fr] sm:items-start">
+            <CharacterStage speaker={currentNode.speaker} />
+            <WorldDialogueBubble speaker={currentNode.speaker}>
+              <JapaneseText text={currentNode.japaneseText} size="lg" className="text-foreground" />
               {currentNode.romaji ? (
-                <p className="text-body-sm text-muted-foreground">{currentNode.romaji}</p>
+                <p className="mt-2 text-body-sm text-muted-foreground">{currentNode.romaji}</p>
               ) : null}
               {currentNode.english ? (
-                <p className="text-body-sm text-muted-foreground">{currentNode.english}</p>
+                <p className="mt-1 text-body-sm text-muted-foreground">{currentNode.english}</p>
               ) : null}
-            </CardContent>
-          </Card>
-
-          {currentNode.choices.length > 0 ? (
-            <div className="space-y-2">
-              {currentNode.choices.map((choice) => (
-                <Button
-                  key={choice.id}
-                  variant="outline"
-                  className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
-                  disabled={saving}
-                  onClick={() =>
-                    handleChoice(choice.id, choice.nextNodeId, choice.isCorrect)
-                  }
-                >
-                  {choice.choiceText}
-                </Button>
-              ))}
-            </div>
+            </WorldDialogueBubble>
+          </div>
+        }
+        footer={
+          currentNode.choices.length > 0 ? (
+            <TrailAnswerPad
+              options={currentNode.choices.map((choice) => ({
+                id: choice.id,
+                label: choice.choiceText,
+                state: saving ? "disabled" : "default",
+                onSelect: saving
+                  ? undefined
+                  : () => handleChoice(choice.id, choice.nextNodeId, choice.isCorrect),
+              }))}
+            />
           ) : (
-            <Button className="w-full" disabled={saving} onClick={handleContinue}>
+            <PrimaryClimbButton className="w-full" disabled={saving} onClick={handleContinue}>
               Continue
-            </Button>
-          )}
-        </>
-      ) : null}
+            </PrimaryClimbButton>
+          )
+        }
+      />
+    );
+  }
 
-      {finished ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Dialog Complete</CardTitle>
-            <CardDescription>Score {score}%</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {!embedded ? (
-              <>
-                <Button className="w-full" asChild>
-                  <Link href="/learn/reading">Back to Reading</Link>
-                </Button>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/learn/mount-n5">Back to Mount N5</Link>
-                </Button>
-              </>
-            ) : null}
-          </CardContent>
-        </Card>
-      ) : null}
-    </div>
+  const body = (
+    <>
+      {error ? <p className="mb-3 text-caption text-destructive">{error}</p> : null}
+      {renderConversation()}
+    </>
   );
 
   if (embedded) {
-    return content;
+    return body;
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={dialogue.title}
-        subtitle={dialogue.description ?? "Conversation practice"}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/reading">Back</Link>
-          </Button>
-        }
-      />
-      <div className="flex flex-wrap items-center gap-2">
-        {dialogue.jlptLevel ? (
-          <Badge variant="outline">{dialogue.jlptLevel.toUpperCase()}</Badge>
-        ) : null}
-        {dialogue.completed ? <Badge variant="secondary">Completed</Badge> : null}
-      </div>
-      {content}
-    </PageContainer>
+    <LessonShell
+      scene="study_atmosphere"
+      header={
+        <div className="absolute left-0 right-0 top-0 z-30 flex items-center gap-2 border-b border-white/10 bg-black/50 px-4 py-3 backdrop-blur-md">
+          <Link
+            href="/study"
+            className="inline-flex items-center gap-1.5 text-body-sm text-white/75 hover:text-white"
+          >
+            <UiIconImage name="arrow_left" size={16} />
+            Study
+          </Link>
+          <StoryTitle as="h1" className="truncate text-sm">
+            {dialogue.title}
+          </StoryTitle>
+        </div>
+      }
+    >
+      {body}
+    </LessonShell>
   );
 }

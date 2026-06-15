@@ -4,13 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { Label } from "@/components/ui/label";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import {
@@ -96,102 +90,97 @@ export function FeedbackForm({ defaults, onSubmitted }: FeedbackFormProps) {
 
   if (submitted) {
     return (
-      <Card className="border-success/30 shadow-elevation-1">
-        <CardHeader>
-          <CardTitle className="text-heading-6">Thank you</CardTitle>
-          <CardDescription>
-            {BETA_RELEASE.enabled
-              ? "Your beta feedback helps shape the climb for everyone."
-              : "Your feedback helps shape the climb for everyone."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button variant="outline" className="w-full" asChild>
-            <Link href="/camp">Back to Camp</Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <GlassPanel className="space-y-3 border-success/30 p-4 shadow-elevation-1">
+        <p className="text-heading-6 font-medium">Thank you</p>
+        <p className="text-caption text-muted-foreground">
+          {BETA_RELEASE.enabled
+            ? "Your beta feedback helps shape the climb for everyone."
+            : "Your feedback helps shape the climb for everyone."}
+        </p>
+        <Button variant="outline" className="w-full" asChild>
+          <Link href="/camp">Back to Camp</Link>
+        </Button>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardTitle className="text-heading-6">
+    <GlassPanel className="space-y-4 p-4 shadow-elevation-1">
+      <div className="space-y-1">
+        <p className="text-heading-6 font-medium">
           {BETA_RELEASE.enabled ? "Share Beta Feedback" : "Share Feedback"}
-        </CardTitle>
-        <CardDescription>
+        </p>
+        <p className="text-caption text-muted-foreground">
           Tell us what is working and what needs improvement on the trail, in
           lessons, with audio, or during install/offline use.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="feedback-category">Category</Label>
-          <select
-            id="feedback-category"
-            className="flex h-11 w-full rounded-xl border border-input bg-background px-3 text-body-sm"
-            value={category}
-            onChange={(event) => setCategory(event.target.value as FeedbackCategory)}
-          >
-            {CATEGORY_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {FEEDBACK_CATEGORY_LABELS[option]}
-              </option>
-            ))}
-          </select>
-          <p className="text-caption text-muted-foreground">
-            {FEEDBACK_CATEGORY_HINTS[category]}
-          </p>
-        </div>
+        </p>
+      </div>
 
-        <div className="space-y-2">
-          <Label>Overall rating (optional)</Label>
-          <div className="flex gap-2">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <Button
-                key={value}
-                type="button"
-                size="sm"
-                variant={rating === value ? "default" : "outline"}
-                onClick={() => setRating(value)}
-                aria-label={`Rate ${value} out of 5`}
-              >
-                {value}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="feedback-message">Message</Label>
-          <textarea
-            id="feedback-message"
-            className="min-h-32 w-full rounded-xl border border-input bg-background px-3 py-2 text-body-sm"
-            maxLength={FEEDBACK_MESSAGE_MAX_LENGTH}
-            value={message}
-            onChange={(event) => setMessage(event.target.value)}
-            placeholder="What happened? What did you expect? Which screen or lesson were you on?"
-          />
-          <p className="text-caption text-muted-foreground">
-            {message.length}/{FEEDBACK_MESSAGE_MAX_LENGTH}
-          </p>
-        </div>
-
-        {error ? (
-          <p className="text-caption text-destructive" role="alert">
-            {error}
-          </p>
-        ) : null}
-
-        <Button
-          className="w-full"
-          loading={submitting}
-          onClick={() => void handleSubmit()}
+      <div className="space-y-2">
+        <Label htmlFor="feedback-category">Category</Label>
+        <select
+          id="feedback-category"
+          className="flex h-11 w-full rounded-xl border border-input bg-background px-3 text-body-sm"
+          value={category}
+          onChange={(event) => setCategory(event.target.value as FeedbackCategory)}
         >
-          Submit Feedback
-        </Button>
-      </CardContent>
-    </Card>
+          {CATEGORY_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {FEEDBACK_CATEGORY_LABELS[option]}
+            </option>
+          ))}
+        </select>
+        <p className="text-caption text-muted-foreground">
+          {FEEDBACK_CATEGORY_HINTS[category]}
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Overall rating (optional)</Label>
+        <div className="flex gap-2">
+          {[1, 2, 3, 4, 5].map((value) => (
+            <Button
+              key={value}
+              type="button"
+              size="sm"
+              variant={rating === value ? "default" : "outline"}
+              onClick={() => setRating(value)}
+              aria-label={`Rate ${value} out of 5`}
+            >
+              {value}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="feedback-message">Message</Label>
+        <textarea
+          id="feedback-message"
+          className="min-h-32 w-full rounded-xl border border-input bg-background px-3 py-2 text-body-sm"
+          maxLength={FEEDBACK_MESSAGE_MAX_LENGTH}
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+          placeholder="What happened? What did you expect? Which screen or lesson were you on?"
+        />
+        <p className="text-caption text-muted-foreground">
+          {message.length}/{FEEDBACK_MESSAGE_MAX_LENGTH}
+        </p>
+      </div>
+
+      {error ? (
+        <p className="text-caption text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+
+      <Button
+        className="w-full"
+        loading={submitting}
+        onClick={() => void handleSubmit()}
+      >
+        Submit Feedback
+      </Button>
+    </GlassPanel>
   );
 }

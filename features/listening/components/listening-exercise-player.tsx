@@ -3,18 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { UiIconImage } from "@/components/media/ui-icon-image";
+import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
+import { StoryTitle } from "@/components/visual";
 import { AudioPlayback } from "@/features/listening/components/audio-playback";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonShell } from "@/features/learning/components/lesson/lesson-shell";
 import type { ListeningExerciseDetailViewModel } from "@/features/listening/types/listening.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
@@ -79,125 +74,136 @@ export function ListeningExercisePlayer({
     }
   }
 
-  const content = (
-    <div className="space-y-4">
-      {error ? <p className="text-caption text-destructive">{error}</p> : null}
-
-      {phase === "listen" ? (
-        <>
-          <Card className="shadow-elevation-1">
-            <CardHeader>
-              <CardDescription>Listen carefully before answering.</CardDescription>
-              <CardTitle className="text-heading-5">{exercise.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <AudioPlayback
-                audioUrl={exercise.audioUrl}
-                japaneseText={exercise.japaneseText}
-              />
+  function renderPhase() {
+    if (phase === "listen") {
+      return (
+        <LessonDrillLayout
+          prompt={`Listening post · ${exercise.title}`}
+          hero={
+            <div className="flex flex-col items-center gap-4">
+              <p className="font-story text-sm text-trail-glow">Sound carries on the mountain wind</p>
+              <div className="scale-125">
+                <AudioPlayback
+                  audioUrl={exercise.audioUrl}
+                  japaneseText={exercise.japaneseText}
+                />
+              </div>
               {revealed ? (
-                <div className="space-y-2 border-t border-border pt-3">
-                  <p className="text-body">{exercise.japaneseText}</p>
-                  {exercise.romaji ? (
-                    <p className="text-body-sm text-muted-foreground">{exercise.romaji}</p>
-                  ) : null}
-                  {exercise.english ? (
-                    <p className="text-body-sm text-muted-foreground">{exercise.english}</p>
-                  ) : null}
+                <div className="space-y-1 text-body-sm text-muted-foreground">
+                  <p>{exercise.japaneseText}</p>
+                  {exercise.romaji ? <p>{exercise.romaji}</p> : null}
                 </div>
               ) : (
-                <Button variant="ghost" className="w-full" onClick={() => setRevealed(true)}>
-                  Show Transcript
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-          <Button className="w-full" onClick={() => setPhase("quiz")}>
-            Answer Question
-          </Button>
-        </>
-      ) : null}
-
-      {phase === "quiz" ? (
-        <>
-          <Card className="shadow-elevation-1">
-            <CardHeader>
-              <CardDescription>Listening comprehension</CardDescription>
-              <CardTitle className="text-heading-5">{exercise.question}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {exercise.options.map((option, index) => (
-                <Button
-                  key={option}
-                  variant="outline"
-                  className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
-                  disabled={answered}
-                  onClick={() => {
-                    setAnswered(true);
-                    setSelectedCorrect(index === exercise.correctOptionIndex);
-                  }}
+                <button
+                  type="button"
+                  className="text-caption text-trail-glow underline-offset-2 hover:underline"
+                  onClick={() => setRevealed(true)}
                 >
-                  {option}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-          <Button
-            className="w-full"
-            disabled={!answered || saving}
-            loading={saving}
-            onClick={() => void saveProgress(selectedCorrect ? 100 : 0)}
-          >
-            Submit Answer
-          </Button>
-        </>
-      ) : null}
+                  Show transcript
+                </button>
+              )}
+            </div>
+          }
+          footer={
+            <PrimaryClimbButton className="w-full" onClick={() => setPhase("quiz")}>
+              Answer question
+            </PrimaryClimbButton>
+          }
+        />
+      );
+    }
 
-      {phase === "done" ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Exercise Complete</CardTitle>
-            <CardDescription>Score {score}%</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {!embedded ? (
-              <>
-                <Button className="w-full" asChild>
-                  <Link href="/learn/listening">Back to Listening</Link>
-                </Button>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/learn/mount-n5">Back to Mount N5</Link>
-                </Button>
-              </>
-            ) : null}
-          </CardContent>
-        </Card>
-      ) : null}
-    </div>
+    if (phase === "quiz") {
+      return (
+        <LessonDrillLayout
+          prompt="Listening comprehension"
+          hero={
+            <p className="font-story text-xl font-semibold text-heading-story">{exercise.question}</p>
+          }
+          footer={
+            <>
+              <TrailAnswerPad
+                options={exercise.options.map((option, index) => ({
+                  id: option,
+                  label: option,
+                  state:
+                    answered && index === exercise.correctOptionIndex
+                      ? "correct"
+                      : answered
+                        ? "disabled"
+                        : "default",
+                  onSelect: answered
+                    ? undefined
+                    : () => {
+                        setAnswered(true);
+                        setSelectedCorrect(index === exercise.correctOptionIndex);
+                      },
+                }))}
+              />
+              <PrimaryClimbButton
+                className="mt-3 w-full"
+                disabled={!answered || saving}
+                onClick={() => void saveProgress(selectedCorrect ? 100 : 0)}
+              >
+                Submit answer
+              </PrimaryClimbButton>
+            </>
+          }
+        />
+      );
+    }
+
+    if (phase === "done") {
+      return (
+        <div className="mx-auto max-w-md space-y-4 rounded-2xl border border-success/30 bg-black/45 p-5 text-center">
+          <StoryTitle as="h2" className="text-lg">
+            Listening complete
+          </StoryTitle>
+          <p className="text-caption text-muted-foreground">Score {score}%</p>
+          {!embedded ? (
+            <div className="space-y-2">
+              <PrimaryClimbButton asChild className="w-full">
+                <Link href="/learn/listening">Return to listening trail</Link>
+              </PrimaryClimbButton>
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
+  const body = (
+    <>
+      {error ? <p className="mb-3 text-caption text-destructive">{error}</p> : null}
+      {renderPhase()}
+    </>
   );
 
   if (embedded) {
-    return content;
+    return body;
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={exercise.title}
-        subtitle="Listen and answer"
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/listening">Back</Link>
-          </Button>
-        }
-      />
-      <div className="flex flex-wrap items-center gap-2">
-        {exercise.jlptLevel ? (
-          <Badge variant="outline">{exercise.jlptLevel.toUpperCase()}</Badge>
-        ) : null}
-        {exercise.completed ? <Badge variant="secondary">Completed</Badge> : null}
-      </div>
-      {content}
-    </PageContainer>
+    <LessonShell
+      scene="study_atmosphere"
+      header={
+        <div className="absolute left-0 right-0 top-0 z-30 flex items-center gap-2 border-b border-white/10 bg-black/50 px-4 py-3 backdrop-blur-md">
+          <Link
+            href="/study"
+            className="inline-flex items-center gap-1.5 text-body-sm text-white/75 hover:text-white"
+          >
+            <UiIconImage name="arrow_left" size={16} />
+            Study
+          </Link>
+          <StoryTitle as="h1" className="truncate text-sm">
+            {exercise.title}
+          </StoryTitle>
+        </div>
+      }
+    >
+      {body}
+    </LessonShell>
   );
 }

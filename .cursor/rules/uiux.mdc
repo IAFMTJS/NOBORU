@@ -186,21 +186,9 @@ No hidden critical features.
 
 PRIMARY NAVIGATION
 
-Bottom Navigation (Immersive — see docs/immersive-navigation-system.md):
+Bottom Navigation:
 
-Camp
-
-Journey
-
-Dojo
-
-World
-
-Profile
-
-Maximum:
-
-5 primary items
+5-tab pill bar — Journey · Camp · Study · Bag · Profile (VISUAL MD FILES Doc 01)
 
 Mountain Fox appears on the active tab with themed glow and subtle motion.
 
@@ -220,17 +208,17 @@ Main progression path.
 
 Regions, lessons, checkpoints, and region progression.
 
-Dojo
+Study
 
-Training Grounds hub.
+Travel study area on the trail.
 
-Kana, vocabulary, grammar, listening, review queue, and weakness drills.
+Vocabulary, kanji, grammar, listening, review queue, and weakness drills.
 
-World
+Bag
 
-Discovery system.
+Backpack and trail inventory.
 
-Regions, lore, trials, games, community, collectibles, and achievements.
+Cosmetics, items, and collected gear — opened like a travel bag, not a grid dashboard.
 
 Profile
 

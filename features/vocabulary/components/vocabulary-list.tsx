@@ -1,28 +1,15 @@
-import Link from "next/link";
-
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
-import { ContentHubBanner } from "@/components/ui/content-hub-banner";
-import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { ContentHubScreen } from "@/components/visual/content-hub-screen";
 import { GlassPanel, StoryTitle } from "@/components/visual";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
+import { VocabularyListRow } from "@/features/vocabulary/components/vocabulary-list-row";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
-
-function vocabularyLeadingGlyph(entry: { kana: string; kanji: string | null }) {
-  return entry.kanji?.[0] ?? entry.kana[0] ?? "語";
-}
 
 type VocabularyListProps = {
   list: VocabularyListViewModel;
@@ -35,25 +22,11 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
   const tokens = CONTENT_HUB_TOKENS.vocabulary;
 
   return (
-    <ContentHubScreen>
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={hub.vocabularyTitle}
-        subtitle={hub.vocabularySubtitle}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(hub.regionSlug)}>Back</Link>
-          </Button>
-        }
-      />
-
-      <ContentHubBanner
-        variant="vocabulary"
-        title={hub.vocabularyTitle}
-        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} words on your trail`}
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={hub.vocabularyTitle}
+      subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} words on your trail`}
+    >
       <YamaTrainingPresence location="vocabulary_hall" />
 
       <JlptLevelPills basePath="/learn/vocabulary" activeLevel={jlptLevel} />
@@ -73,43 +46,31 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         />
       </GlassPanel>
 
-      <GlassPanel className="space-y-3 p-4">
+      <div className="space-y-2 rounded-card border border-white/10 bg-black/30 p-3 backdrop-blur-sm">
         <StoryTitle as="h2" className="text-sm">
-          Word List
+          Word shelf
         </StoryTitle>
+        <p className="text-caption text-muted-foreground">
+          Scroll the trail lexicon — tap a word to study it in place.
+        </p>
         <div className="space-y-2">
-          {list.entries.map((entry) => (
-            <Link
-              key={entry.id}
-              href={`/learn/vocabulary/${entry.id}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={
-                  <ContentHubLeading
-                    variant="vocabulary"
-                    glyph={vocabularyLeadingGlyph(entry)}
-                  />
-                }
-                primary={
-                  <span lang="ja" className="font-japanese">
-                    {entry.kanji ? `${entry.kana} · ${entry.kanji}` : entry.kana}
-                  </span>
-                }
-                secondary={entry.meaning}
-                trailing={
-                  entry.learned ? (
-                    <Badge variant="secondary">Learned</Badge>
-                  ) : (
-                    <Badge variant="outline">New</Badge>
-                  )
-                }
+          {list.entries.length === 0 ? (
+            <YamaEmptyState
+              surface="search"
+              title="Word shelf awaits discovery"
+              description="Vocabulary will appear here as lessons unlock along the trail."
+            />
+          ) : (
+            list.entries.map((entry) => (
+              <VocabularyListRow
+                key={entry.id}
+                entry={entry}
+                href={`/learn/vocabulary/${entry.id}`}
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
-      </GlassPanel>
-    </PageContainer>
-    </ContentHubScreen>
+      </div>
+    </StudyHubLayout>
   );
 }

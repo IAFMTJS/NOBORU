@@ -106,10 +106,10 @@ Profile
 
 Replace with:
 
-Camp
 Journey
-Dojo
-World
+Camp
+Study
+Bag
 Profile
 
 ⸻
@@ -167,54 +167,51 @@ Exploration
 
 ⸻
 
-Dojo
+Study
 
 Purpose:
 
-Training Grounds.
+Travel study area on the trail.
 
 Contains:
 
-* Kana practice
 * Vocabulary practice
+* Kanji practice
 * Grammar practice
 * Listening practice
+* Review queue
 * Weakness training
 
 Visual Theme:
 
-Japanese dojo
+Open-air study spot
 
-Training grounds
+Trail-side learning
 
-Shrine training area
+Lantern-lit study table
 
 ⸻
 
-World
+Bag
 
 Purpose:
 
-Discovery system.
+Backpack and trail inventory.
 
 Contains:
 
-* Regions
-* Lore
-* Collectibles
-* Landmarks
-* Achievements
-* Unlockables
+* Cosmetics and trail skins
+* Collected items
+* Consumables
+* Gear inspection
 
 Visual Theme:
 
-Map
+Travel bag
 
-Compass
+Backpack open
 
-Exploration
-
-Travel
+Trail supplies
 
 ⸻
 
@@ -273,25 +270,23 @@ Ready to travel.
 
 ⸻
 
-Dojo Active
+Study Active
 
-The fox is meditating.
+The fox reads a scroll.
 
-Training.
+Studying.
 
-Practicing.
-
-Focused.
+Focused on learning.
 
 ⸻
 
-World Active
+Bag Active
 
-The fox holds a map.
+The fox inspects a travel bag.
 
-Or a compass.
+Organizing supplies.
 
-Exploring.
+Prepared for the trail.
 
 ⸻
 
@@ -359,13 +354,13 @@ Journey
 * Moving clouds
 * Small drifting particles
 
-Dojo
+Study
 
-* Floating leaves
+* Floating leaves or lantern glow
 
-World
+Bag
 
-* Rotating compass
+* Gentle item shimmer
 
 Profile
 
@@ -385,9 +380,9 @@ Camp Fox
 
 Journey Fox
 
-Dojo Fox
+Study Fox
 
-World Fox
+Bag Fox
 
 Profile Fox
 

@@ -1,4 +1,5 @@
 /** Core expression moods resolved by YamaService and mapped to asset paths. */
+import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 import type { ReviewRating } from "@/features/review/types/review.types";
 
 export type YamaExpression =
@@ -27,6 +28,8 @@ export type YamaSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 export type YamaPresenceViewModel = {
   expression: YamaExpression;
+  /** Canonical Noboru pose asset id when context resolves to a specific illustration. */
+  poseId?: NoboruPoseId;
   message: string;
   ariaLabel: string;
 };

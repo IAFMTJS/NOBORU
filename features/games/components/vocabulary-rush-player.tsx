@@ -1,19 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { GameCompleteCard } from "@/features/games/components/game-complete-card";
@@ -152,73 +145,69 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
     advanceOrFinish(true, nextCorrect, lives);
   }
 
+  const headerAction =
+    started && !finished && !result ? (
+      <TrialTimer
+        timeLimitSeconds={timerSeconds}
+        running={timerRunning}
+        onExpired={handleExpired}
+      />
+    ) : null;
+
   if (result) {
     return (
-      <PageContainer>
-        <ScreenHeader title="Vocabulary Rush" subtitle="Mini-game" />
+      <StudyHubLayout
+        scene="study_atmosphere"
+        title="Vocabulary Rush"
+        subtitle="Mini-game"
+        backHref="/games"
+        backLabel="Games"
+      >
         <GameCompleteCard result={result} title="Vocabulary Rush Complete" />
-      </PageContainer>
+      </StudyHubLayout>
     );
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title="Vocabulary Rush"
-        subtitle="Fast recall from your learned vocabulary"
-        action={
-          <div className="flex items-center gap-2">
-            {started && !finished ? (
-              <TrialTimer
-                timeLimitSeconds={timerSeconds}
-                running={timerRunning}
-                onExpired={handleExpired}
-              />
-            ) : null}
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/games">Exit</Link>
-            </Button>
-          </div>
-        }
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title="Vocabulary Rush"
+      subtitle="Fast recall from your learned vocabulary"
+      backHref="/games"
+      backLabel="Games"
+      action={headerAction}
+    >
       {error ? (
-        <Card className="border-destructive/30 bg-destructive/5 shadow-elevation-1">
-          <CardContent className="space-y-3 p-4">
-            <p className="text-body-sm text-destructive" role="alert">
-              {error}
-            </p>
-            {lastFinalCorrect !== null ? (
-              <Button
-                className="w-full"
-                disabled={submitting}
-                onClick={() => void finishGame(lastFinalCorrect)}
-              >
-                {submitting ? "Saving…" : "Retry saving results"}
-              </Button>
-            ) : null}
-          </CardContent>
-        </Card>
+        <GlassPanel className="space-y-3 border-destructive/30 bg-destructive/5 p-4">
+          <p className="text-body-sm text-destructive" role="alert">
+            {error}
+          </p>
+          {lastFinalCorrect !== null ? (
+            <Button
+              className="w-full"
+              disabled={submitting}
+              onClick={() => void finishGame(lastFinalCorrect)}
+            >
+              {submitting ? "Saving…" : "Retry saving results"}
+            </Button>
+          ) : null}
+        </GlassPanel>
       ) : null}
 
       {!started ? (
-        <Card className="shadow-elevation-1">
-          <CardHeader>
-            <CardDescription>
-              Answer {session.questionCount} vocabulary prompts before you run out of lives.
-            </CardDescription>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{session.lives} lives</Badge>
-              <Badge variant="outline">Timer speeds up on streaks</Badge>
-              <Badge variant="outline">10–25 EP</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={handleStart}>
-              Start Rush
-            </Button>
-          </CardContent>
-        </Card>
+        <GlassPanel className="space-y-4 p-4">
+          <p className="text-body-sm text-muted-foreground">
+            Answer {session.questionCount} vocabulary prompts before you run out of lives.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline">{session.lives} lives</Badge>
+            <Badge variant="outline">Timer speeds up on streaks</Badge>
+            <Badge variant="outline">10–25 EP</Badge>
+          </div>
+          <Button className="w-full" onClick={handleStart}>
+            Start Rush
+          </Button>
+        </GlassPanel>
       ) : (
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -246,6 +235,6 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
           ) : null}
         </div>
       )}
-    </PageContainer>
+    </StudyHubLayout>
   );
 }

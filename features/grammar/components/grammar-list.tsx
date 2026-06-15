@@ -1,22 +1,16 @@
 import Link from "next/link";
 
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
-import { ContentHubBanner } from "@/components/ui/content-hub-banner";
-import { ContentHubLeading } from "@/components/ui/content-hub-leading";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { ContentHubScreen } from "@/components/visual/content-hub-screen";
 import { GlassPanel, StoryTitle } from "@/components/visual";
+import { StudyShelfRow } from "@/features/dojo/components/study-shelf-row";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ListRow } from "@/components/ui/list-row";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { GrammarListViewModel } from "@/features/grammar/types/grammar.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
 
@@ -31,25 +25,11 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
   const tokens = CONTENT_HUB_TOKENS.grammar;
 
   return (
-    <ContentHubScreen scene="shrine_torii">
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={hub.grammarTitle}
-        subtitle={hub.grammarSubtitle}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(hub.regionSlug)}>Back</Link>
-          </Button>
-        }
-      />
-
-      <ContentHubBanner
-        variant="grammar"
-        title={hub.grammarTitle}
-        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} grammar points on your trail`}
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={hub.grammarTitle}
+      subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} grammar points on your trail`}
+    >
       <YamaTrainingPresence location="grammar_shrine" />
 
       <JlptLevelPills basePath="/learn/grammar" activeLevel={jlptLevel} />
@@ -71,22 +51,22 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
 
       <GlassPanel className="space-y-3 p-4">
         <StoryTitle as="h2" className="text-sm">
-          Grammar Points
+          Shrine panels
         </StoryTitle>
         <div className="space-y-2">
-          {list.entries.map((entry) => (
-            <Link
-              key={entry.id}
-              href={`/learn/grammar/${entry.id}`}
-              className="focus-ring block rounded-card"
-            >
-              <ListRow
-                leading={
-                  <ContentHubLeading
-                    variant="grammar"
-                    glyph={entry.title[0] ?? "文"}
-                  />
-                }
+          {list.entries.length === 0 ? (
+            <YamaEmptyState
+              surface="generic"
+              title="Grammar panels await discovery"
+              description="Shrine panels will appear as grammar content unlocks on your trail."
+            />
+          ) : (
+            list.entries.map((entry) => (
+              <StudyShelfRow
+                key={entry.id}
+                href={`/learn/grammar/${entry.id}`}
+                variant="grammar"
+                glyph={entry.title[0] ?? "文"}
                 primary={
                   <span lang="ja" className="font-japanese">
                     {entry.title}
@@ -97,15 +77,14 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
                   entry.learned ? (
                     <Badge variant="secondary">Learned</Badge>
                   ) : (
-                    <Badge variant="outline">New</Badge>
+                    <Badge variant="outline">Awaiting</Badge>
                   )
                 }
               />
-            </Link>
-          ))}
+            ))
+          )}
         </div>
       </GlassPanel>
-    </PageContainer>
-    </ContentHubScreen>
+    </StudyHubLayout>
   );
 }

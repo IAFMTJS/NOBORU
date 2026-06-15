@@ -120,6 +120,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       kind: "checkpoint",
       label: "Hiragana: a, i, u",
       subtitle: "Exam · 25 XP",
+      lessonType: "checkpoint",
       state: "completed",
       pathPosition: 0.17,
       regionIndex: 0,
@@ -133,6 +134,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       kind: "lesson",
       label: "Hiragana: e, o",
       subtitle: "hiragana · 10 XP",
+      lessonType: "hiragana",
       state: "in_progress",
       pathPosition: 0.5,
       regionIndex: 1,
@@ -146,6 +148,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       kind: "lesson",
       label: "Hiragana: ka, ki",
       subtitle: "hiragana · 10 XP",
+      lessonType: "hiragana",
       state: "locked",
       pathPosition: 0.83,
       regionIndex: 2,
@@ -195,6 +198,11 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
     targetMinutes: 15,
     progressPercent: 25,
     label: "1/4 daily quests",
+  },
+  chests: [],
+  shrineProtection: {
+    tokensAvailable: 0,
+    tokensUsed: 0,
   },
   yama: yamaService.resolveHomePresence(
     {

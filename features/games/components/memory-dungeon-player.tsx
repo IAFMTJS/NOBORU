@@ -1,18 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-} from "@/components/ui/card";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { GameCompleteCard } from "@/features/games/components/game-complete-card";
 import type {
@@ -114,67 +107,59 @@ export function MemoryDungeonPlayer({ session }: MemoryDungeonPlayerProps) {
 
   if (result) {
     return (
-      <PageContainer>
-        <ScreenHeader title={session.modeLabel} subtitle="Mini-game" />
-        <GameCompleteCard
-          result={result}
-          title={`${session.modeLabel} Complete`}
-        />
-      </PageContainer>
+      <StudyHubLayout
+        scene="study_atmosphere"
+        title={session.modeLabel}
+        subtitle="Mini-game"
+        backHref="/games"
+        backLabel="Games"
+      >
+        <GameCompleteCard result={result} title={`${session.modeLabel} Complete`} />
+      </StudyHubLayout>
     );
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={session.modeLabel}
-        subtitle="Flip cards and clear each dungeon room"
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/games">Exit</Link>
-          </Button>
-        }
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={session.modeLabel}
+      subtitle="Flip cards and clear each dungeon room"
+      backHref="/games"
+      backLabel="Games"
+    >
       {error ? (
-        <Card className="border-destructive/30 bg-destructive/5 shadow-elevation-1">
-          <CardContent className="space-y-3 p-4">
-            <p className="text-body-sm text-destructive" role="alert">
-              {error}
-            </p>
-            {lastCompleteAttempt ? (
-              <Button
-                className="w-full"
-                disabled={submitting}
-                onClick={() => void finishDungeon(lastCompleteAttempt.wrongAttempts)}
-              >
-                {submitting ? "Saving…" : "Retry saving results"}
-              </Button>
-            ) : null}
-          </CardContent>
-        </Card>
+        <GlassPanel className="space-y-3 border-destructive/30 bg-destructive/5 p-4">
+          <p className="text-body-sm text-destructive" role="alert">
+            {error}
+          </p>
+          {lastCompleteAttempt ? (
+            <Button
+              className="w-full"
+              disabled={submitting}
+              onClick={() => void finishDungeon(lastCompleteAttempt.wrongAttempts)}
+            >
+              {submitting ? "Saving…" : "Retry saving results"}
+            </Button>
+          ) : null}
+        </GlassPanel>
       ) : null}
 
       {!started ? (
-        <Card className="shadow-elevation-1">
-          <CardHeader>
-            <CardDescription>
-              Navigate {session.roomCount}{" "}
-              {session.roomCount === 1 ? "room" : "rooms"} by matching hidden
-              pairs from your learned trail content.
-            </CardDescription>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{session.totalPairs} pairs total</Badge>
-              <Badge variant="outline">{session.roomCount} rooms</Badge>
-              <Badge variant="outline">12–22 EP</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={handleStart}>
-              Enter Dungeon
-            </Button>
-          </CardContent>
-        </Card>
+        <GlassPanel className="space-y-4 p-4">
+          <p className="text-body-sm text-muted-foreground">
+            Navigate {session.roomCount}{" "}
+            {session.roomCount === 1 ? "room" : "rooms"} by matching hidden pairs from your
+            learned trail content.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline">{session.totalPairs} pairs total</Badge>
+            <Badge variant="outline">{session.roomCount} rooms</Badge>
+            <Badge variant="outline">12–22 EP</Badge>
+          </div>
+          <Button className="w-full" onClick={handleStart}>
+            Enter Dungeon
+          </Button>
+        </GlassPanel>
       ) : currentRoom ? (
         <MemoryDungeonDrill
           key={currentRoom.id}
@@ -184,6 +169,6 @@ export function MemoryDungeonPlayer({ session }: MemoryDungeonPlayerProps) {
           onRoomComplete={handleRoomComplete}
         />
       ) : null}
-    </PageContainer>
+    </StudyHubLayout>
   );
 }

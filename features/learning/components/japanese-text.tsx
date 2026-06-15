@@ -5,7 +5,7 @@ type JapaneseTextProps = {
   reading?: string | null;
   romaji?: string | null;
   english?: string | null;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "hero";
   className?: string;
 };
 
@@ -14,6 +14,7 @@ const SIZE_CLASSES = {
   md: "text-body",
   lg: "text-heading-5",
   xl: "text-heading-3",
+  hero: "text-5xl font-semibold leading-tight sm:text-6xl",
 } as const;
 
 export function JapaneseText({

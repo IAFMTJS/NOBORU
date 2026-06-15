@@ -3,8 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { FeedbackForm } from "@/features/feedback/components/feedback-form";
 import { BETA_RELEASE } from "@/lib/release/beta.constants";
 import type { FeedbackCategory } from "@/features/feedback/types/feedback.types";
@@ -28,11 +27,13 @@ function FeedbackPageContent() {
       : undefined;
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={BETA_RELEASE.enabled ? "Beta Feedback" : "Feedback"}
-        subtitle="Help us improve trail clarity, lesson interactivity, audio, and PWA install flow."
-      />
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={BETA_RELEASE.enabled ? "Beta Feedback" : "Feedback"}
+      subtitle="Help us improve trail clarity, lesson interactivity, audio, and PWA install flow."
+      backHref="/profile"
+      backLabel="Profile"
+    >
       <FeedbackForm
         defaults={{
           category,
@@ -44,7 +45,7 @@ function FeedbackPageContent() {
           },
         }}
       />
-    </PageContainer>
+    </StudyHubLayout>
   );
 }
 

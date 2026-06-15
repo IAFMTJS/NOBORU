@@ -14,7 +14,7 @@ export default async function AppLayout({
     <OfflineProvider userId={session?.userId}>
       <div className="min-h-dvh bg-background text-foreground">
         <BetaBanner />
-        <main className="mx-auto min-h-dvh max-w-lg pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
+        <main className="mx-auto min-h-dvh max-w-lg pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
           {children}
         </main>
         <BottomNav />

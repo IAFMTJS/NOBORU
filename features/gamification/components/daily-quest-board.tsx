@@ -16,6 +16,8 @@ type DailyQuestBoardProps = {
   streakDays?: number;
 };
 
+const DAILY_QUEST_DISPLAY_CAP = 3;
+
 const STREAK_MILESTONES = [7, 14, 30, 50] as const;
 
 function QuestBoardFrame({ children }: { children: ReactNode }) {
@@ -196,14 +198,17 @@ export function DailyQuestBoard({
   streakDays = 0,
 }: DailyQuestBoardProps) {
   const compact = variant === "compact";
+  const displayedDailyQuests = daily.quests.slice(0, DAILY_QUEST_DISPLAY_CAP);
+  const displayedDailyTotal = Math.min(daily.totalCount, DAILY_QUEST_DISPLAY_CAP);
+  const displayedDailyCompleted = displayedDailyQuests.filter((quest) => quest.completed).length;
 
   return (
     <div className="space-y-3">
       <QuestBoardFrame>
         <QuestSection
           title="Today's Quests"
-          subtitle={`${daily.completedCount}/${daily.totalCount} complete`}
-          quests={daily.quests}
+          subtitle={`${displayedDailyCompleted}/${displayedDailyTotal} complete`}
+          quests={displayedDailyQuests}
           compact={compact}
         />
         {weekly && weekly.totalCount > 0 ? (

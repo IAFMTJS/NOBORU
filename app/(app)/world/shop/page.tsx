@@ -1,7 +1,5 @@
-import { ShopScreen } from "@/features/shop/components/shop-screen";
-import { shopService } from "@/features/shop/services/shop.service";
+import { redirect } from "next/navigation";
 
-export default function ShopPage() {
-  const catalog = shopService.getCatalog();
-  return <ShopScreen catalog={catalog} />;
+export default function WorldShopRedirectPage() {
+  redirect("/shop");
 }

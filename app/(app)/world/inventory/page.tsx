@@ -1,8 +1,5 @@
-import { InventoryScreen } from "@/features/inventory/components/inventory-screen";
-import { inventoryService } from "@/features/inventory/services/inventory.service";
+import { redirect } from "next/navigation";
 
-export default function InventoryPage() {
-  const inventory = inventoryService.getInventory();
-
-  return <InventoryScreen inventory={inventory} />;
+export default function InventoryRedirectPage() {
+  redirect("/bag");
 }

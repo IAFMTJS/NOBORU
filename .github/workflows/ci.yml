@@ -18,6 +18,8 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test
+      - run: npm run assets:validate
+      - run: npm run assets:audit-immersion
       - run: npm run build
       - name: Verify health route module
         run: node -e "require('fs').accessSync('app/api/health/route.ts')"

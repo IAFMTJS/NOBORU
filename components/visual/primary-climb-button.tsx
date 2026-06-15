@@ -13,7 +13,7 @@ export function PrimaryClimbButton({
   return (
     <Button
       className={cn(
-        "h-12 w-full rounded-[var(--radius)] text-base font-semibold shadow-elevation-2",
+        "motion-button h-12 w-full rounded-[var(--radius)] text-base font-semibold shadow-elevation-2 transition-[transform,opacity,background-color,box-shadow]",
         className,
       )}
       {...props}

@@ -8,9 +8,11 @@ import { getYamaExpressionPath } from "@/lib/assets/registry";
 import { resolveCharacterStickerPresentation } from "@/lib/assets/image-presentation";
 import { cn } from "@/lib/utils";
 import type { YamaExpression } from "@/features/yama/types/yama.types";
+import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 
 type YamaExpressionImageProps = {
   expression?: YamaExpression;
+  poseId?: NoboruPoseId;
   alt?: string;
   className?: string;
   fit?: "sticker" | "full";
@@ -23,6 +25,7 @@ type YamaExpressionImageProps = {
 
 export function YamaExpressionImage({
   expression = "main",
+  poseId,
   alt = "Noboru",
   className,
   fit = "sticker",
@@ -33,7 +36,7 @@ export function YamaExpressionImage({
   sizes,
 }: YamaExpressionImageProps) {
   const { resolvedTheme } = useTheme();
-  const src = getYamaExpressionPath(expression, resolvedTheme);
+  const src = getYamaExpressionPath(expression, resolvedTheme, poseId);
   const presentation = resolveCharacterStickerPresentation();
 
   if (!src) {

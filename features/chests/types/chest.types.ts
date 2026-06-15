@@ -1,3 +1,4 @@
+import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import type { NextUnlockViewModel } from "@/lib/progression/preview.types";
 
 export type ChestKind = "daily" | "weekly" | "boss" | "streak";
@@ -40,4 +41,5 @@ export type ChestEligibilityViewModel = {
 
 export type ChestClaimResult = ChestRewardViewModel & {
   alreadyClaimed: boolean;
+  unlockedAchievements?: AchievementUnlockViewModel[];
 };

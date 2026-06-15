@@ -26,7 +26,7 @@ export function SelectionCard({
       type={onClick ? "button" : undefined}
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-3 rounded-card border bg-card p-4 text-left shadow-elevation-1 transition-colors motion-standard",
+        "flex w-full items-center gap-3 rounded-card border border-white/12 bg-black/40 p-4 text-left shadow-elevation-1 transition-colors motion-standard",
         selected
           ? "border-primary bg-primary/5 ring-1 ring-primary/30"
           : "border-border hover:border-primary/30 hover:bg-accent/30",

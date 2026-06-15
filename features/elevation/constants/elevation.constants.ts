@@ -8,6 +8,15 @@ export const REVIEW_EP = {
 
 export const COMPREHENSION_EP = 15;
 
+/** User-facing climb distance — 1 elevation point equals 1 meter on the trail. */
+export function formatMeters(ep: number): string {
+  return `${ep.toLocaleString()} m`;
+}
+
+export function formatMetersClimbed(ep: number): string {
+  return `${formatMeters(ep)} climbed`;
+}
+
 export type ElevationSourceType =
   | "lesson_complete"
   | "review_rating"

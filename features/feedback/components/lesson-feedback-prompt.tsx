@@ -4,13 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 
 type LessonFeedbackPromptProps = {
   lessonId: string;
@@ -32,22 +26,22 @@ export function LessonFeedbackPrompt({
   const feedbackHref = `/feedback?category=lesson_ux&lessonId=${encodeURIComponent(lessonId)}&region=${encodeURIComponent(regionSlug)}&score=${score}`;
 
   return (
-    <Card className="border-border/80 shadow-elevation-1">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-heading-6">How was this lesson?</CardTitle>
-        <CardDescription>
+    <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+      <div className="space-y-1">
+        <p className="text-heading-6 font-medium">How was this lesson?</p>
+        <p className="text-caption text-muted-foreground">
           Your feedback on {lessonType} lessons helps us improve interactivity and trail
           clarity.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex gap-2">
+        </p>
+      </div>
+      <div className="flex gap-2">
         <Button className="flex-1" variant="outline" asChild>
           <Link href={feedbackHref}>Share feedback</Link>
         </Button>
         <Button variant="ghost" onClick={() => setDismissed(true)}>
           Not now
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </GlassPanel>
   );
 }

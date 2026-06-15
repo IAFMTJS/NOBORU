@@ -3,6 +3,7 @@ import Link from "next/link";
 import { StudyAtmosphere } from "@/components/layout/study-atmosphere";
 import { GlassPanel, PrimaryClimbButton, StoryTitle } from "@/components/visual";
 import { Button } from "@/components/ui/button";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { ReviewStatsViewModel } from "@/features/review/types/review.types";
 
 type ReviewSessionHubProps = {
@@ -17,6 +18,20 @@ const PRESET_MODES = [
 ] as const;
 
 export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
+  if (stats.dueCount === 0) {
+    return (
+      <StudyAtmosphere>
+        <YamaEmptyState
+          surface="review"
+          title="Review queue is clear"
+          description="The path ahead is open — explore a lesson or rest at camp until new cards ripen."
+          actionHref="/learn"
+          actionLabel="Continue climbing"
+        />
+      </StudyAtmosphere>
+    );
+  }
+
   return (
     <StudyAtmosphere>
       <GlassPanel className="space-y-4 p-4">

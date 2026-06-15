@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import {
   isStandalonePwa,
   shouldShowIosInstallPrompt,
@@ -86,50 +80,48 @@ export function PwaInstallPrompt() {
 
   if (showIosGuide && !showNativePrompt) {
     return (
-      <Card className="border-primary/20 shadow-elevation-1">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-heading-6">Install Noboru on iPhone</CardTitle>
-          <CardDescription>
+      <GlassPanel className="space-y-3 border-primary/20 p-4 shadow-elevation-1">
+        <div className="space-y-1">
+          <p className="text-heading-6 font-medium">Install Noboru on iPhone</p>
+          <p className="text-caption text-muted-foreground">
             Add Noboru to your Home Screen for full-screen lessons, offline study,
             and reliable Japanese audio in standalone mode.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <ol className="list-decimal space-y-1 pl-5 text-body-sm text-muted-foreground">
-            <li>Tap the Share button in Safari (square with arrow).</li>
-            <li>Scroll down and choose <strong>Add to Home Screen</strong>.</li>
-            <li>Open Noboru from your Home Screen before starting listening drills.</li>
-          </ol>
-          <div className="flex gap-2">
-            <Button className="flex-1" onClick={handleDismiss}>
-              Got it
-            </Button>
-            <Button variant="ghost" onClick={handleDismiss}>
-              Not now
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+        <ol className="list-decimal space-y-1 pl-5 text-body-sm text-muted-foreground">
+          <li>Tap the Share button in Safari (square with arrow).</li>
+          <li>Scroll down and choose <strong>Add to Home Screen</strong>.</li>
+          <li>Open Noboru from your Home Screen before starting listening drills.</li>
+        </ol>
+        <div className="flex gap-2">
+          <Button className="flex-1" onClick={handleDismiss}>
+            Got it
+          </Button>
+          <Button variant="ghost" onClick={handleDismiss}>
+            Not now
+          </Button>
+        </div>
+      </GlassPanel>
     );
   }
 
   return (
-    <Card className="border-primary/20 shadow-elevation-1">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-heading-6">Install Noboru</CardTitle>
-        <CardDescription>
+    <GlassPanel className="space-y-3 border-primary/20 p-4 shadow-elevation-1">
+      <div className="space-y-1">
+        <p className="text-heading-6 font-medium">Install Noboru</p>
+        <p className="text-caption text-muted-foreground">
           Add Noboru to your home screen for a standalone climbing companion with
           offline lessons and Japanese audio.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex gap-2">
+        </p>
+      </div>
+      <div className="flex gap-2">
         <Button className="flex-1" onClick={() => void handleInstall()}>
           Install App
         </Button>
         <Button variant="ghost" onClick={handleDismiss}>
           Not now
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </GlassPanel>
   );
 }

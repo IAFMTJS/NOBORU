@@ -2,16 +2,10 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { LessonApplicationStep } from "@/features/learning/types/lesson.types";
 import {
@@ -22,6 +16,7 @@ import {
 type ApplicationDrillProps = {
   step: LessonApplicationStep;
   onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
 };
 
 function normalizeJapaneseAnswer(value: string): string {
@@ -51,18 +46,11 @@ function resolvePlaceholder(direction: LessonApplicationStep["direction"]): stri
   }
 }
 
-function resolveDescription(direction: LessonApplicationStep["direction"]): string {
-  switch (direction) {
-    case "to_japanese":
-      return "Translate into Japanese using the kana you know";
-    case "to_romaji":
-      return "Read the kana you know";
-    default:
-      return "Translate into English";
-  }
-}
-
-export function ApplicationDrill({ step, onAnswer }: ApplicationDrillProps) {
+export function ApplicationDrill({
+  step,
+  onAnswer,
+  disabled = false,
+}: ApplicationDrillProps) {
   const [value, setValue] = useState("");
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
 
@@ -79,36 +67,53 @@ export function ApplicationDrill({ step, onAnswer }: ApplicationDrillProps) {
     step.direction === "to_english" || step.direction === "to_romaji";
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>{resolveDescription(step.direction)}</CardDescription>
-        <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
-        {showJapaneseDisplay ? (
-          <JapaneseText text={step.display} className="text-body-sm" />
+    <LessonDrillLayout
+      prompt={step.prompt}
+      result={result}
+      hero={
+        showJapaneseDisplay ? (
+          <JapaneseText text={step.display} size="hero" className="text-foreground" />
         ) : step.direction === "to_japanese" && step.displayHint ? (
-          <p className="text-body-sm text-muted-foreground">{step.displayHint}</p>
-        ) : null}
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <Input
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-          placeholder={resolvePlaceholder(step.direction)}
-          disabled={result !== null}
-          aria-label={resolvePlaceholder(step.direction)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") handleSubmit();
-          }}
-        />
-        <Button
-          className="w-full"
-          disabled={!normalizeRecallAnswer(value) || result !== null}
-          onClick={handleSubmit}
-        >
-          Check answer
-        </Button>
-        <DrillFeedbackBanner result={result} />
-      </CardContent>
-    </Card>
+          <p className="font-story text-2xl font-semibold text-heading-story sm:text-3xl">
+            {step.displayHint}
+          </p>
+        ) : (
+          <p className="font-story text-3xl font-bold text-heading-story sm:text-4xl">
+            {step.display}
+          </p>
+        )
+      }
+      footer={
+        <>
+          <Input
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            placeholder={resolvePlaceholder(step.direction)}
+            disabled={disabled || result !== null}
+            aria-label={resolvePlaceholder(step.direction)}
+            className="border-white/15 bg-black/30"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") handleSubmit();
+            }}
+          />
+          <PrimaryClimbButton
+            className="w-full"
+            disabled={!normalizeRecallAnswer(value) || result !== null || disabled}
+            onClick={handleSubmit}
+          >
+            Check answer
+          </PrimaryClimbButton>
+        </>
+      }
+      explanation={
+        result === "incorrect" ? (
+          <LessonExplanationPanel
+            className="mt-3"
+            message="Not quite — here is the right answer."
+            correctAnswer={step.acceptedAnswers[0]}
+          />
+        ) : null
+      }
+    />
   );
 }

@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { SceneImage } from "@/components/media/scene-image";
-import { PageContainer } from "@/components/layout/page-container";
+
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { TrialPerformancePanel } from "@/features/trials/components/trial-performance-panel";
 import {
   TRIAL_GRADE_LABELS,
   TRIAL_KIND_LABELS,
 } from "@/features/trials/constants/trial.constants";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type {
   TrialListEntryViewModel,
   TrialPerformanceViewModel,
@@ -84,24 +84,30 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
     (trial) => trial.kind === "boss_trial" || trial.kind === "final_trial",
   );
 
-  return (
-    <IllustratedScreen
-      scrim="minimal"
-      background={
-        <SceneImage
-          scene="study_atmosphere"
-          alt=""
-          className="absolute inset-0 min-h-dvh rounded-none"
-        />
-      }
-    >
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
+  if (trials.length === 0) {
+    return (
+      <StudyHubLayout
+        scene="shrine_torii"
         title="Trials"
         subtitle="High-stakes challenges that validate real recall"
-      />
+      >
+        <YamaEmptyState
+          surface="trail"
+          title="Trials await discovery"
+          description="Summit challenges unlock as you advance along the mountain path."
+          actionHref="/learn"
+          actionLabel="Return to trail"
+        />
+      </StudyHubLayout>
+    );
+  }
 
+  return (
+    <StudyHubLayout
+      scene="shrine_torii"
+      title="Trials"
+      subtitle="High-stakes challenges that validate real recall"
+    >
       <TrialPerformancePanel performance={performance} />
 
       <div className="space-y-3">
@@ -117,7 +123,6 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
           <TrialCard key={trial.id} trial={trial} />
         ))}
       </div>
-    </PageContainer>
-    </IllustratedScreen>
+    </StudyHubLayout>
   );
 }

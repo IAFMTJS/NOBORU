@@ -1,12 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { formatMeters, formatMetersClimbed } from "@/features/elevation/constants/elevation.constants";
 import type { ElevationSummaryViewModel } from "@/features/elevation/types/elevation.types";
 
 type ElevationSummaryProps = {
@@ -25,7 +20,7 @@ export function ElevationSummary({ summary, compact = false }: ElevationSummaryP
               <p className="text-caption text-muted-foreground">{summary.activeTitle}</p>
             ) : null}
           </div>
-          <Badge variant="secondary">{summary.totalEp.toLocaleString()} EP</Badge>
+          <Badge variant="secondary">{formatMetersClimbed(summary.totalEp)}</Badge>
         </div>
         <ProgressBar
           value={summary.levelProgressPercent}
@@ -37,20 +32,23 @@ export function ElevationSummary({ summary, compact = false }: ElevationSummaryP
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardTitle className="text-heading-6">Elevation</CardTitle>
-        <CardDescription>
+    <GlassPanel className="space-y-4 p-4 shadow-elevation-1">
+      <div className="space-y-1">
+        <StoryTitle as="h2" className="text-base">
+          Elevation
+        </StoryTitle>
+        <p className="text-body-sm text-muted-foreground">
           Level {summary.currentLevel}
           {summary.activeTitle ? ` · ${summary.activeTitle}` : ""}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </p>
+      </div>
+      <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <p className="text-body-sm text-muted-foreground">
-            {summary.currentEp}/{summary.epToNextLevel} EP to next level
+            {formatMeters(summary.currentEp)} / {formatMeters(summary.epToNextLevel)} to next
+            level
           </p>
-          <Badge variant="outline">{summary.totalEp.toLocaleString()} total EP</Badge>
+          <Badge variant="outline">{formatMetersClimbed(summary.totalEp)}</Badge>
         </div>
         <ProgressBar
           value={summary.levelProgressPercent}
@@ -71,7 +69,7 @@ export function ElevationSummary({ summary, compact = false }: ElevationSummaryP
             ))}
           </div>
         ) : null}
-      </CardContent>
-    </Card>
+      </div>
+    </GlassPanel>
   );
 }

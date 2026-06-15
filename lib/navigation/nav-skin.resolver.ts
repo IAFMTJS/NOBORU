@@ -4,15 +4,17 @@ import {
   type ImmersiveNavTab,
   type ImmersiveNavTabConfig,
 } from "@/lib/navigation/immersive-nav.constants";
-import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
+import { resolveNavTabFromPath } from "@/lib/navigation/is-nav-active";
 
-/** All 10 immersive nav pill skin IDs (5 tab defaults + 5 seasonal). */
+/** All immersive nav pill skin IDs (5 tab defaults + seasonal variants). */
 export const NAV_PILL_SKIN_IDS = [
   "ember_night",
   "trail_mist",
+  "study_scroll",
+  "travel_pack",
+  "stone_path",
   "bamboo_grove",
   "moonlit_torii",
-  "stone_path",
   "sakura_bloom",
   "winter_summit",
   "lantern_festival",
@@ -25,50 +27,34 @@ export type NavSkinSeason = "spring" | "summer" | "autumn" | "winter";
 
 const SEASON_SKIN_BY_TAB: Record<NavSkinSeason, Record<ImmersiveNavTab, NavPillSkinId>> = {
   spring: {
-    camp: "sakura_bloom",
     journey: "cherry_dawn",
-    dojo: "bamboo_grove",
-    world: "moonlit_torii",
+    camp: "sakura_bloom",
+    study: "bamboo_grove",
+    bag: "travel_pack",
     profile: "stone_path",
   },
   summer: {
-    camp: "ember_night",
     journey: "trail_mist",
-    dojo: "bamboo_grove",
-    world: "lantern_festival",
+    camp: "ember_night",
+    study: "study_scroll",
+    bag: "travel_pack",
     profile: "stone_path",
   },
   autumn: {
-    camp: "ember_night",
     journey: "trail_mist",
-    dojo: "bamboo_grove",
-    world: "moonlit_torii",
+    camp: "ember_night",
+    study: "study_scroll",
+    bag: "travel_pack",
     profile: "stone_path",
   },
   winter: {
-    camp: "ember_night",
     journey: "winter_summit",
-    dojo: "bamboo_grove",
-    world: "cloud_sea",
+    camp: "ember_night",
+    study: "study_scroll",
+    bag: "travel_pack",
     profile: "stone_path",
   },
 };
-
-function resolveTabFromRoute(route: string): ImmersiveNavTab {
-  const pathname = route.startsWith("/") ? route : `/${route}`;
-
-  for (const item of PRIMARY_NAV_ITEMS) {
-    if (pathname === item.href || pathname.startsWith(`${item.href}/`)) {
-      return item.navTab;
-    }
-  }
-
-  if (pathname === "/home" || pathname.startsWith("/home/")) {
-    return "camp";
-  }
-
-  return "camp";
-}
 
 function withSkinId(config: ImmersiveNavTabConfig, skinId: NavPillSkinId): ImmersiveNavTabConfig {
   if (config.skinId === skinId) {
@@ -88,7 +74,7 @@ export function resolveNavSkin(tab: ImmersiveNavTab): ImmersiveNavTabConfig {
 }
 
 /**
- * Route-aware skin resolver stub — picks from the 10 nav pill skins.
+ * Route-aware skin resolver — picks from nav pill skins.
  * Without `season`, returns the tab default from `IMMERSIVE_NAV_TAB_CONFIG`.
  * With `season`, maps each tab to a seasonal skin variant.
  */
@@ -96,7 +82,7 @@ export function resolveNavSkinWithContext(
   route: string,
   season?: NavSkinSeason,
 ): ImmersiveNavTabConfig {
-  const tab = resolveTabFromRoute(route);
+  const tab = resolveNavTabFromPath(route.startsWith("/") ? route : `/${route}`);
   const base = IMMERSIVE_NAV_TAB_CONFIG[tab];
 
   if (!season) {

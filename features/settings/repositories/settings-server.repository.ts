@@ -43,6 +43,32 @@ class SettingsServerRepository {
     return data as UserSettingsRow;
   }
 
+  async updatePreferences(
+    userId: string,
+    input: Partial<
+      Pick<
+        UserSettingsRow,
+        "sound_enabled" | "notifications_enabled" | "preferred_language"
+      >
+    >,
+  ): Promise<UserSettingsRow> {
+    const supabase = await createServerClient();
+    await ensureSettings(supabase, { userId });
+
+    const { data, error } = await supabase
+      .from("user_settings")
+      .update(input)
+      .eq("user_id", userId)
+      .select("*")
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data as UserSettingsRow;
+  }
+
   async ensureSettings(userId: string): Promise<UserSettingsRow> {
     const existing = await this.findByUserId(userId);
     if (existing) {

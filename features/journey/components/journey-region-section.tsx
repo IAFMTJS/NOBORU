@@ -4,6 +4,8 @@ import { useMemo } from "react";
 
 import { TrailMapArtwork } from "@/components/media/trail-map-artwork";
 import { MotionDiv } from "@/components/motion/motion-div";
+import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { JourneyTrailLanterns } from "@/features/journey/components/journey-trail-lanterns";
 import { JourneyEnvironmentLayers } from "@/features/journey/components/journey-environment-layers";
 import { JourneyFoxCompanion } from "@/features/journey/components/journey-fox-companion";
 import { JourneyPathNode } from "@/features/journey/components/journey-path-node";
@@ -21,6 +23,9 @@ import {
   resolveNodeDiscoveryOpacity,
 } from "@/features/journey/utils/journey-map.utils";
 import { hasTrailScrollArt } from "@/lib/assets/registry";
+import { FOG_ASSETS } from "@/lib/assets/lesson-node-assets";
+import { getNarrativeArcForRegion, getNarrativeArcWeatherZone } from "@/lib/design-system/narrative-regions";
+import type { RegionSlug } from "@/lib/design-system/regions";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { trailNodeReveal } from "@/lib/motion/presets";
 import { cn } from "@/lib/utils";
@@ -38,6 +43,8 @@ type JourneyRegionSectionProps = {
   dimmed?: boolean;
   /** Single-region Learn view — full-bleed scroll art, natural path height. */
   immersive?: boolean;
+  selectedNodeId?: string | null;
+  pulseNodeId?: string | null;
   onNodeSelect?: (node: JourneyNode) => void;
   className?: string;
 };
@@ -54,11 +61,20 @@ export function JourneyRegionSection({
   companionEvolutionSlug,
   dimmed = false,
   immersive = false,
+  selectedNodeId = null,
+  pulseNodeId = null,
   onNodeSelect,
   className,
 }: JourneyRegionSectionProps) {
   const visuals = getRegionVisuals(region.slug);
+  const narrativeArc = getNarrativeArcForRegion(region.slug as RegionSlug);
+  const weatherZone = getNarrativeArcWeatherZone(narrativeArc.id);
+  const regionLocked = region.availability === "locked";
   const currentNode = resolveCurrentJourneyNode(region);
+  const focusNode =
+    selectedNodeId !== null
+      ? region.nodes.find((node) => node.id === selectedNodeId) ?? null
+      : null;
   const scrollArt = hasTrailScrollArt(region.slug);
 
   const geometryOptions = useMemo(
@@ -118,7 +134,7 @@ export function JourneyRegionSection({
         {visualSettings.environmentLayers ? <JourneyEnvironmentLayers /> : null}
         {visualSettings.weatherEffects ? (
           <JourneyWeatherLayers
-            zone="mid"
+            zone={weatherZone}
             particlesEnabled={visualSettings.ambientParticles}
             particleIntensity={visualSettings.particleIntensity}
           />
@@ -140,6 +156,8 @@ export function JourneyRegionSection({
             theme={theme}
           />
         ) : null}
+
+        <JourneyTrailLanterns nodes={region.nodes} geometryOptions={geometryOptions} />
 
         <div
           className="absolute inset-0"
@@ -189,6 +207,8 @@ export function JourneyRegionSection({
                   <JourneyPathNode
                     node={node}
                     isCurrent={isCurrent}
+                    isSelected={selectedNodeId === node.id}
+                    isPulsing={pulseNodeId === node.id}
                     discoveryOpacity={discoveryOpacity}
                     checkpointCelebration={visualSettings.checkpointCelebration}
                     trialTempleEffects={visualSettings.trialTempleEffects}
@@ -207,17 +227,39 @@ export function JourneyRegionSection({
         {showFox && currentNode ? (
           <JourneyFoxCompanion
             currentNode={currentNode}
+            focusNode={focusNode}
             geometryOptions={geometryOptions}
             evolutionSlug={companionEvolutionSlug}
-            interactionsEnabled={visualSettings.foxInteractions}
             idleMotionEnabled={visualSettings.foxIdleMotion}
           />
         ) : null}
         {region.nodes.some((node) => node.state === "locked") ? (
           <div
-            className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[45%] bg-gradient-to-b from-background/70 via-background/25 to-transparent backdrop-blur-[2px]"
+            className={cn(
+              "pointer-events-none absolute inset-x-0 top-0 z-[5] bg-gradient-to-b from-background/70 via-background/25 to-transparent backdrop-blur-[2px]",
+              dimmed && "from-background/85 via-background/55",
+            )}
             aria-hidden
           />
+        ) : null}
+        {regionLocked ? (
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-0 z-[6] transition-opacity duration-[1500ms] motion-reduce:transition-none",
+              narrativeArc.fogLevel === "sacred" && "opacity-90",
+              narrativeArc.fogLevel === "heavy" && "opacity-80",
+              narrativeArc.fogLevel === "low" && "opacity-65",
+            )}
+            aria-hidden
+          >
+            <WorldArtImage
+              asset={FOG_ASSETS.locked_region}
+              alt=""
+              width={512}
+              height={512}
+              className="h-full w-full object-cover mix-blend-multiply"
+            />
+          </div>
         ) : null}
       </div>
     </section>

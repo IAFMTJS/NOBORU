@@ -24,6 +24,8 @@ export type JourneyNode = {
   landmarkKind?: JourneyLandmarkKind | null;
   label: string;
   subtitle: string | null;
+  /** Raw lesson type for node art resolution (vocabulary, kanji, application, etc.). */
+  lessonType: string | null;
   state: JourneyNodeState;
   /** Normalized position along the vertical path segment, 0–1. */
   pathPosition: number;

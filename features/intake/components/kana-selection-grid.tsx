@@ -1,13 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { INTAKE_ROW_SHORTCUTS } from "@/features/intake/constants/intake.constants";
 import { cn } from "@/lib/utils";
 
@@ -112,39 +106,37 @@ export function KanaSelectionGrid({
           if (rowEntries.length === 0) return null;
 
           return (
-            <Card key={rowLabel} className="shadow-elevation-1">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-heading-6">{rowLabel}</CardTitle>
-                <CardDescription>Tap characters you can read</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-                  {rowEntries.map((entry) => {
-                    const selected = selectedIds.has(entry.id);
-                    return (
-                      <button
-                        key={entry.id}
-                        type="button"
-                        aria-pressed={selected}
-                        aria-label={`${entry.character}, ${entry.romaji}`}
-                        onClick={() => toggleEntry(entry.id)}
-                        className={cn(
-                          "flex flex-col items-center rounded-xl border p-3 transition-colors motion-standard",
-                          selected
-                            ? "border-primary bg-primary/10 ring-1 ring-primary/30"
-                            : "border-border bg-card hover:border-primary/30",
-                        )}
-                      >
-                        <span className="text-heading-4">{entry.character}</span>
-                        <span className="text-caption text-muted-foreground">
-                          {entry.romaji}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+            <GlassPanel key={rowLabel} className="space-y-3 p-4 shadow-elevation-1">
+              <div className="space-y-1">
+                <p className="text-heading-6 font-medium">{rowLabel}</p>
+                <p className="text-caption text-muted-foreground">Tap characters you can read</p>
+              </div>
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                {rowEntries.map((entry) => {
+                  const selected = selectedIds.has(entry.id);
+                  return (
+                    <button
+                      key={entry.id}
+                      type="button"
+                      aria-pressed={selected}
+                      aria-label={`${entry.character}, ${entry.romaji}`}
+                      onClick={() => toggleEntry(entry.id)}
+                      className={cn(
+                        "flex flex-col items-center rounded-xl border p-3 transition-colors motion-standard",
+                        selected
+                          ? "border-primary bg-primary/10 ring-1 ring-primary/30"
+                          : "border-border bg-black/30 hover:border-primary/30",
+                      )}
+                    >
+                      <span className="text-heading-4">{entry.character}</span>
+                      <span className="text-caption text-muted-foreground">
+                        {entry.romaji}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </GlassPanel>
           );
         })}
       </div>

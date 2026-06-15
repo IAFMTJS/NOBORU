@@ -6,11 +6,11 @@ export type PrimaryNavItem = {
   navTab: ImmersiveNavTab;
 };
 
-/** Immersive navigation — Camp · Journey · Dojo · World · Profile */
+/** VISUAL MD FILES Doc 01 — Journey · Camp · Study · Bag · Profile */
 export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
-  { href: "/camp", label: "Camp", navTab: "camp" },
   { href: "/learn", label: "Journey", navTab: "journey" },
-  { href: "/dojo", label: "Dojo", navTab: "dojo" },
-  { href: "/world", label: "World", navTab: "world" },
+  { href: "/camp", label: "Camp", navTab: "camp" },
+  { href: "/study", label: "Study", navTab: "study" },
+  { href: "/bag", label: "Bag", navTab: "bag" },
   { href: "/profile", label: "Profile", navTab: "profile" },
 ];

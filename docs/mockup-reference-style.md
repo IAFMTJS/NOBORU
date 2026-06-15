@@ -10,7 +10,9 @@ Revocation: Only by explicit founder instruction. Until revoked, this document a
 
 **Supersedes for visual execution:** prior mockup collections, informal design notes, and agent improvisation when they conflict with the four canonical mockups below.
 
-**Related:** [art-direction.md](./art-direction.md), [design-system.md](./design-system.md), [.cursor/rules/visual-reference.mdc](../.cursor/rules/visual-reference.mdc), [.cursor/rules/uiux.mdc](../.cursor/rules/uiux.mdc)
+**Related:** [art-direction.md](./art-direction.md), [design-system.md](./design-system.md), [visual-spec-decisions.md](./visual-spec-decisions.md), [.cursor/rules/visual-reference.mdc](../.cursor/rules/visual-reference.mdc), [.cursor/rules/uiux.mdc](../.cursor/rules/uiux.mdc)
+
+**D4 (palette):** Mountain Red primary (`#D64045` / `hsl(358 65% 54%)`) and mockup night surfaces override Doc 01 raw hex values when they conflict.
 
 ---
 
@@ -130,10 +132,10 @@ Reference: `mockup_navbar_concepts_v1.png`
 
 ### Structure
 
-- **5 tabs:** Camp, Journey, Dojo, World, Profile
+- **5 tabs:** Journey, Camp, Study, Bag, Profile (VISUAL MD FILES Doc 01)
 - **Shape:** Pill-shaped floating bottom bar with high corner radius
-- **Mascot:** Yama (white fox) overlaps the left edge of the bar — not a tiny icon, a character moment
-- **Icons:** Minimalist thin-line — tent (Camp), mountains (Journey), torii (Dojo), pagoda/compass (World), fox/profile silhouette (Profile)
+- **Mascot:** Yama (white fox) overlaps the active tab — not a tiny icon, a character moment
+- **Icons:** Approved nav assets — mountains (Journey), tent/camp (Camp), study scroll (Study), travel bag (Bag), fox/profile silhouette (Profile)
 - **Active state:** Icon + label glow in theme accent color (orange default); optional dot/line indicator under label
 
 ### Theming

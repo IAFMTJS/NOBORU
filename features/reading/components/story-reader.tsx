@@ -3,18 +3,11 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { StoryDetailViewModel } from "@/features/reading/types/reading.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
@@ -96,28 +89,20 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
       {phase === "read" && currentSection ? (
         <>
           <ProgressBar value={readProgress} label="Story progress" showValue />
-          <Card className="shadow-elevation-1">
-            <CardHeader>
-              <CardDescription>
-                Section {sectionIndex + 1} of {story.sections.length}
-              </CardDescription>
-              <CardTitle className="text-heading-4 leading-relaxed">
-                {currentSection.japaneseText}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {currentSection.romaji ? (
-                <p className="text-body-sm text-muted-foreground">
-                  {currentSection.romaji}
-                </p>
-              ) : null}
-              {currentSection.english ? (
-                <p className="text-body-sm text-muted-foreground">
-                  {currentSection.english}
-                </p>
-              ) : null}
-            </CardContent>
-          </Card>
+          <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+            <p className="text-caption text-muted-foreground">
+              Section {sectionIndex + 1} of {story.sections.length}
+            </p>
+            <p className="font-japanese text-heading-4 leading-relaxed" lang="ja">
+              {currentSection.japaneseText}
+            </p>
+            {currentSection.romaji ? (
+              <p className="text-body-sm text-muted-foreground">{currentSection.romaji}</p>
+            ) : null}
+            {currentSection.english ? (
+              <p className="text-body-sm text-muted-foreground">{currentSection.english}</p>
+            ) : null}
+          </GlassPanel>
           <Button
             className="w-full"
             onClick={() => {
@@ -138,31 +123,27 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
 
       {phase === "quiz" && currentQuestion ? (
         <>
-          <Card className="shadow-elevation-1">
-            <CardHeader>
-              <CardDescription>
-                Question {questionIndex + 1} of {story.questions.length}
-              </CardDescription>
-              <CardTitle className="text-heading-5">{currentQuestion.question}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {currentQuestion.options.map((option, index) => (
-                <Button
-                  key={option}
-                  variant="outline"
-                  className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
-                  disabled={answered}
-                  onClick={() => {
-                    setAnswered(true);
-                    const isCorrect = index === currentQuestion.correctOptionIndex;
-                    setAnswers((current) => [...current, isCorrect]);
-                  }}
-                >
-                  {option}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
+          <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+            <p className="text-caption text-muted-foreground">
+              Question {questionIndex + 1} of {story.questions.length}
+            </p>
+            <p className="text-heading-5 font-medium">{currentQuestion.question}</p>
+            {currentQuestion.options.map((option, index) => (
+              <Button
+                key={option}
+                variant="outline"
+                className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
+                disabled={answered}
+                onClick={() => {
+                  setAnswered(true);
+                  const isCorrect = index === currentQuestion.correctOptionIndex;
+                  setAnswers((current) => [...current, isCorrect]);
+                }}
+              >
+                {option}
+              </Button>
+            ))}
+          </GlassPanel>
           <Button
             className="w-full"
             disabled={!answered || saving}
@@ -182,25 +163,17 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
         </>
       ) : null}
 
-      {phase === "done" ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Story Complete</CardTitle>
-            <CardDescription>Score {score}%</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {!embedded ? (
-              <>
-                <Button className="w-full" asChild>
-                  <Link href="/learn/reading">Back to Reading</Link>
-                </Button>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/learn/mount-n5">Back to Mount N5</Link>
-                </Button>
-              </>
-            ) : null}
-          </CardContent>
-        </Card>
+      {phase === "done" && !embedded ? (
+        <GlassPanel className="space-y-3 border-success/30 p-4 shadow-elevation-1">
+          <p className="font-story text-story-title">Story Complete</p>
+          <p className="text-caption text-muted-foreground">Score {score}%</p>
+          <Button className="w-full" asChild>
+            <Link href="/learn/reading">Back to Reading</Link>
+          </Button>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/learn/mount-n5">Back to Mount N5</Link>
+          </Button>
+        </GlassPanel>
       ) : null}
     </div>
   );
@@ -210,16 +183,13 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={story.title}
-        subtitle={story.summary ?? "N5 reading story"}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/reading">Back</Link>
-          </Button>
-        }
-      />
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={story.title}
+      subtitle={story.summary ?? "Reading practice"}
+      backHref="/study"
+      backLabel="Back to Study"
+    >
       <div className="flex flex-wrap items-center gap-2">
         {story.jlptLevel ? (
           <Badge variant="outline">{story.jlptLevel.toUpperCase()}</Badge>
@@ -228,6 +198,6 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
         {story.completed ? <Badge variant="secondary">Completed</Badge> : null}
       </div>
       {content}
-    </PageContainer>
+    </StudyHubLayout>
   );
 }

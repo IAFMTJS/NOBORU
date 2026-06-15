@@ -23,3 +23,7 @@ export type ShopCatalogViewModel = {
   items: ShopItemViewModel[];
   wallet: ShopWalletViewModel;
 };
+
+export type ShopPurchaseResult =
+  | { success: true; itemName: string; catalog: ShopCatalogViewModel }
+  | { success: false; error: string };

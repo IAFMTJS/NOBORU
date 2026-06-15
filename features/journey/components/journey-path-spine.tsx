@@ -97,17 +97,20 @@ export function JourneyPathSpine({
           segment.fromState === "in_progress" ||
           segment.toState === "in_progress" ||
           segment.fromState === "available";
+        const isIlluminated =
+          segment.fromState === "completed" && segment.toState !== "locked";
         return (
           <g key={`${segment.from.x}-${segment.from.y}-${index}`}>
-            {isActive ? (
+            {isActive || isIlluminated ? (
               <path
                 d={`M ${segment.from.x} ${segment.from.y} L ${segment.to.x} ${segment.to.y}`}
                 fill="none"
-                stroke="hsl(var(--trail-glow))"
+                stroke={isIlluminated ? "hsl(var(--trail-glow))" : "hsl(var(--trail-glow))"}
                 strokeWidth={8}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
-                opacity={0.35}
+                opacity={isIlluminated ? 0.5 : 0.35}
+                className={isIlluminated ? "motion-reward" : undefined}
               />
             ) : null}
             <path

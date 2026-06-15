@@ -1,3 +1,4 @@
+import { streakService } from "@/features/achievements/services/streak.service";
 import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
 import {
   getCachedElevationSummary,
@@ -115,6 +116,7 @@ class ProgressDashboardService {
       progressRows,
       reviewStats,
       elevation,
+      currentStreak,
     ] = await Promise.all([
       hiraganaProgressService.getChart(userId),
       katakanaProgressService.getChart(userId),
@@ -131,6 +133,7 @@ class ProgressDashboardService {
         : Promise.resolve(preload!.progressRows!),
       getCachedReviewStats(userId),
       getCachedElevationSummary(userId),
+      streakService.getCurrentStreak(userId),
     ]);
 
     const domains: DomainMasteryViewModel[] = [
@@ -208,6 +211,7 @@ class ProgressDashboardService {
       learningStats,
       reviewStats,
       elevation,
+      currentStreak,
     };
   }
 

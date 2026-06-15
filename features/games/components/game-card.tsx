@@ -81,7 +81,7 @@ export function GameCard({
     <Link
       href={href}
       className={cn(
-        "focus-ring flex items-start gap-3 rounded-xl border border-border bg-card p-4 shadow-elevation-1 transition-colors hover:border-primary/30 hover:bg-primary/5",
+        "focus-ring flex items-start gap-3 rounded-xl border border-white/12 bg-black/40 p-4 shadow-elevation-1 transition-colors hover:border-trail-glow/30 hover:bg-black/50",
         className,
       )}
     >

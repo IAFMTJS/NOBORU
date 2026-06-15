@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
  * Publishes hand-authored PNG sources from assets/art/_source/ to assets/art/ and public/art/.
- * Source layout mirrors production: assets/art/_source/{category}/{id}.png
+ * Character stickers are keyed, trimmed, and exported with alpha preserved.
  */
-import { copyFile, mkdir, readdir, stat } from "node:fs/promises";
+import { mkdir, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+
+import {
+  isCharacterStickerPath,
+  processCharacterSticker,
+  writeCharacterStickerOutputs,
+} from "./character-sticker-process.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
@@ -26,12 +32,7 @@ async function walk(dir) {
   return files;
 }
 
-async function publishOne(sourcePath) {
-  const rel = path.relative(SOURCE_ROOT, sourcePath);
-  const parsed = path.parse(rel);
-  const category = parsed.dir.replace(/\\/g, "/");
-  const id = parsed.name;
-
+async function publishRaster(sourcePath, category, id) {
   const outDir = path.join(ROOT, "assets", "art", category);
   const publicDir = path.join(ROOT, "public", "art", category);
   await mkdir(outDir, { recursive: true });
@@ -41,11 +42,33 @@ async function publishOne(sourcePath) {
   const webpOut = path.join(outDir, `${id}.webp`);
   const publicWebp = path.join(publicDir, `${id}.webp`);
 
-  await copyFile(sourcePath, pngOut);
-  await sharp(sourcePath).webp({ quality: 88, effort: 4 }).toFile(webpOut);
-  await copyFile(webpOut, publicWebp);
+  if (isCharacterStickerPath(category)) {
+    const processed = await processCharacterSticker(sourcePath);
+    await writeCharacterStickerOutputs(processed, { pngOut, webpOut, publicWebp });
+    return { mode: "character-sticker" };
+  }
 
-  return { category, id, publicPath: `/art/${category}/${id}.webp` };
+  const { copyFile } = await import("node:fs/promises");
+  await copyFile(sourcePath, pngOut);
+  await sharp(sourcePath).webp({ quality: 88, effort: 4, alphaQuality: 100 }).toFile(webpOut);
+  await copyFile(webpOut, publicWebp);
+  return { mode: "raster" };
+}
+
+async function publishOne(sourcePath) {
+  const rel = path.relative(SOURCE_ROOT, sourcePath);
+  const parsed = path.parse(rel);
+  const category = parsed.dir.replace(/\\/g, "/");
+  const id = parsed.name;
+
+  const result = await publishRaster(sourcePath, category, id);
+
+  return {
+    category,
+    id,
+    mode: result.mode,
+    publicPath: `/art/${category}/${id}.webp`,
+  };
 }
 
 async function main() {
@@ -65,7 +88,8 @@ async function main() {
   console.log(`Publishing ${sources.length} source art files…`);
   for (const source of sources) {
     const result = await publishOne(source);
-    console.log(`  ${result.publicPath}`);
+    const suffix = result.mode === "character-sticker" ? " [sticker]" : "";
+    console.log(`  ${result.publicPath}${suffix}`);
   }
   console.log("Done.");
 }

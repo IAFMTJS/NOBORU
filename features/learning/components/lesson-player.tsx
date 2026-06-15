@@ -1,26 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { LessonLayout } from "@/components/layout/lesson-layout";
-import { SceneImage } from "@/components/media/scene-image";
 import { MotionDiv } from "@/components/motion/motion-div";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
-import { IllustratedScreen } from "@/components/visual/illustrated-screen";
+import { GlassPanel } from "@/components/visual";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
@@ -31,6 +16,11 @@ import {
   calculateLessonScore,
   LESSON_EMBEDDED_STEP_PASS_THRESHOLD,
 } from "@/features/learning/constants/lesson.constants";
+import {
+  LESSON_AUTO_ADVANCE_MS,
+  LESSON_MAX_HEARTS,
+  LESSON_WRONG_EXPLANATION_MS,
+} from "@/features/learning/constants/lesson-ui.constants";
 import { ApplicationDrill } from "@/features/learning/components/drills/application-drill";
 import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
 import { FillBlankDrill } from "@/features/learning/components/drills/fill-blank-drill";
@@ -41,6 +31,11 @@ import { WordBankDrill } from "@/features/learning/components/drills/word-bank-d
 import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { LessonFailScreen } from "@/features/learning/components/lesson-fail-screen";
+import {
+  LessonHeader,
+  LessonIntroPanel,
+  LessonShell,
+} from "@/features/learning/components/lesson";
 import { LessonTeachCard } from "@/features/learning/components/lesson-teach-card";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import type {
@@ -49,11 +44,12 @@ import type {
   LessonStep,
 } from "@/features/learning/types/lesson.types";
 import { LessonFeedbackPrompt } from "@/features/feedback/components/lesson-feedback-prompt";
-import {
-  collectUpcomingLessonAudioUrls,
-} from "@/lib/learning/lesson-audio-prefetch";
+import { collectUpcomingLessonAudioUrls } from "@/lib/learning/lesson-audio-prefetch";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
+import { LevelUpCeremony } from "@/components/visual/world/level-up-ceremony";
 import { fadeInUp } from "@/lib/motion/presets";
+
+import { lessonReturnJourneyHref } from "@/features/learning/utils/trail-navigation";
 
 function EmbeddedPlayerSkeleton() {
   return (
@@ -96,7 +92,6 @@ const ListeningChallengePlayer = dynamic(
   { loading: () => <EmbeddedPlayerSkeleton /> },
 );
 
-
 const AchievementUnlockFeedback = dynamic(
   () =>
     import("@/features/achievements/components/achievement-unlock-feedback").then(
@@ -134,7 +129,7 @@ type LessonPlayerProps = {
   soundEnabled?: boolean;
 };
 
-function isScoredLessonStep(step: LessonStep): boolean {
+function isAutoAdvanceDrillStep(step: LessonStep): boolean {
   return (
     step.kind === "recall" ||
     step.kind === "matching" ||
@@ -142,15 +137,11 @@ function isScoredLessonStep(step: LessonStep): boolean {
     step.kind === "application" ||
     step.kind === "fill_blank" ||
     step.kind === "word_bank" ||
-    step.kind === "sentence_typed" ||
-    step.kind === "story" ||
-    step.kind === "dialogue" ||
-    step.kind === "listening" ||
-    step.kind === "listening_challenge"
+    step.kind === "sentence_typed"
   );
 }
 
-function ReadingCard({
+function ReadingDrill({
   step,
   onAnswer,
 }: {
@@ -161,80 +152,82 @@ function ReadingCard({
   const { content } = step;
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>
-          Reading · {step.index}/{step.total}
-        </CardDescription>
-        <CardTitle className="text-heading-5">{content.title}</CardTitle>
-        <JapaneseText text={content.japaneseText} size="lg" />
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="flex min-h-[min(32rem,calc(100dvh-12rem))] flex-1 flex-col">
+      <div className="flex flex-1 flex-col justify-center space-y-4 py-4">
+        <JapaneseText text={content.japaneseText} size="hero" />
         {content.romaji ? (
-          <p className="text-body-sm text-muted-foreground">{content.romaji}</p>
+          <p className="text-center text-body-sm text-muted-foreground">{content.romaji}</p>
         ) : null}
-        {content.english ? (
-          <p className="text-body-sm text-muted-foreground">{content.english}</p>
-        ) : null}
-        <p className="text-body font-medium">{content.question}</p>
+        <p className="text-center text-body font-medium">{content.question}</p>
+      </div>
+      <GlassPanel className="mt-auto space-y-2 p-3">
         {content.options.map((option, index) => (
-          <Button
+          <button
             key={option}
-            variant="outline"
-            className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
+            type="button"
             disabled={selected !== null}
             onClick={() => {
               setSelected(index);
               onAnswer(index === content.correctOptionIndex);
             }}
+            className="focus-ring w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-left text-body-sm transition-colors hover:border-trail-glow/40"
           >
             {option}
-          </Button>
+          </button>
         ))}
-      </CardContent>
-    </Card>
+      </GlassPanel>
+    </div>
   );
 }
 
 export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps) {
   const regionJlpt = getJlptLevelForRegion(session.regionSlug);
+  const [lessonCompleted, setLessonCompleted] = useState(session.progress === "completed");
+  const journeyTrailHref = useMemo(
+    () =>
+      lessonReturnJourneyHref(session, {
+        regionUnlocked: lessonCompleted && Boolean(session.unlocksRegionSlug),
+      }),
+    [session, lessonCompleted],
+  );
   const [stepIndex, setStepIndex] = useState(0);
   const [started, setStarted] = useState(session.progress === "completed");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recallCorrect, setRecallCorrect] = useState(0);
   const [recallTotal, setRecallTotal] = useState(0);
-  const [recallAnswered, setRecallAnswered] = useState(false);
   const [embeddedComplete, setEmbeddedComplete] = useState(false);
   const [completedScore, setCompletedScore] = useState(session.score);
-  const [elevationAward, setElevationAward] = useState<ElevationAwardViewModel | null>(
-    null,
+  const [elevationAward, setElevationAward] = useState<ElevationAwardViewModel | null>(null);
+  const [achievementUnlocks, setAchievementUnlocks] = useState<AchievementUnlockViewModel[]>(
+    [],
   );
-  const [achievementUnlocks, setAchievementUnlocks] = useState<
-    AchievementUnlockViewModel[]
-  >([]);
-  const [questCompletions, setQuestCompletions] = useState<
-    QuestCompletionViewModel[]
-  >([]);
+  const [questCompletions, setQuestCompletions] = useState<QuestCompletionViewModel[]>([]);
   const [reviewItemsEnqueued, setReviewItemsEnqueued] = useState(0);
   const [lessonFailed, setLessonFailed] = useState(false);
   const [failedScore, setFailedScore] = useState(0);
+  const [heartsRemaining, setHeartsRemaining] = useState(LESSON_MAX_HEARTS);
+  const [streakCount, setStreakCount] = useState(0);
+  const [showLevelUpCeremony, setShowLevelUpCeremony] = useState(false);
 
-  const checkStepCount = useMemo(
-    () => session.steps.filter(isScoredLessonStep).length,
-    [session.steps],
-  );
+  const advanceTimerRef = useRef<number | null>(null);
+
   const isReviewSession = session.progress === "completed";
-
   const currentStep: LessonStep | undefined = session.steps[stepIndex];
-  const progressPercent = Math.round(
-    ((stepIndex + 1) / session.steps.length) * 100,
-  );
+
+  const clearAdvanceTimer = useCallback(() => {
+    if (advanceTimerRef.current !== null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
-    setRecallAnswered(false);
     setEmbeddedComplete(false);
-  }, [stepIndex]);
+    clearAdvanceTimer();
+  }, [stepIndex, clearAdvanceTimer]);
+
+  useEffect(() => clearAdvanceTimer, [clearAdvanceTimer]);
 
   useEffect(() => {
     const urls = collectUpcomingLessonAudioUrls(session.steps, stepIndex, 2);
@@ -275,9 +268,13 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       const result = await offlineClient.completeLesson(session.lessonId, score);
       setCompletedScore(result.score);
       setElevationAward(result.elevation);
+      if (result.elevation?.leveledUp) {
+        setShowLevelUpCeremony(true);
+      }
       setAchievementUnlocks(result.achievements);
       setQuestCompletions(result.quests);
       setReviewItemsEnqueued(result.reviewItemsEnqueued);
+      setLessonCompleted(true);
       void analyticsService.track({
         name: "lesson_completed",
         properties: {
@@ -298,6 +295,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   }, [session.lessonId, session.regionSlug]);
 
   const goNext = useCallback(() => {
+    clearAdvanceTimer();
     const nextIndex = stepIndex + 1;
     const nextStep = session.steps[nextIndex];
 
@@ -324,6 +322,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
     setStepIndex(nextIndex);
   }, [
+    clearAdvanceTimer,
     recallCorrect,
     recallTotal,
     session.lessonId,
@@ -335,19 +334,56 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     isReviewSession,
   ]);
 
-  const handleRecallAnswer = useCallback((correct: boolean) => {
-    setRecallTotal((current) => current + 1);
-    if (correct) setRecallCorrect((current) => current + 1);
-    setRecallAnswered(true);
-  }, []);
+  const scheduleAdvance = useCallback(
+    (delayMs: number) => {
+      clearAdvanceTimer();
+      advanceTimerRef.current = window.setTimeout(() => {
+        goNext();
+      }, delayMs);
+    },
+    [clearAdvanceTimer, goNext],
+  );
+
+  const handleRecallAnswer = useCallback(
+    (correct: boolean) => {
+      const nextTotal = recallTotal + 1;
+      const nextCorrect = recallCorrect + (correct ? 1 : 0);
+
+      setRecallTotal(nextTotal);
+
+      if (correct) {
+        setRecallCorrect(nextCorrect);
+        setStreakCount((current) => current + 1);
+        scheduleAdvance(LESSON_AUTO_ADVANCE_MS);
+        return;
+      }
+
+      setStreakCount(0);
+      setHeartsRemaining((current) => {
+        const next = current - 1;
+        if (next <= 0) {
+          scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
+          window.setTimeout(() => {
+            setFailedScore(calculateLessonScore(nextCorrect, nextTotal));
+            setLessonFailed(true);
+          }, LESSON_WRONG_EXPLANATION_MS);
+          return 0;
+        }
+        scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
+        return next;
+      });
+    },
+    [recallCorrect, recallTotal, scheduleAdvance],
+  );
 
   const handleRetry = useCallback(() => {
     setLessonFailed(false);
     setFailedScore(0);
     setRecallCorrect(0);
     setRecallTotal(0);
-    setRecallAnswered(false);
     setEmbeddedComplete(false);
+    setHeartsRemaining(LESSON_MAX_HEARTS);
+    setStreakCount(0);
     setError(null);
     const firstDrillIndex = session.steps.findIndex(
       (step, index) => index > 0 && step.kind !== "intro",
@@ -355,330 +391,301 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     setStepIndex(firstDrillIndex >= 0 ? firstDrillIndex : 1);
   }, [session.steps]);
 
+  const showLessonHeader =
+    currentStep?.kind !== "complete" && !lessonFailed;
+
+  const stickyFooter = useMemo(() => {
+    if (!currentStep || lessonFailed) return null;
+    if (isAutoAdvanceDrillStep(currentStep)) return null;
+
+    if (currentStep.kind === "teach" || currentStep.kind === "knowledge_inventory") {
+      return (
+        <PrimaryClimbButton className="w-full" onClick={goNext}>
+          Continue
+        </PrimaryClimbButton>
+      );
+    }
+
+    if (
+      currentStep.kind === "story" ||
+      currentStep.kind === "dialogue" ||
+      currentStep.kind === "listening" ||
+      currentStep.kind === "listening_challenge"
+    ) {
+      return (
+        <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!embeddedComplete}>
+          Continue
+        </PrimaryClimbButton>
+      );
+    }
+
+    if (currentStep.kind === "intro" && started) {
+      return (
+        <PrimaryClimbButton className="w-full" onClick={goNext}>
+          Continue
+        </PrimaryClimbButton>
+      );
+    }
+
+    return null;
+  }, [currentStep, embeddedComplete, goNext, lessonFailed, started]);
+
   if (!currentStep) {
     return null;
   }
 
   if (lessonFailed) {
     return (
-      <LessonLayout>
-        <ScreenHeader
-          title={session.title}
-          subtitle={`${session.type} lesson · ${session.xpReward} XP`}
-          action={
-            <Button variant="ghost" size="sm" asChild>
-              <Link href={regionTrailHref(session.regionSlug)}>Exit</Link>
-            </Button>
-          }
-        />
+      <LessonShell>
         <LessonFailScreen
           score={failedScore}
           passScore={session.passScore}
-          regionSlug={session.regionSlug}
+          trailHref={journeyTrailHref}
           onRetry={handleRetry}
         />
-      </LessonLayout>
+      </LessonShell>
     );
   }
 
-  const stickyFooter =
-    currentStep.kind === "teach" || currentStep.kind === "knowledge_inventory" ? (
-      <PrimaryClimbButton className="w-full" onClick={goNext}>
-        Continue
-      </PrimaryClimbButton>
-    ) : currentStep.kind === "application" ? (
-      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!recallAnswered}>
-        Continue
-      </PrimaryClimbButton>
-    ) : currentStep.kind === "recall" ||
-        currentStep.kind === "fill_blank" ||
-        currentStep.kind === "word_bank" ||
-        currentStep.kind === "sentence_typed" ||
-        currentStep.kind === "matching" ||
-        currentStep.kind === "reading" ? (
-      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!recallAnswered}>
-        Continue
-      </PrimaryClimbButton>
-    ) : currentStep.kind === "story" ||
-        currentStep.kind === "dialogue" ||
-        currentStep.kind === "listening" ||
-        currentStep.kind === "listening_challenge" ? (
-      <PrimaryClimbButton className="w-full" onClick={goNext} disabled={!embeddedComplete}>
-        Continue
-      </PrimaryClimbButton>
-    ) : null;
-
   return (
-    <LessonLayout footer={stickyFooter}>
-      <ScreenHeader
-        title={session.title}
-        subtitle={`${session.type} lesson · ${session.xpReward} XP`}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(session.regionSlug)}>Exit</Link>
-          </Button>
-        }
+    <>
+      <LevelUpCeremony
+        level={elevationAward?.currentLevel ?? 1}
+        open={showLevelUpCeremony}
+        onComplete={() => setShowLevelUpCeremony(false)}
       />
-
-      <ProgressBar value={progressPercent} label="Lesson progress" showValue />
-
+      <LessonShell
+      header={
+        showLessonHeader ? (
+          <LessonHeader
+            backHref={journeyTrailHref}
+            stepIndex={stepIndex}
+            totalSteps={session.steps.length}
+            heartsRemaining={heartsRemaining}
+            streakCount={streakCount}
+          />
+        ) : null
+      }
+      footer={stickyFooter ?? undefined}
+    >
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
-      <IllustratedScreen
-        scrim="minimal"
-        className="min-h-0 rounded-2xl"
-        background={
-          <SceneImage
-            scene="study_atmosphere"
-            alt=""
-            className="absolute inset-0 rounded-2xl"
-            fill
-          />
-        }
-      >
       <MotionDiv
         key={stepIndex}
         {...fadeInUp}
         initial="initial"
         animate="animate"
-        className="space-y-4"
+        className="flex min-h-0 flex-1 flex-col"
       >
-      {currentStep.kind === "intro" ? (
-        <Card className="shadow-elevation-1">
-          <CardHeader>
-            <CardDescription className="capitalize">
-              {currentStep.lessonType} lesson
-            </CardDescription>
-            <CardTitle className="text-heading-4">{currentStep.title}</CardTitle>
-            {currentStep.description ? (
-              <CardDescription>{currentStep.description}</CardDescription>
-            ) : null}
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <YamaPresence
-              presence={yamaService.resolveLessonIntroPresence(stepIndex)}
-              size="sm"
+        {currentStep.kind === "intro" ? (
+          started ? (
+            <div className="flex flex-1 flex-col justify-center py-8">
+              <YamaPresence
+                presence={yamaService.resolveLessonIntroPresence(stepIndex)}
+                size="md"
+                layout="vertical"
+                showMessage={false}
+                className="items-center"
+              />
+            </div>
+          ) : (
+            <LessonIntroPanel
+              title={currentStep.title}
+              description={currentStep.description}
+              lessonType={currentStep.lessonType}
+              xpReward={currentStep.xpReward}
+              isReview={isReviewSession}
+              alreadyCompleted={session.progress === "completed"}
+              loading={saving}
+              onStart={() => void handleStart()}
             />
-            <p className="text-body-sm text-muted-foreground">
-              {checkStepCount} checks · Pass {session.passScore}% ·{" "}
-              {currentStep.xpReward} XP reward
-            </p>
-            {!isReviewSession ? (
-              <p className="text-caption text-muted-foreground">
-                You need at least {session.passScore}% to unlock the next trail node.
-              </p>
-            ) : null}
-            {session.progress === "completed" ? (
-              <Badge variant="secondary">Already completed · {session.score}%</Badge>
-            ) : null}
-            {!started ? (
-              <PrimaryClimbButton
-                className="w-full"
-                loading={saving}
-                onClick={() => void handleStart()}
-              >
-                {session.progress === "completed" ? "Review Lesson" : "Start Lesson"}
-              </PrimaryClimbButton>
-            ) : (
-              <PrimaryClimbButton className="w-full" onClick={goNext}>
-                Continue
-              </PrimaryClimbButton>
-            )}
-          </CardContent>
-        </Card>
-      ) : null}
+          )
+        ) : null}
 
-      {currentStep.kind === "teach" ? (
-        <>
-          <YamaPresence
-            presence={yamaService.resolveTeachPresence(stepIndex)}
-            size="sm"
-            className="mb-2"
-          />
+        {currentStep.kind === "teach" ? (
           <LessonTeachCard step={currentStep} soundEnabled={soundEnabled} />
-        </>
-      ) : null}
+        ) : null}
 
-      {currentStep.kind === "knowledge_inventory" ? (
-        <>
+        {currentStep.kind === "knowledge_inventory" ? (
           <KnowledgeInventoryCard step={currentStep} />
-        </>
-      ) : null}
+        ) : null}
 
-      {currentStep.kind === "application" ? (
-        <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
-      ) : null}
+        {currentStep.kind === "application" ? (
+          <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        ) : null}
 
-      {currentStep.kind === "recall" ? (
-        <>
-          {currentStep.phase === "consolidation" ? (
-            <p className="text-caption text-muted-foreground">
-              Final recall round · no hints
-            </p>
-          ) : null}
-          {currentStep.mode === "typed" ? (
+        {currentStep.kind === "recall" ? (
+          currentStep.mode === "typed" ? (
             <TypedRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
           ) : (
-            <ChoiceRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          )}
-        </>
-      ) : null}
+            <ChoiceRecallDrill
+              step={currentStep}
+              onAnswer={handleRecallAnswer}
+              soundEnabled={soundEnabled}
+            />
+          )
+        ) : null}
 
-      {currentStep.kind === "fill_blank" ? (
-        <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-      ) : null}
+        {currentStep.kind === "fill_blank" ? (
+          <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        ) : null}
 
-      {currentStep.kind === "word_bank" ? (
-        <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-      ) : null}
+        {currentStep.kind === "word_bank" ? (
+          <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        ) : null}
 
-      {currentStep.kind === "sentence_typed" ? (
-        <TypedSentenceDrill
-          prompt={currentStep.prompt}
-          display={currentStep.englishHint}
-          acceptedAnswers={currentStep.acceptedAnswers}
-          onAnswer={handleRecallAnswer}
-        />
-      ) : null}
+        {currentStep.kind === "sentence_typed" ? (
+          <TypedSentenceDrill
+            prompt={currentStep.prompt}
+            display={currentStep.englishHint}
+            acceptedAnswers={currentStep.acceptedAnswers}
+            onAnswer={handleRecallAnswer}
+          />
+        ) : null}
 
-      {currentStep.kind === "matching" ? (
-        <MatchingDrill step={currentStep} onAnswer={handleRecallAnswer} />
-      ) : null}
+        {currentStep.kind === "matching" ? (
+          <MatchingDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        ) : null}
 
-      {currentStep.kind === "reading" ? (
-        <ReadingCard step={currentStep} onAnswer={handleRecallAnswer} />
-      ) : null}
+        {currentStep.kind === "reading" ? (
+          <ReadingDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        ) : null}
 
-      {currentStep.kind === "story" ? (
-        <StoryReader
-          embedded
-          story={{
-            id: currentStep.content.id,
-            title: currentStep.content.title,
-            slug: currentStep.content.slug,
-            summary: currentStep.content.summary,
-            jlptLevel: regionJlpt,
-            estimatedReadTime: currentStep.content.sections.length * 2,
-            sections: currentStep.content.sections,
-            questions: currentStep.content.questions,
-            completed: false,
-            score: 0,
-          }}
-          onComplete={(score) => {
-            setRecallTotal(1);
-            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-            setEmbeddedComplete(true);
-          }}
-        />
-      ) : null}
+        {currentStep.kind === "story" ? (
+          <StoryReader
+            embedded
+            story={{
+              id: currentStep.content.id,
+              title: currentStep.content.title,
+              slug: currentStep.content.slug,
+              summary: currentStep.content.summary,
+              jlptLevel: regionJlpt,
+              estimatedReadTime: currentStep.content.sections.length * 2,
+              sections: currentStep.content.sections,
+              questions: currentStep.content.questions,
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+        ) : null}
 
-      {currentStep.kind === "dialogue" ? (
-        <DialoguePlayer
-          embedded
-          dialogue={{
-            id: currentStep.content.id,
-            title: currentStep.content.title,
-            slug: currentStep.content.slug,
-            description: currentStep.content.description,
-            jlptLevel: regionJlpt,
-            nodes: currentStep.content.nodes,
-            completed: false,
-            score: 0,
-          }}
-          onComplete={(score) => {
-            setRecallTotal(1);
-            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-            setEmbeddedComplete(true);
-          }}
-        />
-      ) : null}
+        {currentStep.kind === "dialogue" ? (
+          <DialoguePlayer
+            embedded
+            dialogue={{
+              id: currentStep.content.id,
+              title: currentStep.content.title,
+              slug: currentStep.content.slug,
+              description: currentStep.content.description,
+              jlptLevel: regionJlpt,
+              nodes: currentStep.content.nodes,
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+        ) : null}
 
-      {currentStep.kind === "listening" ? (
-        <ListeningExercisePlayer
-          embedded
-          exercise={{
-            ...currentStep.content,
-            jlptLevel: regionJlpt,
-            completed: false,
-            score: 0,
-          }}
-          onComplete={(score) => {
-            setRecallTotal(1);
-            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-            setEmbeddedComplete(true);
-          }}
-        />
-      ) : null}
+        {currentStep.kind === "listening" ? (
+          <ListeningExercisePlayer
+            embedded
+            exercise={{
+              ...currentStep.content,
+              jlptLevel: regionJlpt,
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+        ) : null}
 
-      {currentStep.kind === "listening_challenge" ? (
-        <ListeningChallengePlayer
-          embedded
-          challenge={{
-            id: currentStep.content.id,
-            title: currentStep.content.title,
-            slug: currentStep.content.slug,
-            description: currentStep.content.description,
-            jlptLevel: regionJlpt,
-            exercises: currentStep.content.exercises,
-            completed: false,
-            score: 0,
-          }}
-          onComplete={(score) => {
-            setRecallTotal(1);
-            if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
-            setEmbeddedComplete(true);
-          }}
-        />
-      ) : null}
+        {currentStep.kind === "listening_challenge" ? (
+          <ListeningChallengePlayer
+            embedded
+            challenge={{
+              id: currentStep.content.id,
+              title: currentStep.content.title,
+              slug: currentStep.content.slug,
+              description: currentStep.content.description,
+              jlptLevel: regionJlpt,
+              exercises: currentStep.content.exercises,
+              completed: false,
+              score: 0,
+            }}
+            onComplete={(score) => {
+              setRecallTotal(1);
+              if (score >= LESSON_EMBEDDED_STEP_PASS_THRESHOLD) setRecallCorrect(1);
+              setEmbeddedComplete(true);
+            }}
+          />
+        ) : null}
 
-      {currentStep.kind === "complete" ? (
-        session.type === "practice" ? (
-          <CheckpointShrine
-            xpReward={session.xpReward}
-            gemsReward={elevationAward ? 5 : 0}
-            itemsEarned={[{ label: "Lantern", icon: "🏮", quantity: 1 }]}
-            continueHref={regionTrailHref(session.regionSlug)}
-            footerSlot={
-              <>
+        {currentStep.kind === "complete" ? (
+          session.type === "practice" ? (
+            <CheckpointShrine
+              xpReward={session.xpReward}
+              gemsReward={elevationAward ? 5 : 0}
+              itemsEarned={[{ label: "Lantern", icon: "🏮", quantity: 1 }]}
+              continueHref={journeyTrailHref}
+              footerSlot={
+                <>
+                  <AchievementUnlockFeedback achievements={achievementUnlocks} />
+                  <QuestCompleteFeedback completions={questCompletions} />
+                  <LessonFeedbackPrompt
+                    lessonId={session.lessonId}
+                    regionSlug={session.regionSlug}
+                    lessonType={session.type}
+                    score={completedScore}
+                  />
+                </>
+              }
+            />
+          ) : (
+            <LessonCompletePanel
+              score={completedScore}
+              passScore={session.passScore}
+              xpReward={session.xpReward}
+              regionSlug={session.regionSlug}
+              elevationAward={elevationAward}
+              nextLessonHref={session.nextLesson?.href ?? null}
+              nextLessonTitle={session.nextLesson?.title ?? null}
+              reviewItemsEnqueued={reviewItemsEnqueued}
+              trailHref={journeyTrailHref}
+              trailPreview={{
+                regionSlug: session.regionSlug,
+                nextNodeLabel: session.nextLesson?.title ?? null,
+                unlocksRegionSlug: session.unlocksRegionSlug ?? null,
+              }}
+              achievementSlot={
                 <AchievementUnlockFeedback achievements={achievementUnlocks} />
-                <QuestCompleteFeedback completions={questCompletions} />
+              }
+              questSlot={<QuestCompleteFeedback completions={questCompletions} />}
+              feedbackSlot={
                 <LessonFeedbackPrompt
                   lessonId={session.lessonId}
                   regionSlug={session.regionSlug}
                   lessonType={session.type}
                   score={completedScore}
                 />
-              </>
-            }
-          />
-        ) : (
-          <LessonCompletePanel
-            score={completedScore}
-            passScore={session.passScore}
-            xpReward={session.xpReward}
-            regionSlug={session.regionSlug}
-            elevationAward={elevationAward}
-            nextLessonHref={session.nextLesson?.href ?? null}
-            nextLessonTitle={session.nextLesson?.title ?? null}
-            reviewItemsEnqueued={reviewItemsEnqueued}
-            trailHref={regionTrailHref(session.regionSlug)}
-            achievementSlot={
-              <AchievementUnlockFeedback achievements={achievementUnlocks} />
-            }
-            questSlot={<QuestCompleteFeedback completions={questCompletions} />}
-            feedbackSlot={
-              <LessonFeedbackPrompt
-                lessonId={session.lessonId}
-                regionSlug={session.regionSlug}
-                lessonType={session.type}
-                score={completedScore}
-              />
-            }
-          />
-        )
-      ) : null}
+              }
+            />
+          )
+        ) : null}
       </MotionDiv>
-      </IllustratedScreen>
-    </LessonLayout>
+    </LessonShell>
+    </>
   );
 }

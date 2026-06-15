@@ -2,75 +2,68 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { SceneImage } from "@/components/media/scene-image";
-import { YamaAvatar } from "@/features/yama/components/yama-avatar";
-import { PageContainer } from "@/components/layout/page-container";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { IllustratedScreen, StoryTitle } from "@/components/visual";
 import { yamaService } from "@/features/yama/services/yama.service";
-import { getDojoIconPath } from "@/lib/assets/registry";
+import { getDojoIconPath, getWorldIconPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
 
-const TRAINING_GROUNDS = [
-  {
-    title: "Review Queue",
-    description:
-      "Spaced repetition sessions built from your weak spots. Ratings adjust when each word, kanji, or pattern returns.",
-    href: "/review",
-    iconSlug: "review_queue",
-  },
-  {
-    title: "Kana Dojo",
-    description:
-      "Master hiragana and katakana rows, then apply them in short production drills on the foothills trail camps.",
-    href: "/learn/hiragana",
-    iconSlug: "kana_dojo",
-  },
-  {
-    title: "Vocabulary Hall",
-    description:
-      "Browse JLPT-tagged word lists, track what you have learned, and revisit items due for recall.",
-    href: "/learn/vocabulary",
-    iconSlug: "vocabulary_hall",
-  },
-  {
-    title: "Grammar Shrine",
-    description:
-      "Study patterns with natural example sentences, then reinforce them through trail lessons and reviews.",
-    href: "/learn/grammar",
-    iconSlug: "grammar_shrine",
-  },
-  {
-    title: "Listening Pavilion",
-    description:
-      "Train your ear with graded audio lessons and timed comprehension challenges at your level.",
-    href: "/learn/listening",
-    iconSlug: "listening_pavilion",
-  },
-  {
-    title: "Kanji Grounds",
-    description:
-      "Explore readings, radicals, and stroke order — add tough characters to your review queue anytime.",
-    href: "/learn/kanji",
-    iconSlug: "kanji_grounds",
-  },
-  {
-    title: "Reading Library",
-    description:
-      "Work through graded passages and dialogues with furigana support and comprehension checks.",
-    href: "/learn/reading",
-    iconSlug: "reading_library",
-  },
-] as const;
+type StudyHotspot = {
+  label: string;
+  href: string;
+  className: string;
+  icon: ReactNode;
+};
 
-function DojoHallIcon({
-  slug,
-  className,
-}: {
-  slug: (typeof TRAINING_GROUNDS)[number]["iconSlug"];
-  className?: string;
-}) {
-  const src = getDojoIconPath(slug);
+const STUDY_HOTSPOTS: StudyHotspot[] = [
+  {
+    label: "Review",
+    href: "/review",
+    className: "top-[18%] left-1/2 w-[5.5rem] -translate-x-1/2",
+    icon: <StudyIcon src={getDojoIconPath("review_queue")} />,
+  },
+  {
+    label: "Vocabulary",
+    href: "/learn/vocabulary",
+    className: "top-[30%] left-[6%] w-[5rem]",
+    icon: <StudyIcon src={getDojoIconPath("vocabulary_hall")} />,
+  },
+  {
+    label: "Kanji",
+    href: "/learn/kanji",
+    className: "top-[28%] right-[5%] w-[5rem]",
+    icon: <StudyIcon src={getDojoIconPath("kanji_grounds")} />,
+  },
+  {
+    label: "Grammar",
+    href: "/learn/grammar",
+    className: "top-[46%] left-[4%] w-[5rem]",
+    icon: <StudyIcon src={getDojoIconPath("grammar_shrine")} />,
+  },
+  {
+    label: "Listening",
+    href: "/learn/listening",
+    className: "top-[44%] right-[4%] w-[5rem]",
+    icon: <StudyIcon src={getDojoIconPath("listening_pavilion")} />,
+  },
+  {
+    label: "Games",
+    href: "/games",
+    className: "bottom-[30%] left-[10%] w-[5rem]",
+    icon: <StudyIcon src={getWorldIconPath("games")} />,
+  },
+  {
+    label: "Trials",
+    href: "/trials",
+    className: "bottom-[28%] right-[8%] w-[5rem]",
+    icon: <StudyIcon src={getWorldIconPath("trials")} />,
+  },
+];
+
+function StudyIcon({ src }: { src: string | null }) {
   if (!src) return null;
 
   return (
@@ -80,91 +73,94 @@ function DojoHallIcon({
       width={22}
       height={22}
       aria-hidden
-      className={cn("shrink-0 object-contain", className)}
+      className="shrink-0 object-contain"
     />
   );
 }
 
-function DojoHubTile({
-  iconSlug,
-  title,
-  description,
-  href,
-}: {
-  iconSlug: (typeof TRAINING_GROUNDS)[number]["iconSlug"];
-  title: string;
-  description: string;
+type DojoHotspotProps = {
+  label: string;
   href: string;
-}) {
+  className: string;
+  icon: ReactNode;
+};
+
+function DojoHotspot({ label, href, className, icon }: DojoHotspotProps) {
   return (
-    <GlassPanel className="transition-colors hover:border-trail-glow/30">
-      <Link href={href} className="focus-ring block space-y-3 p-4">
-        <div className="flex items-start gap-3">
-          <span
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-success/10"
-            aria-hidden
-          >
-            <DojoHallIcon slug={iconSlug} />
-          </span>
-          <div className="min-w-0 space-y-1">
-            <StoryTitle as="h3" className="text-sm">
-              {title}
-            </StoryTitle>
-            <p className="text-caption text-muted-foreground">{description}</p>
-          </div>
-        </div>
-        <p className="text-caption font-medium text-primary">Enter →</p>
+    <div
+      className={cn(
+        "absolute rounded-xl border border-white/12 bg-black/40 shadow-[inset_0_1px_0_rgb(255_255_255/0.05)] backdrop-blur-sm transition-colors hover:border-trail-glow/40",
+        className,
+      )}
+    >
+      <Link
+        href={href}
+        className="focus-ring flex min-h-11 flex-col items-center justify-center gap-1 px-2 py-2 text-center"
+        aria-label={label}
+      >
+        <span
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 ring-1 ring-white/10"
+          aria-hidden
+        >
+          {icon}
+        </span>
+        <span className="text-[10px] font-semibold tracking-wide text-foreground/90">
+          {label}
+        </span>
       </Link>
-    </GlassPanel>
+    </div>
   );
 }
 
 export function DojoScreen() {
-  const presence = yamaService.resolveTrainingGroundsPresence("kana_dojo", 0);
+  const presence = yamaService.resolveNavPresence("study", 0);
 
   return (
     <IllustratedScreen
-      scrim="minimal"
+      scrim="none"
+      className="min-h-dvh"
       background={
         <SceneImage
-          scene="dojo_forest"
-          alt=""
+          scene="study_atmosphere"
+          alt="Forest trail study area at night"
           className="absolute inset-0 min-h-dvh rounded-none"
+          priority
         />
       }
     >
-      <PageContainer>
-        <header className="space-y-1">
-          <StoryTitle as="h1" className="text-xl">
-            Dojo
-          </StoryTitle>
-          <p className="text-body-sm text-muted-foreground">
-            Training Grounds — deliberate practice for mastery
-          </p>
-        </header>
+      <div className="relative flex min-h-dvh flex-col">
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/65"
+          aria-hidden
+        />
 
-        <GlassPanel className="flex items-start gap-3 p-4">
-          <YamaAvatar expression="training" size="lg" priority />
-          <div className="min-w-0 flex-1 space-y-1">
-            <p className="text-body-sm font-medium">{presence.message}</p>
+        <header className="relative z-10 p-4 pt-3">
+          <div className="space-y-1 rounded-card border border-white/12 bg-black/45 p-3 backdrop-blur-sm">
+            <StoryTitle as="h1" className="text-base">
+              Study
+            </StoryTitle>
             <p className="text-caption text-muted-foreground">
-              Choose a hall to begin focused practice.
+              Travel study areas — practice while on the trail
             </p>
           </div>
-        </GlassPanel>
+        </header>
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          {TRAINING_GROUNDS.map((ground) => (
-            <DojoHubTile
-              key={ground.href}
-              iconSlug={ground.iconSlug}
-              title={ground.title}
-              description={ground.description}
-              href={ground.href}
+        <div className="relative z-10 flex-1">
+          <div className="absolute bottom-[18%] left-[14%] max-w-[9rem]">
+            <YamaPresence presence={presence} size="md" layout="vertical" showMessage={false} />
+          </div>
+
+          {STUDY_HOTSPOTS.map((spot) => (
+            <DojoHotspot
+              key={spot.href}
+              label={spot.label}
+              href={spot.href}
+              className={spot.className}
+              icon={spot.icon}
             />
           ))}
         </div>
-      </PageContainer>
+      </div>
     </IllustratedScreen>
   );
 }

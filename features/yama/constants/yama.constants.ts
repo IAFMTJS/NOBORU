@@ -141,20 +141,20 @@ export const YAMA_EMPTY_MESSAGES = {
     "No results on this path. Adjust your search and look again.",
   ],
   achievements: [
-    "No achievements unlocked yet. Keep climbing — milestones will appear.",
-    "Your badge case is empty for now. Every lesson builds toward one.",
+    "Plaques await discovery along the shrine wall. Continue climbing to reveal them.",
+    "Hidden milestones remain on the trail — each lesson brings a new plaque closer.",
   ],
   notifications: [
-    "No notifications right now. I'll let you know when something matters.",
-    "All quiet on the trail. Check back after your next climb.",
+    "All quiet on the trail — milestones will arrive as you climb.",
+    "Awaiting discovery. Your next summit may bring word from the path.",
   ],
   trail: [
-    "No trail nodes here yet. Content is still being mapped.",
-    "This region's path isn't ready. Explore another area for now.",
+    "This stretch of trail is still hidden in the mist. Explore elsewhere for now.",
+    "The path ahead awaits discovery. Another region may reveal the way.",
   ],
   generic: [
-    "Nothing here yet. Your next step will fill this space.",
-    "This area is empty for now. Keep climbing and check back soon.",
+    "Not discovered yet. Continue your journey and this place will awaken.",
+    "Hidden treasures remain. Your next step along the trail may reveal them.",
   ],
 } as const;
 
@@ -349,10 +349,10 @@ export const YAMA_DIALOGUE_POOLS: Record<YamaDialoguePoolId, YamaDialoguePool> =
     id: "empty",
     defaultExpression: "encouraging",
     messages: [
-      "Nothing here yet — that's room to grow.",
-      "This space fills as you climb further.",
-      "Start a lesson or review to see activity here.",
-      "Empty now, but the trail ahead is full of steps.",
+      "Not discovered yet — blank pages await your first summit moments.",
+      "Hidden chapters remain along the trail. Continue climbing to fill these pages.",
+      "This space awakens as you journey — each lesson brings a new entry closer.",
+      "Awaiting discovery. Your next step may inscribe the first line here.",
     ],
   },
   notification: {

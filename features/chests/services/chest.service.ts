@@ -1,3 +1,4 @@
+import { achievementService } from "@/features/achievements/services/achievement.service";
 import { companionService } from "@/features/companion/services/companion.service";
 import { collectibleService } from "@/features/collectibles/services/collectible.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
@@ -47,7 +48,7 @@ class ChestService {
       label: daily.title,
       progressPercent: 100,
       remainingLabel: "Ready to open",
-      href: "/world",
+      href: "/camp",
     };
   }
 
@@ -96,6 +97,7 @@ class ChestService {
         collectibleSlug: template.collectible_slug,
         shrineProtectionGrant: template.shrine_protection_grant,
         alreadyClaimed: true,
+        unlockedAchievements: [],
       };
     }
 
@@ -135,6 +137,8 @@ class ChestService {
       );
     }
 
+    const unlockedAchievements = await achievementService.evaluateAndUnlock(userId);
+
     return {
       chestSlug: template.slug,
       title: template.title,
@@ -143,6 +147,7 @@ class ChestService {
       collectibleSlug: template.collectible_slug,
       shrineProtectionGrant: template.shrine_protection_grant,
       alreadyClaimed: false,
+      unlockedAchievements,
     };
   }
 

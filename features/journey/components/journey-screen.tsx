@@ -1,32 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import { JourneyRegionScroll } from "@/features/journey/components/journey-region-scroll";
-import { JourneyStatusBar } from "@/features/journey/components/journey-status-bar";
-import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
-import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
+import { EventTrailBranch } from "@/components/visual/world/event-trail-branch";
+import { JourneyHud } from "@/features/journey/components/journey-hud";
+import { JourneyWorldScroll } from "@/features/journey/components/journey-world-scroll";
+import { RegionUnlockOverlay } from "@/features/journey/components/region-unlock-overlay";
 import { useJourneyLessonSummary } from "@/features/journey/hooks/use-journey-lesson-summary";
+import { getNarrativeArcForRegion } from "@/lib/design-system/narrative-regions";
+import type { RegionSlug } from "@/lib/design-system/regions";
 import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import type {
   JourneyNode,
   JourneyPathViewModel,
-  JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
+import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
+import { RegionSelectSheet } from "@/features/learning/components/trail/region-select-sheet";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
+import { seasonalEventService } from "@/features/events/services/seasonal-event.service";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
-import type { TrialListEntryViewModel } from "@/features/trials/types/trial.types";
+import {
+  resolveGlobalCurrentRegion,
+} from "@/features/journey/utils/journey-world.utils";
 
 type JourneyScreenProps = {
   journey: JourneyPathViewModel;
-  initialRegionSlug: string;
-  trials?: TrialListEntryViewModel[];
-  soundEnabled?: boolean;
   profileStats?: {
     displayName: string;
     levelLabel: string;
@@ -35,35 +37,6 @@ type JourneyScreenProps = {
   } | null;
   companionEvolutionSlug?: CompanionEvolutionSlug | null;
 };
-
-function resolveRegionTrial(
-  trials: TrialListEntryViewModel[],
-  regionSlug: string,
-): { href: string; title: string } | null {
-  const trial = trials.find(
-    (entry) =>
-      entry.regionSlug === regionSlug &&
-      entry.availability === "available" &&
-      !entry.progress?.passed,
-  );
-  return trial ? { href: `/trials/${trial.slug}`, title: trial.title } : null;
-}
-
-function resolveInitialRegion(
-  journey: JourneyPathViewModel,
-  initialRegionSlug: string,
-) {
-  const preferred = journey.regions.find((region) => region.slug === initialRegionSlug);
-  if (preferred && preferred.availability !== "locked") {
-    return preferred;
-  }
-
-  return (
-    journey.regions.find((region) => region.availability !== "locked") ??
-    journey.regions[0] ??
-    null
-  );
-}
 
 function toRegionSelectItems(
   regions: JourneyPathViewModel["regions"],
@@ -113,52 +86,38 @@ function countLessonPosition(
 
 export function JourneyScreen({
   journey,
-  initialRegionSlug,
-  trials = [],
   profileStats,
   companionEvolutionSlug,
 }: JourneyScreenProps) {
-  const router = useRouter();
-  const defaultRegion = resolveInitialRegion(journey, initialRegionSlug);
-  const [selectedSlug, setSelectedSlug] = useState(
-    defaultRegion?.slug ?? initialRegionSlug,
-  );
-  const [regionPickerOpen, setRegionPickerOpen] = useState(false);
+  const searchParams = useSearchParams();
   const [regionsOverviewOpen, setRegionsOverviewOpen] = useState(false);
+  const [scrollToRegionSlug, setScrollToRegionSlug] = useState<string | null>(
+    () => searchParams?.get("region") ?? null,
+  );
+  const [scrollToNodeId, setScrollToNodeId] = useState<string | null>(
+    () => searchParams?.get("node") ?? null,
+  );
+  const [unlockRegionName, setUnlockRegionName] = useState<string | null>(null);
+  const [unlockRegionSlug, setUnlockRegionSlug] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<JourneyNode | null>(null);
   const [nodeDetailOpen, setNodeDetailOpen] = useState(false);
 
-  const selectedRegion =
-    journey.regions.find((region) => region.slug === selectedSlug) ?? defaultRegion;
-
-  useEffect(() => {
-    const resolved = resolveInitialRegion(journey, initialRegionSlug);
-    if (resolved?.slug) {
-      setSelectedSlug(resolved.slug);
-    }
-  }, [initialRegionSlug, journey]);
-
-  useEffect(() => {
-    if (!selectedSlug || typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("region") !== selectedSlug) {
-      router.replace(regionTrailHref(selectedSlug), { scroll: false });
-    }
-  }, [router, selectedSlug]);
-
-  const regionTrial = selectedRegion
-    ? resolveRegionTrial(trials, selectedRegion.slug)
-    : null;
-
+  const currentRegion = resolveGlobalCurrentRegion(journey);
+  const activeEvent = useMemo(() => seasonalEventService.getActiveEvent(), []);
   const regionSelectItems = useMemo(
     () => toRegionSelectItems(journey.regions),
     [journey.regions],
   );
 
   const selectedTrailNode = selectedNode ? journeyNodeToTrailNode(selectedNode) : null;
+  const selectedNodeRegion = selectedNode
+    ? journey.regions.find((region) =>
+        region.nodes.some((node) => node.id === selectedNode.id),
+      )
+    : null;
   const selectedLessonPosition =
-    selectedRegion && selectedNode
-      ? countLessonPosition(selectedRegion.nodes, selectedNode.id)
+    selectedNodeRegion && selectedNode
+      ? countLessonPosition(selectedNodeRegion.nodes, selectedNode.id)
       : null;
 
   const { lesson: selectedLessonSummary } = useJourneyLessonSummary(
@@ -171,14 +130,35 @@ export function JourneyScreen({
     setNodeDetailOpen(true);
   };
 
-  if (!selectedRegion) {
+  const handleScrollToRegion = (slug: string) => {
+    setScrollToRegionSlug(slug);
+    setRegionsOverviewOpen(false);
+    requestAnimationFrame(() => setScrollToRegionSlug(null));
+  };
+
+  useEffect(() => {
+    if (!searchParams) return;
+    const region = searchParams.get("region");
+    const node = searchParams.get("node");
+    const unlock = searchParams.get("unlock");
+    if (region) setScrollToRegionSlug(region);
+    if (node) setScrollToNodeId(node);
+    if (unlock) {
+      const region = journey.regions.find((entry) => entry.slug === unlock);
+      setUnlockRegionName(region?.name ?? unlock);
+      setUnlockRegionSlug(unlock);
+      setScrollToRegionSlug(unlock);
+    }
+  }, [searchParams, journey.regions]);
+
+  if (!currentRegion) {
     return (
       <YamaEmptyState
         surface="trail"
         title="Trail not ready"
-        description="No learning regions are available yet. Check back soon or explore other areas."
+        description="The trail ahead is still forming. Return to camp while the path is prepared."
         actionHref="/camp"
-        actionLabel="Return home"
+        actionLabel="Return to camp"
         className="p-4"
       />
     );
@@ -186,79 +166,85 @@ export function JourneyScreen({
 
   return (
     <>
-      <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-6rem)] min-h-0 flex-col">
+      <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] min-h-0 flex-col">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-background/80 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background/70 to-transparent"
           aria-hidden
         />
 
         {profileStats ? (
-          <JourneyStatusBar
+          <JourneyHud
             displayName={profileStats.displayName}
             levelLabel={profileStats.levelLabel}
-            currentStreak={profileStats.currentStreak}
-            totalXp={profileStats.totalXp}
-            regionName={selectedRegion.name}
-            completedCount={selectedRegion.completedCount}
-            lessonCount={selectedRegion.lessonCount}
-            progressPercent={selectedRegion.progressPercent}
-            onRegionClick={() => setRegionPickerOpen(true)}
+            regionName={currentRegion.name}
+            onRegionOverview={() => setRegionsOverviewOpen(true)}
           />
         ) : (
           <header className="absolute inset-x-4 top-4 z-30 flex justify-center">
             <button
               type="button"
-              onClick={() => setRegionPickerOpen(true)}
+              onClick={() => setRegionsOverviewOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-4 py-2 text-body-sm font-medium text-white backdrop-blur-sm"
             >
-              {selectedRegion.name}
+              {currentRegion.name}
               <UiIconImage name="chevron_down" size={16} className="opacity-80" />
-              <span className="ml-1 text-caption text-trail-glow">
-                {selectedRegion.completedCount}/{selectedRegion.lessonCount} ·{" "}
-                {selectedRegion.progressPercent}%
-              </span>
             </button>
           </header>
         )}
 
-        <JourneyRegionScroll
-          region={selectedRegion}
-          trialHref={regionTrial?.href ?? null}
-          trialTitle={regionTrial?.title ?? null}
+        <JourneyWorldScroll
+          journey={journey}
           onNodeSelect={handleNodeSelect}
           companionEvolutionSlug={companionEvolutionSlug ?? undefined}
+          scrollToRegionSlug={scrollToRegionSlug}
+          scrollToNodeId={scrollToNodeId}
+          selectedNodeId={nodeDetailOpen ? selectedNode?.id ?? null : null}
           className="min-h-0 flex-1"
         />
 
-        <Link
-          href="/learn/world"
-          aria-label="View all regions"
-          onClick={(event) => {
-            event.preventDefault();
-            setRegionsOverviewOpen(true);
-          }}
-          className="fixed bottom-[5.5rem] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur-sm"
+        <button
+          type="button"
+          aria-label="Region overview"
+          onClick={() => setRegionsOverviewOpen(true)}
+          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur-sm"
+          title="Region overview"
         >
           <UiIconImage name="map" size={22} />
-        </Link>
-      </div>
+        </button>
 
-      <RegionSelectSheet
-        open={regionPickerOpen}
-        onOpenChange={setRegionPickerOpen}
-        regions={regionSelectItems}
-        selectedSlug={selectedSlug}
-        onSelectRegion={setSelectedSlug}
-        mode="picker"
-      />
+        {activeEvent ? (
+          <Link
+            href="/world/events"
+            className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-20 flex h-12 w-12 items-center justify-center"
+            aria-label={`Seasonal event: ${activeEvent.title}`}
+            title={activeEvent.title}
+          >
+            <EventTrailBranch />
+          </Link>
+        ) : null}
+      </div>
 
       <RegionSelectSheet
         open={regionsOverviewOpen}
         onOpenChange={setRegionsOverviewOpen}
         regions={regionSelectItems}
-        selectedSlug={selectedSlug}
-        onSelectRegion={setSelectedSlug}
+        selectedSlug={currentRegion.slug}
+        onSelectRegion={handleScrollToRegion}
         mode="overview"
+      />
+
+      <RegionUnlockOverlay
+        regionName={unlockRegionName ?? ""}
+        gateAsset={
+          unlockRegionSlug
+            ? getNarrativeArcForRegion(unlockRegionSlug as RegionSlug).gateIcon
+            : undefined
+        }
+        open={Boolean(unlockRegionName)}
+        onContinue={() => {
+          setUnlockRegionName(null);
+          setUnlockRegionSlug(null);
+        }}
       />
 
       <LessonNodeDetailSheet
@@ -267,8 +253,8 @@ export function JourneyScreen({
         node={selectedTrailNode}
         lesson={selectedLessonSummary}
         lessonNumber={selectedLessonPosition?.index ?? null}
-        lessonCount={selectedLessonPosition?.total ?? selectedRegion.lessonCount}
-        regionName={selectedRegion.name}
+        lessonCount={selectedLessonPosition?.total ?? selectedNodeRegion?.lessonCount ?? 0}
+        regionName={selectedNodeRegion?.name ?? currentRegion.name}
       />
     </>
   );

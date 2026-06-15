@@ -45,4 +45,5 @@ export type ProgressDashboardViewModel = {
   learningStats: LearningStatsViewModel;
   reviewStats: ReviewStatsViewModel;
   elevation: ElevationSummaryViewModel;
+  currentStreak: number;
 };

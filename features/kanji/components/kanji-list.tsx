@@ -1,20 +1,13 @@
-import Link from "next/link";
-
-import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-
-import { ContentHubBanner } from "@/components/ui/content-hub-banner";
 import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
-import { ContentHubScreen } from "@/components/visual/content-hub-screen";
 import { GlassPanel, StoryTitle } from "@/components/visual";
-import { Button } from "@/components/ui/button";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { KanjiListRow } from "@/features/kanji/components/kanji-list-row";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { KanjiListViewModel } from "@/features/kanji/types/kanji.types";
 
 type KanjiListProps = {
@@ -28,25 +21,11 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
   const tokens = CONTENT_HUB_TOKENS.kanji;
 
   return (
-    <ContentHubScreen scene="shrine_torii">
-    <PageContainer>
-      <ScreenHeader
-        variant="story"
-        title={hub.kanjiTitle}
-        subtitle={hub.kanjiSubtitle}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={regionTrailHref(hub.regionSlug)}>Back</Link>
-          </Button>
-        }
-      />
-
-      <ContentHubBanner
-        variant="kanji"
-        title={hub.kanjiTitle}
-        subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} kanji on your trail`}
-      />
-
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={hub.kanjiTitle}
+      subtitle={`${list.learnedCount} of ${list.totalCount} ${levelLabel} kanji on your trail`}
+    >
       <JlptLevelPills basePath="/learn/kanji" activeLevel={jlptLevel} />
 
       <GlassPanel className={cn("space-y-4 p-4", tokens.progressCardBorder)}>
@@ -69,16 +48,23 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
           Kanji Catalog
         </StoryTitle>
         <div className="space-y-2">
-          {list.entries.map((entry) => (
-            <KanjiListRow
-              key={entry.id}
-              entry={entry}
-              href={`/learn/kanji/${entry.id}`}
+          {list.entries.length === 0 ? (
+            <YamaEmptyState
+              surface="generic"
+              title="Kanji stones await discovery"
+              description="Characters will appear on the grounds shelf as content unlocks."
             />
-          ))}
+          ) : (
+            list.entries.map((entry) => (
+              <KanjiListRow
+                key={entry.id}
+                entry={entry}
+                href={`/learn/kanji/${entry.id}`}
+              />
+            ))
+          )}
         </div>
       </GlassPanel>
-    </PageContainer>
-    </ContentHubScreen>
+    </StudyHubLayout>
   );
 }

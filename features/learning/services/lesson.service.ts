@@ -48,6 +48,32 @@ import { learningPathService } from "@/features/learning/services/learning-path.
 import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 
+function resolveUnlocksRegionSlug(
+  regions: Awaited<
+    ReturnType<typeof learningPathRepository.listPublishedRegionsWithCurriculum>
+  >,
+  currentRegionSlug: string,
+  currentLessonId: string,
+  progressByLesson: ReadonlyMap<string, { status: ProgressStatus }>,
+): string | null {
+  const regionIndex = regions.findIndex((region) => region.slug === currentRegionSlug);
+  if (regionIndex === -1 || regionIndex >= regions.length - 1) return null;
+
+  const region = regions[regionIndex];
+  if (!region) return null;
+
+  const allOthersComplete = region.units.every((unit) =>
+    unit.lessons.every((lesson) => {
+      if (lesson.id === currentLessonId) return true;
+      return progressByLesson.get(lesson.id)?.status === "completed";
+    }),
+  );
+
+  if (!allOthersComplete) return null;
+
+  return regions[regionIndex + 1]?.slug ?? null;
+}
+
 function groupExamplesByParentId<T extends { vocabulary_id?: string; kanji_id?: string; grammar_id?: string }>(
   examples: T[],
   key: "vocabulary_id" | "kanji_id" | "grammar_id",
@@ -657,11 +683,21 @@ class LessonService {
       (content): content is LessonContent => content !== null,
     );
 
-    const [progress, nextLesson] = await Promise.all([
+    const [progress, nextLesson, regions] = await Promise.all([
       progressRepository.findByUserAndLesson(userId, lessonId),
       this.getNextIncompleteLesson(userId),
+      learningPathRepository.listPublishedRegionsWithCurriculum(),
     ]);
     const progressStatus: ProgressStatus = progress?.status ?? "not_started";
+    const progressByLesson = new Map(
+      (await progressRepository.listByUserId(userId)).map((row) => [row.lesson_id, row]),
+    );
+    const unlocksRegionSlug = resolveUnlocksRegionSlug(
+      regions,
+      lesson.unit.region.slug,
+      lesson.id,
+      progressByLesson,
+    );
     let steps = this.buildSteps(lesson, contents);
 
     if (lesson.type === "application") {
@@ -687,6 +723,7 @@ class LessonService {
 
     return {
       lessonId: lesson.id,
+      trailNodeId: lesson.id,
       unitId: lesson.unit.id,
       regionSlug: lesson.unit.region.slug,
       title: lesson.title,
@@ -705,6 +742,7 @@ class LessonService {
               href: `/learn/lesson/${nextLesson.id}`,
             }
           : null,
+      unlocksRegionSlug,
     };
   }
 

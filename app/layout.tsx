@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Lora } from "next/font/google";
+import { Cinzel, Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
@@ -11,10 +11,10 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const lora = Lora({
+const cinzel = Cinzel({
   subsets: ["latin"],
   variable: "--font-story",
-  weight: ["400", "600"],
+  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#F7F8FA" },
-    { media: "(prefers-color-scheme: dark)", color: "#0F1115" },
+    { media: "(prefers-color-scheme: dark)", color: "#05070A" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -74,7 +74,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${lora.variable} font-sans`}>
+      <body className={`${inter.variable} ${cinzel.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

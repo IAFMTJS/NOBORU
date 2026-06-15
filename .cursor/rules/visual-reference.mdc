@@ -55,7 +55,7 @@ Visual identity targets:
 * **Backgrounds:** Illustrated environments on primary screens; UI on dark glass overlays
 * **Glow:** Warm amber/gold for active trail, current node, selected nav — functional only
 * **Primary CTA:** Mountain Red `#D64045` — one per screen
-* **Navigation:** 5-tab pill bar (Camp, Journey, Dojo, World, Profile) with Yama mascot overlap
+* **Navigation:** 5-tab pill bar (Journey, Camp, Study, Bag, Profile) with Yama mascot overlap
 * **Trail:** Vertical glowing stone path with circular nodes; fog for locked regions
 * **Typography:** Serif for story titles; sans for UI; Noto Sans JP for Japanese content
 * **Icons:** Single thin-line family — no mixed icon packs in learner UI

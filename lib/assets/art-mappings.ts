@@ -47,10 +47,10 @@ export const REGION_TRAIL_SCROLL_ASSETS: Record<RegionSlug, ArtAssetRef> = {
 export const REGION_HERO_ASSETS: Record<RegionSlug, ArtAssetRef> = {
   foothills: { category: "backgrounds/trail", id: "bg-trail-foot-hills-night" },
   "forest-trail": { category: "backgrounds/trail", id: "bg-trail-forest-current-night" },
-  "mount-n5": { category: "backgrounds/trail", id: "bg-trail-long-region" },
-  "mount-n4": { category: "backgrounds/trail", id: "bg-trail-long-region" },
-  "mount-n3": { category: "backgrounds/trail", id: "bg-trail-temple-peak-locked" },
-  "mount-n2": { category: "backgrounds/trail", id: "bg-trail-temple-peak-locked" },
+  "mount-n5": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n5" },
+  "mount-n4": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n4" },
+  "mount-n3": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n3" },
+  "mount-n2": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n2" },
   "mount-n1": { category: "backgrounds/trail", id: "bg-trail-temple-peak-boss" },
   "master-summit": { category: "backgrounds/trail", id: "bg-trail-multi-region-panorama" },
 };
@@ -78,36 +78,156 @@ export const YAMA_EXPRESSION_ASSETS: Record<YamaExpression, ArtAssetRef> = {
   victorious: { category: "characters/noboru/reactions", id: "char-noboru-reaction-proud" },
 };
 
+/** All 28 Noboru companion poses under public/art/characters/noboru/. */
+export const NOBORU_POSE_ASSETS = {
+  "char-noboru-from-behind-region-transition": {
+    category: "characters/noboru/base",
+    id: "char-noboru-from-behind-region-transition",
+  },
+  "char-noboru-hero-profile": {
+    category: "characters/noboru/base",
+    id: "char-noboru-hero-profile",
+  },
+  "char-noboru-meditating-dojo": {
+    category: "characters/noboru/base",
+    id: "char-noboru-meditating-dojo",
+  },
+  "char-noboru-peeking-locked-detail": {
+    category: "characters/noboru/base",
+    id: "char-noboru-peeking-locked-detail",
+  },
+  "char-noboru-reading-book": {
+    category: "characters/noboru/base",
+    id: "char-noboru-reading-book",
+  },
+  "char-noboru-running-ember": {
+    category: "characters/noboru/base",
+    id: "char-noboru-running-ember",
+  },
+  "char-noboru-sitting-campfire": {
+    category: "characters/noboru/base",
+    id: "char-noboru-sitting-campfire",
+  },
+  "char-noboru-standing-traveler": {
+    category: "characters/noboru/base",
+    id: "char-noboru-standing-traveler",
+  },
+  "char-noboru-telescope-world": {
+    category: "characters/noboru/base",
+    id: "char-noboru-telescope-world",
+  },
+  "char-noboru-walking-backpack": {
+    category: "characters/noboru/base",
+    id: "char-noboru-walking-backpack",
+  },
+  "char-noboru-winter-staff": {
+    category: "characters/noboru/base",
+    id: "char-noboru-winter-staff",
+  },
+  "char-noboru-cosmetic-backpack-bamboo": {
+    category: "characters/noboru/cosmetics",
+    id: "char-noboru-cosmetic-backpack-bamboo",
+  },
+  "char-noboru-cosmetic-fox-mask": {
+    category: "characters/noboru/cosmetics",
+    id: "char-noboru-cosmetic-fox-mask",
+  },
+  "char-noboru-cosmetic-preview-base": {
+    category: "characters/noboru/cosmetics",
+    id: "char-noboru-cosmetic-preview-base",
+  },
+  "char-noboru-cosmetic-scarf-crimson": {
+    category: "characters/noboru/cosmetics",
+    id: "char-noboru-cosmetic-scarf-crimson",
+  },
+  "char-noboru-reaction-encouraging": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-encouraging",
+  },
+  "char-noboru-reaction-excited": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-excited",
+  },
+  "char-noboru-reaction-happy": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-happy",
+  },
+  "char-noboru-reaction-mastery": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-mastery",
+  },
+  "char-noboru-reaction-oops": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-oops",
+  },
+  "char-noboru-reaction-out-of-hearts": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-out-of-hearts",
+  },
+  "char-noboru-reaction-proud": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-proud",
+  },
+  "char-noboru-reaction-teaching": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-teaching",
+  },
+  "char-noboru-reaction-worried": {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-worried",
+  },
+  "char-noboru-weather-night-lantern": {
+    category: "characters/noboru/weather",
+    id: "char-noboru-weather-night-lantern",
+  },
+  "char-noboru-weather-rainy-umbrella": {
+    category: "characters/noboru/weather",
+    id: "char-noboru-weather-rainy-umbrella",
+  },
+  "char-noboru-weather-snowy-cloak": {
+    category: "characters/noboru/weather",
+    id: "char-noboru-weather-snowy-cloak",
+  },
+  "char-noboru-weather-sunny": {
+    category: "characters/noboru/weather",
+    id: "char-noboru-weather-sunny",
+  },
+} as const satisfies Record<string, ArtAssetRef>;
+
+export type NoboruPoseId = keyof typeof NOBORU_POSE_ASSETS;
+
 export const NAV_TAB_ICON_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
-  camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
   journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-active-blue" },
-  dojo: { category: "ui/icons/nav", id: "icon-nav-dojo-torii-active-green" },
-  world: { category: "ui/icons/nav", id: "icon-nav-world-pagoda-active-violet" },
+  camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
+  study: { category: "ui/icons/nav", id: "icon-nav-study-book-active-green" },
+  bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-active-blue" },
   profile: { category: "ui/icons/nav", id: "icon-nav-profile-fox-active-gold" },
 };
 
 export const NAV_TAB_ICON_INACTIVE_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
-  camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-inactive" },
   journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-inactive" },
-  dojo: { category: "ui/icons/nav", id: "icon-nav-dojo-torii-inactive" },
-  world: { category: "ui/icons/nav", id: "icon-nav-world-pagoda-inactive" },
+  camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-inactive" },
+  study: { category: "ui/icons/nav", id: "icon-nav-study-book-inactive" },
+  bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-inactive" },
   profile: { category: "ui/icons/nav", id: "icon-nav-profile-fox-inactive" },
 };
 
 export const NAV_TAB_MASCOT_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
-  camp: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
   journey: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },
-  dojo: { category: "characters/noboru/base", id: "char-noboru-meditating-dojo" },
-  world: { category: "characters/noboru/base", id: "char-noboru-telescope-world" },
+  camp: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
+  study: { category: "characters/noboru/base", id: "char-noboru-reading-book" },
+  bag: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },
   profile: { category: "characters/noboru/base", id: "char-noboru-hero-profile" },
 };
 
 export const NAV_SKIN_TEXTURE_ASSETS: Record<NavPillSkinId, ArtAssetRef> = {
   ember_night: { category: "ui/navbars", id: "nav-ember-camp-active-camp" },
   trail_mist: { category: "ui/navbars", id: "nav-moonlit-journey-active-journey" },
+  study_scroll: { category: "ui/navbars", id: "nav-app-dark-active-study" },
+  travel_pack: { category: "ui/navbars", id: "nav-app-dark-active-bag" },
+  stone_path: { category: "ui/navbars", id: "nav-premium-gold-profile-active-profile" },
   bamboo_grove: { category: "ui/navbars", id: "nav-bamboo-dojo-active-dojo" },
   moonlit_torii: { category: "ui/navbars", id: "nav-cosmic-world-active-world" },
-  stone_path: { category: "ui/navbars", id: "nav-premium-gold-profile-active-profile" },
   sakura_bloom: { category: "ui/navbars", id: "nav-light-sakura-parchment-active-camp" },
   winter_summit: { category: "ui/navbars", id: "nav-snow-journey-active-journey" },
   lantern_festival: { category: "ui/navbars", id: "nav-dark-camp-lantern-active-camp" },
@@ -205,6 +325,42 @@ export const TRAIL_SPINE_ASSET: ArtAssetRef = {
   category: "ui/progress",
   id: "scroll-indicator-trail-vertical",
 };
+
+/** Doc 11 camp world hotspots — quest board, chest, shrine, merchant, tent. */
+export const JOURNEY_WORLD_ASSETS = {
+  region_gate: { category: "backgrounds/shrine", id: "bg-shrine-region-transition-torii" },
+  region_unlock_fox: {
+    category: "characters/noboru/base",
+    id: "char-noboru-from-behind-region-transition",
+  },
+  trail_lantern: { category: "props/inventory", id: "item-stone-lantern" },
+  boss_atmosphere: { category: "backgrounds/trail", id: "bg-trail-temple-peak-boss" },
+} as const satisfies Record<string, ArtAssetRef>;
+
+export const CAMP_WORLD_ASSETS = {
+  quest_board: { category: "ui/panels", id: "panel-wood-daily-quest-board" },
+  chest_closed: { category: "props/inventory", id: "item-daruma" },
+  chest_available: { category: "rewards", id: "reward-lantern" },
+  chest_opening: { category: "props/particles", id: "particle-golden-star" },
+  chest_collected: { category: "props/inventory", id: "item-omamori" },
+  shrine_lantern: { category: "props/inventory", id: "item-stone-lantern" },
+  shrine_lantern_paper: { category: "props/inventory", id: "item-lantern" },
+  shrine_glow: { category: "rewards", id: "reward-lantern" },
+  merchant: { category: "characters/noboru/base", id: "char-noboru-standing-traveler" },
+  merchant_scene: { category: "backgrounds/utility", id: "bg-shop-general-store-dark" },
+  tent: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
+  ember_particle: { category: "props/particles", id: "particle-ember" },
+  campfire_fox: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
+  campfire_fox_happy: { category: "characters/noboru/reactions", id: "char-noboru-reaction-happy" },
+  campfire_fox_proud: { category: "characters/noboru/reactions", id: "char-noboru-reaction-proud" },
+  campfire_fox_encouraging: {
+    category: "characters/noboru/reactions",
+    id: "char-noboru-reaction-encouraging",
+  },
+  campfire_fox_peek: { category: "characters/noboru/base", id: "char-noboru-peeking-locked-detail" },
+  memory_book: { category: "backgrounds/utility", id: "bg-memory-book-frame" },
+  achievement_shrine: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
+} as const satisfies Record<string, ArtAssetRef>;
 
 export function resolveArtAsset(ref: ArtAssetRef): string {
   return `/art/${ref.category}/${ref.id}.webp`;

@@ -39,7 +39,7 @@
     --input: 220 14% 88%;
     --ring: 358 65% 54%;
     --radius: 0.75rem;
-    --radius-card: 1rem;
+    --radius-card: 1.25rem;
     --radius-hero: 2rem;
 
     /* Elevation — light mode only */
@@ -51,39 +51,43 @@
     /* Motion */
     --motion-fast: 150ms;
     --motion-standard: 250ms;
-    --motion-complex: 350ms;
+    --motion-complex: 400ms;
+    --motion-button: 120ms;
+    --motion-reward: 800ms;
+    --motion-level-up: 1200ms;
+    --motion-region: 1500ms;
 
     /* Mockup material system */
     --trail-glow: 39 91% 57%;
     --heading-story: 39 85% 55%;
     --reward: 270 55% 58%;
     --xp-gold: 43 90% 58%;
-    --glass-bg: 218 18% 15% / 0.88;
+    --glass-bg: 220 33% 3% / 0.95;
     --glass-border: 220 14% 96% / 0.1;
     --overlay-scrim: 220 18% 7% / 0.55;
     --nav-radius: 1.35rem;
 
     /* Typography — bundled via @fontsource (no Google Fonts fetch at build) */
     --font-noto-sans-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
-    --font-story: "Lora", "Noto Serif JP", Georgia, "Times New Roman", serif;
+    --font-story: "Cinzel", "Noto Serif JP", Georgia, "Times New Roman", serif;
   }
 
   .dark {
-    /* Surfaces — Mountain Night */
-    --background: 220 18% 7%;
-    --foreground: 220 14% 96%;
-    --surface: 218 18% 11%;
-    --card: 218 18% 15%;
-    --card-foreground: 220 14% 96%;
-    --popover: 218 18% 15%;
-    --popover-foreground: 220 14% 96%;
+    /* Surfaces — Mountain Night (VISUAL MD FILES Doc 01) */
+    --background: 220 33% 3%;
+    --foreground: 40 47% 93%;
+    --surface: 214 32% 7%;
+    --card: 214 32% 7%;
+    --card-foreground: 40 47% 93%;
+    --popover: 214 32% 7%;
+    --popover-foreground: 40 47% 93%;
 
     --primary: 358 65% 54%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 16% 11%;
     --secondary-foreground: 220 14% 96%;
     --muted: 220 16% 11%;
-    --muted-foreground: 220 10% 62%;
+    --muted-foreground: 38 18% 65%;
     --accent: 220 16% 11%;
     --accent-foreground: 220 14% 96%;
     --destructive: 355 78% 56%;
@@ -104,13 +108,13 @@
     --shadow-elevation-3: 0 0 0 1px hsl(218 14% 24% / 0.95), 0 8px 24px rgb(0 0 0 / 0.35);
     --shadow-elevation-4: 0 0 0 1px hsl(218 14% 26%), 0 16px 40px rgb(0 0 0 / 0.4);
 
-    --trail-glow: 38 92% 55%;
-    --heading-story: 38 88% 62%;
+    --trail-glow: 38 86% 72%;
+    --heading-story: 38 86% 72%;
     --reward: 270 60% 62%;
-    --xp-gold: 43 92% 62%;
-    --glass-bg: 218 18% 15% / 0.85;
-    --glass-border: 220 14% 96% / 0.12;
-    --overlay-scrim: 220 18% 7% / 0.65;
+    --xp-gold: 38 86% 72%;
+    --glass-bg: 220 33% 3% / 0.95;
+    --glass-border: 38 86% 72% / 0.15;
+    --overlay-scrim: 220 33% 3% / 0.65;
   }
 
   * {
@@ -197,6 +201,7 @@
     @apply rounded-card border backdrop-blur-md;
     background-color: hsl(var(--glass-bg));
     border-color: hsl(var(--glass-border));
+    box-shadow: 0 16px 48px rgb(0 0 0 / 0.35);
   }
 
   .glass-header {
@@ -212,7 +217,17 @@
   .text-story-title {
     font-family: var(--font-story);
     color: hsl(var(--heading-story));
-    @apply text-lg font-semibold uppercase tracking-widest;
+    @apply text-2xl font-bold tracking-wide;
+  }
+
+  .text-section-header {
+    font-family: var(--font-story);
+    color: hsl(var(--heading-story));
+    @apply text-xl font-semibold;
+  }
+
+  .text-label-sm {
+    @apply text-xs font-medium;
   }
 
   .text-xp-gold {
@@ -259,11 +274,101 @@
     transition-duration: var(--motion-complex);
   }
 
+  .motion-reward {
+    transition-duration: var(--motion-reward);
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-property: transform, opacity, box-shadow;
+  }
+
+  .motion-button {
+    transition-duration: var(--motion-button);
+    transition-timing-function: ease-out;
+    transition-property: transform, opacity, background-color, box-shadow;
+  }
+
+  .motion-level-up {
+    transition-duration: var(--motion-level-up);
+  }
+
+  .motion-region {
+    transition-duration: var(--motion-region);
+  }
+
+  .combo-milestone {
+    transition-duration: var(--motion-reward);
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .combo-streak-5 {
+    box-shadow: 0 0 10px hsl(var(--trail-glow) / 0.35);
+  }
+
+  .combo-streak-10 {
+    box-shadow:
+      0 0 14px hsl(var(--trail-glow) / 0.45),
+      0 0 24px hsl(var(--trail-glow) / 0.15);
+  }
+
+  .combo-streak-20 {
+    box-shadow:
+      0 0 18px hsl(var(--trail-glow) / 0.55),
+      0 0 32px hsl(var(--xp-gold) / 0.2);
+    filter: drop-shadow(0 0 6px hsl(var(--trail-glow) / 0.4));
+  }
+
+  .combo-streak-50 {
+    box-shadow:
+      0 0 22px hsl(var(--trail-glow) / 0.65),
+      0 0 40px hsl(var(--reward) / 0.25);
+    filter: drop-shadow(0 0 10px hsl(var(--xp-gold) / 0.5));
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .motion-fast,
     .motion-standard,
-    .motion-complex {
+    .motion-complex,
+    .motion-reward,
+    .motion-button,
+    .motion-region,
+    .combo-milestone {
       transition-duration: 0ms;
+    }
+
+    .combo-streak-5,
+    .combo-streak-10,
+    .combo-streak-20,
+    .combo-streak-50 {
+      box-shadow: none;
+      filter: none;
+    }
+  }
+
+  @keyframes lesson-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-4px);
+    }
+    40% {
+      transform: translateX(4px);
+    }
+    60% {
+      transform: translateX(-3px);
+    }
+    80% {
+      transform: translateX(3px);
+    }
+  }
+
+  @keyframes journey-node-pulse {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 8px hsl(var(--trail-glow) / 0.45));
+    }
+    50% {
+      filter: drop-shadow(0 0 16px hsl(var(--trail-glow) / 0.75));
     }
   }
 
@@ -286,6 +391,78 @@
     }
     100% {
       transform: scale(1);
+    }
+  }
+
+  @keyframes campfire-flicker {
+    0%,
+    100% {
+      transform: scaleY(1) scaleX(1) translateY(0);
+      opacity: 0.92;
+    }
+    50% {
+      transform: scaleY(1.08) scaleX(0.94) translateY(-2px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes campfire-ember-rise {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0.85;
+    }
+    100% {
+      transform: translateY(-28px) scale(0.4);
+      opacity: 0;
+    }
+  }
+
+  .campfire-glow {
+    background: radial-gradient(
+      circle,
+      hsl(var(--trail-glow) / 0.55) 0%,
+      hsl(var(--trail-glow) / 0.2) 45%,
+      transparent 72%
+    );
+  }
+
+  .campfire-flame {
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: linear-gradient(
+      to top,
+      hsl(var(--primary) / 0.95),
+      hsl(var(--trail-glow) / 0.9) 55%,
+      hsl(48 100% 72% / 0.75)
+    );
+    filter: blur(0.4px);
+    transform-origin: bottom center;
+    animation: campfire-flicker 1.8s ease-in-out infinite;
+  }
+
+  .campfire-flame--primary {
+    animation-duration: 1.6s;
+  }
+
+  .campfire-flame--secondary {
+    animation-duration: 2.1s;
+    animation-delay: 0.25s;
+    opacity: 0.85;
+  }
+
+  .campfire-flame--tertiary {
+    animation-duration: 1.9s;
+    animation-delay: 0.5s;
+    opacity: 0.7;
+  }
+
+  .campfire-ember {
+    animation: campfire-ember-rise 2.4s ease-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .campfire-flame,
+    .campfire-ember {
+      animation: none;
     }
   }
 }

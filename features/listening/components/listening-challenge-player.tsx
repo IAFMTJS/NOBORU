@@ -3,19 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { PageContainer } from "@/components/layout/page-container";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { GlassPanel } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { AudioPlayback } from "@/features/listening/components/audio-playback";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { ListeningChallengeDetailViewModel } from "@/features/listening/types/listening.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
@@ -119,35 +113,41 @@ export function ListeningChallengePlayer({
     <div className="space-y-4">
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
+      {challenge.exercises.length === 0 ? (
+        <YamaEmptyState
+          surface="trail"
+          title="Challenge route not yet revealed"
+          description="This listening path will open as exercises are added to the pavilion."
+          actionHref="/learn/listening"
+          actionLabel="Return to listening pavilion"
+        />
+      ) : null}
+
       {!finished && currentExercise ? (
         <>
           <ProgressBar value={progressPercent} label="Challenge progress" showValue />
 
           {phase === "listen" ? (
             <>
-              <Card className="shadow-elevation-1">
-                <CardHeader>
-                  <CardDescription>
-                    Part {exerciseIndex + 1} of {challenge.exercises.length}
-                  </CardDescription>
-                  <CardTitle className="text-heading-5">{currentExercise.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <AudioPlayback
-                    audioUrl={currentExercise.audioUrl}
-                    japaneseText={currentExercise.japaneseText}
-                  />
-                  {revealed ? (
-                    <p className="text-body-sm text-muted-foreground">
-                      {currentExercise.japaneseText}
-                    </p>
-                  ) : (
-                    <Button variant="ghost" className="w-full" onClick={() => setRevealed(true)}>
-                      Show Transcript
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+              <GlassPanel className="space-y-4 p-4 shadow-elevation-1">
+                <p className="text-caption text-muted-foreground">
+                  Part {exerciseIndex + 1} of {challenge.exercises.length}
+                </p>
+                <p className="text-heading-5 font-medium">{currentExercise.title}</p>
+                <AudioPlayback
+                  audioUrl={currentExercise.audioUrl}
+                  japaneseText={currentExercise.japaneseText}
+                />
+                {revealed ? (
+                  <p className="text-body-sm text-muted-foreground">
+                    {currentExercise.japaneseText}
+                  </p>
+                ) : (
+                  <Button variant="ghost" className="w-full" onClick={() => setRevealed(true)}>
+                    Show Transcript
+                  </Button>
+                )}
+              </GlassPanel>
               <Button className="w-full" onClick={() => setPhase("quiz")}>
                 Answer Question
               </Button>
@@ -156,25 +156,21 @@ export function ListeningChallengePlayer({
 
           {phase === "quiz" ? (
             <>
-              <Card className="shadow-elevation-1">
-                <CardHeader>
-                  <CardDescription>{currentExercise.title}</CardDescription>
-                  <CardTitle className="text-heading-5">{currentExercise.question}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {currentExercise.options.map((option, index) => (
-                    <Button
-                      key={option}
-                      variant="outline"
-                      className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
-                      disabled={answered}
-                      onClick={() => handleAnswer(index)}
-                    >
-                      {option}
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
+              <GlassPanel className="space-y-3 p-4 shadow-elevation-1">
+                <p className="text-caption text-muted-foreground">{currentExercise.title}</p>
+                <p className="text-heading-5 font-medium">{currentExercise.question}</p>
+                {currentExercise.options.map((option, index) => (
+                  <Button
+                    key={option}
+                    variant="outline"
+                    className="h-auto w-full justify-start whitespace-normal px-4 py-3 text-left"
+                    disabled={answered}
+                    onClick={() => handleAnswer(index)}
+                  >
+                    {option}
+                  </Button>
+                ))}
+              </GlassPanel>
               <Button
                 className="w-full"
                 disabled={!answered || saving}
@@ -189,24 +185,16 @@ export function ListeningChallengePlayer({
       ) : null}
 
       {finished ? (
-        <Card className="border-success/30 shadow-elevation-1">
-          <CardHeader>
-            <CardTitle>Challenge Complete</CardTitle>
-            <CardDescription>Score {score}%</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {!embedded ? (
-              <>
-                <Button className="w-full" asChild>
-                  <Link href="/learn/listening">Back to Listening</Link>
-                </Button>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/learn/mount-n5">Back to Mount N5</Link>
-                </Button>
-              </>
-            ) : null}
-          </CardContent>
-        </Card>
+        <GlassPanel className="space-y-3 border-success/30 p-4 shadow-elevation-1">
+          <p className="font-story text-story-title">Challenge Complete</p>
+          <p className="text-caption text-muted-foreground">Score {score}%</p>
+          <Button className="w-full" asChild>
+            <Link href="/learn/listening">Back to Listening</Link>
+          </Button>
+          <Button variant="outline" className="w-full" asChild>
+            <Link href="/learn/mount-n5">Back to Mount N5</Link>
+          </Button>
+        </GlassPanel>
       ) : null}
     </div>
   );
@@ -216,16 +204,13 @@ export function ListeningChallengePlayer({
   }
 
   return (
-    <PageContainer>
-      <ScreenHeader
-        title={challenge.title}
-        subtitle={challenge.description ?? "Multi-part listening challenge"}
-        action={
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/learn/listening">Back</Link>
-          </Button>
-        }
-      />
+    <StudyHubLayout
+      scene="study_atmosphere"
+      title={challenge.title}
+      subtitle={challenge.description ?? "Multi-part listening challenge"}
+      backHref="/study"
+      backLabel="Back to Study"
+    >
       <div className="flex flex-wrap items-center gap-2">
         {challenge.jlptLevel ? (
           <Badge variant="outline">{challenge.jlptLevel.toUpperCase()}</Badge>
@@ -234,6 +219,6 @@ export function ListeningChallengePlayer({
         {challenge.completed ? <Badge variant="secondary">Completed</Badge> : null}
       </div>
       {content}
-    </PageContainer>
+    </StudyHubLayout>
   );
 }

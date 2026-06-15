@@ -1,6 +1,13 @@
 "use client";
 
 import type { JourneyRegionViewModel } from "@/features/journey/types/journey.types";
+import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { JOURNEY_WORLD_ASSETS } from "@/lib/assets/art-mappings";
+import {
+  getNarrativeArcForRegion,
+  isNarrativeArcEntryRegion,
+} from "@/lib/design-system/narrative-regions";
+import type { RegionSlug } from "@/lib/design-system/regions";
 import { cn } from "@/lib/utils";
 
 type JourneyRegionGateProps = {
@@ -15,6 +22,9 @@ export function JourneyRegionGate({
   className,
 }: JourneyRegionGateProps) {
   const locked = region.availability === "locked";
+  const narrativeArc = getNarrativeArcForRegion(region.slug as RegionSlug);
+  const isArcEntry = isNarrativeArcEntryRegion(region.slug as RegionSlug);
+  const gateAsset = isArcEntry ? narrativeArc.gateIcon : JOURNEY_WORLD_ASSETS.region_gate;
 
   return (
     <div
@@ -26,35 +36,28 @@ export function JourneyRegionGate({
     >
       <div
         className={cn(
-          "mb-3 flex h-16 w-16 items-center justify-center rounded-lg border-[3px] backdrop-blur-md",
+          "mb-3 overflow-hidden rounded-xl border-2 backdrop-blur-md",
           locked
-            ? "border-white/20 bg-black/40 text-white/45"
-            : "border-warning/70 bg-warning/10 text-warning trail-glow-warning",
+            ? "border-white/20 bg-black/40 opacity-60 grayscale"
+            : "border-trail-glow/50 bg-black/30 trail-glow-warm",
         )}
         aria-hidden
       >
-        <svg viewBox="0 0 24 24" className="h-9 w-9">
-          <path
-            d="M4 4V20"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path d="M4 6H14L11.5 10L15 14H4" fill="currentColor" />
-          <path
-            d="M4 14H14L11.5 18L15 22H4"
-            fill="currentColor"
-            opacity={0.55}
-          />
-        </svg>
+        <WorldArtImage
+          asset={gateAsset}
+          alt=""
+          width={96}
+          height={64}
+          className="h-16 w-24 object-cover"
+        />
       </div>
 
-      <h2 className="text-heading-5 text-white drop-shadow-sm">{region.name}</h2>
+      <h2 className="font-story text-xl font-semibold text-white drop-shadow-sm">
+        {region.name}
+      </h2>
 
       {region.description ? (
-        <p className="mt-1 max-w-xs text-body-sm text-white/75">
-          {region.description}
-        </p>
+        <p className="mt-1 max-w-xs text-body-sm text-white/75">{region.description}</p>
       ) : null}
 
       {locked ? (
@@ -65,7 +68,7 @@ export function JourneyRegionGate({
               : "This region is not yet available.")}
         </p>
       ) : (
-        <p className="mt-2 text-caption uppercase tracking-wide text-white/55">
+        <p className="mt-2 text-caption uppercase tracking-wide text-trail-glow/80">
           Region checkpoint
         </p>
       )}

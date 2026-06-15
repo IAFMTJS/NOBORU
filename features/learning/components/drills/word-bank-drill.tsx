@@ -2,28 +2,27 @@
 
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
 import { cn } from "@/lib/utils";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
 import type { LessonWordBankStep } from "@/features/learning/types/lesson.types";
 
 type WordBankDrillProps = {
   step: LessonWordBankStep;
   onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
 };
 
 function arraysEqual(left: string[], right: string[]): boolean {
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
-export function WordBankDrill({ step, onAnswer }: WordBankDrillProps) {
+export function WordBankDrill({
+  step,
+  onAnswer,
+  disabled = false,
+}: WordBankDrillProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
 
@@ -37,17 +36,17 @@ export function WordBankDrill({ step, onAnswer }: WordBankDrillProps) {
   }, [selected, step.tokens]);
 
   function handleSelect(token: string) {
-    if (result !== null) return;
+    if (result !== null || disabled) return;
     setSelected((current) => [...current, token]);
   }
 
   function handleUndo() {
-    if (result !== null) return;
+    if (result !== null || disabled) return;
     setSelected((current) => current.slice(0, -1));
   }
 
   function handleClear() {
-    if (result !== null) return;
+    if (result !== null || disabled) return;
     setSelected([]);
   }
 
@@ -58,72 +57,77 @@ export function WordBankDrill({ step, onAnswer }: WordBankDrillProps) {
   }
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>
-          Production · {step.index}/{step.total}
-        </CardDescription>
-        <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
-        <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <LessonDrillLayout
+      prompt={`${step.prompt} · ${step.index}/${step.total}`}
+      result={result}
+      hero={
         <div
-          className="min-h-14 rounded-lg border border-dashed border-border bg-muted/30 p-3"
+          className="min-h-16 w-full max-w-md rounded-xl border border-dashed border-white/20 bg-black/25 p-4"
           aria-label="Your sentence"
         >
           {selected.length === 0 ? (
-            <p className="text-body-sm text-muted-foreground">Tap words below to build the sentence</p>
+            <p className="text-body-sm text-muted-foreground">
+              Tap words below to build the sentence
+            </p>
           ) : (
-            <p className="text-heading-5 leading-relaxed">{selected.join("")}</p>
+            <p className="font-story text-2xl font-semibold leading-relaxed text-heading-story sm:text-3xl">
+              {selected.join("")}
+            </p>
           )}
         </div>
-
-        <div className="flex flex-wrap gap-2">
-          {remainingTokens.map((token, index) => (
-            <Button
-              key={`${token}-${index}`}
+      }
+      footer={
+        <>
+          <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+          <div className="flex flex-wrap gap-2">
+            {remainingTokens.map((token, index) => (
+              <button
+                key={`${token}-${index}`}
+                type="button"
+                disabled={result !== null || disabled}
+                onClick={() => handleSelect(token)}
+                className="focus-ring rounded-lg border border-white/15 bg-black/35 px-3 py-2 text-body-sm font-medium hover:border-trail-glow/40"
+              >
+                {token}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button
               type="button"
-              variant="outline"
-              size="sm"
-              className="text-heading-6"
-              disabled={result !== null}
-              onClick={() => handleSelect(token)}
+              className="focus-ring flex-1 rounded-lg border border-white/15 py-2 text-body-sm disabled:opacity-40"
+              disabled={selected.length === 0 || result !== null || disabled}
+              onClick={handleUndo}
             >
-              {token}
-            </Button>
-          ))}
-        </div>
-
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="flex-1"
-            disabled={selected.length === 0 || result !== null}
-            onClick={handleUndo}
+              Undo
+            </button>
+            <button
+              type="button"
+              className="focus-ring flex-1 rounded-lg border border-white/15 py-2 text-body-sm disabled:opacity-40"
+              disabled={selected.length === 0 || result !== null || disabled}
+              onClick={handleClear}
+            >
+              Clear
+            </button>
+          </div>
+          <PrimaryClimbButton
+            className={cn("w-full", result === "correct" && "trail-glow-warm")}
+            disabled={selected.length !== step.correctOrder.length || result !== null || disabled}
+            onClick={handleCheck}
           >
-            Undo
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            className="flex-1"
-            disabled={selected.length === 0 || result !== null}
-            onClick={handleClear}
-          >
-            Clear
-          </Button>
-        </div>
-
-        <Button
-          className={cn("w-full", result === "correct" && "border-success/40 bg-success/10")}
-          disabled={selected.length !== step.correctOrder.length || result !== null}
-          onClick={handleCheck}
-        >
-          Check sentence
-        </Button>
-        <DrillFeedbackBanner result={result} />
-      </CardContent>
-    </Card>
+            Check sentence
+          </PrimaryClimbButton>
+        </>
+      }
+      explanation={
+        result === "incorrect" ? (
+          <LessonExplanationPanel
+            className="mt-3"
+            message="Not quite — here is the correct sentence."
+            correctAnswer={step.correctOrder.join("")}
+          />
+        ) : null
+      }
+    />
   );
 }

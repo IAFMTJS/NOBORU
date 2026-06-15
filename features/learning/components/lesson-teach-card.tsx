@@ -2,13 +2,7 @@
 
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { LessonTeachStep } from "@/features/learning/types/lesson.types";
 
@@ -22,32 +16,36 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
 
   if (content.type === "vocabulary") {
     return (
-      <Card>
-        <CardHeader>
-          <CardDescription>
+      <div className="flex flex-1 flex-col justify-center space-y-6 py-4">
+        <div className="space-y-4 text-center">
+          <p className="text-caption text-muted-foreground">
             Vocabulary · {step.index}/{step.total}
-          </CardDescription>
+          </p>
           <JapaneseText
             text={content.kanji ?? content.kana}
             reading={content.kanji ? content.kana : null}
-            size="xl"
+            size="hero"
           />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-body">{content.meaning}</p>
-          {content.partOfSpeech ? (
-            <Badge variant="secondary">{content.partOfSpeech}</Badge>
-          ) : null}
           {soundEnabled ? (
-            <AudioPlayback
-              audioUrl={content.audioUrl}
-              japaneseText={content.kana}
-              label="Listen to pronunciation"
-            />
+            <div className="flex justify-center">
+              <AudioPlayback
+                audioUrl={content.audioUrl}
+                japaneseText={content.kana}
+                label="Listen to pronunciation"
+              />
+            </div>
+          ) : null}
+        </div>
+
+        <div className="rounded-2xl border border-white/12 bg-black/40 p-4 backdrop-blur-sm">
+          <p className="text-center font-story text-xl text-trail-glow">{content.meaning}</p>
+          {content.partOfSpeech ? (
+            <div className="mt-3 flex justify-center">
+              <Badge variant="secondary">{content.partOfSpeech}</Badge>
+            </div>
           ) : null}
           {content.examples.length > 0 ? (
-            <div className="space-y-3 border-t border-border pt-3">
-              <p className="text-caption text-muted-foreground">Examples</p>
+            <div className="mt-4 space-y-3 border-t border-white/10 pt-3">
               {content.examples.map((example) => (
                 <JapaneseText
                   key={example.japaneseText}
@@ -59,85 +57,52 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
               ))}
             </div>
           ) : null}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
-  if (content.type === "hiragana") {
+  if (content.type === "hiragana" || content.type === "katakana") {
+    const label = content.type === "hiragana" ? "Hiragana" : "Katakana";
     return (
-      <Card>
-        <CardHeader>
-          <CardDescription>
-            Hiragana · {step.index}/{step.total}
-          </CardDescription>
-          <CardTitle className="font-japanese text-heading-1" lang="ja">
-            {content.character}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-heading-5">{content.romaji}</p>
-          <Badge variant="secondary">{content.rowLabel}</Badge>
-          {soundEnabled ? (
-            <AudioPlayback
-              audioUrl={null}
-              japaneseText={content.character}
-              label="Listen"
-            />
-          ) : null}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (content.type === "katakana") {
-    return (
-      <Card>
-        <CardHeader>
-          <CardDescription>
-            Katakana · {step.index}/{step.total}
-          </CardDescription>
-          <CardTitle className="font-japanese text-heading-1" lang="ja">
-            {content.character}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-heading-5">{content.romaji}</p>
-          <Badge variant="secondary">{content.rowLabel}</Badge>
-          {soundEnabled ? (
-            <AudioPlayback
-              audioUrl={null}
-              japaneseText={content.character}
-              label="Listen"
-            />
-          ) : null}
-        </CardContent>
-      </Card>
+      <div className="flex flex-1 flex-col items-center justify-center space-y-4 py-8 text-center">
+        <p className="text-caption text-muted-foreground">
+          {label} · {step.index}/{step.total}
+        </p>
+        <p className="font-japanese text-6xl font-semibold sm:text-7xl" lang="ja">
+          {content.character}
+        </p>
+        <p className="text-heading-4 text-foreground">{content.romaji}</p>
+        <Badge variant="secondary">{content.rowLabel}</Badge>
+        {soundEnabled ? (
+          <AudioPlayback audioUrl={null} japaneseText={content.character} label="Listen" />
+        ) : null}
+      </div>
     );
   }
 
   if (content.type === "kanji") {
     return (
-      <Card>
-        <CardHeader>
-          <CardDescription>
+      <div className="flex flex-1 flex-col justify-center space-y-6 py-4">
+        <div className="space-y-3 text-center">
+          <p className="text-caption text-muted-foreground">
             Kanji · {step.index}/{step.total}
-          </CardDescription>
-          <CardTitle className="font-japanese text-heading-1" lang="ja">
+          </p>
+          <p className="font-japanese text-6xl font-semibold sm:text-7xl" lang="ja">
             {content.character}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-body">{content.meaning}</p>
-          {content.strokeCount ? (
-            <Badge variant="outline">{content.strokeCount} strokes</Badge>
-          ) : null}
+          </p>
           {soundEnabled ? (
-            <AudioPlayback
-              audioUrl={null}
-              japaneseText={content.character}
-              label="Listen"
-            />
+            <div className="flex justify-center">
+              <AudioPlayback audioUrl={null} japaneseText={content.character} label="Listen" />
+            </div>
+          ) : null}
+        </div>
+        <div className="rounded-2xl border border-white/12 bg-black/40 p-4 backdrop-blur-sm">
+          <p className="text-center text-body-lg">{content.meaning}</p>
+          {content.strokeCount ? (
+            <p className="text-center text-caption text-muted-foreground">
+              {content.strokeCount} strokes
+            </p>
           ) : null}
           {content.onyomi.length > 0 ? (
             <p className="text-body-sm text-muted-foreground">
@@ -149,57 +114,38 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
               Kun: {content.kunyomi.join(" · ")}
             </p>
           ) : null}
-          {content.examples.length > 0 ? (
-            <div className="space-y-3 border-t border-border pt-3">
-              <p className="text-caption text-muted-foreground">Examples</p>
-              {content.examples.map((example) => (
-                <JapaneseText
-                  key={example.japaneseText}
-                  text={example.japaneseText}
-                  romaji={example.romaji}
-                  english={example.english}
-                  size="sm"
-                />
-              ))}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   if (content.type === "grammar") {
     return (
-      <Card>
-        <CardHeader>
-          <CardDescription>
-            Grammar · {step.index}/{step.total}
-          </CardDescription>
-          <CardTitle className="font-japanese text-heading-4" lang="ja">
-            {content.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-body">{content.meaning}</p>
-          {content.explanation ? (
-            <p className="text-body-sm text-muted-foreground">{content.explanation}</p>
-          ) : null}
-          {content.examples.length > 0 ? (
-            <div className="space-y-3 border-t border-border pt-3">
-              <p className="text-caption text-muted-foreground">Examples</p>
-              {content.examples.map((example) => (
-                <JapaneseText
-                  key={example.japaneseText}
-                  text={example.japaneseText}
-                  romaji={example.romaji}
-                  english={example.english}
-                  size="sm"
-                />
-              ))}
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
+      <GlassPanel className="space-y-4 p-5">
+        <p className="text-caption text-muted-foreground">
+          Grammar · {step.index}/{step.total}
+        </p>
+        <StoryTitle as="h2" className="font-japanese text-2xl normal-case" lang="ja">
+          {content.title}
+        </StoryTitle>
+        <p className="text-body">{content.meaning}</p>
+        {content.explanation ? (
+          <p className="text-body-sm text-muted-foreground">{content.explanation}</p>
+        ) : null}
+        {content.examples.length > 0 ? (
+          <div className="space-y-3 border-t border-glass-border pt-3">
+            {content.examples.map((example) => (
+              <JapaneseText
+                key={example.japaneseText}
+                text={example.japaneseText}
+                romaji={example.romaji}
+                english={example.english}
+                size="sm"
+              />
+            ))}
+          </div>
+        ) : null}
+      </GlassPanel>
     );
   }
 

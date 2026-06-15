@@ -1,71 +1,93 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/visual/drill-glass-card";
-import { cn } from "@/lib/utils";
-import { DrillFeedbackBanner } from "@/features/learning/components/drills/drill-feedback-banner";
+import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { cn } from "@/lib/utils";
 import type { LessonFillBlankStep } from "@/features/learning/types/lesson.types";
 
 type FillBlankDrillProps = {
   step: LessonFillBlankStep;
   onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
 };
 
-export function FillBlankDrill({ step, onAnswer }: FillBlankDrillProps) {
+export function FillBlankDrill({
+  step,
+  onAnswer,
+  disabled = false,
+}: FillBlankDrillProps) {
   const [selected, setSelected] = useState<number | null>(null);
+  const [shakeIndex, setShakeIndex] = useState<number | null>(null);
   const result =
     selected === null
       ? null
       : selected === step.correctIndex
         ? ("correct" as const)
         : ("incorrect" as const);
+  const correctAnswer = step.options[step.correctIndex];
+
+  useEffect(() => {
+    if (result !== "incorrect" || selected === null) return;
+    setShakeIndex(selected);
+    const timeoutId = window.setTimeout(() => setShakeIndex(null), 420);
+    return () => window.clearTimeout(timeoutId);
+  }, [result, selected]);
 
   return (
-    <Card className="shadow-elevation-1">
-      <CardHeader>
-        <CardDescription>
-          Production · {step.index}/{step.total}
-        </CardDescription>
-        <CardTitle className="text-heading-5">{step.prompt}</CardTitle>
-        <JapaneseText text={step.sentenceWithBlank} size="lg" />
-        <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {step.options.map((option, index) => {
-          const isSelected = selected === index;
-          const isCorrect = index === step.correctIndex;
-          const showResult = selected !== null;
+    <LessonDrillLayout
+      prompt={`${step.prompt} · ${step.index}/${step.total}`}
+      result={result}
+      hero={
+        <div className="space-y-3">
+          <JapaneseText text={step.sentenceWithBlank} size="hero" className="text-foreground" />
+          <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+        </div>
+      }
+      footer={
+        <>
+          {step.options.map((option, index) => {
+            const isSelected = selected === index;
+            const isCorrect = index === step.correctIndex;
+            const showResult = selected !== null;
 
-          return (
-            <Button
-              key={`${option}-${index}`}
-              variant="outline"
-              className={cn(
-                "h-auto w-full justify-start whitespace-normal px-4 py-3 text-left transition-colors duration-200 motion-reduce:transition-none",
-                showResult && isCorrect && "border-success/40 bg-success/10",
-                showResult && isSelected && !isCorrect && "border-destructive/40 bg-destructive/10",
-              )}
-              disabled={selected !== null}
-              onClick={() => {
-                setSelected(index);
-                onAnswer(isCorrect);
-              }}
-            >
-              {option}
-            </Button>
-          );
-        })}
-        <DrillFeedbackBanner result={result} />
-      </CardContent>
-    </Card>
+            return (
+              <button
+                key={`${option}-${index}`}
+                type="button"
+                disabled={disabled || selected !== null}
+                onClick={() => {
+                  setSelected(index);
+                  onAnswer(isCorrect);
+                }}
+                className={cn(
+                  "focus-ring w-full rounded-xl border px-4 py-3 text-left text-body-sm font-medium transition-all duration-200 motion-reduce:transition-none",
+                  "border-white/10 bg-black/30 hover:border-trail-glow/40 hover:bg-black/45",
+                  showResult && isCorrect && "border-trail-glow/60 bg-trail-glow/15 trail-glow-warm",
+                  showResult &&
+                    isSelected &&
+                    !isCorrect &&
+                    "border-destructive/50 bg-destructive/10 animate-[lesson-shake_0.42s_ease-in-out]",
+                  shakeIndex === index && "animate-[lesson-shake_0.42s_ease-in-out]",
+                )}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </>
+      }
+      explanation={
+        result === "incorrect" ? (
+          <LessonExplanationPanel
+            className="mt-3"
+            message="Not quite — here is the right word."
+            correctAnswer={correctAnswer}
+          />
+        ) : null
+      }
+    />
   );
 }

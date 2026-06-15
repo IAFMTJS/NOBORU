@@ -16,6 +16,8 @@
     "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "assets:validate": "node scripts/art-direction/validate-mappings.mjs",
+    "assets:audit-immersion": "node scripts/art-direction/audit-immersion.mjs",
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
     "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs"

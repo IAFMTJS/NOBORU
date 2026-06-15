@@ -42,7 +42,7 @@ export function OfflineSyncRewardsFeedback({
         {...scaleIn}
         initial="initial"
         animate="animate"
-        className="mx-auto max-w-lg space-y-3 rounded-xl border border-primary/25 bg-card p-4 shadow-elevation-3"
+        className="mx-auto max-w-lg space-y-3 rounded-xl border border-primary/25 bg-black/50 p-4 shadow-elevation-3 backdrop-blur-md"
         role="status"
         aria-live="polite"
       >

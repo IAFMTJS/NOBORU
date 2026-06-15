@@ -13,6 +13,7 @@ import { trialService } from "@/features/trials/services/trial.service";
 import { companionService } from "@/features/companion/services/companion.service";
 import { chestService } from "@/features/chests/services/chest.service";
 import { collectibleService } from "@/features/collectibles/services/collectible.service";
+import { shrineProtectionService } from "@/features/streak-protection/services/shrine-protection.service";
 import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { buildProgressionPreview } from "@/lib/progression/preview.service";
 import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
@@ -55,6 +56,8 @@ class DashboardServerService {
       companionNext,
       collectibleNext,
       chestNext,
+      chests,
+      shrineProtection,
     ] = await Promise.all([
       learningPathRepository.listPublishedRegionsWithCurriculum(),
       getCachedProgressRows(profile.userId),
@@ -74,6 +77,8 @@ class DashboardServerService {
         profile.currentRegionSlug,
       ),
       chestService.getNextEligibleChest(profile.userId),
+      chestService.listEligible(profile.userId),
+      shrineProtectionService.getSummary(profile.userId),
     ]);
 
     const learningPath = learningPathService.buildLearningPath(
@@ -209,6 +214,8 @@ class DashboardServerService {
               ),
         label: `${quests.daily.completedCount}/${quests.daily.totalCount} daily quests`,
       },
+      chests,
+      shrineProtection,
     };
   }
 }

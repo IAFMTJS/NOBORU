@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input";
+import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { SelectionCard } from "@/features/onboarding/components/selection-card";
 import type { VocabularyListEntry } from "@/features/vocabulary/types/vocabulary.types";
 
@@ -88,7 +89,11 @@ export function VocabularySelectionList({
           />
         ))}
         {filtered.length === 0 ? (
-          <p className="text-body-sm text-muted-foreground">No words match your search.</p>
+          <YamaEmptyState
+            surface="search"
+            title="No words on this path"
+            description="Adjust your search — different characters or a broader term may reveal the word you need."
+          />
         ) : null}
       </div>
     </div>

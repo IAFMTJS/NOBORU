@@ -53,15 +53,15 @@ From [immersive-navigation-system.md](./immersive-navigation-system.md):
 
 | Tab | Purpose | Primary Content |
 |-----|---------|-----------------|
-| **Camp** | Player headquarters | Daily goals, streak, continue learning, quests, Yama updates |
-| **Journey** | Main progression | World path, lessons, checkpoints, region progression |
-| **Dojo** | Training Grounds | Kana, vocabulary, grammar, listening, review queue, weakness drills |
-| **World** | Discovery | Regions, lore, trials, games, community, collectibles, achievements |
-| **Profile** | Player identity | Stats, achievements, customization, settings entry |
+| **Journey** | Main progression | Continuous mountain trail, lessons, checkpoints, region progression |
+| **Camp** | Player headquarters | Campfire, quests, streak shrine, reward chest, merchant, fox companion |
+| **Study** | Travel study area | Vocabulary, kanji, grammar, listening, review queue, weakness drills |
+| **Bag** | Backpack inventory | Cosmetics, items, collected gear |
+| **Profile** | Travel record | Avatar, title, journey status, achievements, collections, settings entry |
 
 Settings is accessed from Profile — not a sixth tab.
 
-Legacy routes `/home` and `/explore` redirect to `/camp` and `/world`.
+Legacy routes: `/home` → `/camp`, `/dojo` → `/study`, `/world/inventory` → `/bag`. Secondary discovery routes (`/world`, `/games`, `/community`, `/trials`, `/achievements`) are reachable from Camp, Study, or Profile — see [route-map.md](./route-map.md).
 
 ---
 
@@ -77,10 +77,12 @@ Legacy routes `/home` and `/explore` redirect to `/camp` and `/world`.
 | `/` | root | Public | Landing / redirect to Camp |
 | `/camp` | `(app)` | Protected | Camp headquarters (daily dashboard) |
 | `/home` | `(app)` | Protected | Redirect → `/camp` |
-| `/learn` | `(app)` | Protected | Journey path hub |
-| `/dojo` | `(app)` | Protected | Training Grounds hub |
-| `/review` | `(app)` | Protected | Review session (Dojo child) |
-| `/world` | `(app)` | Protected | World discovery hub |
+| `/learn` | `(app)` | Protected | Journey path hub (continuous world scroll) |
+| `/study` | `(app)` | Protected | Study hub (travel study area) |
+| `/dojo` | `(app)` | Protected | Redirect → `/study` |
+| `/bag` | `(app)` | Protected | Backpack inventory |
+| `/review` | `(app)` | Protected | Review session (Study child) |
+| `/world` | `(app)` | Protected | Secondary discovery hub (not primary nav) |
 | `/explore` | `(app)` | Protected | Redirect → `/world` |
 | `/games` | `(app)` | Protected | Game center |
 | `/community` | `(app)` | Protected | Community hub (placeholder MVP) |
