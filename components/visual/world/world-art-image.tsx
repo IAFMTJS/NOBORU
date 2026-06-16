@@ -34,7 +34,7 @@ export function WorldArtImage({
       priority={priority}
       className={cn(
         renderMode === "icon"
-          ? "object-cover object-center mix-blend-screen"
+          ? "object-contain object-center"
           : "object-contain",
         className,
       )}

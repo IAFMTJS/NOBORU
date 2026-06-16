@@ -73,7 +73,7 @@ function StudyIcon({ src }: { src: string | null }) {
       width={22}
       height={22}
       aria-hidden
-      className="shrink-0 object-cover object-center mix-blend-screen"
+      className="shrink-0 object-contain object-center"
     />
   );
 }

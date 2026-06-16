@@ -8,24 +8,25 @@ import { X } from "lucide-react";
 import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { Badge } from "@/components/ui/badge";
+import { IllustratedScreen } from "@/components/visual/illustrated-screen";
+import { CampCampfire, type CampfireIntensity } from "@/components/visual/world/camp-campfire";
+import { CampFoxIdle } from "@/components/visual/world/camp-fox-idle";
+import { CampQuestBoardHotspot } from "@/components/visual/world/camp-quest-board-hotspot";
+import {
+  CampRewardChest,
+  type CampRewardChestState,
+} from "@/components/visual/world/camp-reward-chest";
+import {
+  CampShrineHotspot,
+  resolveShrineLanternAsset,
+} from "@/components/visual/world/camp-shrine-hotspot";
+import { CampWeatherOverlay } from "@/components/visual/world/camp-weather-overlay";
+import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { WorldDialogueBubble } from "@/components/visual/world-dialogue-bubble";
 import { ChestOpenCeremony } from "@/features/chests/components/chest-open-ceremony";
 import type { ChestClaimResult } from "@/features/chests/types/chest.types";
 import { DailyQuestBoard } from "@/features/gamification/components/daily-quest-board";
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
-import {
-  CampCampfire,
-  CampFoxIdle,
-  CampQuestBoardHotspot,
-  CampRewardChest,
-  CampShrineHotspot,
-  CampWeatherOverlay,
-  WorldArtImage,
-  resolveShrineLanternAsset,
-  type CampRewardChestState,
-  type CampfireIntensity,
-} from "@/components/visual/world";
-import { WorldDialogueBubble } from "@/components/visual/world-dialogue-bubble";
-import { IllustratedScreen } from "@/components/visual";
 import { CAMP_WORLD_ASSETS } from "@/lib/assets/art-mappings";
 import { cn } from "@/lib/utils";
 
@@ -205,6 +206,7 @@ export function CampScreen({ data }: CampScreenProps) {
     5,
     Math.max(1, Math.ceil(data.stats.currentStreak / 7) || 1),
   );
+  const scenePanelOpen = questBoardOpen || shrineOpen;
 
   useEffect(() => {
     if (searchParams?.get("quests") === "1") {
@@ -278,17 +280,21 @@ export function CampScreen({ data }: CampScreenProps) {
             <CampFoxIdle />
           </div>
 
-          <CampQuestBoardHotspot
-            className="bottom-[40%] right-[4%]"
-            hasActiveQuests={hasActiveQuests}
-            onClick={() => setQuestBoardOpen(true)}
-          />
+          {!scenePanelOpen ? (
+            <CampQuestBoardHotspot
+              className="bottom-[40%] right-[4%]"
+              hasActiveQuests={hasActiveQuests}
+              onClick={() => setQuestBoardOpen(true)}
+            />
+          ) : null}
 
-          <CampShrineHotspot
-            className="bottom-[38%] left-[2%]"
-            streakDays={data.stats.currentStreak}
-            onClick={() => setShrineOpen(true)}
-          />
+          {!scenePanelOpen ? (
+            <CampShrineHotspot
+              className="bottom-[38%] left-[2%]"
+              streakDays={data.stats.currentStreak}
+              onClick={() => setShrineOpen(true)}
+            />
+          ) : null}
 
           <CampRewardChest
             className="bottom-[24%] left-[14%]"
@@ -297,34 +303,42 @@ export function CampScreen({ data }: CampScreenProps) {
             onClick={() => void claimChest()}
           />
 
-          <CampWorldHotspotLink
-            label="Merchant"
-            href="/shop"
-            asset={CAMP_WORLD_ASSETS.merchant}
-            className="bottom-[26%] right-[12%]"
-          />
+          {!scenePanelOpen ? (
+            <CampWorldHotspotLink
+              label="Merchant"
+              href="/shop"
+              asset={CAMP_WORLD_ASSETS.merchant}
+              className="bottom-[26%] right-[12%]"
+            />
+          ) : null}
 
-          <CampWorldHotspotLink
-            label="Tent"
-            href="/profile"
-            asset={CAMP_WORLD_ASSETS.tent}
-            className="bottom-[34%] right-[28%]"
-          />
+          {!scenePanelOpen ? (
+            <CampWorldHotspotLink
+              label="Tent"
+              href="/profile"
+              asset={CAMP_WORLD_ASSETS.tent}
+              className="bottom-[34%] right-[28%]"
+            />
+          ) : null}
 
-          <CampWorldHotspotLink
-            label="Memory"
-            href="/memory-book"
-            asset={CAMP_WORLD_ASSETS.memory_book}
-            className="bottom-[22%] right-[30%]"
-          />
+          {!scenePanelOpen ? (
+            <CampWorldHotspotLink
+              label="Memory"
+              href="/memory-book"
+              asset={CAMP_WORLD_ASSETS.memory_book}
+              className="bottom-[22%] right-[30%]"
+            />
+          ) : null}
 
-          <CampWorldHotspotLink
-            label="Shrine"
-            href="/achievements"
-            asset={CAMP_WORLD_ASSETS.achievement_shrine}
-            glow
-            className="bottom-[30%] left-[18%]"
-          />
+          {!scenePanelOpen ? (
+            <CampWorldHotspotLink
+              label="Shrine"
+              href="/achievements"
+              asset={CAMP_WORLD_ASSETS.achievement_shrine}
+              glow
+              className="bottom-[30%] left-[18%]"
+            />
+          ) : null}
 
           <CampScenePanel
             open={questBoardOpen}

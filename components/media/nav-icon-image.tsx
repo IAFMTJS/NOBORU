@@ -23,7 +23,7 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
   return (
     <span
       className={cn(
-        "relative inline-flex h-5 w-5 shrink-0 overflow-hidden rounded-[0.45rem] transition-all duration-300",
+        "relative inline-flex h-5 w-5 shrink-0 items-center justify-center transition-all duration-300",
         active ? cn("scale-110 opacity-100", config.activeIconDropShadow) : "opacity-55",
         className,
       )}
@@ -35,7 +35,7 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
         width={24}
         height={24}
         aria-hidden
-        className="h-full w-full object-cover object-center mix-blend-screen [transform:scale(1.4)]"
+        className="h-full w-full object-contain object-center"
       />
     </span>
   );

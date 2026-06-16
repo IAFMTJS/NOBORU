@@ -4,8 +4,6 @@ import Link from "next/link";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { StoryTitle } from "@/components/visual/story-title";
-import { YamaPresence } from "@/features/yama/components/yama-presence";
-import { yamaService } from "@/features/yama/services/yama.service";
 import { cn } from "@/lib/utils";
 
 type JourneyHudProps = {
@@ -52,12 +50,6 @@ export function JourneyHud({
 
       <p className="ml-auto shrink-0 text-caption text-white/75">Lv {levelLabel}</p>
 
-      <YamaPresence
-        presence={yamaService.resolveNavPresence("journey")}
-        size="xs"
-        showMessage={false}
-        className="ml-1 shrink-0"
-      />
     </header>
   );
 }

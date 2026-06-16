@@ -35,7 +35,7 @@ export function UiIconImage({ name, className, size = 20 }: UiIconImageProps) {
   return (
     <span
       className={cn(
-        "relative inline-flex shrink-0 overflow-hidden rounded-[0.35rem]",
+        "relative inline-flex shrink-0 items-center justify-center",
         className,
       )}
       style={{ width: size, height: size }}
@@ -47,7 +47,7 @@ export function UiIconImage({ name, className, size = 20 }: UiIconImageProps) {
         width={size}
         height={size}
         aria-hidden
-        className="h-full w-full object-cover object-center mix-blend-screen [transform:scale(1.4)]"
+        className="h-full w-full object-contain object-center"
       />
     </span>
   );

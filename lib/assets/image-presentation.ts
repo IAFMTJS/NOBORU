@@ -19,7 +19,7 @@ export type CharacterStickerPresentation = {
   scale: number;
 };
 
-export const CHARACTER_STICKER_SCALE = 2.25;
+export const CHARACTER_STICKER_SCALE = 1.15;
 
 export function resolveTrailScrollPresentation(options?: {
   scrollCropFocus?: { x: number; y: number };
