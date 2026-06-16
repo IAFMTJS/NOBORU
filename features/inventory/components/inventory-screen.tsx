@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SceneImage } from "@/components/media/scene-image";
 import { Button } from "@/components/ui";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { GlassPanel, StoryTitle } from "@/components/visual/primitives";
+import { ImmersiveWorldShell } from "@/components/visual/shells";
 import { BagCapacityCard } from "@/features/inventory/components/bag-capacity-card";
 import { InventoryDetailCard } from "@/features/inventory/components/inventory-detail-card";
 import { PouchAccordionSection } from "@/features/inventory/components/pouch-accordion-section";
@@ -130,99 +131,91 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
   }
 
   return (
-    <IllustratedScreen
-      scrim="none"
-      className="min-h-dvh"
+    <ImmersiveWorldShell
+      vignette="hub"
       background={
         <SceneImage
           scene="inventory_backpack"
           alt="Open travel backpack on the trail"
-          className="absolute inset-0 min-h-dvh rounded-none"
+          className="absolute inset-0 h-full w-full rounded-none"
           priority
         />
       }
     >
-      <div className="relative flex min-h-dvh flex-col">
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85"
-          aria-hidden
-        />
-
-        <header className="relative z-10 shrink-0 p-4 pt-3">
-          <GlassPanel
-            variant="header"
-            className="space-y-2 rounded-card border-amber-900/40 bg-black/65 p-3"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <StoryTitle as="h1" className="text-base uppercase tracking-wide text-amber-200">
-                  Backpack
-                </StoryTitle>
-                <p className="text-caption text-muted-foreground">
-                  Pouches laid open - inspect what you carry on the climb
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="secondary"
-                className="h-9 rounded-xl border border-white/10 bg-black/50 px-3 text-xs"
-                onClick={handleQuickUseOpen}
-              >
-                Quick Use
-              </Button>
+      <header className="relative z-10 shrink-0 p-4 pt-3">
+        <GlassPanel
+          variant="header"
+          className="space-y-2 rounded-card border-amber-900/40 bg-black/65 p-3"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <StoryTitle as="h1" className="text-base uppercase tracking-wide text-amber-200">
+                Backpack
+              </StoryTitle>
+              <p className="text-caption text-muted-foreground">
+                Pouches laid open - inspect what you carry on the climb
+              </p>
             </div>
-          </GlassPanel>
-        </header>
-
-        <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2">
-          {viewModel.items.length === 0 ? (
-            <YamaEmptyState
-              surface="generic"
-              title="Pouches await discovery"
-              description="Hidden treasures will appear in your pack as you trade with merchants and climb the trail."
-              actionHref="/shop"
-              actionLabel="Visit the merchant"
-            />
-          ) : (
-            <>
-              {sectionsWithItems.map(({ section, items }) => (
-                <PouchAccordionSection
-                  key={section.id}
-                  title={section.label}
-                  subtitle={section.subtitle}
-                  items={items}
-                  selectedId={selectedItem?.id ?? null}
-                  expanded={expandedSections[section.id]}
-                  onToggle={() => toggleSection(section.id)}
-                  onSelectItem={setSelectedId}
-                />
-              ))}
-              <BagCapacityCard
-                usedSlots={viewModel.capacity.usedSlots}
-                totalSlots={viewModel.capacity.totalSlots}
-              />
-            </>
-          )}
-        </main>
-
-        <footer className="relative z-10 shrink-0 p-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2">
-          <InventoryDetailCard
-            item={selectedItem}
-            onUse={() => useOne(selectedItem)}
-            onUseMultiple={handleQuickUseOpen}
-            onToggleEquip={() => toggleEquip(selectedItem)}
-          />
-        </footer>
-
-        {nearCapacity ? (
-          <div
-            className="pointer-events-none absolute right-4 top-[5.5rem] z-20 rounded-lg border border-primary/30 bg-black/65 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary"
-            aria-hidden
-          >
-            Almost Full
+            <Button
+              type="button"
+              variant="secondary"
+              className="h-9 rounded-xl border border-white/10 bg-black/50 px-3 text-xs"
+              onClick={handleQuickUseOpen}
+            >
+              Quick Use
+            </Button>
           </div>
-        ) : null}
-      </div>
+        </GlassPanel>
+      </header>
+
+      <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2">
+        {viewModel.items.length === 0 ? (
+          <YamaEmptyState
+            surface="generic"
+            title="Pouches await discovery"
+            description="Hidden treasures will appear in your pack as you trade with merchants and climb the trail."
+            actionHref="/shop"
+            actionLabel="Visit the merchant"
+          />
+        ) : (
+          <>
+            {sectionsWithItems.map(({ section, items }) => (
+              <PouchAccordionSection
+                key={section.id}
+                title={section.label}
+                subtitle={section.subtitle}
+                items={items}
+                selectedId={selectedItem?.id ?? null}
+                expanded={expandedSections[section.id]}
+                onToggle={() => toggleSection(section.id)}
+                onSelectItem={setSelectedId}
+              />
+            ))}
+            <BagCapacityCard
+              usedSlots={viewModel.capacity.usedSlots}
+              totalSlots={viewModel.capacity.totalSlots}
+            />
+          </>
+        )}
+      </main>
+
+      <footer className="relative z-10 shrink-0 p-4 pt-2">
+        <InventoryDetailCard
+          item={selectedItem}
+          onUse={() => useOne(selectedItem)}
+          onUseMultiple={handleQuickUseOpen}
+          onToggleEquip={() => toggleEquip(selectedItem)}
+        />
+      </footer>
+
+      {nearCapacity ? (
+        <div
+          className="pointer-events-none absolute right-4 top-[5.5rem] z-20 rounded-lg border border-primary/30 bg-black/65 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary"
+          aria-hidden
+        >
+          Almost Full
+        </div>
+      ) : null}
 
       <QuickUseSheet
         open={quickUseOpen}
@@ -237,6 +230,6 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
         }
         onUse={() => useMultiple(quickUseItem, quickUseQuantity)}
       />
-    </IllustratedScreen>
+    </ImmersiveWorldShell>
   );
 }

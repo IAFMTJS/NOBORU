@@ -26,7 +26,7 @@ export const SCENE_BACKGROUND_ASSETS: Record<SceneId, ArtAssetRef> = {
   memory_book_journal: { category: "backgrounds/utility", id: "bg-memory-book-frame" },
   seasonal_sakura: { category: "backgrounds/events", id: "bg-event-sakura-trail" },
   social_gathering: { category: "backgrounds/utility", id: "bg-social-leaderboard-dark" },
-  inventory_backpack: { category: "backgrounds/camp", id: "bg-camp-home-night" },
+  inventory_backpack: { category: "backgrounds/camp", id: "bg-camp-daily-quests" },
   review_atmosphere: { category: "backgrounds/camp", id: "bg-camp-offline" },
   study_atmosphere: { category: "backgrounds/trail", id: "bg-trail-forest-current-night" },
   profile_lantern_path: { category: "backgrounds/utility", id: "bg-settings-dark-panel" },
@@ -197,10 +197,10 @@ export const NOBORU_POSE_ASSETS = {
 export type NoboruPoseId = keyof typeof NOBORU_POSE_ASSETS;
 
 export const NAV_TAB_ICON_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
-  journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-active-blue" },
+  journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-active-amber" },
   camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
   study: { category: "ui/icons/nav", id: "icon-nav-study-book-active-green" },
-  bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-active-blue" },
+  bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-active-amber" },
   profile: { category: "ui/icons/nav", id: "icon-nav-profile-fox-active-gold" },
 };
 
@@ -371,7 +371,7 @@ export const CAMP_WORLD_ASSETS = {
   shrine_lantern: { category: "props/camp", id: "prop-camp-shrine-lantern-stone" },
   shrine_lantern_paper: { category: "props/camp", id: "prop-camp-shrine-lantern-paper" },
   shrine_glow: { category: "props/camp", id: "prop-camp-shrine-lantern-glow" },
-  merchant: { category: "characters/noboru/base", id: "char-noboru-standing-traveler" },
+  merchant: { category: "props/camp", id: "prop-camp-merchant-stand" },
   merchant_scene: { category: "backgrounds/utility", id: "bg-shop-general-store-dark" },
   tent: { category: "props/camp", id: "prop-camp-tent-canvas" },
   ember_particle: { category: "props/particles", id: "particle-ember" },

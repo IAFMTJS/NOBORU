@@ -75,11 +75,10 @@ export function JourneyScrollIndicator({
   return (
     <div
       className={cn(
-        "pointer-events-none absolute right-2 top-24 z-20 flex flex-col items-center",
+        "pointer-events-none absolute right-2 top-24 z-20 flex flex-col items-center bottom-nav-clearance",
         className,
       )}
       aria-hidden
-      style={{ bottom: "calc(6rem + env(safe-area-inset-bottom))" }}
     >
       <div
         className="relative h-full w-1 rounded-full bg-white/10"

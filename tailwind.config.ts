@@ -96,6 +96,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 8px)",
         card: "var(--radius-card)",
         hero: "var(--radius-hero)",
+        nav: "var(--nav-radius)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
@@ -105,6 +106,19 @@ const config: Config = {
       boxShadow: {
         "trail-glow": "0 0 14px hsl(var(--trail-glow) / 0.45)",
         "nav-active": "0 0 20px hsl(var(--trail-glow) / 0.35)",
+      },
+      height: {
+        content: "var(--content-height)",
+        nav: "var(--nav-height)",
+        app: "var(--app-height)",
+      },
+      minHeight: {
+        content: "var(--content-height)",
+        nav: "var(--nav-height)",
+        app: "var(--app-height)",
+      },
+      maxWidth: {
+        phone: "var(--phone-max-width)",
       },
       fontSize: {
         "heading-1": ["3rem", { lineHeight: "1.1", fontWeight: "600" }],

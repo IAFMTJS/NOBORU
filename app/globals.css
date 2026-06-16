@@ -67,6 +67,16 @@
     --overlay-scrim: 220 18% 7% / 0.55;
     --nav-radius: 1.35rem;
 
+    /* Unified viewport shell */
+    --app-height: 100dvh;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-height: 5.5rem;
+    --nav-clearance: calc(var(--nav-height) + var(--safe-bottom));
+    --hud-height: 3.25rem;
+    --content-height: calc(var(--app-height) - var(--nav-clearance));
+    --phone-max-width: 32rem;
+
     /* Typography — bundled via @fontsource (no Google Fonts fetch at build) */
     --font-noto-sans-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
     --font-story: "Cinzel", "Noto Serif JP", Georgia, "Times New Roman", serif;
@@ -244,6 +254,57 @@
 
   .overlay-scrim {
     background-color: hsl(var(--overlay-scrim));
+  }
+
+  .h-content {
+    height: var(--content-height);
+  }
+
+  .min-h-content {
+    min-height: var(--content-height);
+  }
+
+  .pb-nav-clearance {
+    padding-bottom: var(--nav-clearance);
+  }
+
+  .bottom-nav-clearance {
+    bottom: var(--nav-clearance);
+  }
+
+  .pb-safe-bottom {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .min-h-nav {
+    min-height: var(--nav-height);
+  }
+
+  .max-w-phone {
+    max-width: var(--phone-max-width);
+  }
+
+  .rounded-nav {
+    border-radius: var(--nav-radius);
+  }
+
+  .nav-bar-texture {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)),
+      var(--nav-texture-url);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .material-hud {
+    @apply rounded-card border backdrop-blur-md;
+    border-color: hsl(var(--glass-border));
+    background-color: hsl(var(--glass-bg) / 0.55);
+  }
+
+  .material-pouch {
+    @apply rounded-2xl border backdrop-blur-md;
+    border-color: hsl(38 86% 72% / 0.2);
+    background: linear-gradient(to bottom, hsl(24 45% 12% / 0.8), hsl(220 33% 3% / 0.7));
   }
 
   .shadow-elevation-1 {

@@ -1,17 +1,34 @@
+/** Centralized visual system — mockup-aligned primitives, shells, and domain visuals. */
+
+export * from "./tokens";
+export * from "./primitives";
+export * from "./shells";
+export * from "./art";
+export * from "./camp";
+export * from "./navigation";
+export * from "./loading";
+
 export { ContentHubScreen } from "./content-hub-screen";
 export { FeedbackSparkOverlay } from "./feedback-spark-overlay";
-export { FullscreenLoadingShell } from "./fullscreen-loading-shell";
-export { GlassPanel } from "./glass-panel";
-export { IllustratedScreen } from "./illustrated-screen";
-export { PrimaryClimbButton } from "./primary-climb-button";
-export { RewardChip } from "./reward-chip";
-export { StoryTitle } from "./story-title";
+export * from "./drill-glass-card";
+
+// Trail / world nodes (journey + learning reuse)
 export {
-  CampCampfire,
-  CampQuestBoardHotspot,
-  CampRewardChest,
-  CampShrineHotspot,
-  WorldArtImage,
-  type CampRewardChestState,
-  type CampfireIntensity,
+  WorldBossNode,
+  WorldLessonNode,
+  WorldToriiGate,
+  EventTrailBranch,
+  AchievementRevealCeremony,
+  CharacterStage,
+  LevelUpCeremony,
+  MemoryBookSpread,
+  MerchantStand,
+  MessengerBoardRow,
+  RecognitionPost,
+  TrailAnswerPad,
 } from "./world";
+
+// Back-compat aliases
+export { IllustratedScreen } from "./primitives/illustrated-screen";
+export { FullscreenLoadingShell, LoadingShell } from "./loading";
+export { BottomNav, NavTabItem } from "./navigation";

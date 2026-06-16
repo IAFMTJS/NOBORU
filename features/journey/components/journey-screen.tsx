@@ -201,7 +201,7 @@ export function JourneyScreen({
 
   return (
     <>
-      <div className="relative flex h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] min-h-0 flex-col overflow-x-hidden">
+      <div className="relative flex h-content min-h-0 flex-col overflow-x-hidden">
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-background/80 via-background/30 to-transparent"
           aria-hidden
@@ -246,7 +246,7 @@ export function JourneyScreen({
         {activeEvent ? (
           <JourneyEventBanner
             event={activeEvent}
-            className="pointer-events-auto fixed left-4 top-[5.1rem] z-20"
+            className="pointer-events-auto fixed left-4 top-[calc(var(--hud-height)+0.75rem)] z-20"
           />
         ) : null}
 
@@ -254,7 +254,7 @@ export function JourneyScreen({
           type="button"
           aria-label="Region overview"
           onClick={() => setRegionsOverviewOpen(true)}
-          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/45 backdrop-blur-md"
+          className="fixed bottom-nav-clearance left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/45 backdrop-blur-md"
           title="Region overview"
         >
           <UiIconImage name="map" size={22} />
@@ -263,7 +263,7 @@ export function JourneyScreen({
         {activeEvent ? (
           <Link
             href="/world/events"
-            className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-20 flex h-12 w-12 items-center justify-center"
+            className="fixed bottom-nav-clearance right-4 z-20 flex h-12 w-12 items-center justify-center"
             aria-label={`Seasonal event: ${activeEvent.title}`}
             title={activeEvent.title}
           >

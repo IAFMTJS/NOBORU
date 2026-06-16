@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 
-import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { WorldArtImage } from "@/components/visual/art/world-art-image";
 import { InventorySlotCard } from "@/features/inventory/components/inventory-slot-card";
 import type { InventoryItemViewModel } from "@/features/inventory/types/inventory.types";
 import { INVENTORY_ITEM_ASSETS } from "@/lib/assets/lesson-node-assets";
@@ -28,7 +28,7 @@ export function PouchAccordionSection({
   onSelectItem,
 }: PouchAccordionSectionProps) {
   return (
-    <section className="rounded-2xl border border-amber-900/35 bg-gradient-to-b from-amber-950/35 to-black/45 p-2 shadow-[inset_0_1px_0_rgba(246,174,45,0.1)]">
+    <section className="material-pouch p-2">
       <button
         type="button"
         onClick={onToggle}

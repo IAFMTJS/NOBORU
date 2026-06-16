@@ -2,7 +2,7 @@
 
 import type { LessonNodeVisualKind } from "@/lib/assets/lesson-node-assets";
 import { resolveLessonNodeAsset } from "@/lib/assets/lesson-node-assets";
-import { JOURNEY_MOCKUP } from "@/features/journey/constants/journey-mockup.constants";
+import { VISUAL_MOCKUP } from "@/components/visual/tokens";
 import type { TrailNodeKind, TrailNodeState } from "@/features/learning/types/trail.types";
 import { cn } from "@/lib/utils";
 
@@ -19,9 +19,9 @@ type WorldLessonNodeProps = {
 };
 
 const SIZE_PX = {
-  sm: JOURNEY_MOCKUP.node.sizeSmPx,
-  md: JOURNEY_MOCKUP.node.sizeMdPx,
-  lg: JOURNEY_MOCKUP.node.sizeLgPx,
+  sm: VISUAL_MOCKUP.node.sizeSmPx,
+  md: VISUAL_MOCKUP.node.sizeMdPx,
+  lg: VISUAL_MOCKUP.node.sizeLgPx,
 } as const;
 
 const GLOW: Record<TrailNodeState, string> = {
