@@ -117,9 +117,10 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
       {isActive ? (
         <motion.span
           aria-hidden
-          layoutId="nav-active-indicator"
           className={cn("relative z-10 h-1.5 w-1.5 rounded-full", config.activeIndicatorClass)}
-          transition={{ type: "spring", stiffness: 420, damping: 32 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         />
       ) : (
         <span className="h-1.5 w-1.5" aria-hidden />

@@ -10,20 +10,26 @@ type EventTrailBranchProps = {
   onClick?: () => void;
 };
 
-/** Doc 11 — seasonal event branch node on trail. */
+/** Doc 11 — seasonal event branch node with sakura glow (mockup event path). */
 export function EventTrailBranch({ className, onClick }: EventTrailBranchProps) {
   const content = (
-    <WorldArtImage
-      asset={LESSON_NODE_ASSETS.event}
-      alt=""
-      width={48}
-      height={48}
-      className="drop-shadow-lg trail-glow-warm"
-    />
+    <div className="relative">
+      <span
+        className="pointer-events-none absolute -inset-2 rounded-full bg-pink-500/25 blur-md motion-safe:animate-pulse motion-reduce:animate-none"
+        aria-hidden
+      />
+      <WorldArtImage
+        asset={LESSON_NODE_ASSETS.event}
+        alt=""
+        width={52}
+        height={52}
+        className="relative drop-shadow-lg ring-2 ring-pink-400/40 trail-glow-warm"
+      />
+    </div>
   );
 
   if (!onClick) {
-    return <div className={className}>{content}</div>;
+    return <div className={cn(className)}>{content}</div>;
   }
 
   return (

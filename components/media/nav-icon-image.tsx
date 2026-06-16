@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { getNavIconPath } from "@/lib/assets/registry";
 import {
   IMMERSIVE_NAV_TAB_CONFIG,
@@ -29,14 +27,7 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
       )}
       aria-hidden
     >
-      <Image
-        src={src}
-        alt=""
-        width={24}
-        height={24}
-        aria-hidden
-        className="h-full w-full object-contain object-center"
-      />
+      <img src={src} alt="" width={24} height={24} aria-hidden className="h-full w-full object-contain object-center" />
     </span>
   );
 }

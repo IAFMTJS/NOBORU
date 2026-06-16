@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 type DailyQuestBoardProps = {
   daily: DailyQuestsViewModel;
   weekly?: WeeklyQuestsViewModel;
-  variant?: "camp" | "compact";
+  variant?: "camp" | "compact" | "camp_overlay";
   streakDays?: number;
 };
 
@@ -197,7 +197,8 @@ export function DailyQuestBoard({
   variant = "camp",
   streakDays = 0,
 }: DailyQuestBoardProps) {
-  const compact = variant === "compact";
+  const compact = variant === "compact" || variant === "camp_overlay";
+  const showWeekly = variant === "camp";
   const displayedDailyQuests = daily.quests.slice(0, DAILY_QUEST_DISPLAY_CAP);
   const displayedDailyTotal = Math.min(daily.totalCount, DAILY_QUEST_DISPLAY_CAP);
   const displayedDailyCompleted = displayedDailyQuests.filter((quest) => quest.completed).length;
@@ -211,7 +212,7 @@ export function DailyQuestBoard({
           quests={displayedDailyQuests}
           compact={compact}
         />
-        {weekly && weekly.totalCount > 0 ? (
+        {showWeekly && weekly && weekly.totalCount > 0 ? (
           <QuestSection
             title="Weekly Quests"
             subtitle={`${weekly.completedCount}/${weekly.totalCount} this week`}
@@ -220,7 +221,7 @@ export function DailyQuestBoard({
           />
         ) : null}
       </QuestBoardFrame>
-      {!compact && streakDays > 0 ? <StreakTimeline streakDays={streakDays} /> : null}
+      {variant === "camp" && streakDays > 0 ? <StreakTimeline streakDays={streakDays} /> : null}
     </div>
   );
 }

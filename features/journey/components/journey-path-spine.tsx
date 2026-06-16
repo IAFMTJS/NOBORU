@@ -15,15 +15,15 @@ function segmentStroke(
   toState: JourneyNodeState,
 ): string {
   if (fromState === "completed" && toState !== "locked") {
-    return "var(--success)";
+    return "hsl(var(--trail-glow))";
   }
   if (fromState === "in_progress" || toState === "in_progress") {
-    return "hsl(var(--primary))";
+    return "hsl(var(--trail-glow))";
   }
   if (fromState === "available" || toState === "available") {
     return "hsl(var(--warning))";
   }
-  return "rgba(90, 70, 45, 0.55)";
+  return "rgba(120, 100, 70, 0.45)";
 }
 
 function buildPathD(points: Array<{ x: number; y: number }>): string {
@@ -32,6 +32,7 @@ function buildPathD(points: Array<{ x: number; y: number }>): string {
   return `M ${first!.x} ${first!.y} ${rest.map((point) => `L ${point.x} ${point.y}`).join(" ")}`;
 }
 
+/** Stone-trail spine — warm amber glow on active/completed segments (mockup contract). */
 export function JourneyPathSpine({
   nodes,
   regionSlug,
@@ -64,11 +65,23 @@ export function JourneyPathSpine({
       preserveAspectRatio="none"
       aria-hidden
     >
+      {/* Stone bed — dark earth under trail */}
       <path
         d={buildPathD(backdropPoints)}
         fill="none"
-        stroke="#3d2f1f"
-        strokeWidth={10}
+        stroke="#2a1f14"
+        strokeWidth={12}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        opacity={0.9}
+      />
+      {/* Warm stone surface */}
+      <path
+        d={buildPathD(backdropPoints)}
+        fill="none"
+        stroke="#6b5230"
+        strokeWidth={9}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
@@ -77,18 +90,18 @@ export function JourneyPathSpine({
       <path
         d={buildPathD(backdropPoints)}
         fill="none"
-        stroke="#8b6914"
-        strokeWidth={8}
+        stroke="#c4a35a"
+        strokeWidth={6}
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
-        opacity={0.92}
+        opacity={0.55}
       />
       <path
         d={pathD}
         fill="none"
-        stroke="rgba(255,255,255,0.15)"
-        strokeWidth={3}
+        stroke="rgba(255,255,255,0.12)"
+        strokeWidth={2}
         strokeLinecap="round"
         vectorEffect="non-scaling-stroke"
       />
@@ -99,28 +112,41 @@ export function JourneyPathSpine({
           segment.fromState === "available";
         const isIlluminated =
           segment.fromState === "completed" && segment.toState !== "locked";
+        const isLocked = segment.toState === "locked" && segment.fromState === "locked";
+
         return (
           <g key={`${segment.from.x}-${segment.from.y}-${index}`}>
-            {isActive || isIlluminated ? (
+            {isIlluminated ? (
               <path
                 d={`M ${segment.from.x} ${segment.from.y} L ${segment.to.x} ${segment.to.y}`}
                 fill="none"
-                stroke={isIlluminated ? "hsl(var(--trail-glow))" : "hsl(var(--trail-glow))"}
-                strokeWidth={8}
+                stroke="hsl(var(--trail-glow))"
+                strokeWidth={10}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
-                opacity={isIlluminated ? 0.5 : 0.35}
-                className={isIlluminated ? "motion-reward" : undefined}
+                opacity={0.45}
+                className="motion-reward"
+              />
+            ) : null}
+            {isActive ? (
+              <path
+                d={`M ${segment.from.x} ${segment.from.y} L ${segment.to.x} ${segment.to.y}`}
+                fill="none"
+                stroke="hsl(var(--trail-glow))"
+                strokeWidth={7}
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+                opacity={0.55}
               />
             ) : null}
             <path
               d={`M ${segment.from.x} ${segment.from.y} L ${segment.to.x} ${segment.to.y}`}
               fill="none"
               stroke={segmentStroke(segment.fromState, segment.toState)}
-              strokeWidth={isActive ? 5 : 4}
+              strokeWidth={isActive || isIlluminated ? 5 : 4}
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
-              opacity={segment.toState === "locked" ? 0.45 : isActive ? 0.95 : 0.75}
+              opacity={isLocked ? 0.35 : isActive || isIlluminated ? 0.95 : 0.7}
             />
           </g>
         );

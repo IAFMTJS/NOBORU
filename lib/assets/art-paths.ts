@@ -9,6 +9,7 @@ export type ArtCategory =
   | "backgrounds/events"
   | "backgrounds/weather"
   | "backgrounds/utility"
+  | "backgrounds/loading"
   | "characters/noboru/base"
   | "characters/noboru/reactions"
   | "characters/noboru/weather"
@@ -22,6 +23,7 @@ export type ArtCategory =
   | "ui/progress"
   | "rewards"
   | "props/inventory"
+  | "props/camp"
   | "props/particles"
   | "brand";
 

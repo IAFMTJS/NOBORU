@@ -77,7 +77,14 @@ export function LessonSessionLoader({
   }, [initialSession, lessonId, online, retryCount]);
 
   if (loading && !session) {
-    return <YamaLoading message="Loading lesson…" />;
+    return (
+      <YamaLoading
+        mode="fullscreen"
+        profile="lesson"
+        title="Setting up this lesson…"
+        statusMessage="Gathering today's lessons…"
+      />
+    );
   }
 
   if (error && !session) {
@@ -94,7 +101,14 @@ export function LessonSessionLoader({
   }
 
   if (!session) {
-    return <YamaLoading message="Loading lesson…" />;
+    return (
+      <YamaLoading
+        mode="fullscreen"
+        profile="lesson"
+        title="Setting up this lesson…"
+        statusMessage="Gathering today's lessons…"
+      />
+    );
   }
 
   return <LessonPlayer session={session} soundEnabled={soundEnabled} />;

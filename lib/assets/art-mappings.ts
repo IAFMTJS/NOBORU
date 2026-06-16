@@ -316,6 +316,31 @@ export const AUTH_ATMOSPHERE_ASSET: ArtAssetRef = {
   id: "bg-camp-loading",
 };
 
+/** Scene backgrounds per loading route profile (phase 1 uses existing camp/trail art). */
+export const LOADING_SCENE_PROFILE_ASSETS = {
+  default: AUTH_ATMOSPHERE_ASSET,
+  home: AUTH_ATMOSPHERE_ASSET,
+  learn: { category: "backgrounds/trail", id: "bg-trail-forest-current-night" },
+  review: { category: "backgrounds/camp", id: "bg-camp-offline" },
+  lesson: { category: "backgrounds/trail", id: "bg-trail-foot-hills-night" },
+  "region-transition": {
+    category: "backgrounds/shrine",
+    id: "bg-shrine-region-transition-torii",
+  },
+} as const satisfies Record<string, ArtAssetRef>;
+
+/**
+ * Final mockup-aligned loading backgrounds (phase 2 art pass).
+ * Publish optimized WebP to public/art/backgrounds/loading/.
+ */
+export const LOADING_BACKGROUND_ASSETS = {
+  camp_moment: { category: "backgrounds/loading", id: "bg-loading-camp-moment-v1" },
+  trail_moment: { category: "backgrounds/loading", id: "bg-loading-trail-moment-v1" },
+  study_moment: { category: "backgrounds/loading", id: "bg-loading-study-moment-v1" },
+  region_enter: { category: "backgrounds/loading", id: "bg-loading-region-enter-v1" },
+  region_leave: { category: "backgrounds/loading", id: "bg-loading-region-leave-v1" },
+} as const satisfies Record<string, ArtAssetRef>;
+
 export const TRAIL_COMPANION_ASSET: ArtAssetRef = {
   category: "characters/noboru/base",
   id: "char-noboru-walking-backpack",
@@ -339,26 +364,29 @@ export const JOURNEY_WORLD_ASSETS = {
 
 export const CAMP_WORLD_ASSETS = {
   quest_board: { category: "ui/panels", id: "panel-wood-daily-quest-board" },
-  chest_closed: { category: "props/inventory", id: "item-daruma" },
-  chest_available: { category: "rewards", id: "reward-lantern" },
-  chest_opening: { category: "props/particles", id: "particle-golden-star" },
-  chest_collected: { category: "props/inventory", id: "item-omamori" },
-  shrine_lantern: { category: "props/inventory", id: "item-stone-lantern" },
-  shrine_lantern_paper: { category: "props/inventory", id: "item-lantern" },
-  shrine_glow: { category: "rewards", id: "reward-lantern" },
+  chest_closed: { category: "props/camp", id: "prop-camp-chest-closed" },
+  chest_available: { category: "props/camp", id: "prop-camp-chest-available" },
+  chest_opening: { category: "props/camp", id: "prop-camp-chest-opening" },
+  chest_collected: { category: "props/camp", id: "prop-camp-chest-collected" },
+  shrine_lantern: { category: "props/camp", id: "prop-camp-shrine-lantern-stone" },
+  shrine_lantern_paper: { category: "props/camp", id: "prop-camp-shrine-lantern-paper" },
+  shrine_glow: { category: "props/camp", id: "prop-camp-shrine-lantern-glow" },
   merchant: { category: "characters/noboru/base", id: "char-noboru-standing-traveler" },
   merchant_scene: { category: "backgrounds/utility", id: "bg-shop-general-store-dark" },
-  tent: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
+  tent: { category: "props/camp", id: "prop-camp-tent-canvas" },
   ember_particle: { category: "props/particles", id: "particle-ember" },
   campfire_fox: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
   campfire_fox_happy: { category: "characters/noboru/reactions", id: "char-noboru-reaction-happy" },
   campfire_fox_proud: { category: "characters/noboru/reactions", id: "char-noboru-reaction-proud" },
+  campfire_fox_excited: { category: "characters/noboru/reactions", id: "char-noboru-reaction-excited" },
+  campfire_fox_worried: { category: "characters/noboru/reactions", id: "char-noboru-reaction-worried" },
+  campfire_fox_oops: { category: "characters/noboru/reactions", id: "char-noboru-reaction-oops" },
   campfire_fox_encouraging: {
     category: "characters/noboru/reactions",
     id: "char-noboru-reaction-encouraging",
   },
   campfire_fox_peek: { category: "characters/noboru/base", id: "char-noboru-peeking-locked-detail" },
-  memory_book: { category: "backgrounds/utility", id: "bg-memory-book-frame" },
+  memory_book: { category: "props/camp", id: "prop-camp-memory-book-closed" },
   achievement_shrine: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
 } as const satisfies Record<string, ArtAssetRef>;
 

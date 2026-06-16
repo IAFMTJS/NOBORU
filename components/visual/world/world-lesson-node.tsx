@@ -2,6 +2,7 @@
 
 import type { LessonNodeVisualKind } from "@/lib/assets/lesson-node-assets";
 import { resolveLessonNodeAsset } from "@/lib/assets/lesson-node-assets";
+import { JOURNEY_MOCKUP } from "@/features/journey/constants/journey-mockup.constants";
 import type { TrailNodeKind, TrailNodeState } from "@/features/learning/types/trail.types";
 import { cn } from "@/lib/utils";
 
@@ -17,16 +18,20 @@ type WorldLessonNodeProps = {
   onClick?: () => void;
 };
 
-const SIZE_PX = { sm: 36, md: 44, lg: 56 } as const;
+const SIZE_PX = {
+  sm: JOURNEY_MOCKUP.node.sizeSmPx,
+  md: JOURNEY_MOCKUP.node.sizeMdPx,
+  lg: JOURNEY_MOCKUP.node.sizeLgPx,
+} as const;
 
 const GLOW: Record<TrailNodeState, string> = {
   locked: "opacity-50 grayscale",
   available: "trail-glow-warning",
-  in_progress: "trail-glow-warm scale-110",
+  in_progress: "trail-glow-warm",
   completed: "trail-glow-success",
 };
 
-/** Doc 11 Component 001 — lesson node as approved world art, not CSS circle. */
+/** Doc 11 — lesson node as approved world art with mockup scale hierarchy. */
 export function WorldLessonNode({
   state,
   nodeKind = "lesson",
@@ -41,18 +46,26 @@ export function WorldLessonNode({
   const interactive = state !== "locked" && onClick;
 
   const content = (
-    <WorldArtImage
-      asset={asset}
-      alt=""
-      width={px}
-      height={px}
+    <span
       className={cn(
-        "drop-shadow-md transition-all duration-300 motion-reduce:transition-none",
-        GLOW[state],
-        isCurrent && "animate-[journey-node-pulse_2s_ease-in-out_infinite] motion-reduce:animate-none",
-        className,
+        "relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/20 p-0.5",
+        state === "locked" && "border-white/5 bg-black/40",
       )}
-    />
+    >
+      <WorldArtImage
+        asset={asset}
+        alt=""
+        width={px}
+        height={px}
+        className={cn(
+          "rounded-full drop-shadow-md transition-all duration-300 motion-reduce:transition-none",
+          GLOW[state],
+          isCurrent &&
+            "animate-[journey-node-pulse_2s_ease-in-out_infinite] motion-reduce:animate-none",
+          className,
+        )}
+      />
+    </span>
   );
 
   if (!interactive) {

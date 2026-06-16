@@ -6,6 +6,7 @@ import { useReducedMotion } from "framer-motion";
 
 import { JourneyRegionGate } from "@/features/journey/components/journey-region-gate";
 import { JourneyRegionSection } from "@/features/journey/components/journey-region-section";
+import { JourneyScrollIndicator } from "@/features/journey/components/journey-scroll-indicator";
 import { resolveJourneyVisualSettings } from "@/features/journey/constants/journey-visual.constants";
 import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import type {
@@ -119,51 +120,56 @@ export function JourneyWorldScroll({
   }
 
   return (
-    <div
-      ref={scrollRef}
-      className={cn(
-        "min-h-0 flex-1 overflow-y-auto overscroll-contain",
-        className,
-      )}
-    >
-      {journey.regions.map((region, index) => {
-        const locked = region.availability === "locked";
-        const isCurrentRegion = region.slug === currentRegionSlug;
+    <div className="relative min-h-0 flex-1">
+      <JourneyScrollIndicator journey={journey} scrollContainerRef={scrollRef} />
 
-        return (
-          <div key={region.slug} className="relative">
-            <JourneyRegionGate
-              region={region}
-              previousRegionName={
-                index > 0 ? (journey.regions[index - 1]?.name ?? null) : null
-              }
-              className={locked ? "opacity-80" : undefined}
-            />
+      <div
+        ref={scrollRef}
+        className={cn(
+          "h-full min-h-0 overflow-y-auto overscroll-contain",
+          className,
+        )}
+      >
+        {journey.regions.map((region, index) => {
+          const locked = region.availability === "locked";
+          const isCurrentRegion = region.slug === currentRegionSlug;
 
-            <JourneyRegionSection
-              region={region}
-              theme={resolvedTheme}
-              loadArtwork={!locked || visualSettings.maxLoadedArtSections === 0}
-              artPriority={isCurrentRegion}
-              visualSettings={visualSettings}
-              showFox={isCurrentRegion}
-              companionEvolutionSlug={companionEvolutionSlug}
-              dimmed={locked}
-              immersive
-              selectedNodeId={selectedNodeId}
-              pulseNodeId={scrollToNodeId}
-              onNodeSelect={locked ? undefined : onNodeSelect}
-            />
-
-            {locked ? (
-              <div
-                className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-background/55 via-background/35 to-background/65 backdrop-blur-[1px]"
-                aria-hidden
+          return (
+            <div key={region.slug} className="relative">
+              <JourneyRegionGate
+                region={region}
+                previousRegionName={
+                  index > 0 ? (journey.regions[index - 1]?.name ?? null) : null
+                }
+                compact={region.slug === currentRegionSlug}
+                className={locked ? "opacity-80" : undefined}
               />
-            ) : null}
-          </div>
-        );
-      })}
+
+              <JourneyRegionSection
+                region={region}
+                theme={resolvedTheme}
+                loadArtwork={!locked || visualSettings.maxLoadedArtSections === 0}
+                artPriority={isCurrentRegion}
+                visualSettings={visualSettings}
+                showFox={isCurrentRegion}
+                companionEvolutionSlug={companionEvolutionSlug}
+                dimmed={locked}
+                immersive
+                selectedNodeId={selectedNodeId}
+                pulseNodeId={scrollToNodeId}
+                onNodeSelect={locked ? undefined : onNodeSelect}
+              />
+
+              {locked ? (
+                <div
+                  className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-background/55 via-background/35 to-background/65 backdrop-blur-[1px]"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

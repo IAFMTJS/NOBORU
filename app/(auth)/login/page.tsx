@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { AuthBrandHeader } from "@/components/auth/auth-brand-header";
 import { GlassPanel, StoryTitle } from "@/components/visual";
+import { YamaLoading } from "@/components/ui/yama-loading";
 import { LoginForm } from "@/features/authentication/components/login-form";
 
 export default function LoginPage() {
@@ -15,7 +16,7 @@ export default function LoginPage() {
         <StoryTitle as="h2" className="text-sm">
           Sign In
         </StoryTitle>
-        <Suspense fallback={<p className="text-body-sm text-muted-foreground">Loading...</p>}>
+        <Suspense fallback={<YamaLoading mode="compact" animate={false} percent={12} />}>
           <LoginForm />
         </Suspense>
       </GlassPanel>

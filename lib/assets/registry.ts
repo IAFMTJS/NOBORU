@@ -13,6 +13,7 @@ import {
   NAV_TAB_ICON_ASSETS,
   NAV_TAB_ICON_INACTIVE_ASSETS,
   NAV_TAB_MASCOT_ASSETS,
+  LOADING_SCENE_PROFILE_ASSETS,
   REGION_HERO_ASSETS,
   REGION_TRAIL_SCROLL_ASSETS,
   SCENE_BACKGROUND_ASSETS,
@@ -188,6 +189,16 @@ export function getWordmarkPath(theme?: string): string | null {
 export function getAuthAtmospherePath(theme?: string): string | null {
   void theme;
   return resolveArtAsset(AUTH_ATMOSPHERE_ASSET);
+}
+
+export function getLoadingScenePath(
+  profile: keyof typeof LOADING_SCENE_PROFILE_ASSETS = "default",
+  theme?: string,
+): string | null {
+  void theme;
+  const ref =
+    LOADING_SCENE_PROFILE_ASSETS[profile] ?? LOADING_SCENE_PROFILE_ASSETS.default;
+  return resolveArtAsset(ref);
 }
 
 export function getNavSkinTexturePath(skinId: NavPillSkinId): string {

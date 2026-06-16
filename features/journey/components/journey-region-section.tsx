@@ -122,6 +122,7 @@ export function JourneyRegionSection({
       }}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-background/85" aria-hidden />
         <TrailMapArtwork
           theme={theme}
           regionSlug={region.slug}
@@ -138,6 +139,12 @@ export function JourneyRegionSection({
             particlesEnabled={visualSettings.ambientParticles}
             particleIntensity={visualSettings.particleIntensity}
           />
+        ) : null}
+        {immersive ? (
+          <>
+            <div className="absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-background/85 to-transparent" />
+            <div className="absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-background/85 to-transparent" />
+          </>
         ) : null}
       </div>
 
@@ -172,13 +179,15 @@ export function JourneyRegionSection({
             const isCurrent = currentNode?.id === node.id;
             const discoveryOpacity =
               node.state === "locked"
-                ? 0.28
+                ? 0.22
                 : isCurrent
                   ? 1
                   : immersive
                     ? node.state === "completed"
-                      ? 0.95
-                      : 0.85
+                      ? 0.92
+                      : node.kind === "trial"
+                        ? 0.9
+                        : 0.82
                     : resolveNodeDiscoveryOpacity(
                         y,
                         viewportCenterY,
@@ -236,8 +245,8 @@ export function JourneyRegionSection({
         {region.nodes.some((node) => node.state === "locked") ? (
           <div
             className={cn(
-              "pointer-events-none absolute inset-x-0 top-0 z-[5] bg-gradient-to-b from-background/70 via-background/25 to-transparent backdrop-blur-[2px]",
-              dimmed && "from-background/85 via-background/55",
+              "pointer-events-none absolute inset-x-0 top-0 z-[5] bg-gradient-to-b from-background/75 via-background/30 to-transparent backdrop-blur-[2px]",
+              dimmed && "from-background/90 via-background/60",
             )}
             aria-hidden
           />

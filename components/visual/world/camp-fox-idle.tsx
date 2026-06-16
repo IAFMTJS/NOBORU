@@ -21,6 +21,9 @@ const REACTION_POSES = [
   CAMP_WORLD_ASSETS.campfire_fox_happy,
   CAMP_WORLD_ASSETS.campfire_fox_encouraging,
   CAMP_WORLD_ASSETS.campfire_fox_proud,
+  CAMP_WORLD_ASSETS.campfire_fox_excited,
+  CAMP_WORLD_ASSETS.campfire_fox_worried,
+  CAMP_WORLD_ASSETS.campfire_fox_oops,
 ] as const;
 
 const IDLE_CYCLE_MS = 12_000;

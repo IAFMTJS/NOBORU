@@ -79,7 +79,14 @@ export function ReviewSessionLoader({
   }
 
   if (!bundle) {
-    return <YamaLoading message="Loading review queue…" />;
+    return (
+      <YamaLoading
+        mode="fullscreen"
+        profile="review"
+        title="Warming up your recall…"
+        statusMessage="Checking your backpack…"
+      />
+    );
   }
 
   return (

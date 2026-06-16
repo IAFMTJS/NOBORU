@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { EventTrailBranch } from "@/components/visual/world/event-trail-branch";
+import { JourneyEventBanner } from "@/features/journey/components/journey-event-banner";
 import { JourneyHud } from "@/features/journey/components/journey-hud";
 import { JourneyWorldScroll } from "@/features/journey/components/journey-world-scroll";
 import { RegionUnlockOverlay } from "@/features/journey/components/region-unlock-overlay";
@@ -23,9 +24,7 @@ import type { RegionPathViewModel } from "@/features/learning/types/lesson.types
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import { seasonalEventService } from "@/features/events/services/seasonal-event.service";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
-import {
-  resolveGlobalCurrentRegion,
-} from "@/features/journey/utils/journey-world.utils";
+import { resolveGlobalCurrentRegion } from "@/features/journey/utils/journey-world.utils";
 
 type JourneyScreenProps = {
   journey: JourneyPathViewModel;
@@ -84,6 +83,27 @@ function countLessonPosition(
   return { index: index + 1, total: lessonNodes.length };
 }
 
+function resolveUnlockRequirements(
+  nodes: JourneyNode[],
+  selectedNode: JourneyNode,
+): Array<{ label: string; completed: boolean }> {
+  const lessonNodes = nodes.filter(
+    (node) => node.kind !== "landmark" && node.lessonId !== null,
+  );
+  const targetIndex = lessonNodes.findIndex((node) => node.id === selectedNode.id);
+  if (targetIndex <= 0) return [];
+
+  const prerequisites = lessonNodes.slice(
+    Math.max(0, targetIndex - 3),
+    targetIndex,
+  );
+
+  return prerequisites.map((node) => ({
+    label: node.label,
+    completed: node.state === "completed",
+  }));
+}
+
 export function JourneyScreen({
   journey,
   profileStats,
@@ -118,6 +138,21 @@ export function JourneyScreen({
   const selectedLessonPosition =
     selectedNodeRegion && selectedNode
       ? countLessonPosition(selectedNodeRegion.nodes, selectedNode.id)
+      : null;
+
+  const unlockRequirements =
+    selectedNodeRegion && selectedNode
+      ? resolveUnlockRequirements(selectedNodeRegion.nodes, selectedNode)
+      : [];
+
+  const nextNode =
+    selectedNodeRegion && selectedNode
+      ? selectedNodeRegion.nodes
+          .filter((n) => n.kind !== "landmark" && n.lessonId)
+          .find((n, i, arr) => {
+            const idx = arr.findIndex((x) => x.id === selectedNode.id);
+            return i === idx + 1;
+          }) ?? null
       : null;
 
   const { lesson: selectedLessonSummary } = useJourneyLessonSummary(
@@ -168,7 +203,11 @@ export function JourneyScreen({
     <>
       <div className="relative flex h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] min-h-0 flex-col overflow-x-hidden">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background/70 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-background/80 via-background/30 to-transparent"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-background/70 via-background/20 to-transparent"
           aria-hidden
         />
 
@@ -177,6 +216,8 @@ export function JourneyScreen({
             displayName={profileStats.displayName}
             levelLabel={profileStats.levelLabel}
             regionName={currentRegion.name}
+            currentStreak={profileStats.currentStreak}
+            totalXp={profileStats.totalXp}
             onRegionOverview={() => setRegionsOverviewOpen(true)}
           />
         ) : (
@@ -202,11 +243,18 @@ export function JourneyScreen({
           className="min-h-0 flex-1"
         />
 
+        {activeEvent ? (
+          <JourneyEventBanner
+            event={activeEvent}
+            className="pointer-events-auto fixed left-4 top-[5.1rem] z-20"
+          />
+        ) : null}
+
         <button
           type="button"
           aria-label="Region overview"
           onClick={() => setRegionsOverviewOpen(true)}
-          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/40 backdrop-blur-sm"
+          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/45 backdrop-blur-md"
           title="Region overview"
         >
           <UiIconImage name="map" size={22} />
@@ -255,6 +303,8 @@ export function JourneyScreen({
         lessonNumber={selectedLessonPosition?.index ?? null}
         lessonCount={selectedLessonPosition?.total ?? selectedNodeRegion?.lessonCount ?? 0}
         regionName={selectedNodeRegion?.name ?? currentRegion.name}
+        unlockRequirements={unlockRequirements}
+        nextLessonLabel={nextNode?.label ?? null}
       />
     </>
   );

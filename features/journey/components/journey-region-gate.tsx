@@ -13,12 +13,14 @@ import { cn } from "@/lib/utils";
 type JourneyRegionGateProps = {
   region: JourneyRegionViewModel;
   previousRegionName?: string | null;
+  compact?: boolean;
   className?: string;
 };
 
 export function JourneyRegionGate({
   region,
   previousRegionName,
+  compact = false,
   className,
 }: JourneyRegionGateProps) {
   const locked = region.availability === "locked";
@@ -30,13 +32,15 @@ export function JourneyRegionGate({
     <div
       data-journey-region-gate={region.slug}
       className={cn(
-        "relative z-20 flex flex-col items-center px-6 py-10 text-center",
+        "relative z-20 flex flex-col items-center px-4 text-center",
+        compact ? "py-3" : "py-6",
         className,
       )}
     >
       <div
         className={cn(
-          "mb-3 overflow-hidden rounded-xl border-2 backdrop-blur-md",
+          "mb-2 overflow-hidden rounded-xl border-2 backdrop-blur-md",
+          compact && "mb-1 rounded-lg border",
           locked
             ? "border-white/20 bg-black/40 opacity-60 grayscale"
             : "border-trail-glow/50 bg-black/30 trail-glow-warm",
@@ -46,18 +50,28 @@ export function JourneyRegionGate({
         <WorldArtImage
           asset={gateAsset}
           alt=""
-          width={96}
-          height={64}
-          className="h-16 w-24 object-cover"
+          width={compact ? 72 : 96}
+          height={compact ? 48 : 64}
+          className={cn(
+            "object-cover",
+            compact ? "h-12 w-[4.5rem]" : "h-16 w-24",
+          )}
         />
       </div>
 
-      <h2 className="font-story text-xl font-semibold text-white drop-shadow-sm">
+      <h2
+        className={cn(
+          "font-story font-semibold text-white drop-shadow-sm",
+          compact ? "text-base" : "text-xl",
+        )}
+      >
         {region.name}
       </h2>
 
-      {region.description ? (
-        <p className="mt-1 max-w-xs text-body-sm text-white/75">{region.description}</p>
+      {region.description && !compact ? (
+        <p className="mt-1 max-w-xs text-body-sm text-white/75">
+          {region.description}
+        </p>
       ) : null}
 
       {locked ? (
@@ -67,9 +81,13 @@ export function JourneyRegionGate({
               ? `Complete ${previousRegionName} to continue climbing.`
               : "This region is not yet available.")}
         </p>
-      ) : (
+      ) : !compact ? (
         <p className="mt-2 text-caption uppercase tracking-wide text-trail-glow/80">
           Region checkpoint
+        </p>
+      ) : (
+        <p className="mt-1 text-[10px] uppercase tracking-wide text-trail-glow/80">
+          Trail section
         </p>
       )}
     </div>

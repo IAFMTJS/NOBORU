@@ -1,178 +1,133 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SceneImage } from "@/components/media/scene-image";
-import { WorldArtImage } from "@/components/visual/world/world-art-image";
-import {
-  GlassPanel,
-  IllustratedScreen,
-  StoryTitle,
-} from "@/components/visual";
+import { Button } from "@/components/ui";
+import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { BagCapacityCard } from "@/features/inventory/components/bag-capacity-card";
+import { InventoryDetailCard } from "@/features/inventory/components/inventory-detail-card";
+import { PouchAccordionSection } from "@/features/inventory/components/pouch-accordion-section";
+import { QuickUseSheet } from "@/features/inventory/components/quick-use-sheet";
+import { inventoryService } from "@/features/inventory/services/inventory.service";
 import type {
   InventoryItemViewModel,
   InventoryViewModel,
 } from "@/features/inventory/types/inventory.types";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
-import { INVENTORY_ITEM_ASSETS } from "@/lib/assets/lesson-node-assets";
-import { cn } from "@/lib/utils";
 
 type InventoryScreenProps = {
   inventory: InventoryViewModel;
 };
 
 type PouchSection = {
-  id: "consumable" | "cosmetic" | "trail";
+  id: "items" | "cosmetics" | "trails";
   label: string;
-  sign: string;
+  subtitle: string;
   filter: (item: InventoryItemViewModel) => boolean;
 };
 
 const POUCH_SECTIONS: PouchSection[] = [
   {
-    id: "consumable",
-    label: "Trail rations",
-    sign: "Items pouch",
+    id: "items",
+    label: "Items Pouch",
+    subtitle: "Trail rations and key items",
     filter: (item) => item.category === "consumable",
   },
   {
-    id: "cosmetic",
-    label: "Travel charms",
-    sign: "Cosmetics pouch",
+    id: "cosmetics",
+    label: "Cosmetics Pouch",
+    subtitle: "Travel charms and keepsakes",
     filter: (item) => item.category === "cosmetic",
   },
   {
-    id: "trail",
-    label: "Path keepsakes",
-    sign: "Trails pouch",
+    id: "trails",
+    label: "Trails Pouch",
+    subtitle: "Path effects and milestones",
     filter: (item) => item.category === "trail" || item.category === "seasonal",
   },
 ];
 
-function InventoryItemToken({
-  item,
-  selected,
-  onSelect,
-}: {
-  item: InventoryItemViewModel;
-  selected: boolean;
-  onSelect: () => void;
-}) {
-  const asset = INVENTORY_ITEM_ASSETS[item.assetKey];
-
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={cn(
-        "flex min-w-[4.5rem] flex-col items-center gap-1 rounded-xl border px-2.5 py-2 text-center transition-all",
-        selected
-          ? "border-trail-glow/60 bg-trail-glow/15 shadow-[0_0_14px_hsl(var(--trail-glow)/0.22)]"
-          : "border-white/12 bg-black/45 hover:border-trail-glow/30",
-      )}
-      aria-pressed={selected}
-      aria-label={`${item.name}, quantity ${item.quantity}`}
-    >
-      <WorldArtImage
-        asset={asset}
-        alt=""
-        width={40}
-        height={40}
-        className="drop-shadow-md"
-      />
-      <span className="text-caption tabular-nums text-white/75">×{item.quantity}</span>
-      {item.equipped ? (
-        <span className="text-[9px] font-semibold uppercase tracking-wide text-trail-glow">
-          Worn
-        </span>
-      ) : null}
-    </button>
-  );
-}
-
-function PouchSectionBlock({
-  section,
-  items,
-  selectedId,
-  onSelect,
-}: {
-  section: PouchSection;
-  items: InventoryItemViewModel[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
-}) {
-  if (items.length === 0) {
-    return (
-      <section className="space-y-2">
-        <div className="flex items-center gap-2">
-          <WorldArtImage
-            asset={INVENTORY_ITEM_ASSETS.scroll}
-            alt=""
-            width={24}
-            height={24}
-            className="opacity-70"
-          />
-          <p className="font-story text-sm text-trail-glow/90">{section.sign}</p>
-        </div>
-        <YamaEmptyState
-          surface="generic"
-          title="Pouch awaits treasures"
-          description="Hidden items may appear in this pouch as you climb and trade along the trail."
-          className="rounded-2xl border border-dashed border-white/15 bg-black/30 p-2"
-        />
-      </section>
-    );
-  }
-
-  return (
-    <section className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <WorldArtImage
-            asset={INVENTORY_ITEM_ASSETS.scroll}
-            alt=""
-            width={24}
-            height={24}
-          />
-          <div>
-            <p className="font-story text-sm text-trail-glow">{section.sign}</p>
-            <p className="text-caption text-muted-foreground">{section.label}</p>
-          </div>
-        </div>
-        <span className="text-caption text-white/50">{items.length} stowed</span>
-      </div>
-      <div className="rounded-2xl border border-amber-900/25 bg-gradient-to-b from-amber-950/30 to-black/50 p-3 shadow-inner">
-        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
-          {items.map((item) => (
-            <InventoryItemToken
-              key={item.id}
-              item={item}
-              selected={selectedId === item.id}
-              onSelect={() => onSelect(item.id)}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function InventoryScreen({ inventory }: InventoryScreenProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [viewModel, setViewModel] = useState<InventoryViewModel>(inventory);
+  const [selectedId, setSelectedId] = useState<string | null>(inventory.items[0]?.id ?? null);
+  const [expandedSections, setExpandedSections] = useState<Record<PouchSection["id"], boolean>>({
+    items: true,
+    cosmetics: false,
+    trails: false,
+  });
+  const [quickUseOpen, setQuickUseOpen] = useState(false);
+  const [quickUseQuantity, setQuickUseQuantity] = useState(1);
 
   const sectionsWithItems = useMemo(
     () =>
       POUCH_SECTIONS.map((section) => ({
         section,
-        items: inventory.items.filter(section.filter),
+        items: viewModel.items.filter(section.filter),
       })),
-    [inventory.items],
+    [viewModel.items],
   );
 
+  useEffect(() => {
+    inventoryService.hydrate(inventory);
+    setViewModel(inventory);
+    setSelectedId(inventory.items[0]?.id ?? null);
+  }, [inventory]);
+
+  const refreshFromService = useCallback((preferredId?: string | null) => {
+    const next = inventoryService.getInventory();
+    setViewModel(next);
+    setSelectedId((currentId) => {
+      const target = preferredId ?? currentId;
+      if (target && next.items.some((item) => item.id === target)) return target;
+      return next.items[0]?.id ?? null;
+    });
+  }, []);
+
   const selectedItem =
-    inventory.items.find((item) => item.id === selectedId) ??
-    inventory.items[0] ??
+    viewModel.items.find((item) => item.id === selectedId) ??
+    viewModel.items[0] ??
     null;
+
+  const quickUseItem = selectedItem?.usable ? selectedItem : null;
+  const nearCapacity = viewModel.capacity.usedSlots / viewModel.capacity.totalSlots >= 0.8;
+
+  function toggleSection(sectionId: PouchSection["id"]) {
+    setExpandedSections((current) => ({
+      ...current,
+      [sectionId]: !current[sectionId],
+    }));
+  }
+
+  function handleQuickUseOpen() {
+    const firstQuickItem = inventoryService.getQuickUseItems()[0] ?? null;
+    const nextSelectedId = quickUseItem?.id ?? firstQuickItem?.id ?? selectedItem?.id ?? null;
+    if (nextSelectedId) setSelectedId(nextSelectedId);
+    setQuickUseQuantity(1);
+    setQuickUseOpen(true);
+  }
+
+  function useOne(item: InventoryItemViewModel | null) {
+    if (!item) return;
+    const used = inventoryService.useItem(item.id, 1);
+    if (used) refreshFromService(item.id);
+  }
+
+  function toggleEquip(item: InventoryItemViewModel | null) {
+    if (!item) return;
+    const toggled = inventoryService.toggleEquip(item.id);
+    if (toggled) refreshFromService(item.id);
+  }
+
+  function useMultiple(item: InventoryItemViewModel | null, amount: number) {
+    if (!item) return;
+    const used = inventoryService.useItem(item.id, amount);
+    if (used) {
+      refreshFromService(item.id);
+      setQuickUseOpen(false);
+      setQuickUseQuantity(1);
+    }
+  }
 
   return (
     <IllustratedScreen
@@ -189,23 +144,38 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
     >
       <div className="relative flex min-h-dvh flex-col">
         <div
-          className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/75"
+          className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/35 to-black/85"
           aria-hidden
         />
 
         <header className="relative z-10 shrink-0 p-4 pt-3">
-          <GlassPanel variant="header" className="space-y-1 rounded-card p-3">
-            <StoryTitle as="h1" className="text-base">
-              Backpack
-            </StoryTitle>
-            <p className="text-caption text-muted-foreground">
-              Pouches laid open — inspect what you carry on the climb
-            </p>
+          <GlassPanel
+            variant="header"
+            className="space-y-2 rounded-card border-amber-900/40 bg-black/65 p-3"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <StoryTitle as="h1" className="text-base uppercase tracking-wide text-amber-200">
+                  Backpack
+                </StoryTitle>
+                <p className="text-caption text-muted-foreground">
+                  Pouches laid open - inspect what you carry on the climb
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                className="h-9 rounded-xl border border-white/10 bg-black/50 px-3 text-xs"
+                onClick={handleQuickUseOpen}
+              >
+                Quick Use
+              </Button>
+            </div>
           </GlassPanel>
         </header>
 
-        <main className="relative z-10 flex-1 space-y-5 overflow-y-auto px-4 py-2">
-          {inventory.items.length === 0 ? (
+        <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2">
+          {viewModel.items.length === 0 ? (
             <YamaEmptyState
               surface="generic"
               title="Pouches await discovery"
@@ -214,47 +184,59 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
               actionLabel="Visit the merchant"
             />
           ) : (
-            sectionsWithItems.map(({ section, items }) => (
-              <PouchSectionBlock
-                key={section.id}
-                section={section}
-                items={items}
-                selectedId={selectedItem?.id ?? null}
-                onSelect={setSelectedId}
+            <>
+              {sectionsWithItems.map(({ section, items }) => (
+                <PouchAccordionSection
+                  key={section.id}
+                  title={section.label}
+                  subtitle={section.subtitle}
+                  items={items}
+                  selectedId={selectedItem?.id ?? null}
+                  expanded={expandedSections[section.id]}
+                  onToggle={() => toggleSection(section.id)}
+                  onSelectItem={setSelectedId}
+                />
+              ))}
+              <BagCapacityCard
+                usedSlots={viewModel.capacity.usedSlots}
+                totalSlots={viewModel.capacity.totalSlots}
               />
-            ))
+            </>
           )}
         </main>
 
         <footer className="relative z-10 shrink-0 p-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2">
-          {selectedItem ? (
-            <GlassPanel className="mx-auto max-w-md space-y-2 rounded-card p-4">
-              <div className="flex items-center gap-3">
-                <WorldArtImage
-                  asset={INVENTORY_ITEM_ASSETS[selectedItem.assetKey]}
-                  alt=""
-                  width={52}
-                  height={52}
-                  className="drop-shadow-md"
-                />
-                <div className="min-w-0 space-y-0.5">
-                  <p className="font-story text-sm text-trail-glow">{selectedItem.name}</p>
-                  <p className="text-caption text-muted-foreground">
-                    ×{selectedItem.quantity} in your pack
-                  </p>
-                </div>
-              </div>
-              <p className="text-body-sm text-muted-foreground">{selectedItem.description}</p>
-            </GlassPanel>
-          ) : (
-            <GlassPanel className="mx-auto max-w-md rounded-card p-3 text-center">
-              <p className="text-caption text-muted-foreground">
-                Lift an item from a pouch to inspect your gear
-              </p>
-            </GlassPanel>
-          )}
+          <InventoryDetailCard
+            item={selectedItem}
+            onUse={() => useOne(selectedItem)}
+            onUseMultiple={handleQuickUseOpen}
+            onToggleEquip={() => toggleEquip(selectedItem)}
+          />
         </footer>
+
+        {nearCapacity ? (
+          <div
+            className="pointer-events-none absolute right-4 top-[5.5rem] z-20 rounded-lg border border-primary/30 bg-black/65 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary"
+            aria-hidden
+          >
+            Almost Full
+          </div>
+        ) : null}
       </div>
+
+      <QuickUseSheet
+        open={quickUseOpen}
+        item={quickUseItem}
+        quantity={quickUseQuantity}
+        onOpenChange={setQuickUseOpen}
+        onDecrease={() => setQuickUseQuantity((quantity) => Math.max(1, quantity - 1))}
+        onIncrease={() =>
+          setQuickUseQuantity((quantity) =>
+            Math.min(quickUseItem?.quantity ?? quantity, quantity + 1),
+          )
+        }
+        onUse={() => useMultiple(quickUseItem, quickUseQuantity)}
+      />
     </IllustratedScreen>
   );
 }
