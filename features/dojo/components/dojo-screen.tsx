@@ -22,43 +22,43 @@ const STUDY_HOTSPOTS: StudyHotspot[] = [
   {
     label: "Review",
     href: "/review",
-    className: "top-[18%] left-1/2 w-[5.5rem] -translate-x-1/2",
+    className: "left-1/2 top-[18%] w-[4.9rem] -translate-x-1/2 sm:w-[5.5rem]",
     icon: <StudyIcon src={getDojoIconPath("review_queue")} />,
   },
   {
     label: "Vocabulary",
     href: "/learn/vocabulary",
-    className: "top-[30%] left-[6%] w-[5rem]",
+    className: "left-[6%] top-[30%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getDojoIconPath("vocabulary_hall")} />,
   },
   {
     label: "Kanji",
     href: "/learn/kanji",
-    className: "top-[28%] right-[5%] w-[5rem]",
+    className: "right-[5%] top-[28%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getDojoIconPath("kanji_grounds")} />,
   },
   {
     label: "Grammar",
     href: "/learn/grammar",
-    className: "top-[46%] left-[4%] w-[5rem]",
+    className: "left-[4%] top-[46%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getDojoIconPath("grammar_shrine")} />,
   },
   {
     label: "Listening",
     href: "/learn/listening",
-    className: "top-[44%] right-[4%] w-[5rem]",
+    className: "right-[4%] top-[44%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getDojoIconPath("listening_pavilion")} />,
   },
   {
     label: "Games",
     href: "/games",
-    className: "bottom-[30%] left-[10%] w-[5rem]",
+    className: "bottom-[30%] left-[10%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getWorldIconPath("games")} />,
   },
   {
     label: "Trials",
     href: "/trials",
-    className: "bottom-[28%] right-[8%] w-[5rem]",
+    className: "bottom-[28%] right-[8%] w-[4.5rem] sm:w-[5rem]",
     icon: <StudyIcon src={getWorldIconPath("trials")} />,
   },
 ];
@@ -73,7 +73,7 @@ function StudyIcon({ src }: { src: string | null }) {
       width={22}
       height={22}
       aria-hidden
-      className="shrink-0 object-contain"
+      className="shrink-0 object-cover object-center mix-blend-screen"
     />
   );
 }
@@ -145,7 +145,7 @@ export function DojoScreen() {
           </div>
         </header>
 
-        <div className="relative z-10 flex-1">
+        <div className="relative z-10 flex-1 pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
           <div className="absolute bottom-[18%] left-[14%] max-w-[9rem]">
             <YamaPresence presence={presence} size="md" layout="vertical" showMessage={false} />
           </div>

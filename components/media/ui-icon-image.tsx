@@ -33,13 +33,22 @@ export function UiIconImage({ name, className, size = 20 }: UiIconImageProps) {
   if (!src) return null;
 
   return (
-    <Image
-      src={src}
-      alt=""
-      width={size}
-      height={size}
+    <span
+      className={cn(
+        "relative inline-flex shrink-0 overflow-hidden rounded-[0.35rem]",
+        className,
+      )}
+      style={{ width: size, height: size }}
       aria-hidden
-      className={cn("shrink-0 object-contain", className)}
-    />
+    >
+      <Image
+        src={src}
+        alt=""
+        width={size}
+        height={size}
+        aria-hidden
+        className="h-full w-full object-cover object-center mix-blend-screen [transform:scale(1.4)]"
+      />
+    </span>
   );
 }

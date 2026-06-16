@@ -63,7 +63,8 @@ export function CampRewardChest({
           alt=""
           width={72}
           height={72}
-          className="h-[4.5rem] w-[4.5rem] object-contain"
+          renderMode="icon"
+          className="h-[4.5rem] w-[4.5rem] object-cover object-center"
         />
         {state === "available" ? (
           <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">

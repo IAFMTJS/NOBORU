@@ -166,7 +166,7 @@ export function JourneyScreen({
 
   return (
     <>
-      <div className="relative -mx-[max(0px,calc((100vw-100%)/2))] flex h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] min-h-0 flex-col">
+      <div className="relative flex h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] min-h-0 flex-col overflow-x-hidden">
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-10 h-20 bg-gradient-to-b from-background/70 to-transparent"
           aria-hidden

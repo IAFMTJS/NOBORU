@@ -168,7 +168,8 @@ function CampWorldHotspotLink({
           alt=""
           width={72}
           height={72}
-          className="h-[4.25rem] w-[4.25rem] object-contain"
+          renderMode="icon"
+          className="h-14 w-14 object-cover object-center"
         />
       </div>
       <span className="rounded-full border border-white/10 bg-black/45 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white/90 backdrop-blur-sm">
@@ -267,7 +268,7 @@ export function CampScreen({ data }: CampScreenProps) {
           </span>
         </header>
 
-        <div className="relative z-10 flex-1 pb-[calc(5.5rem+env(safe-area-inset-bottom))]">
+        <div className="relative z-10 flex-1 pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
           <CampCampfire
             intensity={campfireIntensity}
             className="absolute bottom-[36%] left-1/2 z-[1] -translate-x-1/2"
@@ -338,7 +339,8 @@ export function CampScreen({ data }: CampScreenProps) {
                 alt=""
                 width={120}
                 height={72}
-                className="drop-shadow-md"
+                renderMode="icon"
+                className="h-16 w-24 object-cover object-center drop-shadow-md"
               />
             </div>
             <DailyQuestBoard
@@ -377,7 +379,8 @@ export function CampScreen({ data }: CampScreenProps) {
                     alt=""
                     width={40}
                     height={48}
-                    className="h-12 w-10 object-contain"
+                    renderMode="icon"
+                    className="h-12 w-10 object-cover object-center"
                   />
                 ))}
               </div>

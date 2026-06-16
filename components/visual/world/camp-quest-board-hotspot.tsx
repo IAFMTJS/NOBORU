@@ -38,7 +38,8 @@ export function CampQuestBoardHotspot({
           alt=""
           width={88}
           height={96}
-          className="h-[5.5rem] w-[5rem] object-contain"
+          renderMode="icon"
+          className="h-[5.5rem] w-[5rem] object-cover object-center"
         />
         {hasActiveQuests ? (
           <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.8)]" />

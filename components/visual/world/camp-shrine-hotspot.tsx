@@ -53,8 +53,9 @@ export function CampShrineHotspot({ onClick, streakDays, className }: CampShrine
             alt=""
             width={index === Math.floor(lanternCount / 2) ? 40 : 32}
             height={index === Math.floor(lanternCount / 2) ? 48 : 40}
+            renderMode="icon"
             className={cn(
-              "object-contain",
+              "object-cover object-center",
               index === Math.floor(lanternCount / 2) ? "h-12 w-10" : "h-10 w-8 opacity-90",
               streakDays > 0 && index === Math.floor(lanternCount / 2) && "trail-glow-warm",
             )}

@@ -13,6 +13,7 @@ type WorldArtImageProps = {
   height: number;
   className?: string;
   priority?: boolean;
+  renderMode?: "default" | "icon";
 };
 
 export function WorldArtImage({
@@ -22,6 +23,7 @@ export function WorldArtImage({
   height,
   className,
   priority,
+  renderMode = "default",
 }: WorldArtImageProps) {
   return (
     <Image
@@ -30,7 +32,12 @@ export function WorldArtImage({
       width={width}
       height={height}
       priority={priority}
-      className={cn("object-contain", className)}
+      className={cn(
+        renderMode === "icon"
+          ? "object-cover object-center mix-blend-screen"
+          : "object-contain",
+        className,
+      )}
     />
   );
 }

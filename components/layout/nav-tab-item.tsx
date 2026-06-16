@@ -91,14 +91,14 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
 
       <span
         className={cn(
-          "relative z-10 mt-7 flex h-9 w-9 items-center justify-center rounded-xl ring-1 ring-transparent transition-all duration-300",
+          "relative z-10 mt-7 flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300",
           isActive
             ? cn(
                 config.activeIconRingClass,
                 config.activeGlowClass,
-                "scale-110 ring-2",
+                "scale-110 ring-2 bg-transparent",
               )
-            : "bg-transparent",
+            : "bg-transparent ring-transparent",
         )}
       >
         <NavIconImage

@@ -21,17 +21,22 @@ export function NavIconImage({ tab, active = false, className }: NavIconImagePro
   if (!src) return null;
 
   return (
-    <Image
-      src={src}
-      alt=""
-      width={24}
-      height={24}
-      aria-hidden
+    <span
       className={cn(
-        "h-5 w-5 shrink-0 object-contain transition-all duration-300",
-        active ? cn("scale-110 opacity-100", config.activeIconDropShadow) : "opacity-50",
+        "relative inline-flex h-5 w-5 shrink-0 overflow-hidden rounded-[0.45rem] transition-all duration-300",
+        active ? cn("scale-110 opacity-100", config.activeIconDropShadow) : "opacity-55",
         className,
       )}
-    />
+      aria-hidden
+    >
+      <Image
+        src={src}
+        alt=""
+        width={24}
+        height={24}
+        aria-hidden
+        className="h-full w-full object-cover object-center mix-blend-screen [transform:scale(1.4)]"
+      />
+    </span>
   );
 }
