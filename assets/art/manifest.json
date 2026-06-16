@@ -1,416 +1,416 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-15T13:14:22.421Z",
+  "generatedAt": "2026-06-15T23:24:49.989Z",
   "spec": "art-direction/06_asset_inventory_and_naming.md",
   "count": 236,
   "assets": [
     {
       "id": "bg-trail-foot-hills-night",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-foot-hills-night.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-forest-current-night",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-forest-current-night.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-temple-peak-locked",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-temple-peak-locked.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-temple-peak-boss",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-temple-peak-boss.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-long-region",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-long-region.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-world-overview",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-world-overview.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-multi-region-panorama",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-multi-region-panorama.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-mini-compact",
       "category": "backgrounds/trail",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-mini-compact.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-foothills",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-foothills.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-forest-trail",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-forest-trail.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-mount-n5",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-mount-n5.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-mount-n4",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-mount-n4.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-mount-n3",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-mount-n3.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-mount-n2",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-mount-n2.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-mount-n1",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-mount-n1.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-trail-scroll-master-summit",
       "category": "backgrounds/trail",
-      "width": 3072,
-      "height": 10240,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/trail/bg-trail-scroll-master-summit.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-weather-trail-sunny",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-weather-trail-sunny.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-weather-trail-rainy",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-weather-trail-rainy.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-weather-trail-night",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-weather-trail-night.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-weather-trail-snowy",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-weather-trail-snowy.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-time-trail-morning",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-time-trail-morning.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-time-trail-afternoon",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-time-trail-afternoon.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-time-trail-evening",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-time-trail-evening.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-time-trail-night",
       "category": "backgrounds/weather",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/weather/bg-time-trail-night.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-camp-home-night",
       "category": "backgrounds/camp",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/camp/bg-camp-home-night.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-camp-daily-quests",
       "category": "backgrounds/camp",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/camp/bg-camp-daily-quests.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-camp-loading",
       "category": "backgrounds/camp",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/camp/bg-camp-loading.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-camp-offline",
       "category": "backgrounds/camp",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/camp/bg-camp-offline.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-shrine-achievements",
       "category": "backgrounds/shrine",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/shrine/bg-shrine-achievements.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-shrine-checkpoint",
       "category": "backgrounds/shrine",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/shrine/bg-shrine-checkpoint.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-shrine-lesson-complete-path",
       "category": "backgrounds/shrine",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/shrine/bg-shrine-lesson-complete-path.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-shrine-region-transition-torii",
       "category": "backgrounds/shrine",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/shrine/bg-shrine-region-transition-torii.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-event-sakura-trail",
       "category": "backgrounds/events",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/events/bg-event-sakura-trail.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-event-sakura-map",
       "category": "backgrounds/events",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/events/bg-event-sakura-map.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-event-sakura-rewards",
       "category": "backgrounds/events",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/events/bg-event-sakura-rewards.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-event-bamboo-forest-unlocked",
       "category": "backgrounds/events",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/events/bg-event-bamboo-forest-unlocked.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-shop-general-store-dark",
       "category": "backgrounds/utility",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/utility/bg-shop-general-store-dark.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-avatar-cosmetics-preview",
       "category": "backgrounds/utility",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/utility/bg-avatar-cosmetics-preview.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-memory-book-frame",
       "category": "backgrounds/utility",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/utility/bg-memory-book-frame.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-settings-dark-panel",
       "category": "backgrounds/utility",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/utility/bg-settings-dark-panel.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "bg-social-leaderboard-dark",
       "category": "backgrounds/utility",
-      "width": 2160,
-      "height": 3840,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/backgrounds/utility/bg-social-leaderboard-dark.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-sitting-campfire",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-sitting-campfire.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-standing-traveler",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-standing-traveler.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-walking-backpack",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-walking-backpack.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reading-book",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-reading-book.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-meditating-dojo",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-meditating-dojo.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-telescope-world",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-telescope-world.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-running-ember",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-running-ember.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-hero-profile",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-hero-profile.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-winter-staff",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-winter-staff.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-from-behind-region-transition",
       "category": "characters/noboru/base",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/base/char-noboru-from-behind-region-transition.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-peeking-locked-detail",
@@ -423,218 +423,218 @@
     {
       "id": "char-noboru-reaction-teaching",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-teaching.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-happy",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-happy.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-proud",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-proud.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-worried",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-worried.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-excited",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-excited.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-oops",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-oops.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-encouraging",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-encouraging.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-out-of-hearts",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-out-of-hearts.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-reaction-mastery",
       "category": "characters/noboru/reactions",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/reactions/char-noboru-reaction-mastery.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-weather-sunny",
       "category": "characters/noboru/weather",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/weather/char-noboru-weather-sunny.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-weather-rainy-umbrella",
       "category": "characters/noboru/weather",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/weather/char-noboru-weather-rainy-umbrella.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-weather-night-lantern",
       "category": "characters/noboru/weather",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/weather/char-noboru-weather-night-lantern.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-weather-snowy-cloak",
       "category": "characters/noboru/weather",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/weather/char-noboru-weather-snowy-cloak.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-cosmetic-scarf-crimson",
       "category": "characters/noboru/cosmetics",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/cosmetics/char-noboru-cosmetic-scarf-crimson.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-cosmetic-backpack-bamboo",
       "category": "characters/noboru/cosmetics",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/cosmetics/char-noboru-cosmetic-backpack-bamboo.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-cosmetic-fox-mask",
       "category": "characters/noboru/cosmetics",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/cosmetics/char-noboru-cosmetic-fox-mask.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "char-noboru-cosmetic-preview-base",
       "category": "characters/noboru/cosmetics",
-      "width": 1024,
+      "width": 1536,
       "height": 1024,
       "publicPath": "/art/characters/noboru/cosmetics/char-noboru-cosmetic-preview-base.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-dark-camp-lantern-active-camp",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-dark-camp-lantern-active-camp.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-light-sakura-parchment-active-camp",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-light-sakura-parchment-active-camp.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-moonlit-journey-active-journey",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-moonlit-journey-active-journey.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-bamboo-dojo-active-dojo",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-bamboo-dojo-active-dojo.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-pink-sakura-world-active-world",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-pink-sakura-world-active-world.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-cosmic-world-active-world",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-cosmic-world-active-world.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-rope-scroll-dojo-active-dojo",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-rope-scroll-dojo-active-dojo.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-snow-journey-active-journey",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-snow-journey-active-journey.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-ember-camp-active-camp",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-ember-camp-active-camp.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-premium-gold-profile-active-profile",
       "category": "ui/navbars",
-      "width": 1920,
-      "height": 400,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/navbars/nav-premium-gold-profile-active-profile.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "nav-app-dark-active-journey",
@@ -679,18 +679,18 @@
     {
       "id": "icon-nav-camp-tent-inactive",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-camp-tent-inactive.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-camp-tent-active-amber",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-camp-tent-active-amber.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-camp-tent-active-blue",
@@ -735,10 +735,10 @@
     {
       "id": "icon-nav-journey-mountain-inactive",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-journey-mountain-inactive.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-journey-mountain-active-amber",
@@ -751,10 +751,10 @@
     {
       "id": "icon-nav-journey-mountain-active-blue",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-journey-mountain-active-blue.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-journey-mountain-active-green",
@@ -791,10 +791,10 @@
     {
       "id": "icon-nav-dojo-torii-inactive",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-dojo-torii-inactive.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-dojo-torii-active-amber",
@@ -815,10 +815,10 @@
     {
       "id": "icon-nav-dojo-torii-active-green",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-dojo-torii-active-green.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-dojo-torii-active-red",
@@ -847,10 +847,10 @@
     {
       "id": "icon-nav-world-pagoda-inactive",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-world-pagoda-inactive.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-world-pagoda-active-amber",
@@ -895,10 +895,10 @@
     {
       "id": "icon-nav-world-pagoda-active-violet",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-world-pagoda-active-violet.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-world-compass-inactive",
@@ -1015,10 +1015,10 @@
     {
       "id": "icon-nav-profile-fox-inactive",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-profile-fox-inactive.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-profile-fox-active-amber",
@@ -1055,10 +1055,10 @@
     {
       "id": "icon-nav-profile-fox-active-gold",
       "category": "ui/icons/nav",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nav/icon-nav-profile-fox-active-gold.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-nav-profile-fox-active-violet",
@@ -1183,114 +1183,114 @@
     {
       "id": "icon-node-lesson-camp",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-lesson-camp.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-vocabulary",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-vocabulary.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-kanji",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-kanji.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-listening",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-listening.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-boss-mask",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-boss-mask.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-lock",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-lock.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-complete-check",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-complete-check.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-event-sakura",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-event-sakura.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-region-foot-hills",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-region-foot-hills.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-region-forest",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-region-forest.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-region-temple-peak",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-region-temple-peak.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-node-region-summit",
       "category": "ui/icons/nodes",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/nodes/icon-node-region-summit.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-close",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-close.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-back",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-back.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-menu-dots",
@@ -1311,10 +1311,10 @@
     {
       "id": "icon-ui-settings",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-settings.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-speaker",
@@ -1343,58 +1343,58 @@
     {
       "id": "icon-ui-flame-streak",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-flame-streak.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-gem",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-gem.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-coin",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-coin.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-xp",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-xp.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-heart-full",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-heart-full.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-heart-empty",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-heart-empty.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-check",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-check.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-cross",
@@ -1407,18 +1407,18 @@
     {
       "id": "icon-ui-notification-bell",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-notification-bell.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-globe-language",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-globe-language.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-ui-account",
@@ -1431,10 +1431,10 @@
     {
       "id": "icon-ui-map",
       "category": "ui/icons/ui",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/ui/icons/ui/icon-ui-map.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "panel-dark-glass-small",
@@ -1655,234 +1655,234 @@
     {
       "id": "reward-xp-badge",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-xp-badge.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-gem-purple",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-gem-purple.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-lantern",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-lantern.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-level-medallion-24",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-level-medallion-24.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-badge-kanji-explorer",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-badge-kanji-explorer.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-title-path-master",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-title-path-master.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "reward-trail-bamboo-forest",
       "category": "rewards",
-      "width": 512,
-      "height": 512,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/rewards/reward-trail-bamboo-forest.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-lantern",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-lantern.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-dango",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-dango.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-onigiri",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-onigiri.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-daruma",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-daruma.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-scroll",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-scroll.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-omamori",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-omamori.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-sakura",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-sakura.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-fan",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-fan.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-fox-mask",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-fox-mask.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-stone-lantern",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-stone-lantern.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-scarf-crimson",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-scarf-crimson.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-backpack-bamboo",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-backpack-bamboo.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "item-sakura-petals-trail",
       "category": "props/inventory",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/inventory/item-sakura-petals-trail.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-sakura-petals",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-sakura-petals.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-snowflake",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-snowflake.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-ember",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-ember.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-spark",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-spark.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-rain-streak",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-rain-streak.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-magic-ring",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-magic-ring.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "particle-golden-star",
       "category": "props/particles",
-      "width": 256,
-      "height": 256,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/props/particles/particle-golden-star.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "brand-wordmark-noboru",
       "category": "brand",
-      "width": 1280,
-      "height": 384,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/brand/brand-wordmark-noboru.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-app-dark",
       "category": "brand",
-      "width": 1280,
-      "height": 384,
+      "width": 1536,
+      "height": 1024,
       "publicPath": "/art/brand/icon-app-dark.webp",
-      "source": "procedural"
+      "source": "authored"
     },
     {
       "id": "icon-app-light",
