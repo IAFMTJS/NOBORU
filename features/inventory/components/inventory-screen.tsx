@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
 import { Button } from "@/components/ui";
-import { GlassPanel, StoryTitle } from "@/components/visual/primitives";
-import { ImmersiveWorldShell } from "@/components/visual/shells";
+import { GlassSurfacePanel } from "@/components/visual/primitives/glass-surface";
+import { TabScene } from "@/components/visual/shells/viewport-background";
 import { BagCapacityCard } from "@/features/inventory/components/bag-capacity-card";
 import { InventoryDetailCard } from "@/features/inventory/components/inventory-detail-card";
 import { PouchAccordionSection } from "@/features/inventory/components/pouch-accordion-section";
@@ -131,44 +130,27 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
   }
 
   return (
-    <ImmersiveWorldShell
-      vignette="hub"
-      background={
-        <SceneImage
-          scene="inventory_backpack"
-          alt="Open travel backpack on the trail"
-          className="absolute inset-0 h-full w-full rounded-none"
-          priority
-        />
-      }
-    >
-      <header className="relative z-10 shrink-0 p-4 pt-3">
-        <GlassPanel
-          variant="header"
-          className="space-y-2 rounded-card border-amber-900/40 bg-black/65 p-3"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <StoryTitle as="h1" className="text-base uppercase tracking-wide text-amber-200">
-                Backpack
-              </StoryTitle>
-              <p className="text-caption text-muted-foreground">
-                Pouches laid open - inspect what you carry on the climb
-              </p>
-            </div>
-            <Button
-              type="button"
-              variant="secondary"
-              className="h-9 rounded-xl border border-white/10 bg-black/50 px-3 text-xs"
-              onClick={handleQuickUseOpen}
-            >
-              Quick Use
-            </Button>
+    <TabScene className="flex min-h-full flex-col pb-nav-clearance">
+      <header className="shrink-0 p-4 pt-3">
+        <GlassSurfacePanel variant="hud" className="flex items-center justify-between gap-3 px-3 py-2">
+          <div>
+            <h1 className="font-sans text-section-header font-semibold tracking-tight">Bag</h1>
+            <p className="text-caption text-muted-foreground">
+              {viewModel.items.length} items · pouches on the trail
+            </p>
           </div>
-        </GlassPanel>
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-9 rounded-xl px-3 text-xs"
+            onClick={handleQuickUseOpen}
+          >
+            Quick Use
+          </Button>
+        </GlassSurfacePanel>
       </header>
 
-      <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2">
+      <main className="flex-1 space-y-4 overflow-y-auto px-4 py-2">
         {viewModel.items.length === 0 ? (
           <YamaEmptyState
             surface="generic"
@@ -199,7 +181,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
         )}
       </main>
 
-      <footer className="relative z-10 shrink-0 p-4 pt-2">
+      <footer className="shrink-0 p-4 pt-2">
         <InventoryDetailCard
           item={selectedItem}
           onUse={() => useOne(selectedItem)}
@@ -230,6 +212,6 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
         }
         onUse={() => useMultiple(quickUseItem, quickUseQuantity)}
       />
-    </ImmersiveWorldShell>
+    </TabScene>
   );
 }

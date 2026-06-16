@@ -3,12 +3,19 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { GlassPanel, StoryTitle } from "@/components/visual";
+import { GlassPanel } from "@/components/visual";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { useOfflineContext } from "@/features/offline/components/offline-provider";
+import { cn } from "@/lib/utils";
 
 function SyncStatRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+    <div
+      className={cn(
+        "flex items-center justify-between gap-3 rounded-xl px-3 py-2",
+        glassSurface.chip,
+      )}
+    >
       <span className="text-body-sm">{label}</span>
       <span className="text-caption text-muted-foreground">{value}</span>
     </div>
@@ -23,9 +30,7 @@ export function OfflineSyncPanel() {
   return (
     <GlassPanel className="space-y-3 p-4">
       <div className="space-y-1">
-        <StoryTitle as="h3" className="text-sm tracking-wide">
-          Offline & Sync
-        </StoryTitle>
+        <h3 className="font-sans text-body font-semibold tracking-wide">Offline & Sync</h3>
         <p className="text-caption text-muted-foreground">
           Cached lessons, reviews, and progress sync when you reconnect.
         </p>

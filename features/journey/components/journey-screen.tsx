@@ -8,7 +8,7 @@ import { UiIconImage } from "@/components/media/ui-icon-image";
 import { EventTrailBranch } from "@/components/visual/world/event-trail-branch";
 import { JourneyEventBanner } from "@/features/journey/components/journey-event-banner";
 import { JourneyHud } from "@/features/journey/components/journey-hud";
-import { JourneyWorldScroll } from "@/features/journey/components/journey-world-scroll";
+import { JourneyContinuousTrail } from "@/features/journey/components/journey-continuous-trail";
 import { RegionUnlockOverlay } from "@/features/journey/components/region-unlock-overlay";
 import { useJourneyLessonSummary } from "@/features/journey/hooks/use-journey-lesson-summary";
 import { getNarrativeArcForRegion } from "@/lib/design-system/narrative-regions";
@@ -172,6 +172,12 @@ export function JourneyScreen({
   };
 
   useEffect(() => {
+    if (!scrollToNodeId) return;
+    const target = document.querySelector(`[data-journey-node-id="${scrollToNodeId}"]`);
+    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [scrollToNodeId]);
+
+  useEffect(() => {
     if (!searchParams) return;
     const region = searchParams.get("region");
     const node = searchParams.get("node");
@@ -202,15 +208,6 @@ export function JourneyScreen({
   return (
     <>
       <div className="relative flex h-content min-h-0 flex-col overflow-x-hidden">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-background/80 via-background/30 to-transparent"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-background/70 via-background/20 to-transparent"
-          aria-hidden
-        />
-
         {profileStats ? (
           <JourneyHud
             displayName={profileStats.displayName}
@@ -233,15 +230,14 @@ export function JourneyScreen({
           </header>
         )}
 
-        <JourneyWorldScroll
-          journey={journey}
-          onNodeSelect={handleNodeSelect}
-          companionEvolutionSlug={companionEvolutionSlug ?? undefined}
-          scrollToRegionSlug={scrollToRegionSlug}
-          scrollToNodeId={scrollToNodeId}
-          selectedNodeId={nodeDetailOpen ? selectedNode?.id ?? null : null}
-          className="min-h-0 flex-1"
-        />
+        <div className="relative h-content min-h-0 flex-1 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
+          <JourneyContinuousTrail
+            journey={journey}
+            onNodeSelect={handleNodeSelect}
+            selectedNodeId={nodeDetailOpen ? selectedNode?.id ?? null : null}
+            pulseNodeId={scrollToNodeId}
+          />
+        </div>
 
         {activeEvent ? (
           <JourneyEventBanner

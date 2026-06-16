@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 
-import { UiIconImage } from "@/components/media/ui-icon-image";
-import { NavStatChip } from "@/components/visual/navigation";
-import { StoryTitle } from "@/components/visual/primitives";
+import { ArtLibraryImage } from "@/components/media/art-library-image";
 import {
-  VISUAL_MOCKUP,
-  resolveDisplayGemCount,
-} from "@/components/visual/tokens";
+  GlassSurfaceChip,
+  GlassSurfacePanel,
+  glassSurface,
+} from "@/components/visual/primitives/glass-surface";
+import { resolveDisplayGemCount } from "@/components/visual/tokens";
 import { cn } from "@/lib/utils";
 
 type JourneyHudProps = {
@@ -21,7 +21,7 @@ type JourneyHudProps = {
   className?: string;
 };
 
-/** Journey HUD — profile, place, streak, gems (mockup contract). */
+/** Journey HUD — glass profile chip, region, streak, gems. */
 export function JourneyHud({
   displayName,
   levelLabel,
@@ -36,15 +36,14 @@ export function JourneyHud({
   return (
     <header
       className={cn(
-        "absolute inset-x-3 top-3 z-30 flex items-center gap-1.5 rounded-card border px-2 py-1.5 sm:inset-x-4 sm:gap-2 sm:px-2.5",
-        VISUAL_MOCKUP.glass.borderClass,
-        VISUAL_MOCKUP.glass.bgClass,
+        "pointer-events-auto absolute inset-x-3 top-3 z-30 flex items-center gap-1.5 px-2 py-1.5",
+        glassSurface.hud,
         className,
       )}
     >
       <Link
         href="/profile"
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/20 text-caption font-semibold text-primary sm:h-9 sm:w-9 sm:text-body-sm"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-caption font-semibold text-primary backdrop-blur-sm"
         aria-label={`Profile: ${displayName}`}
       >
         {displayName.charAt(0).toUpperCase()}
@@ -53,22 +52,21 @@ export function JourneyHud({
       <button
         type="button"
         onClick={onRegionOverview}
-        className={cn(
-          "mx-auto inline-flex min-w-0 max-w-[48%] items-center gap-1 rounded-full border px-2.5 py-1 sm:px-3",
-          VISUAL_MOCKUP.glass.borderClass,
-          "bg-black/30",
-        )}
+        className={cn(glassSurface.chip, "focus-ring mx-auto max-w-[48%] px-2.5 py-1")}
       >
-        <StoryTitle as="h1" className="truncate text-caption uppercase text-white sm:text-body-sm">
-          {regionName}
-        </StoryTitle>
-        <UiIconImage name="chevron_down" size={12} className="shrink-0 opacity-70" />
+        <span className="truncate font-sans text-body font-semibold uppercase">{regionName}</span>
       </button>
 
       <div className="ml-auto flex shrink-0 items-center gap-1">
-        <p className="text-caption text-white/70">Lv {levelLabel}</p>
-        <NavStatChip icon="flame" value={currentStreak} label="Streak" />
-        <NavStatChip icon="gem" value={gemCount} label="Gems" className="text-violet-200" />
+        <p className="text-caption text-muted-foreground">Lv {levelLabel}</p>
+        <GlassSurfaceChip>
+          <ArtLibraryImage themedBase="icons/icon_ui_flame_streak" src="" alt="" width={13} height={13} />
+          {currentStreak}
+        </GlassSurfaceChip>
+        <GlassSurfaceChip className="text-violet-700">
+          <ArtLibraryImage themedBase="icons/icon_ui_gem" src="" alt="" width={13} height={13} />
+          {gemCount}
+        </GlassSurfaceChip>
       </div>
     </header>
   );

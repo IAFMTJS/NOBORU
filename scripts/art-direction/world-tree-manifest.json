@@ -1,0 +1,77 @@
+{
+  "folder": "Art Library/world-tree",
+  "version": 2,
+  "activeVersion": 2,
+  "canvas": {
+    "width": 1536,
+    "height": 1024,
+    "orientation": "portrait",
+    "note": "Generator outputs 1536x1024. Stack vertically; engine blends 96-128px overlap."
+  },
+  "anchors": {
+    "trunkCenterXPercent": 50,
+    "trunkWidthPercent": 28,
+    "pathCorridorWidthPercent": 32,
+    "seamOverlapPx": 96,
+    "seamZonePercent": 20
+  },
+  "naming": "wt_{segment}_{theme}_v2.png",
+  "tileTypes": {
+    "BOTTOM": "Only roots segment — earth at bottom, mist at top. No canopy at top edge.",
+    "MID": "Trunk-only — mist at BOTH top and bottom. No ground, no buildings, no roots, no canopy cutoffs.",
+    "TOP": "Canopy transition — mist at bottom only (future batches)"
+  },
+  "rules": {
+    "noUi": true,
+    "noText": true,
+    "noMockLessons": true,
+    "notTransparent": true,
+    "lightDarkPairs": true,
+    "sameTrunkSilhouette": "Identical trunk width and center X across all tiles in a stack",
+    "noRunesUnlessAll": false,
+    "forbiddenMidTile": ["ground", "roots", "buildings", "pagodas", "village", "canopy at top edge", "glowing runes"]
+  },
+  "palettes": {
+    "light": ["#F4EFE3", "#E9E1D0", "#5E7357", "#7B8D5A"],
+    "dark": ["#0D1320", "#131D2D", "#D6A85F", "#8EAA8B"]
+  },
+  "segments": [
+    {
+      "id": "roots",
+      "folder": "01_roots",
+      "order": 0,
+      "tileType": "BOTTOM",
+      "region": "foothills",
+      "season": "spring",
+      "desc": "Roots in earth bottom. Trunk center 50%. Top 20% mist only — trunk continues up, no branches at top."
+    },
+    {
+      "id": "foothills_01",
+      "folder": "02_foothills_01",
+      "order": 1,
+      "tileType": "MID",
+      "region": "foothills",
+      "season": "spring",
+      "desc": "Trunk-only mid tile. Mist top+bottom. Distant soft green hills at far edges only."
+    },
+    {
+      "id": "foothills_02",
+      "folder": "03_foothills_02",
+      "order": 2,
+      "tileType": "MID",
+      "region": "foothills",
+      "season": "spring",
+      "desc": "Trunk-only mid tile. Same trunk width. Soft sakura hint far edges only."
+    },
+    {
+      "id": "foothills_03",
+      "folder": "04_foothills_03",
+      "order": 3,
+      "tileType": "MID",
+      "region": "foothills",
+      "season": "spring",
+      "desc": "Trunk-only mid tile. Denser edge foliage, trunk corridor stays open."
+    }
+  ],
+  "batch1": ["roots", "foothills_01", "foothills_02", "foothills_03"]
+}

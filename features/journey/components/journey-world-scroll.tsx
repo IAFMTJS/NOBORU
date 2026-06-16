@@ -1,175 +1,147 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useTheme } from "next-themes";
-import { useReducedMotion } from "framer-motion";
+import Link from "next/link";
+import { useCallback, useEffect, useRef } from "react";
 
-import { JourneyRegionGate } from "@/features/journey/components/journey-region-gate";
-import { JourneyRegionSection } from "@/features/journey/components/journey-region-section";
-import { JourneyScrollIndicator } from "@/features/journey/components/journey-scroll-indicator";
-import { resolveJourneyVisualSettings } from "@/features/journey/constants/journey-visual.constants";
-import type { CompanionEvolutionSlug } from "@/features/companion/types/companion.types";
 import type {
   JourneyNode,
   JourneyPathViewModel,
 } from "@/features/journey/types/journey.types";
-import { resolveVisualTier } from "@/lib/performance/visual-tier";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type JourneyWorldScrollProps = {
   journey: JourneyPathViewModel;
   onNodeSelect?: (node: JourneyNode) => void;
-  companionEvolutionSlug?: CompanionEvolutionSlug;
+  companionEvolutionSlug?: string;
   scrollToRegionSlug?: string | null;
   scrollToNodeId?: string | null;
   selectedNodeId?: string | null;
   className?: string;
 };
 
+const NODE_STATE_LABEL: Record<JourneyNode["state"], string> = {
+  locked: "Locked",
+  available: "Available",
+  in_progress: "In progress",
+  completed: "Done",
+};
+
+/** Basic lesson list — visuals stripped for rebuild. */
 export function JourneyWorldScroll({
   journey,
   onNodeSelect,
-  companionEvolutionSlug,
-  scrollToRegionSlug = null,
   scrollToNodeId = null,
   selectedNodeId = null,
   className,
 }: JourneyWorldScrollProps) {
-  const { resolvedTheme } = useTheme();
-  const prefersReducedMotion = useReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const visualTier = resolveVisualTier();
-  const visualSettings = useMemo(
-    () => resolveJourneyVisualSettings(visualTier),
-    [visualTier],
-  );
-
   const currentNodeId = journey.position.currentNodeId;
-  const currentRegionSlug = journey.position.currentRegionSlug;
 
-  const scrollToSelector = useCallback(
-    (selector: string, block: ScrollLogicalPosition = "center") => {
-      const scrollEl = scrollRef.current;
-      if (!scrollEl) return;
-      const target = scrollEl.querySelector(selector);
-      if (!target) return;
-      target.scrollIntoView({
-        block,
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-      });
-    },
-    [prefersReducedMotion],
-  );
-
-  useEffect(() => {
-    if (scrollToNodeId) {
-      scrollToSelector(`[data-journey-node-id="${scrollToNodeId}"]`, "center");
-      return;
-    }
-    if (!currentNodeId) return;
-    scrollToSelector(`[data-journey-node-id="${currentNodeId}"]`, "center");
-  }, [currentNodeId, scrollToNodeId, scrollToSelector]);
-
-  useEffect(() => {
-    if (!scrollToRegionSlug) return;
-    scrollToSelector(`[data-journey-region-gate="${scrollToRegionSlug}"]`, "start");
-  }, [scrollToRegionSlug, scrollToSelector]);
-
-  const updateViewportCenter = useCallback(() => {
+  const scrollToSelector = useCallback((selector: string) => {
     const scrollEl = scrollRef.current;
     if (!scrollEl) return;
-
-    const sections = scrollEl.querySelectorAll<HTMLElement>(
-      "[data-journey-region-section]",
-    );
-    const scrollRect = scrollEl.getBoundingClientRect();
-    const viewportCenter = scrollRect.top + scrollRect.height / 2;
-
-    sections.forEach((section) => {
-      const sectionRect = section.getBoundingClientRect();
-      const relativeCenter = viewportCenter - sectionRect.top;
-      if (sectionRect.height <= 0) return;
-      const centerY = Math.min(
-        100,
-        Math.max(0, (relativeCenter / sectionRect.height) * 100),
-      );
-      section.style.setProperty("--journey-viewport-center-y", `${centerY}`);
-    });
+    const target = scrollEl.querySelector(selector);
+    target?.scrollIntoView({ block: "center", behavior: "auto" });
   }, []);
 
   useEffect(() => {
-    const scrollEl = scrollRef.current;
-    if (!scrollEl) return;
-
-    updateViewportCenter();
-    scrollEl.addEventListener("scroll", updateViewportCenter, { passive: true });
-    window.addEventListener("resize", updateViewportCenter);
-
-    return () => {
-      scrollEl.removeEventListener("scroll", updateViewportCenter);
-      window.removeEventListener("resize", updateViewportCenter);
-    };
-  }, [journey.regions.length, updateViewportCenter]);
+    if (scrollToNodeId) {
+      scrollToSelector(`[data-journey-node-id="${scrollToNodeId}"]`);
+      return;
+    }
+    if (currentNodeId) {
+      scrollToSelector(`[data-journey-node-id="${currentNodeId}"]`);
+    }
+  }, [currentNodeId, scrollToNodeId, scrollToSelector]);
 
   if (journey.regions.every((region) => region.nodes.length === 0)) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-body-sm text-muted-foreground">
-        The mountain trail is not ready yet.
+        No lessons yet.
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-0 flex-1">
-      <JourneyScrollIndicator journey={journey} scrollContainerRef={scrollRef} />
-
-      <div
-        ref={scrollRef}
-        className={cn(
-          "h-full min-h-0 overflow-y-auto overscroll-contain",
-          className,
-        )}
-      >
-        {journey.regions.map((region, index) => {
-          const locked = region.availability === "locked";
-          const isCurrentRegion = region.slug === currentRegionSlug;
-
-          return (
-            <div key={region.slug} className="relative">
-              <JourneyRegionGate
-                region={region}
-                previousRegionName={
-                  index > 0 ? (journey.regions[index - 1]?.name ?? null) : null
-                }
-                compact={region.slug === currentRegionSlug}
-                className={locked ? "opacity-80" : undefined}
-              />
-
-              <JourneyRegionSection
-                region={region}
-                theme={resolvedTheme}
-                loadArtwork={!locked || visualSettings.maxLoadedArtSections === 0}
-                artPriority={isCurrentRegion}
-                visualSettings={visualSettings}
-                showFox={isCurrentRegion}
-                companionEvolutionSlug={companionEvolutionSlug}
-                dimmed={locked}
-                immersive
-                selectedNodeId={selectedNodeId}
-                pulseNodeId={scrollToNodeId}
-                onNodeSelect={locked ? undefined : onNodeSelect}
-              />
-
-              {locked ? (
-                <div
-                  className="pointer-events-none absolute inset-0 z-[15] bg-gradient-to-b from-background/55 via-background/35 to-background/65 backdrop-blur-[1px]"
-                  aria-hidden
-                />
-              ) : null}
+    <div
+      ref={scrollRef}
+      className={cn("h-full min-h-0 flex-1 overflow-y-auto p-4", className)}
+    >
+      <div className="space-y-6">
+        {journey.regions.map((region) => (
+          <section key={region.id} data-journey-region-gate={region.slug}>
+            <div className="mb-2 flex items-baseline justify-between gap-2">
+              <h2 className="text-base font-semibold">{region.name}</h2>
+              <span className="text-caption text-muted-foreground">
+                {region.completedCount}/{region.lessonCount}
+              </span>
             </div>
-          );
-        })}
+            {region.description ? (
+              <p className="mb-3 text-body-sm text-muted-foreground">{region.description}</p>
+            ) : null}
+            <ul className="space-y-2">
+              {region.nodes.map((node) => {
+                const selected = selectedNodeId === node.id;
+                const content = (
+                  <div
+                    data-journey-node-id={node.id}
+                    className={cn(
+                      "flex items-center justify-between gap-3 rounded-lg border border-border px-3 py-2 text-body-sm",
+                      selected && "border-primary",
+                      node.state === "locked" && "opacity-60",
+                    )}
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium">{node.label}</p>
+                      {node.subtitle ? (
+                        <p className="text-caption text-muted-foreground">{node.subtitle}</p>
+                      ) : null}
+                    </div>
+                    <span className="shrink-0 text-caption text-muted-foreground">
+                      {NODE_STATE_LABEL[node.state]}
+                    </span>
+                  </div>
+                );
+
+                if (node.href && node.state !== "locked") {
+                  return (
+                    <li key={node.id}>
+                      <Link href={node.href} className="block focus-ring rounded-lg">
+                        {content}
+                      </Link>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li key={node.id}>
+                    {onNodeSelect && node.state !== "locked" ? (
+                      <button
+                        type="button"
+                        className="w-full text-left focus-ring rounded-lg"
+                        onClick={() => onNodeSelect(node)}
+                      >
+                        {content}
+                      </button>
+                    ) : (
+                      content
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
       </div>
+
+      {journey.nextLessonHref ? (
+        <div className="sticky bottom-4 mt-6">
+          <Button asChild className="w-full">
+            <Link href={journey.nextLessonHref}>Continue</Link>
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

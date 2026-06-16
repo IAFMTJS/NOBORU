@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { cn } from "@/lib/utils";
 
 type StudyAtmosphereProps = {
@@ -8,14 +9,5 @@ type StudyAtmosphereProps = {
 };
 
 export function StudyAtmosphere({ children, className }: StudyAtmosphereProps) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border border-border/60 bg-gradient-to-b from-primary/[0.06] via-card to-card p-3 shadow-elevation-1 dark:from-primary/[0.08]",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn(glassSurface.card, "space-y-3 p-4", className)}>{children}</div>;
 }

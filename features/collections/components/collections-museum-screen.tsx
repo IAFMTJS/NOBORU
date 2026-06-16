@@ -3,13 +3,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import {
-  GlassPanel,
-  IllustratedScreen,
-  StoryTitle,
-} from "@/components/visual";
+import { GlassPanel } from "@/components/visual";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
+import { SecondaryScreenShell } from "@/components/visual/shells/secondary-screen-shell";
 import { WorldArtImage } from "@/components/visual/world/world-art-image";
 import type {
   CollectionArtifactCategory,
@@ -50,9 +47,8 @@ function ArtifactPedestal({
       onClick={onSelect}
       className={cn(
         "flex flex-col items-center gap-2 rounded-2xl border px-3 py-4 text-center transition-colors",
-        selected
-          ? "border-trail-glow/60 bg-trail-glow/10 shadow-[0_0_16px_hsl(var(--trail-glow)/0.2)]"
-          : "border-white/15 bg-black/35 hover:border-trail-glow/30",
+        glassSurface.card,
+        selected && "border-primary/30 bg-primary/10 ring-1 ring-primary/20",
         !artifact.discovered && "opacity-70",
       )}
       aria-pressed={selected}
@@ -64,8 +60,8 @@ function ArtifactPedestal({
     >
       <span
         className={cn(
-          "flex h-16 w-16 items-center justify-center rounded-full border bg-black/40",
-          artifact.discovered ? "border-trail-glow/30" : "border-white/10",
+          "flex h-16 w-16 items-center justify-center rounded-full border bg-white/40",
+          artifact.discovered ? "border-primary/25" : "border-border",
         )}
       >
         {artifact.discovered ? (
@@ -80,7 +76,7 @@ function ArtifactPedestal({
           <UiIconImage name="lock" size={24} className="opacity-60" />
         )}
       </span>
-      <span className="line-clamp-2 text-caption font-medium text-white">
+      <span className="line-clamp-2 text-caption font-medium text-foreground">
         {artifact.discovered ? artifact.name : "???"}
       </span>
     </button>
@@ -105,51 +101,15 @@ export function CollectionsMuseumScreen({ museum }: CollectionsMuseumScreenProps
     null;
 
   return (
-    <IllustratedScreen
-      scrim="none"
-      className="min-h-dvh"
-      background={
-        <SceneImage
-          scene="checkpoint_shrine"
-          alt="Shrine hall displaying trail artifacts"
-          className="absolute inset-0 min-h-dvh rounded-none"
-          priority
-        />
-      }
+    <SecondaryScreenShell
+      title="Collections"
+      subtitle={`${museum.discoveredCount}/${museum.totalCount} discoveries in the exhibit hall`}
+      backHref="/profile"
+      backLabel="Profile"
+      contentClassName="pb-2"
     >
-      <div className="relative flex min-h-dvh flex-col">
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/30 to-black/85"
-          aria-hidden
-        />
-
-        <header className="relative z-10 shrink-0 p-4 pt-3">
-          <Link
-            href="/profile"
-            className="mb-3 inline-flex items-center gap-1.5 text-body-sm text-white/70 transition-colors hover:text-white"
-          >
-            <UiIconImage name="arrow_left" size={16} />
-            Profile
-          </Link>
-
-          <div className="space-y-1 rounded-card border border-white/12 bg-black/45 p-4">
-            <div className="space-y-0.5">
-              <StoryTitle as="h1" className="text-base">
-                Collections
-              </StoryTitle>
-              <p className="text-caption text-muted-foreground">
-                Artifacts discovered along the climb — curated, not catalogued
-              </p>
-            </div>
-            <p className="font-story text-sm text-trail-glow tabular-nums">
-              {museum.discoveredCount}/{museum.totalCount} discoveries in the exhibit hall
-            </p>
-          </div>
-        </header>
-
-        <main className="relative z-10 flex-1 overflow-y-auto px-4 py-2">
-          <div className="mx-auto max-w-md space-y-6 pb-4">
-            {museum.artifacts.length === 0 ? (
+      <div className="mx-auto max-w-md space-y-6">
+        {museum.artifacts.length === 0 ? (
               <YamaEmptyState
                 surface="generic"
                 title="Exhibit hall awaits discovery"
@@ -188,15 +148,12 @@ export function CollectionsMuseumScreen({ museum }: CollectionsMuseumScreenProps
                 )}
               </section>
               ))
-            )}
-          </div>
-        </main>
+        )}
 
-        <footer className="relative z-10 shrink-0 p-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2">
-          {selectedArtifact ? (
-            <GlassPanel className="mx-auto max-w-md space-y-3 rounded-card p-4">
+        {selectedArtifact ? (
+          <GlassPanel className="space-y-3 p-4">
               <div className="flex items-start gap-3">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-trail-glow/25 bg-black/40">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-white/45">
                   {selectedArtifact.discovered ? (
                     <WorldArtImage
                       asset={INVENTORY_ITEM_ASSETS[selectedArtifact.assetKey]}
@@ -227,16 +184,13 @@ export function CollectionsMuseumScreen({ museum }: CollectionsMuseumScreenProps
                   Discovered {new Date(selectedArtifact.discoveredAt).toLocaleDateString()}
                 </p>
               ) : null}
-            </GlassPanel>
-          ) : (
-            <GlassPanel className="mx-auto max-w-md rounded-card p-3 text-center">
-              <p className="text-caption text-muted-foreground">
-                Select an artifact to read its story
-              </p>
-            </GlassPanel>
-          )}
-        </footer>
+          </GlassPanel>
+        ) : (
+          <GlassPanel className="p-3 text-center">
+            <p className="text-caption text-muted-foreground">Select an artifact to read its story</p>
+          </GlassPanel>
+        )}
       </div>
-    </IllustratedScreen>
+    </SecondaryScreenShell>
   );
 }

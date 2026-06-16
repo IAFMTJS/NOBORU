@@ -1,8 +1,10 @@
 # 00 - Global Visual System
 
+> **Note:** Color system, generation rules, forbidden styles, and icon requirements are authoritative in **[08_visual_art_direction_master_spec.md](./08_visual_art_direction_master_spec.md)**. This document retains screen-level detail, mockup-derived inventories, and legacy palette references for supplementary use.
+
 ## Product Feeling
 
-Noboru should feel like a cozy but epic Japanese mountain-learning adventure. The user is climbing through regions by completing lessons. The app is a language-learning tool, but the visual world should read like a premium mobile RPG: painterly backgrounds, glowing trail nodes, shrines, lanterns, forest paths, foggy peaks, and a loyal fox companion who reacts to progress.
+Noboru is a **fantasy adventure game that teaches Japanese** — not a language-learning productivity app. The user climbs the sacred Noboru mountain with a magical kitsune companion. Visuals must read as premium AAA stylized realism (Genshin Impact, Ghost of Tsushima, Ghibli environments, Okami) — never cartoon, chibi, kawaii, Duolingo, flat SaaS, or stock illustration.
 
 The dominant mood is night camp warmth against deep mountain darkness. The emotional range moves from safe campfire comfort to mysterious locked paths, sakura festival celebration, snowy mountain quiet, and volcanic boss challenge intensity.
 

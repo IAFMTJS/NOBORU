@@ -34,7 +34,7 @@ export const SCENE_BACKGROUND_ASSETS: Record<SceneId, ArtAssetRef> = {
 
 /** Tall vertical scroll art per journey region (1536×5120). */
 export const REGION_TRAIL_SCROLL_ASSETS: Record<RegionSlug, ArtAssetRef> = {
-  foothills: { category: "backgrounds/trail", id: "bg-trail-scroll-foothills" },
+  foothills: { category: "backgrounds/trail", id: "bg-trail-foot-hills-night" },
   "forest-trail": { category: "backgrounds/trail", id: "bg-trail-scroll-forest-trail" },
   "mount-n5": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n5" },
   "mount-n4": { category: "backgrounds/trail", id: "bg-trail-scroll-mount-n4" },
@@ -390,6 +390,7 @@ export const CAMP_WORLD_ASSETS = {
   achievement_shrine: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
 } as const satisfies Record<string, ArtAssetRef>;
 
-export function resolveArtAsset(ref: ArtAssetRef): string {
-  return `/art/${ref.category}/${ref.id}.webp`;
+/** Visuals stripped — returns null path until assets are rebuilt in public/art. */
+export function resolveArtAsset(_ref: ArtAssetRef): string {
+  return "";
 }

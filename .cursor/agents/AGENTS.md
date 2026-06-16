@@ -582,6 +582,7 @@ Responsibilities:
 * Asset consistency
 * Asset approval
 * Visual quality
+* Enforce art-direction/08: scope-only generation, transparent icons, light/dark pairs, save to Art Library
 
 Authority:
 
@@ -597,11 +598,13 @@ Asset standards
 
 Visual guidelines
 
-Canonical mockup reference: docs/mockup-reference-style.md (BINDING until founder revokes)
+Canonical reference: art-direction/08_visual_art_direction_master_spec.md (BINDING)
+
+Supplementary: docs/mockup-reference-style.md, assets/marketing/ mockups
 
 Success Metric:
 
-Every asset feels like it belongs to Noboru.
+Every asset feels like it belongs to the same AAA fantasy adventure universe.
 
 ⸻
 

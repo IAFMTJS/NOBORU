@@ -1,281 +1,102 @@
 # 05 - Cursor Generation Brief
 
-Use this file as the direct generation and implementation brief for Cursor. It condenses the full art bible into actionable instructions and acceptance checks.
+Use this file as the direct generation and implementation brief for Cursor. It condenses the art bible into actionable instructions and acceptance checks.
+
+**Binding authority:** [08_visual_art_direction_master_spec.md](./08_visual_art_direction_master_spec.md) — read first for every generation request.
 
 ## One-Sentence Product Art Brief
 
-Noboru is a painterly Japanese mountain-learning RPG where a white fox companion guides the user through glowing lesson trails, cozy campfire hubs, shrine milestones, seasonal paths, and tactile dark/parchment UI.
+Noboru is a AAA stylized-realism Japanese fantasy adventure where a magical kitsune companion guides the user through glowing lesson trails, lantern forests, shrine milestones, and tactile parchment/lacquer UI — teaching Japanese through exploration, not chores.
+
+## Non-Negotiable Generation Rules
+
+1. **Generate only what is asked.** No extra props, poses, or style experiments.
+2. **Never deviate from the requested style.** Regenerate if output looks like Duolingo, Canva, flat SaaS, chibi, or stock art.
+3. **Icons: transparent background only.** PNG/WebP with alpha — no baked backgrounds.
+4. **Every asset: light + dark versions.** Same design, colors only change per master spec palettes.
+5. **Naming:** `name_light_v1` and `name_dark_v1`.
+6. **Save to `Art Library/`** — all new art files go to `D:\NOBORU\Art Library` with category subfolders (e.g. `Art Library/icons/`).
+7. **Post-process icons for true alpha:** run `node scripts/art-direction/strip-icon-backgrounds.mjs "Art Library/icons"` — generators fake transparency; rembg produces real RGBA PNGs.
 
 ## Universal Prompt Prefix
 
 Use this prefix before generating any Noboru screen, component, or asset:
 
-> Painterly premium mobile RPG UI for Noboru, a Japanese language learning adventure. Dark blue-black mountain atmosphere, warm lantern/campfire glow, Japanese shrine and trail motifs, handcrafted dark glass/parchment/wood UI, white fox companion with red forehead markings, red scarf, backpack, expressive ears, cozy but epic mood, high readability, detailed environmental depth, no flat generic SaaS styling.
+> Premium AAA fantasy adventure UI for Noboru — stylized realism, mythological dreamlike Japan, NOT cartoon/chibi/kawaii/Duolingo/SaaS. Sacred mountain ascent with magical white-orange kitsune companion. Hand-crafted stone/parchment/wood/lacquer/brass UI with volumetric depth and soft glows. Transparent background for icons. Deliver both light mode (morning parchment palette) and dark mode (lantern forest night palette) versions — same design, colors only.
 
 ## Screen Generation Checklist
 
 Every generated screen should answer:
 
-- What is the environment: camp, trail, shrine, forest, sakura, snow, bamboo, shop, memory book, boss temple?
-- Where is Noboru, and what emotion/pose is he showing?
-- What is the main light source?
+- What is the environment: lantern forest, bamboo valley, river bridge, mist shrine, sky temple, camp, trail, memory book?
+- Where is the kitsune companion, and what emotion/pose?
+- What is the main light source (lantern, moonlight, campfire, spirit glow)?
 - What is the active user action?
-- Which UI material is used: dark glass, parchment, wood, stone, ice, brass/gold?
+- Which UI material: dark lacquer, parchment, wood, stone, brass?
 - Are progress, active, locked, complete, and reward states visually distinct?
-- Does the screen include foreground, midground, and background detail?
+- Does the screen include foreground, midground, and background depth?
 - Are labels readable over the art?
+- Does it avoid forbidden styles and forbidden colors from doc 08?
 
 ## Global Component Checklist
 
 ### Bottom Navigation
 
-- 5 items.
-- Icons above labels.
-- Active tab has colored icon, colored label, glowing underline/dot.
-- Inactive tabs are muted grey/brown.
-- Use consistent icon meanings:
-  - Journey: mountain/path.
-  - Camp: tent/campfire.
-  - Study: book.
-  - Bag: backpack.
-  - Profile: fox head or person.
-  - Dojo: torii when using concept nav.
-  - World: pagoda or compass.
-- If using concept-style nav, Noboru overlaps left edge.
+- 5 items — adventure equipment feel (scroll, lantern, shrine, backpack, compass, fox emblem).
+- Icons above labels — fantasy game UI style, not thin outline app tabs.
+- Active tab: Lantern Gold glow; inactive: `#8A857A`.
+- Transparent icon assets with `_light` and `_dark` variants.
 
 ### Trail Map
 
-- Winding path from bottom to top.
-- Uneven glowing stepping stones.
-- Current node larger and warmer.
-- Locked nodes grey with padlock.
-- Completed nodes green check or bright filled glow.
+- Winding path from bottom to top — glowing stepping stones.
+- Current node larger and warmer; locked grey with padlock; completed Moss Green.
 - Future path fogged but visible.
-- Lanterns and shrine/temple details along the way.
+- Lesson labels: Lantern Trial, Shrine Challenge — not "Question 1 of 10".
 
 ### Lesson Card
 
-- Dark rounded card.
-- Title, lesson number, type/topic.
-- XP and duration.
-- Strong CTA if actionable.
-- Background art visible behind card.
+- Material-based panel (lacquer/parchment/wood) — not flat white card.
+- Title, trial type, topic, XP, duration, CTA.
+- Background art visible behind panel.
 
 ### Reward Card
 
-- Central reward object or icon.
-- Gold/amber halo and sparks.
-- Text label for exact unlock.
-- If item reward, show actual item art.
+- Central reward object; Lantern Gold halo; sparks.
+- Legendary items may use Spirit Violet accent.
 
 ### Empty/Loading State
 
-- Noboru illustration.
-- Scenic background.
-- One clear action or status line.
-- Small amber spinner or red/orange button.
+- Kitsune illustration + scenic background + one clear action.
+- Full art — never plain spinner on blank card.
 
 ## Required Asset Families
 
-Create or maintain these asset families if building final art:
+Each family item needs **light and dark** variants unless background art is theme-specific by nature.
 
-1. Noboru base poses:
-   - sitting calm.
-   - walking/traveling.
-   - meditating.
-   - reading.
-   - cheering.
-   - worried.
-   - excited.
-   - sad/out of hearts.
-   - heroic/profile.
-   - winter travel.
-2. Noboru reaction variants:
-   - happy.
-   - proud.
-   - encouraging.
-   - teaching.
-   - oops.
-   - mastery.
-3. Region backgrounds:
-   - Foot Hills.
-   - Forest Trail.
-   - Temple Peak.
-   - The Summit.
-   - Sakura Festival side path.
-   - Bamboo Forest.
-   - Boss shrine.
-4. UI materials:
-   - dark glass/lacquer card.
-   - cream parchment.
-   - pink sakura parchment.
-   - wood plank board.
-   - rope scroll border.
-   - icy blue stone/parchment.
-   - black and gold premium frame.
-5. Icons:
-   - camp/tent.
-   - journey/mountain.
-   - dojo/torii.
-   - world/pagoda.
-   - world/compass.
-   - profile/person.
-   - fox head.
-   - study/book.
-   - bag/backpack.
-   - lock.
-   - speaker.
-   - microphone.
-   - flame.
-   - gem.
-   - XP badge.
-   - lantern.
-   - check mark.
-   - close/back/menu.
-6. Inventory items:
-   - lantern.
-   - dango.
-   - onigiri.
-   - daruma.
-   - scroll.
-   - omamori.
-   - sakura.
-   - fan.
-   - fox mask.
-   - stone lantern.
-
-## Exact Screen Inventory To Generate
-
-### From Mockup 1
-
-- 10 bottom nav concepts:
-  - dark camp lantern.
-  - light sakura parchment.
-  - moonlit journey.
-  - bamboo dojo.
-  - pink sakura world.
-  - cosmic explorer.
-  - rope scroll dojo.
-  - snow journey.
-  - ember camp.
-  - premium gold profile.
-
-### From Mockup 2
-
-- short trail starting region.
-- long trail full region.
-- focused current position trail.
-- future locked path.
-- branching sakura event path.
-- boss challenge node.
-- progress overlay.
-- zoomed-out world view.
-- zoomed-in node view.
-- before/after path animation.
-- region transition.
-- locked node detail.
-- weather variants: sunny, rainy, night, snowy.
-- time variants: morning, afternoon, evening, night.
-- current lesson pin.
-- next lesson preview.
-- multi-region journey.
-- mini compact trail.
-
-### From Mockup 3
-
-- companion interaction cards: teaching, happy, proud, worried, excited.
-- lesson type cards: vocabulary, kanji writing, listening, sentence order, conversation.
-- correct answer states: good, great, perfect, streak x5, mastery.
-- wrong answer states: incorrect, almost, hint, heart lost, out of hearts.
-- reward cards: lesson complete, level up, new badge, new item, new trail.
-- camp/home base.
-- review cards.
-- progress analytics.
-- streak milestones.
-- shop/general store.
-- avatar/cosmetics.
-- friends/leaderboard.
-- event detail.
-- settings.
-- offline mode.
-- loading states.
-- empty/no content states.
-
-### From Mockup 4
-
-- achievement shrine.
-- daily quest camp.
-- region overview bottom sheet.
-- lesson complete path screen.
-- checkpoint shrine.
-- fox companion reaction library.
-- environmental reaction cards.
-- inventory/backpack.
-- long trail example.
-- memory book.
-- seasonal event map.
-
-## Prompt Fragments By Theme
-
-### Dark Trail
-
-> vertical mobile screen, moonlit Japanese mountain trail, winding glowing stone path, warm lanterns, dark forest, distant torii gate, small shrine houses, blue-black sky, amber lesson nodes, current node with golden halo, dark glass UI overlays.
-
-### Camp Home
-
-> cozy night mountain camp, canvas tent, campfire center, red torii gate in background, Noboru fox sitting by fire, lanterns, stars, warm orange light, dark transparent quest panel, bottom navigation.
-
-### Shrine Reward
-
-> ceremonial red torii shrine, thick sacred rope, hanging paper shide, stone steps, lanterns, white fox companion, golden achievement medallion, reward panel with XP, purple gem, lantern item, magical amber halo.
-
-### Sakura Event
-
-> dark mountain trail transformed by sakura festival, pink cherry blossoms and drifting petals, warm path lights, event side route, red progress card, seasonal rewards, soft pink accents against blue-black forest.
-
-### Snow Region
-
-> icy blue mountain trail, snowbanks, falling snow, frosted stone lantern, Noboru in blue winter cloak holding staff, glowing blue journey icon, cold moonlight with tiny warm lantern accents.
-
-### Boss Challenge
-
-> ominous red-black temple at night, smoky volcanic mountain, ember particles, large locked boss seal with oni mask icon, dark warning card, red underlighting, high contrast.
-
-### Memory Book
-
-> tactile parchment memory book UI, aged pages, binder rings, side tabs, small painted thumbnails, warm ink text, dark frame, Japanese language learning milestones.
-
-## Common Text Labels
-
-Use these exact labels where relevant:
-
-- Player: `Kaito`
-- Levels: `Lv. 12`, `Level 24`
-- Regions: `Foot Hills`, `Foothills`, `Forest Trail`, `Temple Peak`, `The Summit`
-- Lessons: `Lesson 6 Greetings`, `Lesson 9 Listening`, `Lesson 10 Word Order`, `Lesson 12 Vocabulary`, `Lesson 14 Kanji`, `Lesson 16 Advanced Grammar`
-- Event: `Sakura Festival`, `Ends in 12d 6h`
-- Rewards: `+50 XP`, `+100 XP`, `+1 Talent Point`, `Kanji Explorer`, `Lantern of Insight Equipped`, `Bamboo Forest Unlocked`
-- Buttons: `Start Lesson`, `Preview`, `View Event`, `Continue Climbing`, `Back to Journey`, `Go to First Lesson`, `Back to Camp`
-
-## Japanese Learning Text Examples
-
-Use when exact learning content is needed:
-
-- `ありがとう` - `arigatou - thank you`
-- `日本` - `nihon` - `Japan`
-- `学生` - `gakusei` - `student`
-- `新しい` - `atarashii` - `new`
+1. Kitsune companion poses (see 08 — companion, not mascot)
+2. Region backgrounds (Lantern Forest, Bamboo Valley, River Bridge, Mist Shrine, Sky Temple)
+3. UI materials (dark lacquer, parchment, wood, stone, brass frames)
+4. Icons (transparent PNG — full catalog in 07)
+5. Inventory items, achievement badges, enemy/trial art
 
 ## Quality Bar
 
 Cursor output is acceptable only if:
 
-- It is immediately recognizable as Noboru, not a generic fantasy app.
-- Noboru's fox design is consistent across screens.
-- The chosen active state is visually obvious before reading text.
-- The screen remains readable at mobile size.
-- Background art is integrated with UI, not pasted behind it.
-- Every card has material texture, border, lighting, and hierarchy.
+- It matches the **exact request** — no unasked additions.
+- It is immediately recognizable as Noboru AAA fantasy — not generic language app.
+- Kitsune design is consistent — stylized realism, intelligent, never chibi/clownish.
+- Icons have transparent backgrounds and light/dark pairs.
+- Active state is obvious before reading text.
+- Screen remains readable at mobile size.
+- Background art integrates with UI — not pasted behind flat cards.
 - Locked and empty states still feel beautiful.
-- The art contains enough small props and particles to feel handcrafted.
+- No forbidden styles or forbidden hex colors from doc 08.
 
+## Supplementary References
+
+- Mockup boards: `assets/marketing/` — layout and screen inventory only
+- Icon catalog: [07_icon_catalog.md](./07_icon_catalog.md)
+- Asset naming: [06_asset_inventory_and_naming.md](./06_asset_inventory_and_naming.md)
+- Master spec: [08_visual_art_direction_master_spec.md](./08_visual_art_direction_master_spec.md)

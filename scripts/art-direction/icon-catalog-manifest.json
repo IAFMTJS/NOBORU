@@ -1,0 +1,31 @@
+{
+  "prefix": "Noboru fantasy game UI icon, stylized realism, hand-crafted shrine carving RPG inventory style, detailed silhouette soft highlights, NOT cartoon NOT flat outline NOT Material Design. Isolated centered single icon, square composition. Will be background-removed — avoid large empty margins.",
+  "lightSuffix": "Light mode: warm brown-black strokes #2B2A26, Lantern Gold #D6A85F Moss Green #7B8D5A Fox Orange #C96B3D Spirit Blue #7AA8C6 accents on soft parchment context.",
+  "darkSuffix": "Dark mode: warm ivory strokes #F4EEDF secondary #C9C0AF, Lantern Gold #D6A85F Spirit Blue #73A7D6 Fox Orange #D17A47 accents for dark lacquer UI.",
+  "folders": {
+    "icon_": "Art Library/icons",
+    "item_": "Art Library/props",
+    "reward_": "Art Library/achievements",
+    "achievement_badge_": "Art Library/achievements",
+    "brand_": "Art Library/icons",
+    "icon_app_": "Art Library/icons"
+  },
+  "done": [
+    "icon_nav_journey_mountain",
+    "icon_nav_camp_tent",
+    "icon_nav_study_book",
+    "icon_nav_bag_backpack",
+    "icon_nav_profile_fox",
+    "icon_nav_profile_person",
+    "icon_nav_dojo_torii",
+    "icon_nav_world_pagoda",
+    "icon_nav_world_compass",
+    "icon_node_lesson_camp"
+  ],
+  "copies": {
+    "icon_hub_vocabulary": "icon_node_vocabulary",
+    "icon_hub_kanji": "icon_node_kanji",
+    "icon_hub_listening": "icon_node_listening",
+    "icon_game_memory_dungeon": "icon_node_boss_mask"
+  }
+}

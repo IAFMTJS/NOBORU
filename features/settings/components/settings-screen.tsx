@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { useMemo } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
-import { UiIconImage } from "@/components/media/ui-icon-image";
 import { Button } from "@/components/ui/button";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { GlassPanel } from "@/components/visual";
+import { SecondaryScreenShell } from "@/components/visual/shells/secondary-screen-shell";
 import {
   AUTH_MESSAGES,
   AUTH_ROUTES,
@@ -40,8 +39,8 @@ function TrailPreferenceRow({
   href?: string;
 }) {
   const className = cn(
-    "flex w-full items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5 text-left transition-colors",
-    (onClick || href) && "hover:border-trail-glow/35 hover:bg-black/50",
+    "focus-ring flex w-full items-center justify-between gap-3 rounded-xl border border-white/55 bg-white/48 px-3 py-2.5 text-left shadow-elevation-1 backdrop-blur-md transition-colors",
+    (onClick || href) && "hover:bg-white/58",
   );
 
   const body = (
@@ -73,44 +72,14 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
   const yama = useMemo(() => yamaService.resolveProfilePresence(), []);
 
   return (
-    <IllustratedScreen
-      scrim="none"
-      className="min-h-dvh"
-      background={
-        <SceneImage
-          scene="profile_lantern_path"
-          alt=""
-          className="absolute inset-0 min-h-dvh rounded-none"
-        />
-      }
+    <SecondaryScreenShell
+      title="Trail preferences"
+      subtitle="Lantern path — audio, language, and privacy for your climb"
+      backHref="/profile"
+      backLabel="Profile"
+      contentClassName="pb-2"
     >
-      <div className="relative flex min-h-dvh flex-col">
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/80"
-          aria-hidden
-        />
-
-        <header className="relative z-10 shrink-0 space-y-3 p-4 pt-3">
-          <Link
-            href="/profile"
-            className="inline-flex items-center gap-1.5 text-body-sm text-white/70 transition-colors hover:text-white"
-          >
-            <UiIconImage name="arrow_left" size={16} />
-            Profile
-          </Link>
-
-          <GlassPanel variant="header" className="space-y-1 rounded-card p-3">
-            <StoryTitle as="h1" className="text-base">
-              Trail preferences
-            </StoryTitle>
-            <p className="text-caption text-muted-foreground">
-              Lantern path — audio, language, and privacy for your climb
-            </p>
-          </GlassPanel>
-        </header>
-
-        <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2 pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
-          <div className="mx-auto max-w-md space-y-4">
+      <div className="mx-auto max-w-md space-y-4">
             <GlassPanel className="p-4">
               <YamaPresence
                 presence={yama}
@@ -122,9 +91,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Audio
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Audio</h3>
               <p className="text-caption text-muted-foreground">
                 Mountain wind, lesson sounds, and shrine chimes along the trail.
               </p>
@@ -141,9 +108,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Language
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Language</h3>
               <TrailPreferenceRow
                 label="Study language"
                 value={preferences.preferredLanguage === "ja" ? "Japanese" : "English"}
@@ -157,18 +122,14 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Accessibility
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Accessibility</h3>
               <TrailPreferenceRow label="Reduced motion" value="Follow device" />
               <TrailPreferenceRow label="Text size" value="Comfortable" />
               <TrailPreferenceRow label="High contrast trail" value="Off" />
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Privacy
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Privacy</h3>
               <TrailPreferenceRow label="Learning analytics" value="Helps the trail" />
               <TrailPreferenceRow label="Leaderboard visibility" value="Friends only" />
               <TrailPreferenceRow label="Data export" value="Request scroll" href="/feedback" />
@@ -178,9 +139,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             <OfflineSyncPanel />
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Support
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Support</h3>
               <TrailPreferenceRow
                 label="Send feedback"
                 value="Report trail issues"
@@ -194,9 +153,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-2 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                About Noboru
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">About Noboru</h3>
               <TrailPreferenceRow
                 label={RELEASE.name}
                 value={
@@ -209,9 +166,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Appearance
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Appearance</h3>
               <ThemeSelector value={theme} onChange={updateTheme} disabled={loading} />
               {error ? (
                 <p className="text-caption text-destructive" role="alert">
@@ -221,9 +176,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-2 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Daily climb
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Daily climb</h3>
               <TrailPreferenceRow
                 label="Daily goal"
                 value={`${settings.dailyGoalMinutes} min`}
@@ -236,9 +189,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">
-              <StoryTitle as="h3" className="text-sm tracking-wide">
-                Account
-              </StoryTitle>
+              <h3 className="font-sans text-body font-semibold tracking-wide">Account</h3>
               <TrailPreferenceRow label="Traveler email" value={settings.email} />
               <TrailPreferenceRow
                 label="Change password"
@@ -262,8 +213,6 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
               </Button>
             </GlassPanel>
           </div>
-        </main>
-      </div>
-    </IllustratedScreen>
+    </SecondaryScreenShell>
   );
 }

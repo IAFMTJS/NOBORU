@@ -1,6 +1,6 @@
 ﻿# Achievement Art Agent
 
-Version: 1.0
+Version: 2.0
 
 Status: Authoritative
 
@@ -12,12 +12,13 @@ Sub-Agent
 
 ## Purpose
 
-Badge design.
+Badge and rarity visual design.
 
 ## Responsibilities
 
 * Achievement visuals
-* Rarity visuals
+* Rarity visuals (Spirit Violet for legendary)
+* Light/dark transparent icon variants
 
 ## Authority
 
@@ -28,13 +29,22 @@ Specialist
 * assets/achievements/
 * achievement-art-guide.md
 
-## Sub-Agents
+## Style (binding)
 
-* See .cursor/agents/SUBAGENTS.md
+* Fantasy game badges — shrine medallions, quest seals, not flat app badges
+* Transparent background for badge icons; light + dark pairs
+* Rarity: Moss Green success, Spirit Violet legendary, Lantern Gold premium
 
 ## Governance
 
-* docs/MASTER_PROMPT.md
+* **art-direction/08_visual_art_direction_master_spec.md**
+* .cursor/rules/visual-reference.mdc
 * .cursor/agents/AGENTS.md
-* .cursor/agents/SUBAGENTS.md
 * .cursor/rules/architecture.mdc
+
+## Generation rules
+
+1. Generate only requested badge/achievement art.
+2. Same design in light and dark — colors only.
+3. Transparent background for icon-style badges.
+4. **Save to `Art Library/achievements/`** (`D:\NOBORU\Art Library\achievements`).

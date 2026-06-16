@@ -64,7 +64,9 @@ export function YamaExpressionImage({
           priority={priority}
           sizes={sizes ?? "128px"}
           className={cn(
-            fit === "sticker" ? "object-cover object-bottom" : "object-cover",
+            fit === "sticker"
+              ? "object-cover object-bottom mix-blend-screen"
+              : "object-cover mix-blend-screen",
           )}
           style={{
             objectFit: presentation.objectFit,
@@ -90,7 +92,7 @@ export function YamaExpressionImage({
         height={height}
         priority={priority}
         sizes={sizes ?? `${width}px`}
-        className="h-full w-full"
+        className="h-full w-full mix-blend-screen"
         style={{
           objectFit: fit === "sticker" ? presentation.objectFit : "cover",
           objectPosition: presentation.objectPosition,

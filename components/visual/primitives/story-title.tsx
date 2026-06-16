@@ -13,7 +13,7 @@ export function StoryTitle({
   ...props
 }: StoryTitleProps) {
   return (
-    <Tag className={cn("text-story-title font-story", className)} {...props}>
+    <Tag className={cn("text-lg font-semibold tracking-tight", className)} {...props}>
       {children}
     </Tag>
   );

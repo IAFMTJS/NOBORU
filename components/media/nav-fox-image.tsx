@@ -96,7 +96,7 @@ export function NavFoxImage({
         height={px}
         priority={priority}
         aria-hidden
-        className="h-full w-full drop-shadow-md"
+        className="h-full w-full drop-shadow-md mix-blend-screen"
         style={{
           objectFit: presentation.objectFit,
           objectPosition: presentation.objectPosition,

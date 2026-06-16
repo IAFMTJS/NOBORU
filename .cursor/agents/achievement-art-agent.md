@@ -46,24 +46,26 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 
 ## Mandatory governance
 
-- docs/MASTER_PROMPT.md
-- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
-- .cursor/agents/AGENTS.md
-- .cursor/agents/SUBAGENTS.md
-- .cursor/rules/architecture.mdc
+- **art-direction/08_visual_art_direction_master_spec.md**
 - .cursor/rules/visual-reference.mdc
+- docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — supplementary layout
+- .cursor/agents/AGENTS.md
+- .cursor/rules/architecture.mdc
 
-## Mockup alignment (required)
+## Style (binding)
 
-Achievement art must match `assets/marketing/mockup_gamification_screens_v1.png`:
+- Fantasy game badges — shrine medallions, quest seals, not flat app icons
+- Transparent background for icon-style badges; light + dark pairs required
+- Rarity: Moss Green success, Spirit Violet `#8A78C7` legendary, Lantern Gold premium
+- Badges are climbing milestones — earned, not gacha chrome
 
-- **Achievement Shrine:** Torii at night, circular illustrated badges in a grid, milestone counters
-- **Badge style:** Circular, climb-themed motifs — lanterns, peaks, compasses, maps, summits
-- **Rarity:** Common (simple) → Legendary (glow/special effects) — never gacha-game chrome
-- **Checkpoint rewards:** Horizontal reward row layout — XP, gems, item icons
-- **Memory book:** Journal-style "firsts" entries with small illustrative thumbnails
+## Generation rules
 
-Badges are climbing milestones — earned, not handed out constantly.
+1. Generate only requested badge/achievement art.
+2. Same design in light and dark — colors only.
+3. Transparent background for icon-style badges.
+4. **Save to `Art Library/achievements/`** (`D:\NOBORU\Art Library\achievements`).
 
 ## Architecture constraints
 

@@ -14,7 +14,7 @@ Status: AUTHORITATIVE
 
 This rule governs all static and managed visual assets within Noboru.
 
-Every illustration, icon, mascot image, achievement badge, background, audio file, UI asset, and public media file must follow this document, docs/asset-pipeline.md, and docs/asset-registry.md.
+Every illustration, icon, kitsune companion image, achievement badge, background, audio file, UI asset, and public media file must follow this document, **art-direction/08_visual_art_direction_master_spec.md**, docs/asset-pipeline.md, and docs/asset-registry.md.
 
 Assets are part of the product system.
 
@@ -51,19 +51,31 @@ All production assets use:
 
 category_name_variant_version
 
+For generated visual assets (icons, UI art, companion poses, badges, props), **every asset requires light and dark theme variants**:
+
+category_name_light_version
+category_name_dark_version
+
 Examples:
 
-* icon_review_check_v1.svg
-* mascot_yama_happy_v2.png
-* bg_region_kyoto_night_v1.webp
-* achievement_streak_7day_v1.png
+* icon_review_check_light_v1.png
+* icon_review_check_dark_v1.png
+* mascot_yama_happy_light_v2.png
+* mascot_yama_happy_dark_v2.png
+* bg_region_lantern_forest_light_v1.webp
+* bg_region_lantern_forest_dark_v1.webp
+* achievement_streak_7day_light_v1.png
+* achievement_streak_7day_dark_v1.png
 
 Rules
 
 * lowercase
 * underscore separators
-* explicit version suffix
+* explicit `_light` or `_dark` theme suffix before version
+* explicit version suffix (`v1`, `v2`, …)
 * no spaces or ambiguous abbreviations
+* **icons and UI glyphs: transparent background only** — PNG or WebP with alpha; never bake backgrounds into icon files
+* light and dark pairs share identical design — **colors only** differ per art-direction/08 palettes
 
 Metadata
 
@@ -94,9 +106,11 @@ Versioning
 
 Locations
 
+* **`Art Library/`** (`D:\NOBORU\Art Library`) — **required save location for all newly generated art** before production ingest. Organize by category subfolders.
 * assets/ for managed pipeline assets and source organization
 * public/ for delivered static files intended for direct URL serving
 * Do not place unmanaged duplicates across both trees
+* Generated art must land in Art Library first; moving to assets/ or public/ requires registry update per pipeline
 
 Performance
 
@@ -109,6 +123,8 @@ Educational and Brand Integrity
 * Assets support learning, immersion, and progression
 * Avoid generic stock visuals that break Noboru identity
 * Achievement and shop assets must not imply educational advantage
+* All generated art must conform to art-direction/08 — AAA fantasy adventure, stylized realism, forbidden styles listed there
+* Generate only what is requested; do not add unasked variants or style experiments
 
 ⸻
 
@@ -175,9 +191,12 @@ When failure criteria appear, clean up naming and registry before adding more as
 
 EXAMPLES
 
-Correct asset path
+Correct asset paths
 
-public/icons/icon_review_check_v1.svg
+public/icons/icon_review_check_light_v1.png
+public/icons/icon_review_check_dark_v1.png
+
+Both transparent background, same silhouette, palette per master spec.
 
 Correct metadata
 
@@ -218,6 +237,12 @@ Huge uncompressed PNG backgrounds on mobile lesson routes
 Registry entries with no actual file
 
 Assets used before art direction or pipeline review
+
+Icons shipped without transparent background
+
+Light/dark pair missing for a generated visual asset
+
+Single-theme icon when both light and dark are required
 
 Hardcoded /public/foo.png paths scattered without registry IDs
 

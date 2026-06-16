@@ -1,0 +1,311 @@
+{
+  "pass": [
+    {
+      "file": "base/kitsune_from_behind_dark_v1.png",
+      "detail": "RGBA 1202x1202 transparent=44.3% partial=785096 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_from_behind_light_v1.png",
+      "detail": "RGBA 1202x1202 transparent=44.3% partial=785096 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_hero_profile_dark_v1.png",
+      "detail": "RGBA 1033x1033 transparent=65.0% partial=364472 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_hero_profile_light_v1.png",
+      "detail": "RGBA 1033x1033 transparent=65.0% partial=364472 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_meditating_dojo_dark_v1.png",
+      "detail": "RGBA 1215x1215 transparent=59.0% partial=591635 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_meditating_dojo_light_v1.png",
+      "detail": "RGBA 1215x1215 transparent=59.0% partial=591635 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_peeking_corner_dark_v1.png",
+      "detail": "RGBA 1092x1092 transparent=77.5% partial=257518 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_peeking_corner_light_v1.png",
+      "detail": "RGBA 1092x1092 transparent=77.5% partial=257518 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_reading_book_dark_v1.png",
+      "detail": "RGBA 1013x1013 transparent=48.2% partial=524709 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_reading_book_light_v1.png",
+      "detail": "RGBA 1013x1013 transparent=48.2% partial=524709 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_running_ember_dark_v1.png",
+      "detail": "RGBA 1403x1403 transparent=71.5% partial=552262 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_running_ember_light_v1.png",
+      "detail": "RGBA 1403x1403 transparent=71.5% partial=552262 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_sitting_campfire_dark_v1.png",
+      "detail": "RGBA 1069x1069 transparent=54.6% partial=502288 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_sitting_campfire_light_v1.png",
+      "detail": "RGBA 1069x1069 transparent=54.6% partial=502288 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_sleeping_dark_v1.png",
+      "detail": "RGBA 1105x1105 transparent=38.5% partial=740639 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_sleeping_light_v1.png",
+      "detail": "RGBA 1105x1105 transparent=38.5% partial=740639 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_standing_traveler_dark_v1.png",
+      "detail": "RGBA 1069x1069 transparent=64.1% partial=399362 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_standing_traveler_light_v1.png",
+      "detail": "RGBA 1069x1069 transparent=64.1% partial=399362 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_telescope_world_dark_v1.png",
+      "detail": "RGBA 1028x1028 transparent=57.9% partial=432739 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_telescope_world_light_v1.png",
+      "detail": "RGBA 1028x1028 transparent=57.9% partial=432739 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_walking_backpack_dark_v1.png",
+      "detail": "RGBA 1012x1012 transparent=33.4% partial=678569 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "base/kitsune_walking_backpack_light_v1.png",
+      "detail": "RGBA 1012x1012 transparent=33.4% partial=678569 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_determined_ready_dark_v1.png",
+      "detail": "RGBA 1090x1090 transparent=32.4% partial=784621 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_determined_ready_light_v1.png",
+      "detail": "RGBA 1090x1090 transparent=32.4% partial=784621 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_reward_presenting_dark_v1.png",
+      "detail": "RGBA 1340x1340 transparent=65.7% partial=614650 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_reward_presenting_light_v1.png",
+      "detail": "RGBA 1340x1340 transparent=65.7% partial=614650 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_training_demo_dark_v1.png",
+      "detail": "RGBA 1014x1014 transparent=40.6% partial=601767 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "gameplay/kitsune_training_demo_light_v1.png",
+      "detail": "RGBA 1014x1014 transparent=40.6% partial=601767 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "loading/kitsune_waiting_dark_v1.png",
+      "detail": "RGBA 1018x1018 transparent=59.0% partial=418654 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "loading/kitsune_waiting_light_v1.png",
+      "detail": "RGBA 1018x1018 transparent=59.0% partial=418654 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "loading/kitsune_walking_loop_dark_v1.png",
+      "detail": "RGBA 1009x1009 transparent=54.8% partial=449060 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "loading/kitsune_walking_loop_light_v1.png",
+      "detail": "RGBA 1009x1009 transparent=54.8% partial=449060 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_bust_avatar_dark_v1.png",
+      "detail": "RGBA 1072x1072 transparent=41.7% partial=633192 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_bust_avatar_light_v1.png",
+      "detail": "RGBA 1072x1072 transparent=41.7% partial=633192 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_backpack_dark_v1.png",
+      "detail": "RGBA 996x996 transparent=55.9% partial=417364 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_backpack_light_v1.png",
+      "detail": "RGBA 996x996 transparent=55.9% partial=417364 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_mask_dark_v1.png",
+      "detail": "RGBA 1019x1019 transparent=60.5% partial=400040 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_mask_light_v1.png",
+      "detail": "RGBA 1019x1019 transparent=60.5% partial=400040 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_scarf_dark_v1.png",
+      "detail": "RGBA 1255x1255 transparent=74.5% partial=381748 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_cosmetic_scarf_light_v1.png",
+      "detail": "RGBA 1255x1255 transparent=74.5% partial=381748 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_silhouette_dark_v1.png",
+      "detail": "RGBA 1033x1033 transparent=56.7% partial=445390 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "personalization/kitsune_silhouette_light_v1.png",
+      "detail": "RGBA 1033x1033 transparent=56.7% partial=445390 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_confused_dark_v1.png",
+      "detail": "RGBA 1052x1052 transparent=34.1% partial=709722 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_confused_light_v1.png",
+      "detail": "RGBA 1052x1052 transparent=34.1% partial=709722 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_encouraging_dark_v1.png",
+      "detail": "RGBA 1069x1069 transparent=30.4% partial=782494 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_encouraging_light_v1.png",
+      "detail": "RGBA 1069x1069 transparent=30.4% partial=782494 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_excited_dark_v1.png",
+      "detail": "RGBA 1388x1388 transparent=62.6% partial=716329 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_excited_light_v1.png",
+      "detail": "RGBA 1388x1388 transparent=62.6% partial=716329 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_happy_dark_v1.png",
+      "detail": "RGBA 1478x1478 transparent=64.1% partial=781197 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_happy_light_v1.png",
+      "detail": "RGBA 1478x1478 transparent=64.1% partial=781197 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_mastery_dark_v1.png",
+      "detail": "RGBA 1025x1025 transparent=49.3% partial=529671 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_mastery_light_v1.png",
+      "detail": "RGBA 1025x1025 transparent=49.3% partial=529671 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_oops_dark_v1.png",
+      "detail": "RGBA 1047x1047 transparent=43.4% partial=615321 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_oops_light_v1.png",
+      "detail": "RGBA 1047x1047 transparent=43.4% partial=615321 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_out_of_hearts_dark_v1.png",
+      "detail": "RGBA 1341x1341 transparent=72.9% partial=470445 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_out_of_hearts_light_v1.png",
+      "detail": "RGBA 1341x1341 transparent=72.9% partial=470445 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_proud_dark_v1.png",
+      "detail": "RGBA 1217x1217 transparent=59.0% partial=593275 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_proud_light_v1.png",
+      "detail": "RGBA 1217x1217 transparent=59.0% partial=593275 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_surprised_dark_v1.png",
+      "detail": "RGBA 1060x1060 transparent=51.2% partial=534299 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_surprised_light_v1.png",
+      "detail": "RGBA 1060x1060 transparent=51.2% partial=534299 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_teaching_dark_v1.png",
+      "detail": "RGBA 1081x1081 transparent=48.2% partial=571803 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_teaching_light_v1.png",
+      "detail": "RGBA 1081x1081 transparent=48.2% partial=571803 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_thinking_dark_v1.png",
+      "detail": "RGBA 1311x1311 transparent=47.7% partial=888764 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_thinking_light_v1.png",
+      "detail": "RGBA 1311x1311 transparent=47.7% partial=888764 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_worried_dark_v1.png",
+      "detail": "RGBA 1130x1130 transparent=33.4% partial=733230 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "reactions/kitsune_worried_light_v1.png",
+      "detail": "RGBA 1130x1130 transparent=33.4% partial=733230 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_night_lantern_dark_v1.png",
+      "detail": "RGBA 989x989 transparent=47.7% partial=489335 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_night_lantern_light_v1.png",
+      "detail": "RGBA 989x989 transparent=47.7% partial=489335 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_rainy_umbrella_dark_v1.png",
+      "detail": "RGBA 1047x1047 transparent=58.5% partial=441682 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_rainy_umbrella_light_v1.png",
+      "detail": "RGBA 1047x1047 transparent=58.5% partial=441682 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_sakura_dark_v1.png",
+      "detail": "RGBA 1584x1584 transparent=70.3% partial=743646 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_sakura_light_v1.png",
+      "detail": "RGBA 1584x1584 transparent=70.3% partial=743646 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_snowy_cloak_dark_v1.png",
+      "detail": "RGBA 1022x1022 transparent=63.1% partial=375264 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_snowy_cloak_light_v1.png",
+      "detail": "RGBA 1022x1022 transparent=63.1% partial=375264 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_sunny_dark_v1.png",
+      "detail": "RGBA 1195x1195 transparent=57.6% partial=588122 corners=[0, 0, 0, 0]"
+    },
+    {
+      "file": "weather/kitsune_sunny_light_v1.png",
+      "detail": "RGBA 1195x1195 transparent=57.6% partial=588122 corners=[0, 0, 0, 0]"
+    }
+  ],
+  "warn": [],
+  "fail": [],
+  "corner_fail": []
+}

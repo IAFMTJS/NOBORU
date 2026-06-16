@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
@@ -9,12 +9,6 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-});
-
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  variable: "--font-story",
-  weight: ["600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -47,15 +41,7 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  icons: {
-    icon: [
-      {
-        url: "/art/brand/icon-app-dark.webp",
-        media: "(prefers-color-scheme: dark)",
-      },
-    ],
-    apple: "/art/brand/icon-app-dark.webp",
-  },
+  icons: {},
 };
 
 export const viewport: Viewport = {
@@ -75,7 +61,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${cinzel.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
 import type { SceneId } from "@/components/media/scene-image";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { IllustratedScreen } from "@/components/visual/illustrated-screen";
 import { cn } from "@/lib/utils";
 
@@ -11,33 +11,23 @@ type LessonShellProps = {
   children: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
+  /** @deprecated App shell provides route background */
   scene?: SceneId;
   className?: string;
 };
 
 /**
- * Doc 03 lesson layer stack — illustrated world with HUD overlay and thumb-zone footer.
+ * Doc 03 lesson layer stack — glass HUD overlay and thumb-zone footer.
  */
 export function LessonShell({
   children,
   header,
   footer,
-  scene = "study_atmosphere",
   className,
 }: LessonShellProps) {
   return (
     <IllustratedScreen
-      scrim="minimal"
-      fullBleedBackground
-      className={cn("min-h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))]", className)}
-      background={
-        <SceneImage
-          scene={scene}
-          alt=""
-          className="absolute inset-0 min-h-full rounded-none"
-          priority
-        />
-      }
+      className={cn("min-h-[calc(100dvh-var(--nav-clearance))]", className)}
     >
       <div className="relative flex min-h-[inherit] flex-col">
         {header}
@@ -45,7 +35,13 @@ export function LessonShell({
           {children}
         </div>
         {footer ? (
-          <div className="sticky bottom-0 z-20 border-t border-white/10 bg-black/55 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur-md">
+          <div
+            className={cn(
+              "sticky bottom-0 z-20 border-t px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3",
+              glassSurface.sheet,
+              "rounded-none border-x-0",
+            )}
+          >
             {footer}
           </div>
         ) : null}

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { WorldArtImage } from "@/components/visual/world/world-art-image";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import {
-  IllustratedScreen,
   PrimaryClimbButton,
   StoryTitle,
 } from "@/components/visual";
@@ -81,16 +81,17 @@ export function RegionUnlockOverlay({
         />
       </div>
 
-      <IllustratedScreen
-        scrim="minimal"
+      <div
         className={cn(
           "relative w-full max-w-md transition-all duration-[1200ms] motion-reduce:transition-none",
+          glassSurface.card,
+          "p-0",
           phase === "reveal"
             ? "translate-y-0 scale-100 opacity-100"
             : "translate-y-4 scale-95 opacity-0",
         )}
       >
-        <div className="space-y-4 rounded-2xl border border-trail-glow/25 bg-black/55 p-6 text-center backdrop-blur-md">
+        <div className="space-y-4 p-6 text-center">
           <YamaPresence
             presence={yamaService.resolveCelebration("trail_node")}
             size="sm"
@@ -104,7 +105,7 @@ export function RegionUnlockOverlay({
             height={72}
             className="mx-auto drop-shadow-lg"
           />
-          <p className="text-caption uppercase tracking-[0.2em] text-white/60">Entering</p>
+          <p className="text-caption uppercase tracking-[0.2em] text-muted-foreground">Entering</p>
           <StoryTitle as="h2" className="text-2xl text-trail-glow">
             {regionName}
           </StoryTitle>
@@ -115,7 +116,7 @@ export function RegionUnlockOverlay({
             Continue climbing
           </PrimaryClimbButton>
         </div>
-      </IllustratedScreen>
+      </div>
     </div>
   );
 }

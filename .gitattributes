@@ -1,0 +1,4 @@
+Art[[:space:]]Library/**/*.png filter=lfs diff=lfs merge=lfs -text
+Art[[:space:]]Library/**/*.webp filter=lfs diff=lfs merge=lfs -text
+Art[[:space:]]Library/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+Art[[:space:]]Library/**/*.jpeg filter=lfs diff=lfs merge=lfs -text

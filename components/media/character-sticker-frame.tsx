@@ -15,7 +15,7 @@ export function CharacterStickerFrame({
   style,
 }: CharacterStickerFrameProps) {
   return (
-    <div className={cn("relative overflow-hidden", className)} style={style}>
+    <div className={cn("relative isolate overflow-hidden", className)} style={style}>
       {children}
     </div>
   );

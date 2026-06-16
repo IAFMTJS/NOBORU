@@ -71,7 +71,7 @@
     --app-height: 100dvh;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --nav-height: 5.5rem;
+    --nav-height: 3.25rem;
     --nav-clearance: calc(var(--nav-height) + var(--safe-bottom));
     --hud-height: 3.25rem;
     --content-height: calc(var(--app-height) - var(--nav-clearance));
@@ -208,32 +208,23 @@
   }
 
   .glass-panel {
-    @apply rounded-card border backdrop-blur-md;
-    background-color: hsl(var(--glass-bg));
-    border-color: hsl(var(--glass-border));
-    box-shadow: 0 16px 48px rgb(0 0 0 / 0.35);
+    @apply rounded-lg border border-border bg-card;
   }
 
   .glass-header {
-    @apply glass-panel;
-    box-shadow: 0 4px 24px rgb(0 0 0 / 0.2);
+    @apply rounded-lg border border-border bg-card;
   }
 
   .glass-nav {
-    @apply glass-panel;
-    border-radius: var(--nav-radius);
+    @apply rounded-lg border border-border bg-card;
   }
 
   .text-story-title {
-    font-family: var(--font-story);
-    color: hsl(var(--heading-story));
-    @apply text-2xl font-bold tracking-wide;
+    @apply text-lg font-semibold tracking-tight;
   }
 
   .text-section-header {
-    font-family: var(--font-story);
-    color: hsl(var(--heading-story));
-    @apply text-xl font-semibold;
+    @apply text-base font-semibold;
   }
 
   .text-label-sm {
@@ -289,22 +280,15 @@
   }
 
   .nav-bar-texture {
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)),
-      var(--nav-texture-url);
-    background-size: cover;
-    background-position: center;
+    /* visuals stripped */
   }
 
   .material-hud {
-    @apply rounded-card border backdrop-blur-md;
-    border-color: hsl(var(--glass-border));
-    background-color: hsl(var(--glass-bg) / 0.55);
+    @apply rounded-lg border border-border bg-card p-2;
   }
 
   .material-pouch {
-    @apply rounded-2xl border backdrop-blur-md;
-    border-color: hsl(38 86% 72% / 0.2);
-    background: linear-gradient(to bottom, hsl(24 45% 12% / 0.8), hsl(220 33% 3% / 0.7));
+    @apply rounded-lg border border-border bg-card;
   }
 
   .shadow-elevation-1 {

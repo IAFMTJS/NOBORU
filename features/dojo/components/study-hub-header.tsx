@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
-import { GlassPanel, StoryTitle } from "@/components/visual";
 
 type StudyHubHeaderProps = {
   title: string;
@@ -12,6 +11,7 @@ type StudyHubHeaderProps = {
   action?: ReactNode;
 };
 
+/** @deprecated Use SecondaryScreenShell — kept for direct imports during migration. */
 export function StudyHubHeader({
   title,
   subtitle,
@@ -23,25 +23,20 @@ export function StudyHubHeader({
     <>
       <Link
         href={backHref}
-        className="inline-flex items-center gap-1.5 text-body-sm text-white/70 transition-colors hover:text-white"
+        className="focus-ring inline-flex items-center gap-1.5 text-body-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         <UiIconImage name="arrow_left" size={16} />
         {backLabel}
       </Link>
-
-      <GlassPanel variant="header" className="space-y-1 rounded-card p-3">
+      <div className="space-y-1">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
-            <StoryTitle as="h1" className="text-base">
-              {title}
-            </StoryTitle>
-            {subtitle ? (
-              <p className="text-caption text-muted-foreground">{subtitle}</p>
-            ) : null}
+            <h1 className="font-sans text-section-header font-semibold tracking-tight">{title}</h1>
+            {subtitle ? <p className="text-caption text-muted-foreground">{subtitle}</p> : null}
           </div>
           {action ? <div className="shrink-0">{action}</div> : null}
         </div>
-      </GlassPanel>
+      </div>
     </>
   );
 }

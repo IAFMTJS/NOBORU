@@ -1,6 +1,6 @@
 ﻿---
 name: theme-agent
-description: Noboru Theme Agent under Frontend Agent. Use when working on: Dark mode, Light mode, Design tokens.
+description: Noboru Theme Agent under Frontend Agent. Light/dark tokens from art-direction/08 master spec. Use when working on: Dark mode, Light mode, Design tokens.
 model: inherit
 readonly: false
 is_background: false
@@ -14,7 +14,7 @@ Sub-Agent
 
 ## Purpose
 
-Theme system.
+Light/dark theme system aligned with master spec palettes.
 
 ## Parent Agent
 
@@ -22,9 +22,10 @@ Frontend Agent - you operate under this agent and do not override its decisions.
 
 ## Responsibilities
 
-- Dark mode
-- Light mode
-- Design tokens
+- Dark mode (canonical Noboru experience — lantern forest night)
+- Light mode (morning exploration — warm parchment)
+- Design tokens from art-direction/08
+- Icon state colors
 
 ## Authority
 
@@ -35,36 +36,28 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 - app/globals.css
 - tailwind.config.ts
 
-
-
 ## When invoked
 
-1. Read mandatory governance documents before making changes.
-2. Stay within your domain - do not duplicate work owned by other agents.
-3. Produce reusable systems in the correct module paths, not one-off implementations.
-4. Document non-obvious decisions and known limitations.
-5. Return a structured summary: what you did, what you verified, what remains, and any blockers.
+1. Read **art-direction/08_visual_art_direction_master_spec.md** (Color System section).
+2. Map tokens to light and dark palettes — never use forbidden colors.
+3. Return a structured summary: what you did, what you verified, what remains, and any blockers.
 
 ## Mandatory governance
 
-- docs/MASTER_PROMPT.md
-- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
-- .cursor/agents/AGENTS.md
-- .cursor/agents/SUBAGENTS.md
-- .cursor/rules/architecture.mdc
+- **art-direction/08_visual_art_direction_master_spec.md**
 - .cursor/rules/visual-reference.mdc
+- .cursor/agents/AGENTS.md
+- .cursor/rules/architecture.mdc
 
-## Mockup alignment (required)
+## Token authority (binding)
 
-Tokens in `app/globals.css` and `tailwind.config.ts` must support the canonical mockup palette:
+**Light mode:** backgrounds `#F4EFE3`, `#E9E1D0`, `#F8F3E8`, `#FFF9EF`; primary `#5E7357`; CTA Lantern Gold `#D6A85F`; progress Moss Green `#7B8D5A`; companion Fox Orange `#C96B3D`
 
-- **Dark base:** Mountain Night `#0F1115` / surface `#171A21` / card `#1E232D`
-- **Functional glow:** Warm amber/gold CSS utilities for trail active, nav selected — not decorative
-- **Primary action:** Mountain Red `#D64045`
-- **Glass surfaces:** Semi-transparent card tokens with subtle border luminance for overlays on illustrated backgrounds
-- **Nav skins:** Theme variants must be swappable without structural change (see navbar mockup)
+**Dark mode:** backgrounds `#0D1320`, `#131D2D`, `#1A2434`, `#243043`; primary Lantern Gold `#D6A85F`; companion `#D17A47`; magic Spirit Blue `#73A7D6`; legendary Spirit Violet `#8A78C7`
 
-Design dark mode first. Light mode adapts atmosphere — not a generic white inversion.
+**Forbidden:** `#00FFFF`, `#FF00FF`, `#0066FF`, `#00FF00`, `#FF0000`
+
+Dark mode first. Light mode is warm parchment exploration — not pure white SaaS inversion.
 
 ## Architecture constraints
 

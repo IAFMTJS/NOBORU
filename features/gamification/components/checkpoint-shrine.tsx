@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { RegionHeroImage } from "@/components/media/region-hero-image";
-import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import {
   GlassPanel,
@@ -46,20 +45,7 @@ export function CheckpointShrine({
   footerSlot,
 }: CheckpointShrineProps) {
   return (
-    <IllustratedScreen
-      className={cn("min-h-0 rounded-card", className)}
-      scrim="full"
-      background={
-        <>
-          <SceneImage
-            scene="checkpoint_shrine"
-            alt=""
-            className="absolute inset-0 min-h-[28rem] rounded-none"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background/95" />
-        </>
-      }
-    >
+    <IllustratedScreen className={cn("min-h-0 rounded-card", className)}>
       <div className="space-y-4 p-4">
         <header className="space-y-3 text-center">
           <WorldArtImage
@@ -98,7 +84,7 @@ export function CheckpointShrine({
             {itemsEarned.map((item) => (
               <span
                 key={item.label}
-                className="inline-flex flex-col items-center gap-1 rounded-lg border border-glass-border bg-background/40 px-3 py-2"
+                className="inline-flex flex-col items-center gap-1 rounded-lg border border-white/55 bg-white/48 px-3 py-2 backdrop-blur-sm"
               >
                 <span className="text-2xl" aria-hidden>
                   {item.icon}

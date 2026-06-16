@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
 import { Badge } from "@/components/ui/badge";
 import {
   GlassPanel,
@@ -70,20 +69,7 @@ export function LessonCompletePanel({
       : "Lesson Complete");
 
   return (
-    <IllustratedScreen
-      className={cn("min-h-0 rounded-card", className)}
-      scrim="full"
-      background={
-        <>
-          <SceneImage
-            scene="lesson_complete"
-            alt=""
-            className="absolute inset-0 min-h-[32rem] rounded-none"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/75 to-background/95" />
-        </>
-      }
-    >
+    <IllustratedScreen className={cn("min-h-0 rounded-card", className)}>
       <div className="space-y-4 p-4">
         <header className="space-y-3 text-center">
           <YamaPresence

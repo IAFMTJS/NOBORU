@@ -48,24 +48,26 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 
 ## Mandatory governance
 
-- docs/MASTER_PROMPT.md
-- docs/mockup-reference-style.md — **BINDING visual target until founder revokes**
-- .cursor/agents/AGENTS.md
-- .cursor/agents/SUBAGENTS.md
-- .cursor/rules/architecture.mdc
+- **art-direction/08_visual_art_direction_master_spec.md**
 - .cursor/rules/visual-reference.mdc
+- docs/MASTER_PROMPT.md
+- docs/mockup-reference-style.md — supplementary layout
+- .cursor/agents/AGENTS.md
+- .cursor/rules/architecture.mdc
 
-## Mockup alignment (required)
+## Style (binding)
 
-Region art must match `assets/marketing/mockup_journey_core_flow_v1.png`:
+- Environmental pillars: Lantern Forest, Bamboo Valley, River Bridge, Mist Shrine, Sky Temple
+- Magical mythological Japan — stylized realism, AAA concept art quality
+- **Forbidden:** generic stock nature, flat backgrounds, anime Japan, historical realism-only
 
-- **Trail spine:** Winding stone path with warm orange glow on active segments
-- **Atmosphere:** Fog of war on locked regions; cinematic torii transitions between regions
-- **Weather/time:** Same painterly style — sunny, rainy, night, snow, morning/evening variants
-- **World map:** Mountain peaks as region chapters — zoomed-out journey view
-- **Landmarks:** Shrines, lanterns, gates, camps — Japanese mountain folklore, never generic fantasy
+## Generation rules
 
-Each region is one continuous ascent — not disconnected game worlds.
+1. Generate only the requested region/scene — no unasked props or style drift.
+2. Light + dark variants when asset serves both themes (same composition, palette only).
+3. Cinematic depth: foreground, midground, background, particles.
+4. Mockup journey panels supplement layout — master spec wins on style and colors.
+5. **Save to `Art Library/backgrounds/`** (`D:\NOBORU\Art Library\backgrounds`).
 
 ## Architecture constraints
 

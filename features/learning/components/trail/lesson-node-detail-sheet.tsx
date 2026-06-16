@@ -7,7 +7,7 @@ import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { AnalyticsLink } from "@/features/analytics/components/analytics-link";
-import { SceneImage } from "@/components/media/scene-image";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import {
   Sheet,
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sheet";
 import {
   GlassPanel,
-  IllustratedScreen,
   PrimaryClimbButton,
   StoryTitle,
 } from "@/components/visual";
@@ -145,22 +144,12 @@ export function LessonNodeDetailSheet({
             "motion-reduce:animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
           )}
         >
-          <SheetPrimitive.Close className="absolute right-4 top-4 z-20 rounded-full bg-black/50 p-1.5 text-white/80 ring-offset-background transition-opacity hover:text-white focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+          <SheetPrimitive.Close className="focus-ring absolute right-4 top-4 z-20 rounded-full border border-white/55 bg-white/58 p-1.5 text-foreground/80 transition-opacity hover:text-foreground">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
 
-          <IllustratedScreen
-            scrim="minimal"
-            className="min-h-[20rem] rounded-t-3xl bg-black/55 backdrop-blur-md"
-            background={
-              <SceneImage
-                scene={isCheckpoint ? "checkpoint_shrine" : "study_atmosphere"}
-                alt=""
-                className="absolute inset-0 rounded-none opacity-70"
-              />
-            }
-          >
+          <div className={cn("min-h-[20rem] rounded-t-3xl", glassSurface.sheet, "rounded-b-none border-x-0")}>
             <div className="space-y-4 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
               <div className="flex flex-col items-center gap-3 text-center">
                 <WorldLessonNode
@@ -291,7 +280,7 @@ export function LessonNodeDetailSheet({
                 </GlassPanel>
               ) : null}
             </div>
-          </IllustratedScreen>
+          </div>
         </SheetPrimitive.Content>
       </SheetPortal>
     </Sheet>

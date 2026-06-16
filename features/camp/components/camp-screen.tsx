@@ -1,60 +1,51 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import Link from "next/link";
 
-import { SceneImage } from "@/components/media/scene-image";
-import { UiIconImage } from "@/components/media/ui-icon-image";
-import { Badge } from "@/components/ui/badge";
-import { WorldArtImage } from "@/components/visual/art/world-art-image";
+import { ArtLibraryImage } from "@/components/media/art-library-image";
 import {
-  CampCampfire,
-  CampDialogueChip,
-  CampFloatingWidget,
-  CampFoxIdle,
-  CampQuestBoardHotspot,
-  CampRewardChest,
-  CampScenePanel,
-  CampShrineHotspot,
-  CampWeatherOverlay,
-  CampWorldHotspot,
-  resolveShrineLanternAsset,
-  type CampRewardChestState,
-  type CampfireIntensity,
-} from "@/components/visual/camp";
-import { HudProfileChip, NavStatChip } from "@/components/visual/navigation";
-import { ImmersiveWorldShell } from "@/components/visual/shells";
-import { WorldDialogueBubble } from "@/components/visual/primitives";
-import { resolveDisplayGemCount } from "@/components/visual/tokens";
-import { ChestOpenCeremony } from "@/features/chests/components/chest-open-ceremony";
-import type { ChestClaimResult } from "@/features/chests/types/chest.types";
+  GlassSurfaceButton,
+  GlassSurfaceCard,
+  GlassSurfaceCardButton,
+  GlassSurfaceChip,
+  GlassSurfacePanel,
+  glassSurface,
+} from "@/components/visual/primitives/glass-surface";
+import { TabScene } from "@/components/visual/shells/viewport-background";
 import { DailyQuestBoard } from "@/features/gamification/components/daily-quest-board";
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
-import { CAMP_WORLD_ASSETS } from "@/lib/assets/art-mappings";
+import { ChestOpenCeremony } from "@/features/chests/components/chest-open-ceremony";
+import type { ChestClaimResult } from "@/features/chests/types/chest.types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { cn } from "@/lib/utils";
 
 type CampScreenProps = {
   data: HomeDashboardViewModel;
 };
 
-function resolveCampfireIntensity(
-  elevationLevel: number,
-  streakDays: number,
-): CampfireIntensity {
-  if (elevationLevel >= 20 || streakDays >= 30) return "advanced";
-  if (streakDays >= 14) return "festival";
-  if (elevationLevel >= 10 || streakDays >= 7) return "enhanced";
-  return "idle";
-}
-
-function resolveChestVisualState(
-  eligibleCount: number,
-  claiming: boolean,
-  collectedThisSession: boolean,
-): CampRewardChestState {
-  if (claiming) return "opening";
-  if (collectedThisSession && eligibleCount === 0) return "collected";
-  if (eligibleCount > 0) return "available";
-  return "closed";
+function CampHeading({
+  as: Tag = "h2",
+  className,
+  children,
+}: {
+  as?: "h2" | "h3";
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Tag className={cn("font-sans text-section-header font-semibold tracking-tight", className)}>
+      {children}
+    </Tag>
+  );
 }
 
 export function CampScreen({ data }: CampScreenProps) {
@@ -64,27 +55,12 @@ export function CampScreen({ data }: CampScreenProps) {
   const [chestReward, setChestReward] = useState<ChestClaimResult | null>(null);
   const [collectedThisSession, setCollectedThisSession] = useState(false);
 
+  const yama = data.yama;
+
   const eligibleChests = useMemo(
     () => data.chests.filter((entry) => entry.eligible),
     [data.chests],
   );
-  const hasActiveQuests = data.quests.daily.completedCount < data.quests.daily.totalCount;
-  const playerName = data.greeting.replace(/^Kon'nichiwa,\s*/i, "").trim();
-  const campfireIntensity = resolveCampfireIntensity(
-    data.elevation.level,
-    data.stats.currentStreak,
-  );
-  const chestState = resolveChestVisualState(
-    eligibleChests.length,
-    claiming,
-    collectedThisSession,
-  );
-  const shrineLanternCount = Math.min(
-    5,
-    Math.max(1, Math.ceil(data.stats.currentStreak / 7) || 1),
-  );
-  const scenePanelOpen = questBoardOpen || shrineOpen;
-  const pseudoGemCount = resolveDisplayGemCount(data.stats.totalXp);
 
   async function claimChest() {
     const nextChest = eligibleChests[0];
@@ -113,224 +89,142 @@ export function CampScreen({ data }: CampScreenProps) {
   }
 
   return (
-    <ImmersiveWorldShell
-      vignette="camp"
-      background={
-        <SceneImage
-          scene="camp_base"
-          alt="Mountain camp at dusk"
-          className="absolute inset-0 h-full w-full rounded-none"
-          priority
-        />
-      }
-    >
-      <CampWeatherOverlay enabled />
-
-      <header className="relative z-10 flex items-start justify-between gap-3 px-3 pt-3">
-        <div className="material-hud w-[64%] p-2.5">
-          <HudProfileChip displayName={playerName} levelLabel={data.level.label} />
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-trail-glow to-amber-200"
-              style={{ width: `${Math.max(6, data.elevation.progressPercent)}%` }}
-            />
-          </div>
+    <TabScene className="flex min-h-full flex-col gap-4 p-4 pb-nav-clearance">
+      <GlassSurfacePanel variant="hud" className="flex items-center justify-between gap-2 px-3 py-2">
+        <div>
+          <CampHeading>Camp</CampHeading>
+          <p className="text-caption text-muted-foreground">{data.greeting}</p>
         </div>
-
-        <div className="flex flex-col gap-1.5">
-          <NavStatChip
-            icon="flame"
-            value={data.stats.currentStreak}
-            label="Streak"
-            className="text-trail-glow"
-          />
-          <NavStatChip
-            icon="gem"
-            value={pseudoGemCount}
-            label="Gems"
-            className="text-violet-200"
-          />
+        <div className="flex gap-1">
+          <GlassSurfaceChip>
+            <ArtLibraryImage themedBase="icons/icon_ui_flame_streak" src="" alt="" width={14} height={14} />
+            {data.stats.currentStreak}
+          </GlassSurfaceChip>
+          <GlassSurfaceChip>
+            <ArtLibraryImage themedBase="icons/icon_ui_gem" src="" alt="" width={14} height={14} />
+            {Math.max(0, Math.round(data.stats.totalXp / 120))}
+          </GlassSurfaceChip>
         </div>
-      </header>
+      </GlassSurfacePanel>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <div className="relative mx-auto h-full w-full max-w-phone flex-1 px-3 pb-3">
-          <CampCampfire
-            intensity={campfireIntensity}
-            className="absolute bottom-[28%] left-1/2 z-[1] -translate-x-1/2"
-          />
-
-          <div className="absolute bottom-[22%] left-[10%] z-10">
-            <CampFoxIdle />
-          </div>
-
-          <CampRewardChest
-            className="bottom-[16%] left-[22%]"
-            state={chestState}
-            disabled={claiming}
-            onClick={() => void claimChest()}
-          />
-
-          {!scenePanelOpen ? (
-            <>
-              <CampDialogueChip className="absolute bottom-[38%] left-[18%] z-20">
-                {data.yama.message}
-              </CampDialogueChip>
-
-              <CampQuestBoardHotspot
-                className="bottom-[44%] right-[6%]"
-                hasActiveQuests={hasActiveQuests}
-                onClick={() => setQuestBoardOpen(true)}
-              />
-
-              <CampShrineHotspot
-                className="bottom-[40%] left-[4%]"
-                streakDays={data.stats.currentStreak}
-                onClick={() => setShrineOpen(true)}
-              />
-
-              <CampWorldHotspot
-                label="Merchant"
-                href="/shop"
-                asset={CAMP_WORLD_ASSETS.merchant}
-                className="bottom-[24%] right-[10%]"
-              />
-
-              <CampWorldHotspot
-                label="Tent"
-                href="/profile"
-                asset={CAMP_WORLD_ASSETS.tent}
-                className="bottom-[32%] right-[26%]"
-              />
-
-              <CampWorldHotspot
-                label="Memory Book"
-                href="/memory-book"
-                asset={CAMP_WORLD_ASSETS.memory_book}
-                className="bottom-[20%] right-[28%]"
-              />
-
-              <div className="absolute right-3 top-2 z-20 flex w-[8.5rem] flex-col gap-2">
-                <CampFloatingWidget title="Today's Plan">
-                  <p className="text-caption text-white/80">{data.dailyGoal.label}</p>
-                  <p className="mt-1 text-caption text-trail-glow">
-                    {data.quests.daily.completedCount}/{data.quests.daily.totalCount} quests
-                  </p>
-                </CampFloatingWidget>
-
-                <CampFloatingWidget title="Daily Streak">
-                  <div className="flex items-center gap-1.5">
-                    <UiIconImage name="flame" size={14} />
-                    <span className="text-body-sm font-semibold text-trail-glow">
-                      {data.stats.currentStreak} days
-                    </span>
-                  </div>
-                </CampFloatingWidget>
-              </div>
-            </>
-          ) : null}
-        </div>
+      <div className="flex justify-center py-2">
+        <YamaPresence presence={yama} size="lg" layout="vertical" showMessage={false} />
       </div>
 
-      <CampScenePanel
-        open={questBoardOpen}
-        onClose={() => setQuestBoardOpen(false)}
-        title="Quest Board"
-        description={`Daily goals from camp — ${data.dailyGoal.label}`}
-      >
-        <div className="mb-3 flex justify-center">
-          <WorldArtImage
-            asset={CAMP_WORLD_ASSETS.quest_board}
-            alt=""
-            width={120}
-            height={72}
-            presentation="prop"
-            className="h-16 w-24"
-          />
+      <GlassSurfacePanel variant="card">
+        <p className="mb-3 font-japanese text-body text-foreground/90">{data.yama.message}</p>
+        <div className="grid grid-cols-2 gap-2">
+          <GlassSurfaceCardButton padding="md" onClick={() => setQuestBoardOpen(true)}>
+            <ArtLibraryImage themedBase="icons/icon_quest_board_pin" src="" alt="" width={40} height={40} />
+            <span className="text-caption font-semibold">Quest board</span>
+          </GlassSurfaceCardButton>
+          <GlassSurfaceCardButton padding="md" onClick={() => setShrineOpen(true)}>
+            <ArtLibraryImage themedBase="props/item_stone_lantern" src="" alt="" width={40} height={40} />
+            <span className="text-caption font-semibold">Shrine</span>
+          </GlassSurfaceCardButton>
         </div>
-        <DailyQuestBoard
-          daily={data.quests.daily}
-          weekly={data.quests.weekly}
-          variant="compact"
-          streakDays={data.stats.currentStreak}
-        />
-      </CampScenePanel>
+      </GlassSurfacePanel>
 
-      <CampScenePanel
-        open={shrineOpen}
-        onClose={() => setShrineOpen(false)}
-        title="Streak Shrine"
-        description="Consistency grows the shrine — never pressure, only progress."
-        background={
-          <>
-            <SceneImage
-              scene="shrine_torii"
-              alt=""
-              className="absolute inset-0 h-full w-full rounded-none object-cover opacity-40"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/75" aria-hidden />
-          </>
-        }
-      >
-        <div className="space-y-4">
-          <div className="flex items-center justify-center gap-1 py-2" aria-hidden>
-            {Array.from({ length: shrineLanternCount }, (_, index) => (
-              <WorldArtImage
-                key={index}
-                asset={resolveShrineLanternAsset(data.stats.currentStreak, {
-                  center: index === Math.floor(shrineLanternCount / 2),
-                })}
-                alt=""
-                width={40}
-                height={48}
-                presentation={
-                  index === Math.floor(shrineLanternCount / 2) && data.stats.currentStreak >= 7
-                    ? "glow"
-                    : "prop"
-                }
-                className="h-12 w-10"
-              />
+      <div className="grid grid-cols-2 gap-2 text-body-sm">
+        <GlassSurfaceCard padding="sm">
+          <p className="text-caption text-muted-foreground">Level</p>
+          <p className="font-medium">{data.level.label}</p>
+        </GlassSurfaceCard>
+        <GlassSurfaceCard padding="sm">
+          <p className="text-caption text-muted-foreground">Daily goal</p>
+          <p className="font-medium">{data.dailyGoal.label}</p>
+        </GlassSurfaceCard>
+      </div>
+
+      <div className="space-y-2">
+        <CampHeading as="h3" className="px-1 text-body">
+          Daily quests
+        </CampHeading>
+        {data.quests.daily.quests.slice(0, 4).map((quest) => (
+          <GlassSurfaceCard key={quest.id} className="flex items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="font-medium">{quest.title}</p>
+              <p className="text-caption text-muted-foreground">
+                {quest.completed ? "Complete" : `${quest.current}/${quest.target}`}
+              </p>
+            </div>
+            <span className="shrink-0 text-caption font-semibold text-xp-gold">{quest.epReward} EP</span>
+          </GlassSurfaceCard>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {eligibleChests.length > 0 && !collectedThisSession ? (
+          <GlassSurfaceButton disabled={claiming} onClick={() => void claimChest()}>
+            {claiming ? "Opening…" : "Open reward chest"}
+          </GlassSurfaceButton>
+        ) : null}
+        <Link
+          href="/learn"
+          className={cn(
+            "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",
+            glassSurface.buttonSecondary,
+          )}
+        >
+          Return to trail
+        </Link>
+        <Link
+          href="/shop"
+          className={cn(
+            "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",
+            glassSurface.buttonSecondary,
+          )}
+        >
+          Shop
+        </Link>
+        <Link
+          href="/memory-book"
+          className={cn(
+            "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",
+            glassSurface.buttonGhost,
+          )}
+        >
+          Memory book
+        </Link>
+      </div>
+
+      <Dialog open={questBoardOpen} onOpenChange={setQuestBoardOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Quest board</DialogTitle>
+            <DialogDescription>{data.dailyGoal.label}</DialogDescription>
+          </DialogHeader>
+          <DailyQuestBoard
+            daily={data.quests.daily}
+            weekly={data.quests.weekly}
+            variant="compact"
+            streakDays={data.stats.currentStreak}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={shrineOpen} onOpenChange={setShrineOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Streak shrine</DialogTitle>
+            <DialogDescription>
+              {data.stats.currentStreak} day streak — {data.shrineProtection.tokensAvailable}{" "}
+              protection token{data.shrineProtection.tokensAvailable === 1 ? "" : "s"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-wrap gap-2">
+            {([7, 14, 30, 50] as const).map((milestone) => (
+              <Badge key={milestone} variant={data.stats.currentStreak >= milestone ? "default" : "outline"}>
+                {milestone}d
+              </Badge>
             ))}
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {([7, 14, 30, 50] as const).map((milestone) => {
-              const reached = data.stats.currentStreak >= milestone;
-              return (
-                <span
-                  key={milestone}
-                  className={cn(
-                    "rounded-full border px-2.5 py-1 text-caption font-medium",
-                    reached
-                      ? "border-trail-glow/50 bg-trail-glow/15 text-trail-glow"
-                      : "border-white/15 bg-black/35 text-muted-foreground",
-                  )}
-                >
-                  {milestone}d {reached ? "✦" : "·"}
-                </span>
-              );
-            })}
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Badge variant="outline" className="gap-1 border-white/15 bg-black/35">
-              <UiIconImage name="flame" size={14} />
-              {data.stats.currentStreak} day streak
-            </Badge>
-            <Badge variant="outline" className="border-white/15 bg-black/35">
-              {data.shrineProtection.tokensAvailable} protection
-              {data.shrineProtection.tokensAvailable === 1 ? "" : "s"} stored
-            </Badge>
-          </div>
-          <WorldDialogueBubble speaker="Yama">
-            {data.stats.currentStreak > 0
-              ? "The lanterns grow brighter with each day you return to the trail."
-              : "Light the first lantern by climbing again tomorrow — one step at a time."}
-          </WorldDialogueBubble>
-        </div>
-      </CampScenePanel>
+        </DialogContent>
+      </Dialog>
 
       {chestReward ? (
         <ChestOpenCeremony reward={chestReward} onClose={() => setChestReward(null)} />
       ) : null}
-    </ImmersiveWorldShell>
+    </TabScene>
   );
 }

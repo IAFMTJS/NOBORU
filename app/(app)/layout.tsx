@@ -1,4 +1,4 @@
-import { BottomNav } from "@/components/visual/navigation";
+import { AppViewportBackground, BottomNav } from "@/components/visual/navigation";
 import { BetaBanner } from "@/features/feedback/components/beta-banner";
 import { OfflineProvider } from "@/features/offline/components/offline-provider";
 import { getCachedAuthSession } from "@/lib/cache/request-cache";
@@ -12,9 +12,10 @@ export default async function AppLayout({
 
   return (
     <OfflineProvider userId={session?.userId}>
-      <div className="min-h-dvh bg-background text-foreground">
+      <div className="relative min-h-dvh bg-background text-foreground">
+        <AppViewportBackground />
         <BetaBanner />
-        <main className="mx-auto min-h-dvh max-w-phone pb-nav-clearance">
+        <main className="relative z-10 mx-auto min-h-dvh max-w-phone bg-background/0 pb-nav-clearance">
           {children}
         </main>
         <BottomNav />

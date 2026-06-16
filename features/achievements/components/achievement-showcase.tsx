@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import { SceneImage } from "@/components/media/scene-image";
-import { GlassPanel, IllustratedScreen, StoryTitle } from "@/components/visual";
+import { GlassPanel, StoryTitle } from "@/components/visual";
 import { AchievementBadge } from "@/features/achievements/components/achievement-badge";
 import { ACHIEVEMENT_RARITY_LABELS } from "@/features/achievements/constants/achievement.constants";
 import type { AchievementShowcaseViewModel } from "@/features/achievements/types/achievement.types";
@@ -10,6 +9,9 @@ import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { WorldArtImage } from "@/components/visual/world/world-art-image";
 import { INVENTORY_ITEM_ASSETS } from "@/lib/assets/lesson-node-assets";
+import { SecondaryScreenShell } from "@/components/visual/shells/secondary-screen-shell";
+
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { cn } from "@/lib/utils";
 
 type AchievementShowcaseProps = {
@@ -86,8 +88,8 @@ function ShrinePlaque({
       className={cn(
         "flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-center transition-transform",
         unlocked
-          ? "border-trail-glow/25 bg-black/40 shadow-[0_4px_16px_rgba(0,0,0,0.35)]"
-          : "border-dashed border-white/15 bg-black/25",
+          ? cn(glassSurface.card, "border-trail-glow/25 shadow-elevation-1")
+          : "border-dashed border-white/55 bg-white/30",
         elevated && "-translate-y-1",
       )}
       title={achievement.description ?? achievement.name}
@@ -172,19 +174,6 @@ function ShrineWall({
   );
 }
 
-function ShrineBackground() {
-  return (
-    <>
-      <SceneImage
-        scene="shrine_torii"
-        alt="Achievement shrine beneath a torii gate"
-        className="absolute inset-0 min-h-dvh rounded-none"
-        priority
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-black/90" />
-    </>
-  );
-}
 
 export function AchievementShowcase({
   showcase,
@@ -193,15 +182,12 @@ export function AchievementShowcase({
   if (compact) {
     return (
       <Link href="/achievements" className="focus-ring block overflow-hidden rounded-2xl">
-        <div className="relative min-h-[8rem]">
-          <SceneImage scene="shrine_torii" alt="Achievement shrine" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-3">
-            <p className="text-body-sm text-white">
-              {showcase.totalUnlocked}/{showcase.totalAvailable} unlocked
-            </p>
-          </div>
-        </div>
+        <GlassPanel className="relative min-h-[8rem] p-4">
+          <p className="font-sans text-body-sm font-semibold">
+            {showcase.totalUnlocked}/{showcase.totalAvailable} achievements unlocked
+          </p>
+          <p className="mt-1 text-caption text-muted-foreground">Open the shrine</p>
+        </GlassPanel>
       </Link>
     );
   }
@@ -212,22 +198,19 @@ export function AchievementShowcase({
   const yama = yamaService.resolveProfilePresence();
 
   return (
-    <IllustratedScreen scrim="none" className="min-h-dvh" background={<ShrineBackground />}>
-      <div className="relative flex min-h-dvh flex-col">
-        <header className="relative z-10 shrink-0 space-y-1 p-4 pt-3 text-center">
-          <StoryTitle as="h1" className="text-lg text-white drop-shadow-md">
-            Achievement Shrine
-          </StoryTitle>
-          <p className="text-caption text-white/70">Milestones earned beneath the torii</p>
-        </header>
-
-        <main className="relative z-10 flex-1 space-y-4 overflow-y-auto px-4 py-2">
+    <SecondaryScreenShell
+      title="Achievement Shrine"
+      subtitle="Milestones earned beneath the torii"
+      backHref="/profile"
+      backLabel="Profile"
+      contentClassName="space-y-4 pb-2"
+    >
           {trophyAchievement ? (
             <div className="mx-auto flex max-w-md flex-col items-center gap-2 py-2">
               <p className="font-story text-xs uppercase tracking-[0.25em] text-trail-glow">
                 Trophy pedestal
               </p>
-              <div className="relative flex flex-col items-center gap-3 rounded-2xl border border-trail-glow/35 bg-black/50 px-8 py-6 shadow-[0_0_28px_hsl(var(--trail-glow)/0.18)]">
+              <GlassPanel className="relative flex flex-col items-center gap-3 px-8 py-6">
                 <WorldArtImage
                   asset={INVENTORY_ITEM_ASSETS.stone_lantern}
                   alt=""
@@ -243,13 +226,13 @@ export function AchievementShowcase({
                   size="lg"
                   showLabel
                 />
-              </div>
+              </GlassPanel>
             </div>
           ) : null}
 
           {featured && featured.id !== trophyAchievement?.id ? (
             <div className="mx-auto flex max-w-md flex-col items-center gap-3 py-2">
-              <div className="rounded-2xl border border-trail-glow/30 bg-black/45 px-6 py-5 shadow-[0_0_24px_hsl(var(--trail-glow)/0.12)] backdrop-blur-sm">
+              <GlassPanel className="px-6 py-5 text-center">
                 <AchievementBadge
                   slug={featured.slug}
                   name={featured.name}
@@ -258,8 +241,8 @@ export function AchievementShowcase({
                   size="lg"
                   showLabel
                 />
-              </div>
-              <p className="max-w-xs text-center text-body-sm text-white/80">
+              </GlassPanel>
+              <p className="max-w-xs text-center text-body-sm text-muted-foreground">
                 {featured.description ?? featured.name}
               </p>
             </div>
@@ -303,19 +286,12 @@ export function AchievementShowcase({
               />
             </GlassPanel>
           ) : null}
-        </main>
 
-        <footer className="relative z-10 shrink-0 p-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-2">
-          <GlassPanel className="mx-auto max-w-md rounded-card p-3">
-            <YamaPresence
-              presence={yama}
-              size="sm"
-              layout="horizontal"
-              bubbleClassName="border-glass-border bg-glass-bg/80"
-            />
+        <footer className="shrink-0 pt-2">
+          <GlassPanel className="mx-auto max-w-md p-3">
+            <YamaPresence presence={yama} size="sm" layout="horizontal" />
           </GlassPanel>
         </footer>
-      </div>
-    </IllustratedScreen>
+    </SecondaryScreenShell>
   );
 }

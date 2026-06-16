@@ -1,12 +1,11 @@
 "use client";
 
-import { SceneImage } from "@/components/media/scene-image";
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { WorldBossNode } from "@/components/visual/world/world-boss-node";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { ExpeditionMarker } from "@/features/learning/components/lesson/expedition-marker";
-import { IllustratedScreen, PrimaryClimbButton, StoryTitle } from "@/components/visual";
+import { GlassPanel, IllustratedScreen, PrimaryClimbButton, StoryTitle } from "@/components/visual";
 import { cn } from "@/lib/utils";
 
 type LessonIntroPanelProps = {
@@ -43,17 +42,7 @@ export function LessonIntroPanel({
     lessonType === "application" || lessonType === "trial" || lessonType === "boss";
 
   return (
-    <IllustratedScreen
-      scrim="minimal"
-      className="flex flex-1 flex-col justify-center py-4"
-      background={
-        <SceneImage
-          scene="study_atmosphere"
-          alt=""
-          className="absolute inset-0 min-h-full rounded-none opacity-90"
-        />
-      }
-    >
+    <IllustratedScreen className="flex flex-1 flex-col justify-center py-4">
       <div className="relative mx-auto w-full max-w-md space-y-5 px-1">
         {isBossTrial ? (
           <div className="flex justify-center py-2">
@@ -87,11 +76,8 @@ export function LessonIntroPanel({
           <ExpeditionMarker label="Mode" value={isReview ? "Review" : "First climb"} />
         </div>
 
-        <div
-          className={cn(
-            "rounded-2xl border border-white/12 bg-black/40 p-4 backdrop-blur-sm",
-            isBossTrial && "border-trail-glow/30",
-          )}
+        <GlassPanel
+          className={cn("space-y-3 p-4", isBossTrial && "ring-1 ring-primary/25")}
         >
           <YamaPresence
             presence={
@@ -104,12 +90,12 @@ export function LessonIntroPanel({
             showMessage={false}
             className="items-center"
           />
-          <p className="mt-3 text-center text-caption text-muted-foreground">
+          <p className="text-center text-caption text-muted-foreground">
             {isReview
               ? "Practice this stretch of the trail again."
               : "The path ahead awaits — step forward when ready."}
           </p>
-        </div>
+        </GlassPanel>
 
         <PrimaryClimbButton className="w-full" loading={loading} onClick={onStart}>
           {alreadyCompleted ? "Review expedition" : "Begin climb"}

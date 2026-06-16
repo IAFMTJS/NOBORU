@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
-import { RegionHeroImage } from "@/components/media/region-hero-image";
 import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
 import { Button } from "@/components/ui/button";
 import {
@@ -98,18 +97,7 @@ export function OnboardingWizard() {
     (step === 7 && true);
 
   return (
-    <IllustratedScreen
-      scrim="full"
-      background={
-        <RegionHeroImage
-          regionSlug="foothills"
-          alt=""
-          className="absolute inset-0 h-full min-h-dvh rounded-none"
-          hideOverlay
-        />
-      }
-      className="flex min-h-dvh flex-col"
-    >
+    <IllustratedScreen className="flex min-h-dvh flex-col">
       <div className="px-4 pt-[max(1rem,env(safe-area-inset-top))]">
         <OnboardingProgress currentStep={step} />
       </div>

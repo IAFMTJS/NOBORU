@@ -2,6 +2,23 @@
 
 This file turns the mockup documentation into a production asset checklist. Use it when asking Cursor to create files, organize generated art, or implement image references in the app.
 
+## Art Library (required staging)
+
+**All newly generated art must be saved to:**
+
+```text
+Art Library/          ← D:\NOBORU\Art Library (repo root)
+  icons/
+  backgrounds/
+  characters/
+  ui/
+  achievements/
+  enemies/
+  props/
+```
+
+Use the same `category_name_light_v1` / `category_name_dark_v1` naming inside these folders. Production paths under `assets/` or `public/` are populated via ingest — Art Library is the authoritative archive for new art.
+
 ## Recommended Folder Structure
 
 Use a structure like this for generated art assets:

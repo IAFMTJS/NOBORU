@@ -32,7 +32,7 @@ export function ShopItemCard({
     >
       <div className="flex items-start justify-between gap-2">
         <span
-          className="flex h-10 w-10 items-center justify-center rounded-[var(--radius)] bg-black/40 text-xl"
+          className="flex h-10 w-10 items-center justify-center rounded-[var(--radius)] bg-primary/10 text-xl"
           aria-hidden
         >
           {item.iconLabel}

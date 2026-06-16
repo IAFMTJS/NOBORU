@@ -1,8 +1,21 @@
 # Noboru Art Direction Reference Pack
 
-This folder documents the four canonical mockup boards so Cursor can generate UI art, background art, icons, states, and screen layouts with the same visual language.
+This folder documents Noboru's visual identity and mockup boards so Cursor can generate UI art, backgrounds, icons, states, and screen layouts with consistent AAA fantasy adventure language.
 
-## Source Mockups
+## Single Source of Truth
+
+**[08_visual_art_direction_master_spec.md](./08_visual_art_direction_master_spec.md)** — binding for:
+
+- Visual positioning and forbidden styles
+- Light/dark color system
+- Generation rules (scope, transparent icons, dual theme variants)
+- Kitsune companion rules
+- Icon and UI style
+- Art quality bar
+
+Cursor rule: `.cursor/rules/visual-reference.mdc`
+
+## Source Mockups (Supplementary)
 
 **In repo (`assets/marketing/`):**
 
@@ -19,23 +32,26 @@ Legacy supplementary boards: `mockup_product_*`, `mockup_supplementary_dark_v1`,
 
 AI-generated style batches (not production building blocks) belong in `assets/marketing/generated-examples/` — never in `public/art/`.
 
-All four sheets are `1536x1024` and use a dark fantasy mobile-game presentation board with many phone-sized screen concepts.
-
 ## Document Map
 
-- [00_global_visual_system.md](./00_global_visual_system.md) - the master art bible: palette, lighting, materials, character, UI rules, icon language, typography, motion.
-- [01_bottom_navigation.md](./01_bottom_navigation.md) - every navbar concept from Mockup 1, with active/inactive states, backgrounds, ornaments, and icon treatment.
-- [02_journey_trails_and_world_map.md](./02_journey_trails_and_world_map.md) - trail paths, region maps, nodes, locks, boss nodes, weather, day/night, animation, zoom levels.
-- [03_learning_companion_rewards_states.md](./03_learning_companion_rewards_states.md) - lesson cards, answer states, companion emotions, rewards, review, analytics, shop, avatar, social, settings, loading/empty states.
-- [04_camp_inventory_memory_events.md](./04_camp_inventory_memory_events.md) - camp base, achievement shrine, daily quests, inventory, backpack, memory book, region sheets, checkpoint shrine, seasonal events.
-- [05_cursor_generation_brief.md](./05_cursor_generation_brief.md) - direct instructions, component checklist, prompt fragments, acceptance criteria for Cursor-generated art.
-- [06_asset_inventory_and_naming.md](./06_asset_inventory_and_naming.md) - production checklist for backgrounds, navbars, icons, props, character poses, states, and file naming.
+- [08_visual_art_direction_master_spec.md](./08_visual_art_direction_master_spec.md) - **MASTER SPEC** — colors, generation rules, forbidden styles, companion, icons, quality bar.
+- [00_global_visual_system.md](./00_global_visual_system.md) - legacy art bible: lighting, materials, screen detail (supplementary).
+- [01_bottom_navigation.md](./01_bottom_navigation.md) - navbar concepts from Mockup 1.
+- [02_journey_trails_and_world_map.md](./02_journey_trails_and_world_map.md) - trail paths, regions, nodes, weather.
+- [03_learning_companion_rewards_states.md](./03_learning_companion_rewards_states.md) - lesson cards, companion emotions, rewards, states.
+- [04_camp_inventory_memory_events.md](./04_camp_inventory_memory_events.md) - camp, shrine, inventory, memory book, events.
+- [05_cursor_generation_brief.md](./05_cursor_generation_brief.md) - generation checklist, prompt prefix, acceptance criteria.
+- [06_asset_inventory_and_naming.md](./06_asset_inventory_and_naming.md) - production checklist and file naming.
+- [07_icon_catalog.md](./07_icon_catalog.md) - every icon: asset name, function, visual description.
 
 ## Global Non-Negotiables
 
-1. Noboru is not a flat productivity app. It is a painterly mobile learning RPG with Japanese mountain-trail mythology, warm lanterns, shrine motifs, and a white fox companion.
-2. Every screen needs environmental depth: foreground props, midground path or camp elements, background mountains/forest/shrine silhouettes, and atmospheric particles.
-3. UI panels should feel hand-crafted: dark translucent lacquer, parchment, wood, stone, brass, rope, paper, snow, bamboo, sakura petals, or ember-lit metal.
-4. Icons must be bold silhouettes first, then painterly texture second. Use mountain, tent, torii, pagoda, fox, book, backpack, lock, flame, gem, lantern, shrine, and compass motifs.
-5. Active states must glow from the world itself: lantern amber, campfire orange, sakura red, moon blue, bamboo green, snow blue, or royal gold.
-6. Empty, loading, error, locked, and offline states still get full art. Do not leave plain cards or generic spinners alone.
+1. Noboru is a **fantasy adventure game that teaches Japanese** — AAA stylized realism, not flat productivity SaaS.
+2. **Generate only what is asked.** Never deviate from requested style.
+3. **Icons: transparent background mandatory.** Light + dark variant mandatory for every generated asset.
+4. Kitsune is a **companion**, not a cartoon mascot — stylized realism, intelligent, never chibi/clownish.
+5. UI surfaces: stone, parchment, wood, dark lacquer, brass — layered depth, volumetric light.
+6. Icons: fantasy game UI (shrine carvings, RPG inventory, quest markers) — not Material Icons or thin outline packs.
+7. Forbidden styles: cartoon, chibi, kawaii, Duolingo, anime faces, flat design, SaaS dashboards, stock illustration.
+8. Empty, loading, error, locked states still get full art.
+9. **All new generated art saved to `Art Library/`** (`D:\NOBORU\Art Library`) — category subfolders required.

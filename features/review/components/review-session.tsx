@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { SceneImage } from "@/components/media/scene-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel, IllustratedScreen, PrimaryClimbButton, StoryTitle } from "@/components/visual";
@@ -200,16 +199,7 @@ export function ReviewSession({
   }
 
   return (
-    <IllustratedScreen
-      scrim="minimal"
-      background={
-        <SceneImage
-          scene="review_atmosphere"
-          alt=""
-          className="absolute inset-0 min-h-dvh rounded-none"
-        />
-      }
-    >
+    <IllustratedScreen>
       <div className="space-y-4 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-[calc(3.75rem+env(safe-area-inset-top))]">
         <header className="space-y-1 text-center">
           <StoryTitle as="h1" className="text-trail-glow">

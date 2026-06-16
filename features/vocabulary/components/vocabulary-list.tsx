@@ -46,10 +46,8 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
         />
       </GlassPanel>
 
-      <div className="space-y-2 rounded-card border border-white/10 bg-black/30 p-3 backdrop-blur-sm">
-        <StoryTitle as="h2" className="text-sm">
-          Word shelf
-        </StoryTitle>
+      <GlassPanel className="space-y-2 p-3">
+        <h2 className="font-sans text-body font-semibold">Word shelf</h2>
         <p className="text-caption text-muted-foreground">
           Scroll the trail lexicon — tap a word to study it in place.
         </p>
@@ -70,7 +68,7 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
             ))
           )}
         </div>
-      </div>
+      </GlassPanel>
     </StudyHubLayout>
   );
 }

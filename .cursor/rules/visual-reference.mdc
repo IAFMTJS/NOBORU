@@ -1,43 +1,85 @@
 ---
-description: BINDING Noboru visual reference — four canonical mockups govern all UI, art, and asset decisions until explicitly revoked by founder.
-globs: **/*.tsx, **/components/**, **/app/**, **/features/**/components/**, **/assets/**, **/public/**, **/.cursor/agents/**art*, **/.cursor/agents/**ui-art*, **/.cursor/agents/**icon*, **/.cursor/agents/**mascot*, **/.cursor/agents/**theme*, **/.cursor/agents/**region-art*, **/.cursor/agents/**achievement-art*
+description: BINDING Noboru visual reference — art-direction/08 master spec governs all UI, art, and asset generation. Dual light/dark versions, transparent icon backgrounds required.
+globs: **/*.tsx, **/components/**, **/app/**, **/features/**/components/**, **/assets/**, **/public/**, **/art-direction/**, **/.cursor/agents/**art*, **/.cursor/agents/**ui-art*, **/.cursor/agents/**icon*, **/.cursor/agents/**mascot*, **/.cursor/agents/**theme*, **/.cursor/agents/**region-art*, **/.cursor/agents/**achievement-art*, **/.cursor/agents/**enemy*, **/.cursor/agents/**avatar*
 alwaysApply: false
 ---
 
 # NOBORU VISUAL REFERENCE RULE
 
-Version: 1.0
+Version: 2.0
 
 Priority: **CRITICAL**
 
 Status: **BINDING — AUTHORITATIVE**
 
-Revocation: Only by explicit founder instruction. Until revoked, this rule and `docs/mockup-reference-style.md` override conflicting visual guidance.
+Revocation: Only by explicit founder instruction.
 
 ⸻
 
 PURPOSE
 
-Noboru's visual target is defined by **four canonical mockups**. Every screen, component, illustration, icon, and asset must converge toward this style.
+Noboru's visual identity is defined by a single master specification. Every screen, component, illustration, icon, and generated asset must conform to it.
 
-Agents and implementers must not invent alternate visual directions when mockup guidance exists.
+Noboru is a **fantasy adventure game that teaches Japanese** — not a productivity app, not Duolingo, not generic mobile SaaS.
 
 ⸻
 
-CANONICAL MOCKUPS
+SINGLE SOURCE OF TRUTH
 
-All in `assets/marketing/` — design reference only, not production-served:
+**Primary authority:** `art-direction/08_visual_art_direction_master_spec.md`
 
-| File | ID | Scope |
-|------|-----|-------|
-| `mockup_navbar_concepts_v1.png` | `mockup_navbar_concepts_v1` | Pill nav, mascot overlap, 5 tabs, themed skins, active glow |
-| `mockup_journey_core_flow_v1.png` | `mockup_journey_core_flow_v1` | Trail map, nodes, fog, weather/time, world map, region transitions |
-| `mockup_full_product_ux_v1.png` | `mockup_full_product_ux_v1` | Lessons, review, camp, feedback, shop, social, system states |
-| `mockup_gamification_screens_v1.png` | `mockup_gamification_screens_v1` | Achievements, quests, checkpoints, inventory, events, memory book |
+Read this file before creating, generating, or approving any visual work.
 
-**Full specification:** `docs/mockup-reference-style.md`
+**Supplementary (when master spec is silent on layout):**
 
-Legacy mockups (`mockup_product_*`, `mockup_supplementary_*`, `mockup_home_learn_flow_*`) are secondary when they conflict with the four canonical mockups.
+* `docs/mockup-reference-style.md`
+* Canonical mockups in `assets/marketing/`
+* `art-direction/00` through `07` for screen inventories and legacy detail
+
+**On conflict:** Master spec wins.
+
+⸻
+
+GENERATION RULES (NON-NEGOTIABLE)
+
+Every asset generation request — in chat or pipeline — must follow:
+
+1. **Generate only what is asked.** No extra elements, no style experiments, no unrequested variants.
+2. **Never deviate from the requested style.** Regenerate if output reads as cartoon, chibi, kawaii, flat SaaS, stock illustration, Material Design, or generic mobile app art.
+3. **Icons and UI glyphs: transparent background only.** No baked backgrounds, gradients, or scene context in icon files.
+4. **Dual theme versions required.** Every asset needs `_light` and `_dark` variants — same design, colors only change per master spec palettes.
+5. **Naming:** `category_name_light_v1` and `category_name_dark_v1` (see assets.mdc).
+6. **Save location:** all new art must be written to **`Art Library/`** (`D:\NOBORU\Art Library`) — use category subfolders (`icons/`, `backgrounds/`, `characters/`, `ui/`, etc.). Never leave generated art only in chat or temp paths.
+
+⸻
+
+VISUAL IDENTITY SUMMARY
+
+* **Theme:** Sacred Mountain Fantasy — mythological dreamlike Japan, AAA stylized realism
+* **Companion:** Magical kitsune (Yama in legacy assets) — companion, not mascot
+* **References:** Genshin Impact, Ghost of Tsushima, Ori, Ghibli environments, Okami
+* **Forbidden:** Cartoon, chibi, kawaii, Duolingo, anime faces, flat design, Material Design, SaaS dashboards, stock illustration, emoji style
+* **UI:** Stone, parchment, wood, dark lacquer, brass — layered depth, volumetric light, soft glows
+* **Icons:** Fantasy game UI — shrine carvings, RPG inventory symbols, quest markers — detailed silhouettes with depth, not thin outline packs
+* **Primary action:** Lantern Gold `#D6A85F`
+* **Progress / success:** Moss Green `#7B8D5A`
+* **Companion accent:** Fox Orange `#C96B3D` (light) / `#D17A47` (dark)
+* **Forbidden colors:** `#00FFFF`, `#FF00FF`, `#0066FF`, `#00FF00`, `#FF0000`
+
+Full palettes: `art-direction/08_visual_art_direction_master_spec.md`
+
+⸻
+
+CANONICAL MOCKUPS (SUPPLEMENTARY)
+
+| File | Scope |
+|------|-------|
+| `mockup_navbar_concepts_v1.png` | Pill nav, companion overlap, 5 tabs, themed skins |
+| `mockup_journey_core_flow_v1.png` | Trail, nodes, fog, weather, world map |
+| `mockup_full_product_ux_v1.png` | Lessons, review, camp, feedback, shop, states |
+| `mockup_gamification_screens_v1.png` | Achievements, quests, checkpoints, inventory |
+
+Use mockups for layout and screen inventory — not to override master spec colors, icon style, or generation rules.
 
 ⸻
 
@@ -45,20 +87,11 @@ REQUIREMENTS
 
 Before creating or approving visual work:
 
-1. Read `docs/mockup-reference-style.md`
-2. Open the relevant canonical mockup for the screen or asset type
-3. Match atmosphere, hierarchy, and material language — not necessarily pixel positions
-
-Visual identity targets:
-
-* **Theme:** Mystical Japanese mountain journey — dark, painterly, atmospheric
-* **Backgrounds:** Illustrated environments on primary screens; UI on dark glass overlays
-* **Glow:** Warm amber/gold for active trail, current node, selected nav — functional only
-* **Primary CTA:** Mountain Red `#D64045` — one per screen
-* **Navigation:** 5-tab pill bar (Journey, Camp, Study, Bag, Profile) with Yama mascot overlap
-* **Trail:** Vertical glowing stone path with circular nodes; fog for locked regions
-* **Typography:** Serif for story titles; sans for UI; Noto Sans JP for Japanese content
-* **Icons:** Single thin-line family — no mixed icon packs in learner UI
+1. Read `art-direction/08_visual_art_direction_master_spec.md`
+2. Confirm generation scope matches the request exactly
+3. For icons: verify transparent PNG/WebP and both light/dark variants
+4. Match atmosphere, hierarchy, and material language from master spec
+5. Register new assets in `docs/asset-registry.md` per assets.mdc
 
 ⸻
 
@@ -66,22 +99,23 @@ CODING STANDARDS
 
 Implementation
 
-* Use design tokens from `app/globals.css` — no hardcoded hex outside token system
-* Illustrated backgrounds via approved assets in `assets/regions/`, `assets/ui/` — register new art in asset registry
-* Dark glass panels: semi-transparent surface tokens + subtle border luminance
-* Bottom nav: pill shape, safe-area aware, mascot integration per navbar mockup
+* Use design tokens aligned with master spec light/dark palettes in `app/globals.css`
+* Illustrated backgrounds via approved assets in `assets/regions/`, `assets/ui/`
+* Dark mode is canonical experience; light mode is morning exploration variant
+* Bottom nav: adventure equipment feel — scroll, lantern, shrine, backpack, compass, fox emblem
 
 Assets
 
-* New illustrations must pass Art Director alignment against canonical mockups
-* Naming: `category_name_variant_version` per assets.mdc
-* Register in `docs/asset-registry.md` before production use
+* Art Director alignment required before production use
+* Naming: `category_name_light_v1` / `category_name_dark_v1` per assets.mdc
+* Icons: transparent background mandatory
+* **All new art saved to `Art Library/`** (`D:\NOBORU\Art Library`) before production ingest
 
 Agents
 
-* Art Director Agent owns mockup compliance
-* Visual subagents (ui-art, icon, mascot, region-art, achievement-art) must cite mockup panel when proposing art
-* Theme Agent ensures tokens support mockup palette and glass surfaces
+* Art Director Agent owns master spec compliance
+* Visual subagents (ui-art, icon, mascot, region-art, achievement-art, theme) must cite master spec sections when proposing art
+* Reject assets missing light/dark pair or transparent icon backgrounds
 
 ⸻
 
@@ -89,25 +123,27 @@ SUCCESS CRITERIA
 
 Visual work succeeds when:
 
-* Reviewers recognize the mockup world without seeing the logo
-* Primary screens use illustrated backgrounds + dark glass content layers
-* Trail/progress reads as glowing ascent, not a flat list
-* Nav matches pill + mascot + 5-tab structure from navbar mockup
-* New assets feel like they belong in the same painterly universe
-* Deviations are documented and founder-approved — not agent-improvised
+* Output matches the exact request — no unasked additions
+* Reviewers recognize AAA fantasy adventure — not language-learning SaaS
+* Icons have transparent backgrounds and light/dark pairs
+* Kitsune reads as intelligent companion — not cartoon mascot
+* UI surfaces use material depth — stone, parchment, lacquer, brass
+* Colors match master spec tokens — no forbidden palette
+* Deviations are founder-approved — not agent-improvised
 
 ⸻
 
 FAILURE CRITERIA
 
-Stop and realign when:
+Stop and regenerate when:
 
-* Primary screens are flat card stacks on solid fills with no illustrated world
-* Navigation diverges from 5-tab pill + mascot mockup without founder approval
-* Mixed icon libraries in learner-facing UI
-* Glow used decoratively on inactive elements
-* New visual style invented without mockup reference
-* Legacy mockups or old docs cited over the four canonical mockups when they conflict
+* Icon has non-transparent background
+* Only one theme variant delivered
+* Style deviates from request or reads as forbidden category (chibi, flat SaaS, Duolingo, etc.)
+* Forbidden colors used
+* Thin outline / Material / SF Symbols icon style
+* Agent adds unrequested creative variations
+* Legacy mockup colors cited over master spec
 
 ⸻
 
@@ -115,29 +151,35 @@ EXAMPLES
 
 Correct
 
-* Journey screen: vertical trail illustration, orange glow on active segment, circular nodes, fox at current lesson — per `mockup_journey_core_flow_v1.png`
-* Bottom nav: pill container, Yama overlapping left, Journey tab glowing orange — per `mockup_navbar_concepts_v1.png`
-* Lesson complete: dark overlay, +XP gold text, red Continue Climbing button — per `mockup_gamification_screens_v1.png`
+* `icon_nav_journey_mountain_light_v1.png` + `icon_nav_journey_mountain_dark_v1.png` — same silhouette, palette swap, transparent PNG
+* Journey screen: stylized realism trail, lantern glow on active node, kitsune at current lesson
+* Lesson label: "Lantern Trial" — not "Question 1 of 10"
 
 Incorrect
 
-* Learn screen as vertical list of Lucide icons on flat `#171A21` cards
-* 6-tab bottom bar with no mascot integration
-* Random purple gradient hero unrelated to mountain night palette
-* Implementing from `mockup_product_dark_v1.png` when it conflicts with journey core flow mockup
+* Single icon file with white or gradient background baked in
+* Only dark variant generated without light counterpart
+* Lucide-style thin outline icons in learner UI
+* Chibi fox mascot with hyperactive expression
+* Pure white `#FFFFFF` card stacks with no material texture
+* Cyberpunk neon or forbidden hex colors
 
 ⸻
 
 ANTI-PATTERNS
 
-Ignoring canonical mockups in favor of agent aesthetic preference
+Generating assets without reading master spec
 
-Pixel-copying legacy mockups that contradict the four canonical references
+Delivering one theme variant when two are required
 
-Flat SaaS dashboard aesthetic on learner primary screens
+Non-transparent icon backgrounds
 
-Decorative glow, neon accents, or cyberpunk palette
+Style drift beyond the explicit request
 
-Creating assets before checking mockup-reference-style.md
+Flat SaaS dashboard aesthetic on primary screens
+
+Cartoon, chibi, kawaii, or Duolingo-adjacent visuals
+
+Using mockup palette when it conflicts with master spec
 
 END OF visual-reference.mdc

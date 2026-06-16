@@ -1,0 +1,62 @@
+{
+  "folder": "Art Library/backgrounds",
+  "naming": "bg_{scene}_{flavor}_{theme}_v1.png — flavor omitted for base (e.g. bg_trail_light_v1)",
+  "layout": "Mobile portrait 9:16, subtle atmospheric — calm center/lower area for UI and bottom nav",
+  "rules": {
+    "base": "Required light + dark per scene using master spec palettes",
+    "flavors": "Optional subtle regional tints — bamboo, sakura, snow, lantern — never overpower UI",
+    "notTransparent": true
+  },
+  "scenes": [
+    {
+      "id": "core",
+      "folder": "core",
+      "desc": "Default app atmosphere — distant sacred mountain, soft mist, minimal foreground"
+    },
+    {
+      "id": "trail",
+      "folder": "trail",
+      "desc": "Journey trail — winding mountain path suggestion, fog, distant torii, very subtle"
+    },
+    {
+      "id": "camp",
+      "folder": "camp",
+      "desc": "Camp hub — night/day camp mood, tent silhouette far background, warm glow hint"
+    },
+    {
+      "id": "shrine",
+      "folder": "shrine",
+      "desc": "Shrine / achievements — torii and stone steps far background, sacred mist"
+    },
+    {
+      "id": "study",
+      "folder": "study",
+      "desc": "Study / dojo — quiet learning atmosphere, scroll and forest hint"
+    }
+  ],
+  "flavors": {
+    "": "base scene only",
+    "bamboo": "Subtle bamboo stalk silhouettes at edges, moss green tint, very soft",
+    "sakura": "Subtle sakura petals and soft pink atmospheric tint at edges only",
+    "snow": "Subtle cool snow and pale blue mist at edges, winter quiet",
+    "lantern": "Subtle warm lantern bokeh and amber glow at edges, night camp feeling"
+  },
+  "generate": [
+    {"scene": "core", "flavor": "", "themes": ["light", "dark"]},
+    {"scene": "core", "flavor": "bamboo", "themes": ["light", "dark"]},
+    {"scene": "core", "flavor": "sakura", "themes": ["light", "dark"]},
+    {"scene": "trail", "flavor": "", "themes": ["light", "dark"]},
+    {"scene": "trail", "flavor": "bamboo", "themes": ["light", "dark"]},
+    {"scene": "trail", "flavor": "sakura", "themes": ["light", "dark"]},
+    {"scene": "trail", "flavor": "snow", "themes": ["light", "dark"]},
+    {"scene": "camp", "flavor": "", "themes": ["light", "dark"]},
+    {"scene": "camp", "flavor": "lantern", "themes": ["light", "dark"]},
+    {"scene": "camp", "flavor": "sakura", "themes": ["light", "dark"]},
+    {"scene": "shrine", "flavor": "", "themes": ["light", "dark"]},
+    {"scene": "shrine", "flavor": "sakura", "themes": ["light", "dark"]},
+    {"scene": "shrine", "flavor": "lantern", "themes": ["light", "dark"]},
+    {"scene": "study", "flavor": "", "themes": ["light", "dark"]},
+    {"scene": "study", "flavor": "bamboo", "themes": ["light", "dark"]},
+    {"scene": "study", "flavor": "snow", "themes": ["light", "dark"]}
+  ]
+}

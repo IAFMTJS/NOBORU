@@ -60,7 +60,7 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
       href={href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "focus-ring relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl px-0.5 pb-1 pt-0 text-caption font-semibold tracking-wide transition-colors",
+        "focus-ring relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-md px-0.5 pb-1 pt-0 text-caption font-semibold tracking-wide transition-colors",
         isActive ? config.activeLabelClass : "text-muted-foreground/80 hover:text-foreground/90",
       )}
     >

@@ -14,14 +14,7 @@
   "lang": "en",
   "dir": "ltr",
   "prefer_related_applications": false,
-  "icons": [
-    {
-      "src": "/art/brand/icon-app-dark.webp",
-      "sizes": "512x512",
-      "type": "image/webp",
-      "purpose": "any maskable"
-    }
-  ],
+  "icons": [],
   "shortcuts": [
     {
       "name": "Continue Learning",

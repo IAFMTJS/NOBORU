@@ -1,12 +1,12 @@
 ---
-description: Authoritative Noboru UI/UX — mobile-first design, navigation, colors, components, screen specs, Yama usage, and mockup references.
+description: Authoritative Noboru UI/UX — mobile-first design, navigation, colors, components, screen specs, kitsune companion usage, and art-direction/08 master spec.
 globs: **/*.tsx, **/components/**, **/app/**, **/features/**/components/**
 alwaysApply: false
 ---
 
 # NOBORU UI/UX RULE
 
-Version: 1.0
+Version: 1.1
 
 Priority: CRITICAL
 
@@ -16,7 +16,9 @@ This rule governs all user interface and user experience decisions within Noboru
 
 Every screen, interaction, animation, component, page, dialog, onboarding flow, game, lesson, and notification must follow this document.
 
-This document is considered the primary source of truth for user experience.
+**Visual and asset decisions** are governed by `art-direction/08_visual_art_direction_master_spec.md` and `.cursor/rules/visual-reference.mdc`. On conflict with this document's color or style sections, the master spec wins.
+
+This document is the primary source of truth for **user experience**; the master spec is the primary source of truth for **visual identity and generated assets**.
 
 ⸻
 

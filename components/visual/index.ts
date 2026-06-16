@@ -30,5 +30,6 @@ export {
 
 // Back-compat aliases
 export { IllustratedScreen } from "./primitives/illustrated-screen";
+export { SecondaryScreenShell } from "./shells/secondary-screen-shell";
 export { FullscreenLoadingShell, LoadingShell } from "./loading";
 export { BottomNav, NavTabItem } from "./navigation";

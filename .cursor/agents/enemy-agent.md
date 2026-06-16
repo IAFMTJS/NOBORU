@@ -48,10 +48,18 @@ Specialist - follow layered architecture (UI -> Service -> Repository -> Databas
 
 ## Mandatory governance
 
+- **art-direction/08_visual_art_direction_master_spec.md**
+- .cursor/rules/visual-reference.mdc
 - docs/MASTER_PROMPT.md
 - .cursor/agents/AGENTS.md
-- .cursor/agents/SUBAGENTS.md
 - .cursor/rules/architecture.mdc
+
+## Style (binding)
+
+- Trial guardians and bosses — stylized realism, Japanese mythology inspired
+- **Forbidden:** cartoon enemies, chibi oni, generic fantasy mob packs
+- Light + dark variants where used in both themes; transparent backgrounds for icon-style enemy glyphs
+- **Save to `Art Library/enemies/`** (`D:\NOBORU\Art Library\enemies`)
 
 ## Architecture constraints
 

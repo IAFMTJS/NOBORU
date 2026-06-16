@@ -1,50 +1,67 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { resolveNavSkinWithContext } from "@/lib/navigation/nav-skin.resolver";
+import { ArtLibraryImage } from "@/components/media/art-library-image";
+import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
+import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 import { cn } from "@/lib/utils";
 
-import { NavTabItem } from "./nav-tab-item";
+const NAV_ICON_BASE: Record<ImmersiveNavTab, string> = {
+  journey: "icons/icon_nav_journey_mountain",
+  camp: "icons/icon_nav_camp_tent",
+  study: "icons/icon_nav_dojo_torii",
+  bag: "icons/icon_nav_bag_backpack",
+  profile: "icons/icon_nav_profile_fox",
+};
 
-/** Single shared bottom nav — theme art/color varies per active route only. */
+/** Floating glass pill primary navigation. */
 export function BottomNav() {
   const pathname = usePathname();
-  const activeConfig = resolveNavSkinWithContext(pathname ?? "/learn");
 
   return (
     <nav
       aria-label="Primary navigation"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-safe-bottom pt-10"
+      className={cn(
+        "pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3",
+        "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
+      )}
     >
-      <div
-        className={cn(
-          "pointer-events-auto relative mx-auto flex max-w-phone items-end overflow-visible rounded-nav border backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-500",
-          activeConfig.barSurfaceClass,
-          activeConfig.barBorderClass,
-          "shadow-[0_10px_40px_rgba(0,0,0,0.35)]",
-          "nav-bar-texture",
-        )}
-        style={
-          {
-            "--nav-texture-url": `url(${activeConfig.barTexturePath})`,
-          } as CSSProperties
-        }
-      >
-        <div className="flex min-h-nav w-full items-end justify-around gap-0 px-1 pb-1.5 pt-2">
-          {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => (
-            <NavTabItem
+      <div className={cn("pointer-events-auto flex items-center gap-0.5", glassSurface.navShell)}>
+        {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => {
+          const active = isNavActive(pathname, href);
+          return (
+            <Link
               key={href}
               href={href}
-              label={label}
-              navTab={navTab}
-              isActive={isNavActive(pathname, href)}
-            />
-          ))}
-        </div>
+              aria-current={active ? "page" : undefined}
+              aria-label={label}
+              className={cn(
+                "focus-ring inline-flex h-8 min-w-8 items-center justify-center rounded-full transition-all duration-200",
+                active
+                  ? cn(glassSurface.navItemActive, "gap-1 px-2.5")
+                  : cn(glassSurface.navItemInactive, "px-1.5"),
+              )}
+            >
+              <ArtLibraryImage
+                themedBase={NAV_ICON_BASE[navTab]}
+                src=""
+                alt=""
+                width={18}
+                height={18}
+                className={cn("shrink-0 transition", !active && "opacity-70")}
+              />
+              {active ? (
+                <span className="max-w-[4.25rem] truncate font-sans text-[9px] font-semibold leading-none tracking-wide">
+                  {label}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );
