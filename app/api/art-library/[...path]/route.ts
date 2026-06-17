@@ -22,7 +22,6 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const relative = segments.join("/");
   const publicPath = path.resolve(PUBLIC_ROOT, ...segments);
   if (publicPath.startsWith(PUBLIC_ROOT)) {
     try {

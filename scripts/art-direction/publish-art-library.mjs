@@ -3,13 +3,14 @@
  * Copy Art Library assets into public/art-library/ for static deployment.
  * Usage: node scripts/art-direction/publish-art-library.mjs [--if-needed]
  */
-import { cpSync, existsSync, readdirSync, rmSync, statSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const SRC = join(ROOT, "Art Library");
 const DEST = join(ROOT, "public/art-library");
 const ifNeeded = process.argv.includes("--if-needed");
+const LFS_POINTER_PREFIX = "version https://git-lfs.github.com/spec/v1";
 
 function newestMtime(dir) {
   let newest = 0;
@@ -40,6 +41,28 @@ function shouldSkipPublish() {
   return newestMtime(DEST) >= newestMtime(SRC);
 }
 
+function assertArtLibraryIsMaterialized() {
+  const sampleCandidates = [
+    join(SRC, "icons", "icon_nav_journey_mountain_dark_v1.png"),
+    join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
+    join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
+  ];
+  const samples = sampleCandidates.filter((path) => existsSync(path));
+  if (samples.length === 0) return;
+
+  const pointers = samples.filter((path) => {
+    const head = readFileSync(path, { encoding: "utf8", flag: "r" }).slice(0, 80);
+    return head.startsWith(LFS_POINTER_PREFIX);
+  });
+
+  if (pointers.length > 0) {
+    console.error("Art Library contains Git LFS pointer files instead of PNG binaries.");
+    console.error("On Vercel: Project Settings → Git → enable Git Large File Storage, then redeploy.");
+    console.error("Locally: run `git lfs pull` before building.");
+    process.exit(1);
+  }
+}
+
 function publishArtLibrary() {
   if (!existsSync(SRC)) {
     console.error("Art Library folder not found:", SRC);
@@ -51,13 +74,15 @@ function publishArtLibrary() {
     return;
   }
 
+  assertArtLibraryIsMaterialized();
+
   rmSync(DEST, { recursive: true, force: true });
   cpSync(SRC, DEST, {
     recursive: true,
     filter: (source) => !source.split(/[/\\]/).includes("_rejected"),
   });
 
-  console.log(`Published Art Library → public/art-library`);
+  console.log("Published Art Library → public/art-library");
 }
 
 publishArtLibrary();
