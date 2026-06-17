@@ -46,9 +46,9 @@ Underground root network. Moss, ancient bark, fungi, soil.
 | Status | ID | Target folder | Target filename | Skeleton zone | Notes |
 |--------|----|--------------|-----------------|---------------|-------|
 | [x] | `roots_a` | `segments/roots_a/` | `wt_roots_a_{theme}_v2.png` | n5_roots | BOTTOM tile — earth at bottom |
-| [x] | `roots_b` | `segments/roots_b/` | `wt_roots_b_{theme}_v2.png` | n5_roots | Thicker root arch — stacks above roots_a |
-| [x] | `roots_c` | `segments/roots_c/` | `wt_roots_c_{theme}_v2.png` | n5_roots | Glowing fungi cluster |
-| [x] | `roots_d` | `segments/roots_d/` | `wt_roots_d_{theme}_v2.png` | n5_roots | Underground spring |
+| [x] | `roots_b` | `segments/roots_b/` | `wt_roots_b_{theme}_v2.png` | n5_roots | Thicker root arch — regen v2 puzzle piece |
+| [x] | `roots_c` | `segments/roots_c/` | `wt_roots_c_{theme}_v2.png` | n5_roots | Glowing fungi cluster — regen v2 puzzle piece |
+| [x] | `roots_d` | `segments/roots_d/` | `wt_roots_d_{theme}_v2.png` | n5_roots | Underground spring — regen v2 puzzle piece |
 | [x] | `roots_e` | `segments/roots_e/` | `wt_roots_e_{theme}_v2.png` | n5_roots | Crystal root chamber |
 
 **Batch total:** 5 segments × 2 themes = **10 files**
@@ -63,11 +63,11 @@ Main vertical tree body. Normal bark, golden veins, carvings, hollow sections.
 |--------|----|--------------|-----------------|---------------|-------|
 | [x] | `trunk_a` | `segments/trunk_a/` | `wt_trunk_a_{theme}_v2.png` | n4_foothills | v2 puzzle piece — light+dark in Art Library |
 | [x] | `trunk_b` | `segments/trunk_b/` | `wt_trunk_b_{theme}_v2.png` | n4_foothills | v2 puzzle piece — sakura edge hint |
-| [x] | `trunk_c` | `segments/trunk_c/` | `wt_trunk_c_{theme}_v2.png` | n4_foothills | v2 puzzle piece — dense edge foliage |
+| [x] | `trunk_c` | `segments/trunk_c/` | `wt_trunk_c_{theme}_v2.png` | n4_foothills | v2 puzzle piece — regen dense edge foliage |
 | [x] | `trunk_d` | `segments/trunk_d/` | `wt_trunk_d_{theme}_v2.png` | n3_trunk_1 | Ancient carvings on bark |
-| [x] | `trunk_e` | `segments/trunk_e/` | `wt_trunk_e_{theme}_v2.png` | n3_trunk_1 | Empty niche carved in bark only (strict regen) |
-| [x] | `trunk_f` | `segments/trunk_f/` | `wt_trunk_f_{theme}_v2.png` | n3_trunk_2 | Golden vein pattern |
-| [x] | `trunk_g` | `segments/trunk_g/` | `wt_trunk_g_{theme}_v2.png` | n3_trunk_2 | Hollow section inner glow |
+| [x] | `trunk_e` | `segments/trunk_e/` | `wt_trunk_e_{theme}_v2.png` | n3_trunk_1 | Empty niche carved in bark — regen v2 puzzle piece |
+| [x] | `trunk_f` | `segments/trunk_f/` | `wt_trunk_f_{theme}_v2.png` | n3_trunk_2 | Golden vein pattern — regen v2 puzzle piece |
+| [x] | `trunk_g` | `segments/trunk_g/` | `wt_trunk_g_{theme}_v2.png` | n3_trunk_2 | Hollow section inner glow — regen v2 puzzle piece |
 | [x] | `trunk_h` | `segments/trunk_h/` | `wt_trunk_h_{theme}_v2.png` | n3_trunk_3 | Runes carved in bark (strict) |
 
 **Batch total:** 8 segments × 2 themes = **16 files** (3 POC, 5 remaining)

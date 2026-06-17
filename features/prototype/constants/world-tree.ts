@@ -3,8 +3,8 @@ import {
   type WorldTreeTileBase,
 } from "@/lib/assets/art-library-paths";
 
-/** Tailwind overlap class — must be static for JIT (96px / 1024px). */
-export const PROTOTYPE_WORLD_TREE_OVERLAP_CLASS = "-mt-[9.375%]" as const;
+/** Tailwind overlap class — must be static for JIT (96px seam @ 1536×1024 tile). */
+export const PROTOTYPE_WORLD_TREE_OVERLAP_CLASS = "-mt-[6.25%]" as const;
 
 /**
  * Batch 1 infinity tree — one of each unique segment, top → bottom DOM order.

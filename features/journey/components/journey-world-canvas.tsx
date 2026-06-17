@@ -49,9 +49,10 @@ export function JourneyWorldCanvas({
       aria-label="World tree journey"
     >
       <div className="relative mx-auto w-full min-w-full max-w-phone">
-        <WorldTreeStack tiles={JOURNEY_WORLD_TREE_TILE_STACK} />
-
-        <JourneyWorldNodeLayer journey={journey} regionName={regionName} />
+        <div className="relative w-full">
+          <WorldTreeStack tiles={JOURNEY_WORLD_TREE_TILE_STACK} />
+          <JourneyWorldNodeLayer journey={journey} regionName={regionName} />
+        </div>
       </div>
     </div>
   );

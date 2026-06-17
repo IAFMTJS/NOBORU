@@ -1,23 +1,17 @@
 import {
-  DEFAULT_WORLD_TREE_ZONE,
-  REGION_SLUG_TO_WORLD_TREE_ZONE,
-  WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_SKELETON_ZONES,
   type WorldTreeZoneId,
 } from "@/features/journey/constants/world-tree-skeleton.constants";
 import type {
   JourneyNode,
   JourneyPathViewModel,
-  JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
-import { computeJourneyPathCoordinates } from "@/lib/design-system/journey-path-contracts";
-import type { RegionSlug } from "@/lib/design-system/regions";
 import {
   JOURNEY_WORLD_TREE_TILE_STACK,
   WORLD_TREE_SEAM_OVERLAP_PERCENT,
-  WORLD_TREE_TILE_BASES,
   type WorldTreeTileBase,
 } from "@/lib/assets/art-library-paths";
+import { segmentIdFromTileBase } from "@/lib/assets/world-tree-segment-presentation";
 
 export type WorldTreeBand = {
   yMin: number;
@@ -30,13 +24,6 @@ export type PlottedSkeletonNode = {
   xPercent: number;
   yPercent: number;
 };
-
-function resolveZoneId(regionSlug: string): WorldTreeZoneId {
-  return (
-    REGION_SLUG_TO_WORLD_TREE_ZONE[regionSlug as RegionSlug] ??
-    DEFAULT_WORLD_TREE_ZONE
-  );
-}
 
 /** Cumulative y bands per zone — y=100 is base, y=0 is crown. */
 export function buildWorldTreeZoneBands(): Record<WorldTreeZoneId, WorldTreeBand> {
@@ -51,14 +38,6 @@ export function buildWorldTreeZoneBands(): Record<WorldTreeZoneId, WorldTreeBand
   }
 
   return bands;
-}
-
-const SEGMENT_ID_BY_TILE_BASE = Object.fromEntries(
-  Object.entries(WORLD_TREE_TILE_BASES).map(([segmentId, base]) => [base, segmentId]),
-) as Record<WorldTreeTileBase, string>;
-
-function segmentIdFromTileBase(base: WorldTreeTileBase): string {
-  return SEGMENT_ID_BY_TILE_BASE[base] ?? base.split("/").slice(-2, -1)[0] ?? base;
 }
 
 /** Per-segment vertical bands on the stacked tile canvas (y=100 base, y=0 crown). */
@@ -106,93 +85,58 @@ export function buildZoneTileBands(
   return zoneBands;
 }
 
-function mergeZoneBandsForPlotting(): Record<WorldTreeZoneId, WorldTreeBand> {
-  const skeletonBands = buildWorldTreeZoneBands();
-  const tileBands = buildZoneTileBands();
-  return { ...skeletonBands, ...tileBands };
-}
+/** Full vertical span of the produced tile stack (roots base → highest tile). */
+export function buildProducedStackBand(
+  stack: readonly WorldTreeTileBase[] = JOURNEY_WORLD_TREE_TILE_STACK,
+): WorldTreeBand | null {
+  const tileBands = buildWorldTreeTileBands(stack);
+  if (tileBands.size === 0) return null;
 
-function assignRegionBands(
-  regions: JourneyRegionViewModel[],
-  zoneBands: Record<WorldTreeZoneId, WorldTreeBand>,
-): Map<string, WorldTreeBand> {
-  const regionsByZone = new Map<WorldTreeZoneId, JourneyRegionViewModel[]>();
-
-  for (const region of regions) {
-    const zoneId = resolveZoneId(region.slug);
-    const bucket = regionsByZone.get(zoneId) ?? [];
-    bucket.push(region);
-    regionsByZone.set(zoneId, bucket);
-  }
-
-  const regionBands = new Map<string, WorldTreeBand>();
-
-  for (const [zoneId, zoneRegions] of regionsByZone) {
-    const zoneBand = zoneBands[zoneId];
-    if (!zoneBand || zoneRegions.length === 0) continue;
-
-    const sliceHeight = (zoneBand.yMax - zoneBand.yMin) / zoneRegions.length;
-    zoneRegions.forEach((region, index) => {
-      const yMax = zoneBand.yMax - index * sliceHeight;
-      regionBands.set(region.slug, {
-        yMin: yMax - sliceHeight,
-        yMax,
-      });
-    });
-  }
-
-  return regionBands;
-}
-
-function plotNodeInRegionBand(
-  node: JourneyNode,
-  region: JourneyRegionViewModel,
-  band: WorldTreeBand,
-  theme?: string,
-): PlottedSkeletonNode {
-  const pathPoint = computeJourneyPathCoordinates(node.pathPosition, region.slug, {
-    theme,
-  });
-
-  const ySpan = band.yMax - band.yMin;
-  const yPercent = band.yMax - node.pathPosition * ySpan;
-
-  const corridorHalf = WORLD_TREE_MANIFEST_ANCHORS.pathCorridorWidthPercent / 2;
-  const xPercent = Math.min(
-    WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent + corridorHalf,
-    Math.max(
-      WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent - corridorHalf,
-      pathPoint.x,
-    ),
-  );
-
+  const values = [...tileBands.values()];
   return {
-    node,
-    regionSlug: region.slug,
-    xPercent,
-    yPercent,
+    yMin: Math.min(...values.map((band) => band.yMin)),
+    yMax: Math.max(...values.map((band) => band.yMax)),
   };
 }
 
-/** Plot all journey nodes on the World Tree trunk corridor, aligned to the tile stack when art exists. */
+/** Gentle winding x-offset — lesson icons follow a path, no visible trail line. */
+export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: number): number {
+  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 9;
+  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 3.5;
+  return 50 + wave + stagger;
+}
+
+/** Plot all journey nodes bottom-up on the produced stack — roots first, crown last. */
 export function plotJourneyNodesOnSkeleton(
   journey: JourneyPathViewModel,
-  options?: { theme?: string },
 ): PlottedSkeletonNode[] {
-  const activeRegions = journey.regions.filter((region) => region.nodes.length > 0);
-  const regionBands = assignRegionBands(activeRegions, mergeZoneBandsForPlotting());
-  const plotted: PlottedSkeletonNode[] = [];
+  const entries = journey.regions
+    .flatMap((region) =>
+      region.nodes.map((node) => ({
+        node,
+        regionSlug: region.slug,
+      })),
+    )
+    .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 
-  for (const region of activeRegions) {
-    const band = regionBands.get(region.slug);
-    if (!band) continue;
+  if (entries.length === 0) return [];
 
-    for (const node of region.nodes) {
-      plotted.push(plotNodeInRegionBand(node, region, band, options?.theme));
-    }
-  }
+  const stackBand = buildProducedStackBand();
+  if (!stackBand) return [];
 
-  return plotted.sort((a, b) => a.node.globalIndex - b.node.globalIndex);
+  const ySpan = stackBand.yMax - stackBand.yMin;
+  const lastIndex = entries.length - 1;
+
+  return entries.map(({ node, regionSlug }, index) => {
+    const progress = lastIndex > 0 ? index / lastIndex : 0;
+
+    return {
+      node,
+      regionSlug,
+      xPercent: computeWorldTreePathXPercent(progress, index),
+      yPercent: stackBand.yMax - progress * ySpan,
+    };
+  });
 }
 
 export function findPlottedNode(

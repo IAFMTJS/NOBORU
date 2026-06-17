@@ -9,10 +9,15 @@ import {
   type ArtLibraryTheme,
   type WorldTreeTileBase,
 } from "@/lib/assets/art-library-paths";
+import {
+  resolveWorldTreeSegmentPresentation,
+  WORLD_TREE_OVERLAP_WIDTH_PERCENT,
+  WORLD_TREE_TILE_CANVAS,
+} from "@/lib/assets/world-tree-segment-presentation";
 import { cn } from "@/lib/utils";
 
-/** Tailwind overlap class — must be static for JIT (96px / 1024px). */
-export const WORLD_TREE_OVERLAP_CLASS = "-mt-[9.375%]" as const;
+/** @deprecated Use WORLD_TREE_OVERLAP_WIDTH_PERCENT — old value used height % as width %. */
+export const WORLD_TREE_OVERLAP_CLASS = "-mt-[6.25%]" as const;
 
 export const WORLD_TREE_STACK: WorldTreeTileBase[] = [
   WORLD_TREE_TILE_BASES.trunk_c,
@@ -26,23 +31,58 @@ type WorldTreeStackProps = {
   className?: string;
 };
 
-/** Modular infinity-tree canvas — vertically stacked Art Library tiles with seam overlap. */
+/** Single modular tile — fixed aspect, trunk-normalized crop, seam overlap downward. */
+function WorldTreeTile({
+  base,
+  theme,
+  overlap,
+}: {
+  base: WorldTreeTileBase;
+  theme: ArtLibraryTheme;
+  overlap: boolean;
+}) {
+  const presentation = resolveWorldTreeSegmentPresentation(base);
+
+  return (
+    <div
+      className={cn("relative w-full overflow-hidden", overlap && "z-[1]")}
+      style={{
+        aspectRatio: `${WORLD_TREE_TILE_CANVAS.width} / ${WORLD_TREE_TILE_CANVAS.height}`,
+        marginTop: overlap ? `calc(-1 * ${WORLD_TREE_OVERLAP_WIDTH_PERCENT} * 1%)` : undefined,
+      }}
+      data-world-tree-segment={base.split("/").slice(-2, -1)[0]}
+    >
+      <ArtLibraryImage
+        src={worldTreeTileFile(base, theme)}
+        alt=""
+        className="absolute inset-0 h-full w-full select-none object-cover"
+        style={{
+          objectPosition: `${presentation.trunkCenterXPercent}% center`,
+          transform:
+            presentation.presentationScale !== 1
+              ? `scale(${presentation.presentationScale})`
+              : undefined,
+          transformOrigin: `${presentation.trunkCenterXPercent}% center`,
+        }}
+      />
+    </div>
+  );
+}
+
+/** Modular world-tree canvas — bottom (roots) → top (crown), puzzle seams aligned on trunk. */
 export function WorldTreeStack({ tiles, className }: WorldTreeStackProps) {
   const { resolvedTheme } = useTheme();
   const theme: ArtLibraryTheme = resolvedTheme === "light" ? "light" : "dark";
   const stack = tiles ?? WORLD_TREE_STACK;
 
   return (
-    <div className={cn("relative w-full min-w-full", className)} aria-hidden>
+    <div className={cn("relative isolate w-full min-w-full", className)} aria-hidden>
       {stack.map((base, index) => (
-        <ArtLibraryImage
+        <WorldTreeTile
           key={base}
-          src={worldTreeTileFile(base, theme)}
-          alt=""
-          className={cn(
-            "block w-full min-w-full max-w-none select-none",
-            index > 0 && WORLD_TREE_OVERLAP_CLASS,
-          )}
+          base={base}
+          theme={theme}
+          overlap={index > 0}
         />
       ))}
     </div>

@@ -7,9 +7,11 @@ import type {
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
 import {
+  buildProducedStackBand,
   buildWorldTreeTileBands,
   buildWorldTreeZoneBands,
   buildZoneTileBands,
+  computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
 } from "@/features/journey/utils/world-tree-layout.utils";
 
@@ -100,6 +102,19 @@ describe("buildWorldTreeTileBands", () => {
   });
 });
 
+describe("buildProducedStackBand", () => {
+  it("spans from roots base to highest produced tile", () => {
+    const stackBand = buildProducedStackBand();
+    const tileBands = buildWorldTreeTileBands();
+
+    expect(stackBand).not.toBeNull();
+    expect(stackBand!.yMin).toBe(0);
+    expect(stackBand!.yMax).toBe(
+      Math.max(...[...tileBands.values()].map((band) => band.yMax)),
+    );
+  });
+});
+
 describe("buildZoneTileBands", () => {
   it("covers produced art zones on the stack", () => {
     const zoneBands = buildZoneTileBands();
@@ -110,32 +125,27 @@ describe("buildZoneTileBands", () => {
   });
 });
 
-describe("plotJourneyNodesOnSkeleton", () => {
-  it("places foothills nodes inside the N4 foothills tile band", () => {
-    const journey = makeJourney([makeRegion()]);
-    const zoneBands = buildZoneTileBands();
-    const [plotted] = plotJourneyNodesOnSkeleton(journey);
-
-    expect(plotted).toBeDefined();
-    expect(plotted!.yPercent).toBeGreaterThan(zoneBands.n4_foothills!.yMin);
-    expect(plotted!.yPercent).toBeLessThanOrEqual(zoneBands.n4_foothills!.yMax);
-    expect(plotted!.xPercent).toBeGreaterThan(30);
-    expect(plotted!.xPercent).toBeLessThan(70);
+describe("computeWorldTreePathXPercent", () => {
+  it("keeps nodes near the trunk center with gentle variation", () => {
+    expect(computeWorldTreePathXPercent(0, 0)).toBeGreaterThan(38);
+    expect(computeWorldTreePathXPercent(0, 0)).toBeLessThan(62);
+    expect(computeWorldTreePathXPercent(0.5, 4)).not.toBe(50);
   });
+});
 
-  it("places mount-n5 nodes in the roots tile band below foothills", () => {
+describe("plotJourneyNodesOnSkeleton", () => {
+  it("places the first node at the stack base and later nodes higher", () => {
     const journey = makeJourney([
       makeRegion({
-        slug: "mount-n5",
-        name: "Mount N5",
-        nodes: [makeNode({ pathPosition: 0.5 })],
+        nodes: [
+          makeNode({ id: "a", globalIndex: 0 }),
+          makeNode({ id: "b", globalIndex: 1, pathPosition: 0.5 }),
+        ],
       }),
     ]);
-    const zoneBands = buildZoneTileBands();
-    const [plotted] = plotJourneyNodesOnSkeleton(journey);
 
-    expect(plotted!.yPercent).toBeGreaterThan(zoneBands.n5_roots!.yMin);
-    expect(plotted!.yPercent).toBeLessThan(zoneBands.n5_roots!.yMax);
+    const plotted = plotJourneyNodesOnSkeleton(journey);
+    expect(plotted[0]!.yPercent).toBeGreaterThan(plotted[1]!.yPercent);
   });
 
   it("orders nodes by global index", () => {
@@ -150,5 +160,25 @@ describe("plotJourneyNodesOnSkeleton", () => {
 
     const plotted = plotJourneyNodesOnSkeleton(journey);
     expect(plotted.map((entry) => entry.node.id)).toEqual(["b", "a"]);
+  });
+
+  it("places mount-n5 nodes below foothills nodes when global index is lower", () => {
+    const journey = makeJourney([
+      makeRegion({
+        slug: "foothills",
+        nodes: [makeNode({ id: "foothills", globalIndex: 1 })],
+      }),
+      makeRegion({
+        slug: "mount-n5",
+        name: "Mount N5",
+        nodes: [makeNode({ id: "n5", globalIndex: 0 })],
+      }),
+    ]);
+
+    const plotted = plotJourneyNodesOnSkeleton(journey);
+    const n5 = plotted.find((entry) => entry.node.id === "n5");
+    const foothills = plotted.find((entry) => entry.node.id === "foothills");
+
+    expect(n5!.yPercent).toBeGreaterThan(foothills!.yPercent);
   });
 });
