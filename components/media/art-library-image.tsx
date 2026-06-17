@@ -28,7 +28,7 @@ function resolveSrc(
   themedBase: string | undefined,
   theme: ArtLibraryTheme,
 ): string {
-  if (src.startsWith("/art-library/") || src.startsWith("/api/art-library/")) {
+  if (src.startsWith("/api/art-library/")) {
     return src;
   }
   if (themedBase) {

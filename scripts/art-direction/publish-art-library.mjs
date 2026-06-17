@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Copy Art Library assets into public/art-library/ for static deployment.
+ * Copy Art Library assets into public/art-library/ for static CDN serving.
+ * Skips quietly when only LFS pointer files are present (Vercel without Git LFS).
  * Usage: node scripts/art-direction/publish-art-library.mjs [--if-needed]
  */
 import { cpSync, existsSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
@@ -11,6 +12,12 @@ const SRC = join(ROOT, "Art Library");
 const DEST = join(ROOT, "public/art-library");
 const ifNeeded = process.argv.includes("--if-needed");
 const LFS_POINTER_PREFIX = "version https://git-lfs.github.com/spec/v1";
+
+const SAMPLE_FILES = [
+  join(SRC, "icons", "icon_nav_journey_mountain_dark_v1.png"),
+  join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
+  join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
+];
 
 function newestMtime(dir) {
   let newest = 0;
@@ -41,31 +48,19 @@ function shouldSkipPublish() {
   return newestMtime(DEST) >= newestMtime(SRC);
 }
 
-function assertArtLibraryIsMaterialized() {
-  const sampleCandidates = [
-    join(SRC, "icons", "icon_nav_journey_mountain_dark_v1.png"),
-    join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
-    join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
-  ];
-  const samples = sampleCandidates.filter((filePath) => existsSync(filePath));
-  if (samples.length === 0) return;
-
-  const pointers = samples.filter((filePath) => {
+function hasPointerFiles() {
+  const samples = SAMPLE_FILES.filter((filePath) => existsSync(filePath));
+  if (samples.length === 0) return false;
+  return samples.some((filePath) => {
     const head = readFileSync(filePath, { encoding: "utf8", flag: "r" }).slice(0, 80);
     return head.startsWith(LFS_POINTER_PREFIX);
   });
-
-  if (pointers.length > 0) {
-    console.error("Art Library still contains Git LFS pointer files instead of PNG binaries.");
-    console.error("Run: node scripts/art-direction/materialize-art-library-lfs.mjs");
-    process.exit(1);
-  }
 }
 
 function publishArtLibrary() {
   if (!existsSync(SRC)) {
-    console.error("Art Library folder not found:", SRC);
-    process.exit(1);
+    console.warn("Art Library folder not found — skipping publish.");
+    return;
   }
 
   if (shouldSkipPublish()) {
@@ -73,7 +68,15 @@ function publishArtLibrary() {
     return;
   }
 
-  assertArtLibraryIsMaterialized();
+  if (hasPointerFiles()) {
+    console.warn(
+      "Art Library contains Git LFS pointers — skipping publish to public/art-library.",
+    );
+    console.warn(
+      "Enable Git LFS in Vercel: Project Settings → Git → Git Large File Storage, then redeploy.",
+    );
+    return;
+  }
 
   rmSync(DEST, { recursive: true, force: true });
   cpSync(SRC, DEST, {

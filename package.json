@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
-    "build": "npm run assets:publish-library && next build",
+    "build": "node scripts/art-direction/publish-art-library.mjs && next build",
     "predev": "node scripts/art-direction/publish-art-library.mjs --if-needed",
     "analyze": "node -e \"process.env.ANALYZE='true'; require('child_process').execSync('next build', {stdio:'inherit', env:process.env})\"",
     "start": "next start",
@@ -18,7 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "assets:validate": "node scripts/art-direction/validate-mappings.mjs",
-    "assets:publish-library": "node scripts/art-direction/materialize-art-library-lfs.mjs && node scripts/art-direction/publish-art-library.mjs",
+    "assets:publish-library": "node scripts/art-direction/publish-art-library.mjs",
     "assets:audit-immersion": "node scripts/art-direction/audit-immersion.mjs",
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",

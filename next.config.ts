@@ -11,8 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
     formats: ["image/avif", "image/webp"],
   },
-  // Art Library is published to public/art-library at build time — keep source
-  // files out of the serverless bundle (487MB+ exceeds Vercel's 250MB limit).
+  // Art Library source stays out of the serverless bundle; published copies live in public/.
   outputFileTracingExcludes: {
     "/api/art-library/[...path]": ["./Art Library/**/*"],
   },
