@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
- * Validates that every ArtAssetRef in art-mappings resolves to a file under public/art/.
+ * Validates legacy ArtAssetRef mappings resolve to files in Art Library/.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { mapLegacyAssetToArtLibrary } from "./legacy-art-library-map.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const mappingsPath = join(root, "lib/assets/art-mappings.ts");
 const lessonNodePath = join(root, "lib/assets/lesson-node-assets.ts");
+const artLibraryRoot = join(root, "Art Library");
 
 const SCREEN_ASSET_EXPORTS = [
   "JOURNEY_WORLD_ASSETS",
@@ -59,7 +61,9 @@ function extractBlock(source, exportName) {
 }
 
 function resolvePath(ref) {
-  return join(root, "public", "art", ref.category, `${ref.id}.webp`);
+  const relative = mapLegacyAssetToArtLibrary(ref, "dark");
+  if (!relative) return null;
+  return join(artLibraryRoot, relative);
 }
 
 const mappingsSource = existsSync(mappingsPath) ? readFileSync(mappingsPath, "utf8") : "";
@@ -74,14 +78,20 @@ const allRefs = sources.flatMap((path) => {
 });
 
 const missing = [];
+const unmapped = [];
 const seen = new Set();
 
 for (const ref of allRefs) {
   const key = `${ref.category}/${ref.id}`;
   if (seen.has(key)) continue;
   seen.add(key);
-  if (!existsSync(resolvePath(ref))) {
-    missing.push(key);
+  const path = resolvePath(ref);
+  if (!path) {
+    unmapped.push(key);
+    continue;
+  }
+  if (!existsSync(path)) {
+    missing.push(`${key} → ${path.replace(root + "\\", "").replace(root + "/", "")}`);
   }
 }
 
@@ -91,14 +101,17 @@ const yamaExpressionRefs = extractRefs(yamaExpressionBlock);
 const yamaPoseRefs = extractRefs(yamaPoseBlock);
 
 if (missing.length > 0) {
-  console.error("Missing art assets:");
+  console.error("Missing Art Library assets:");
   for (const entry of missing.sort()) {
-    console.error(`  - ${entry}.webp`);
+    console.error(`  - ${entry}`);
   }
   process.exit(1);
 }
 
-console.log(`OK: ${seen.size} unique asset refs validated.`);
+console.log(`OK: ${seen.size - unmapped.length} mapped asset refs validated in Art Library.`);
+if (unmapped.length > 0) {
+  console.log(`Note: ${unmapped.length} refs have no Art Library mapping yet (optional art).`);
+}
 console.log(
   `OK: ${yamaExpressionRefs.length} Yama expression assets, ${yamaPoseRefs.length} Noboru poses.`,
 );

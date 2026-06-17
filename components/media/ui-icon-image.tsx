@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 import { getUiIconPath } from "@/lib/assets/registry";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,8 @@ type UiIconImageProps = {
 };
 
 export function UiIconImage({ name, className, size = 20 }: UiIconImageProps) {
-  const src = getUiIconPath(name);
+  const { resolvedTheme } = useTheme();
+  const src = getUiIconPath(name, resolvedTheme);
   if (!src) return null;
 
   return (

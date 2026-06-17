@@ -28,7 +28,7 @@ function resolveSrc(
   themedBase: string | undefined,
   theme: ArtLibraryTheme,
 ): string {
-  if (src.startsWith("/api/art-library/")) {
+  if (src.startsWith("/art-library/") || src.startsWith("/api/art-library/")) {
     return src;
   }
   if (themedBase) {
@@ -74,7 +74,7 @@ export function ArtLibraryImage({
   const url = resolveSrc(src, themedBase, theme);
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- Art Library served via API route
+    // eslint-disable-next-line @next/next/no-img-element -- Art Library static assets
     <img
       src={url}
       alt={alt}

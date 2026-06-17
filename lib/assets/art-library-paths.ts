@@ -1,14 +1,16 @@
-/** Build URLs for Art Library staging assets (served via /api/art-library). */
+/** Build URLs for Art Library assets published to public/art-library/. */
+
+export const ART_LIBRARY_PUBLIC_ROOT = "/art-library";
 
 export type ArtLibraryTheme = "light" | "dark";
 
 /** e.g. artLibraryPath("icons/icon_nav_journey_mountain_light_v1.png") */
 export function artLibraryPath(relativePath: string): string {
   const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
-  const relative = normalized.startsWith("api/art-library/")
-    ? normalized.slice("api/art-library/".length)
-    : normalized;
-  return `/api/art-library/${relative.split("/").map(encodeURIComponent).join("/")}`;
+  const relative = normalized
+    .replace(/^api\/art-library\//, "")
+    .replace(/^art-library\//, "");
+  return `${ART_LIBRARY_PUBLIC_ROOT}/${relative.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 /** Swap _light_ / _dark_ in a versioned Art Library filename. */

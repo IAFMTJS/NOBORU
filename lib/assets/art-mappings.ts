@@ -390,7 +390,15 @@ export const CAMP_WORLD_ASSETS = {
   achievement_shrine: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
 } as const satisfies Record<string, ArtAssetRef>;
 
-/** Visuals stripped — returns null path until assets are rebuilt in public/art. */
-export function resolveArtAsset(_ref: ArtAssetRef): string {
-  return "";
+import { artLibraryPath, type ArtLibraryTheme } from "@/lib/assets/art-library-paths";
+import { mapLegacyAssetToArtLibrary } from "@/lib/assets/legacy-art-library-map";
+
+function resolveTheme(theme?: string): ArtLibraryTheme {
+  return theme === "light" ? "light" : "dark";
+}
+
+/** Resolve legacy ArtAssetRef to a published Art Library URL. */
+export function resolveArtAsset(ref: ArtAssetRef, theme?: string): string {
+  const relativePath = mapLegacyAssetToArtLibrary(ref, resolveTheme(theme));
+  return relativePath ? artLibraryPath(relativePath) : "";
 }
