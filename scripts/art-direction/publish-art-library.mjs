@@ -47,18 +47,17 @@ function assertArtLibraryIsMaterialized() {
     join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
     join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
   ];
-  const samples = sampleCandidates.filter((path) => existsSync(path));
+  const samples = sampleCandidates.filter((filePath) => existsSync(filePath));
   if (samples.length === 0) return;
 
-  const pointers = samples.filter((path) => {
-    const head = readFileSync(path, { encoding: "utf8", flag: "r" }).slice(0, 80);
+  const pointers = samples.filter((filePath) => {
+    const head = readFileSync(filePath, { encoding: "utf8", flag: "r" }).slice(0, 80);
     return head.startsWith(LFS_POINTER_PREFIX);
   });
 
   if (pointers.length > 0) {
-    console.error("Art Library contains Git LFS pointer files instead of PNG binaries.");
-    console.error("On Vercel: Project Settings → Git → enable Git Large File Storage, then redeploy.");
-    console.error("Locally: run `git lfs pull` before building.");
+    console.error("Art Library still contains Git LFS pointer files instead of PNG binaries.");
+    console.error("Run: node scripts/art-direction/materialize-art-library-lfs.mjs");
     process.exit(1);
   }
 }
