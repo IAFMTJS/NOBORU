@@ -1,23 +1,46 @@
 #!/usr/bin/env node
 /**
- * Copy Art Library assets into public/art-library/ for static CDN serving.
- * Skips quietly when only LFS pointer files are present (Vercel without Git LFS).
+ * Regenerate public/art-library/*.webp from Art Library/ PNG masters.
+ * Masters stay in Art Library/ for archival quality; the site serves WebP only.
  * Usage: node scripts/art-direction/publish-art-library.mjs [--if-needed]
  */
-import { cpSync, existsSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import sharp from "sharp";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const SRC = join(ROOT, "Art Library");
 const DEST = join(ROOT, "public/art-library");
 const ifNeeded = process.argv.includes("--if-needed");
 const LFS_POINTER_PREFIX = "version https://git-lfs.github.com/spec/v1";
+const RASTER_EXT = /\.(png|jpe?g)$/i;
+
+const WEBP_OPTIONS = {
+  quality: 88,
+  effort: 4,
+  alphaQuality: 100,
+};
 
 const SAMPLE_FILES = [
   join(SRC, "icons", "icon_nav_journey_mountain_dark_v1.png"),
   join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
   join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
 ];
+
+function walkRasterFiles(dir, results = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === "_rejected") continue;
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkRasterFiles(fullPath, results);
+      continue;
+    }
+    if (RASTER_EXT.test(entry.name)) {
+      results.push(fullPath);
+    }
+  }
+  return results;
+}
 
 function newestMtime(dir) {
   let newest = 0;
@@ -57,7 +80,18 @@ function hasPointerFiles() {
   });
 }
 
-function publishArtLibrary() {
+function publishedWebpPath(sourcePath) {
+  const rel = relative(SRC, sourcePath).replace(/\\/g, "/");
+  return join(DEST, rel.replace(RASTER_EXT, ".webp"));
+}
+
+async function publishRaster(sourcePath) {
+  const destPath = publishedWebpPath(sourcePath);
+  mkdirSync(dirname(destPath), { recursive: true });
+  await sharp(sourcePath).webp(WEBP_OPTIONS).toFile(destPath);
+}
+
+async function publishArtLibrary() {
   if (!existsSync(SRC)) {
     console.warn("Art Library folder not found — skipping publish.");
     return;
@@ -70,21 +104,25 @@ function publishArtLibrary() {
 
   if (hasPointerFiles()) {
     console.warn(
-      "Art Library contains Git LFS pointers — skipping publish to public/art-library.",
+      "Art Library contains Git LFS pointers — cannot regenerate public/art-library WebP.",
     );
-    console.warn(
-      "Enable Git LFS in Vercel: Project Settings → Git → Git Large File Storage, then redeploy.",
-    );
+    console.warn("Run locally with materialized masters, or use committed WebP in public/.");
     return;
   }
 
   rmSync(DEST, { recursive: true, force: true });
-  cpSync(SRC, DEST, {
-    recursive: true,
-    filter: (source) => !source.split(/[/\\]/).includes("_rejected"),
-  });
 
-  console.log("Published Art Library → public/art-library");
+  const rasterFiles = walkRasterFiles(SRC);
+  let converted = 0;
+  for (const sourcePath of rasterFiles) {
+    await publishRaster(sourcePath);
+    converted += 1;
+  }
+
+  console.log(`Published ${converted} Art Library assets → public/art-library (*.webp)`);
 }
 
-publishArtLibrary();
+publishArtLibrary().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

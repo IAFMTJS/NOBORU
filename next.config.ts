@@ -11,10 +11,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
     formats: ["image/avif", "image/webp"],
   },
-  // Art Library source stays out of the serverless bundle; published copies live in public/.
-  outputFileTracingExcludes: {
-    "/api/art-library/[...path]": ["./Art Library/**/*"],
-  },
   experimental: {
     optimizePackageImports: [
       "lucide-react",

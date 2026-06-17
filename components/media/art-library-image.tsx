@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type ArtLibraryImageProps = {
-  /** Path under Art Library, e.g. icons/icon_ui_gem_light_v1.png */
+  /** Path under Art Library, e.g. icons/icon_ui_gem_light_v1.png (served as .webp when published) */
   src: string;
   /** Base path without theme suffix */
   themedBase?: string;
