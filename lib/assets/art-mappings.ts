@@ -397,7 +397,7 @@ function resolveTheme(theme?: string): ArtLibraryTheme {
   return theme === "light" ? "light" : "dark";
 }
 
-/** Resolve legacy ArtAssetRef to a published Art Library URL. */
+/** Resolve legacy ArtAssetRef to a published WebP URL under /art-library/. */
 export function resolveArtAsset(ref: ArtAssetRef, theme?: string): string {
   const relativePath = mapLegacyAssetToArtLibrary(ref, resolveTheme(theme));
   return relativePath ? artLibraryPath(relativePath) : "";
