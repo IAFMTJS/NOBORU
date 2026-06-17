@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
-import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { LessonApplicationStep } from "@/features/learning/types/lesson.types";
 import {
@@ -107,10 +107,11 @@ export function ApplicationDrill({
       }
       explanation={
         result === "incorrect" ? (
-          <LessonExplanationPanel
+          <LearningFailurePanel
             className="mt-3"
-            message="Not quite — here is the right answer."
-            correctAnswer={step.acceptedAnswers[0]}
+            userAnswer={value}
+            correctAnswer={step.acceptedAnswers[0] ?? ""}
+            seed={step.index}
           />
         ) : null
       }

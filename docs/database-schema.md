@@ -200,6 +200,7 @@ order_index
 difficulty
 xp_reward
 estimated_duration
+checkpoint_activity_mix (jsonb, nullable — bible checkpoint activity types for practice lessons)
 created_at
 updated_at
 
@@ -250,28 +251,37 @@ updated_at
 
 vocabulary_categories
 
+Thematic vocabulary topics from the Learning Architecture Bible.
+
 Fields:
 
 id
 name
 slug
+description
+order_index
+status
 created_at
 updated_at
 
 Examples:
 
-Food
-Travel
-Family
-School
-Business
-Animals
+greetings
+family
+food
+travel
+numbers
+school
+work
+daily-activities
+animals
+business
 
 ⸻
 
 vocabulary_category_assignments
 
-Many-to-many relationship.
+Many-to-many relationship between vocabulary and thematic categories.
 
 Fields:
 
@@ -280,6 +290,35 @@ vocabulary_id
 category_id
 created_at
 updated_at
+
+Unique: (vocabulary_id, category_id)
+
+⸻
+
+learning_branches
+
+World Tree branch metadata layer. `unit_id` aliases CMS units until native branch content ships.
+
+Fields:
+
+id
+region_id
+unit_id (nullable, unique — CMS alias to units)
+category_id (nullable — thematic topic)
+slug
+name
+description
+order_index
+status
+created_at
+updated_at
+
+Relationship:
+
+learning_branches
+→ regions
+→ units (optional alias)
+→ vocabulary_categories (optional theme)
 
 ⸻
 
@@ -538,7 +577,36 @@ get_review_stats(p_user_id uuid) returns json — aggregated counts for review d
 
 get_learned_content_count(p_user_id uuid, p_content_type text) returns integer — distinct learned items from review queue and completed lessons
 
-submit_review_rating(p_user_id uuid, p_review_item_id uuid, p_rating text, p_client_event_id uuid) returns json — atomic SRS update + history insert with idempotency
+submit_review_rating(p_user_id uuid, p_review_item_id uuid, p_rating text, p_client_event_id uuid) returns json — atomic SRS update + history insert with idempotency. Day intervals: 1, 3, 7, 14, 30, 60, 90, 180, 365 (Learning Architecture Bible).
+
+⸻
+
+user_content_mastery
+
+Per-content mastery depth beyond SRS score (Learning Architecture Bible).
+
+Fields:
+
+id
+user_id
+content_type
+content_id
+correct_answer_count
+exercise_types (text[])
+session_count
+practice_day_keys (text[])
+last_correct_at
+created_at
+updated_at
+
+Unique: (user_id, content_type, content_id)
+
+Indexes:
+
+user_content_mastery_user_id_idx on (user_id)
+user_content_mastery_content_idx on (content_type, content_id)
+
+RLS: users may select/insert/update own rows only.
 
 ⸻
 
@@ -558,6 +626,38 @@ client_event_id (nullable, unique per user for idempotent replay)
 gamification_applied_at (nullable)
 gamification_result (nullable jsonb)
 created_at
+
+⸻
+
+DAILY CHALLENGES DOMAIN
+
+⸻
+
+user_daily_challenge_completions
+
+One retention challenge completion per user per local calendar day.
+
+Fields:
+
+id
+user_id
+challenge_date
+correct_count
+total_count
+vocabulary_ids (uuid[])
+client_event_id (nullable, idempotent replay)
+completed_at
+created_at
+updated_at
+
+Unique: (user_id, challenge_date)
+
+Indexes:
+
+user_daily_challenge_completions_user_date_idx on (user_id, challenge_date desc)
+user_daily_challenge_completions_client_event_idx on (user_id, client_event_id) where client_event_id is not null
+
+RLS: users may select/insert/update own rows only.
 
 ⸻
 
@@ -600,6 +700,108 @@ speaking_mastery
 overall_mastery
 created_at
 updated_at
+
+⸻
+
+TRIALS DOMAIN
+
+⸻
+
+trial_templates
+
+Regional boss and final trial definitions.
+
+Fields:
+
+id
+slug
+region_slug
+kind (trial_kind: regional_challenge | boss_trial | final_trial)
+title
+description
+boss_name
+pass_score
+time_limit_seconds
+ep_reward
+min_region_progress_percent
+prerequisite_trial_slug
+sort_order
+status
+created_at
+updated_at
+
+⸻
+
+trial_steps
+
+Ordered steps within a trial template.
+
+Fields:
+
+id
+trial_template_id
+order_index
+step_kind (trial_step_kind)
+prompt
+display_text
+accepted_answers (jsonb)
+options (jsonb)
+correct_index
+match_pairs (jsonb)
+content_type (text, nullable — CMS content reference for bible-aligned boss steps)
+content_id (uuid, nullable)
+created_at
+updated_at
+
+trial_step_kind values:
+
+typed_recall
+choice_recall
+matching
+reading_comprehension
+listening_comprehension
+writing_application
+grammar_context
+story_comprehension
+applied_vocabulary
+
+Indexes:
+
+trial_steps_content_idx on (content_type, content_id) where content_id is not null
+
+⸻
+
+user_trial_progress
+
+Fields:
+
+id
+user_id
+trial_template_id
+best_score
+best_grade
+passed
+passed_at
+attempt_count
+last_attempt_at
+created_at
+updated_at
+
+⸻
+
+user_trial_attempts
+
+Fields:
+
+id
+user_id
+trial_template_id
+score_percent
+grade
+correct_count
+total_count
+duration_seconds
+created_at
 
 ⸻
 
@@ -945,6 +1147,8 @@ profiles
 user_settings
 review_items
 review_history
+user_content_mastery
+user_daily_challenge_completions
 user_progress
 user_mastery
 user_elevation

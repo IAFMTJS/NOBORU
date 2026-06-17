@@ -1,4 +1,10 @@
 import type { NoboruPoseId } from "@/lib/assets/art-mappings";
+import type { PlayerKnowledgeContext } from "@/lib/learning/learning-architecture.types";
+import {
+  buildCompanionDialogueLine,
+  selectCompanionVocabularySnippets,
+  type CompanionVocabularySnippet,
+} from "@/lib/learning/companion-dialogue.service";
 import type { ReviewRating } from "@/features/review/types/review.types";
 import {
   YAMA_CELEBRATION_MESSAGES,
@@ -157,6 +163,24 @@ class YamaService {
       pickMessage(YAMA_DRILL_MESSAGES.incorrect, seed),
       "char-noboru-reaction-oops",
     );
+  }
+
+  resolveCompanionLearningPresence(
+    context: PlayerKnowledgeContext,
+    snippets: CompanionVocabularySnippet[],
+  ): YamaPresenceViewModel {
+    const message = buildCompanionDialogueLine(snippets);
+    const expression =
+      context.weakVocabularyIds.length > 0 ? "teaching" : "encouraging";
+    return withPresence(expression, message, "char-noboru-reading-book");
+  }
+
+  selectLearningSnippets(
+    context: PlayerKnowledgeContext,
+    vocabularyDisplay: ReadonlyMap<string, { display: string; meaning: string }>,
+    limit = 3,
+  ): CompanionVocabularySnippet[] {
+    return selectCompanionVocabularySnippets(context, vocabularyDisplay, limit);
   }
 
   resolveLessonIntroPresence(seed = 0): YamaPresenceViewModel {

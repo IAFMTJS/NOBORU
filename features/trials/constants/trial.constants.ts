@@ -1,5 +1,17 @@
 import type { TrialGrade } from "@/features/trials/types/trial.types";
 
+export const TRIAL_STEP_KIND_LABELS = {
+  typed_recall: "Typed recall",
+  choice_recall: "Choice recall",
+  matching: "Matching",
+  reading_comprehension: "Reading",
+  listening_comprehension: "Listening",
+  writing_application: "Writing",
+  grammar_context: "Grammar",
+  story_comprehension: "Story",
+  applied_vocabulary: "Applied vocabulary",
+} as const;
+
 export const TRIAL_KIND_LABELS = {
   regional_challenge: "Regional Challenge",
   boss_trial: "Boss Trial",

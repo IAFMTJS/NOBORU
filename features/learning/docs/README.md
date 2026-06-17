@@ -4,6 +4,22 @@
 
 Home dashboard, learning paths, lesson delivery, and progress tracking.
 
+## Learning Architecture
+
+Authoritative pedagogy spec: `docs/NOBORU LEARNING ARCHITECTURE BIBLE.md`
+
+Shared runtime rules: `lib/learning/` (constants, golden content validator, active vocabulary pool, session mixer, lifecycle mapping)
+
+- **Player knowledge** — `player-knowledge.service.ts` builds `PlayerKnowledgeContext` (known/weak/mastered vocabulary, active pool, unlocked branches/chapters)
+- **Grammar caps** — `capNewGrammarInLessonContents` per JLPT mini chapter
+- **Story assembly** — reading stories annotated via `assembleStoryForPlayer` (golden rule + highlights)
+- **Mastery tracking** — `user_content_mastery` table + `content-mastery.service.ts` (15+ correct rule)
+
+- **Golden Content Rule** — no activity may use vocabulary not yet introduced; validate via `validateGoldenContentRule`
+- **Active Vocabulary Pool** — current + previous chapter + recently learned + scheduled review
+- **Session mix** — ~70% review / 30% new via `mixSessionItems`
+- **World Tree mapping** — region→JLPT, `learning_branches`→branch (unit alias), lesson→mini chapter, practice lesson→checkpoint, trial→boss
+
 ## Responsibilities
 
 - Home dashboard via `dashboard-server.service.ts` (orchestrated in `lib/orchestration/home.orchestrator.ts`)
@@ -66,4 +82,4 @@ Authoritative spec: `docs/world-map-learning-journey-system.md`
 - Ordering, tap-to-build, and fill-in-blank drill types deferred
 - Region artwork follows path geometry; full per-segment art pipeline deferred
 - Landmarks use label cycle constants; CMS-backed landmark metadata deferred
-- Global recall distractor pool not yet implemented
+- Global recall distractor pool uses prioritized learned vocabulary; CMS distractor metadata deferred

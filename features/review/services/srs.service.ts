@@ -1,8 +1,9 @@
 import type { ReviewState } from "@/features/review/repositories/review.repository";
 import type { ReviewRating } from "@/features/review/types/review.types";
+import { REVIEW_INTERVAL_DAYS } from "@/lib/learning/learning-architecture.constants";
 
 const LEARNING_INTERVAL_MINUTES = 10;
-const DAY_INTERVALS = [1, 3, 7, 14, 30, 90, 180, 365] as const;
+const DAY_INTERVALS = REVIEW_INTERVAL_DAYS;
 
 export type SrsScheduleResult = {
   state: ReviewState;

@@ -115,7 +115,7 @@ export function PrototypeComponentsTab() {
           {(
             [
               ["backgrounds/core/bg_core", "Core"],
-              ["backgrounds/trail/bg_trail_sakura", "Sakura trail"],
+              ["backgrounds/study/bg_study_sakura", "Study sakura"],
               ["backgrounds/camp/bg_camp_lantern", "Camp lanterns"],
               ["backgrounds/shrine/bg_shrine", "Shrine"],
             ] as const

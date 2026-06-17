@@ -1,5 +1,5 @@
 ---
-description: Noboru educational content — learning, vocabulary, kanji, grammar, review; never hardcode content in UI; reference docs/content-pipeline.md and jlpt-content-architecture.md.
+description: Noboru educational content — learning, vocabulary, kanji, grammar, review; never hardcode content in UI; reference content-pipeline, jlpt-content-architecture, and Learning Architecture Bible.
 globs: **/features/learning/**, **/features/vocabulary/**, **/features/kanji/**, **/features/grammar/**, **/features/review/**
 alwaysApply: false
 ---
@@ -14,7 +14,7 @@ Status: AUTHORITATIVE
 
 This rule governs all educational content usage and assembly within Noboru learning features.
 
-Every lesson, vocabulary item, kanji entry, grammar point, review card, and progression screen must follow this document, docs/content-pipeline.md, and docs/jlpt-content-architecture.md.
+Every lesson, vocabulary item, kanji entry, grammar point, review card, and progression screen must follow this document, docs/content-pipeline.md, docs/jlpt-content-architecture.md, and docs/NOBORU LEARNING ARCHITECTURE BIBLE.md.
 
 Educational content is sacred.
 
@@ -65,6 +65,7 @@ Domain Ownership
 Progression
 
 * JLPT levels and mastery progression follow docs/jlpt-content-architecture.md
+* Runtime pedagogy (pools, golden rule, session mix, lifecycle) follows docs/NOBORU LEARNING ARCHITECTURE BIBLE.md via lib/learning/
 * Educational progress is authoritative
 * Gamification may read progress but must not define it
 

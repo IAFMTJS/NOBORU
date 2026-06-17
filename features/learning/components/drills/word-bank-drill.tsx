@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
-import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { cn } from "@/lib/utils";
 import type { LessonWordBankStep } from "@/features/learning/types/lesson.types";
 
@@ -121,10 +121,11 @@ export function WordBankDrill({
       }
       explanation={
         result === "incorrect" ? (
-          <LessonExplanationPanel
+          <LearningFailurePanel
             className="mt-3"
-            message="Not quite — here is the correct sentence."
+            userAnswer={selected.join("")}
             correctAnswer={step.correctOrder.join("")}
+            seed={step.index}
           />
         ) : null
       }

@@ -100,11 +100,20 @@ export type ReadingProgressRow = {
   completed_at: string | null;
 };
 
+export type StoryTokenAnnotationViewModel = {
+  token: string;
+  isKnown: boolean;
+  isMastered: boolean;
+  shouldHighlight: boolean;
+  vocabularyId?: string;
+};
+
 export type StorySectionViewModel = {
   id: string;
   japaneseText: string;
   romaji: string | null;
   english: string | null;
+  tokenAnnotations?: StoryTokenAnnotationViewModel[];
 };
 
 export type ReadingQuestionViewModel = {
@@ -123,6 +132,7 @@ export type StoryDetailViewModel = {
   estimatedReadTime: number;
   sections: StorySectionViewModel[];
   questions: ReadingQuestionViewModel[];
+  highlightedVocabularyIds?: string[];
   completed: boolean;
   score: number;
 };

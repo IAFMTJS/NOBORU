@@ -244,6 +244,25 @@ class ReviewRepository {
     if (error) throw new Error(error.message);
   }
 
+  async listByContentIds(
+    userId: string,
+    contentType: string,
+    contentIds: string[],
+  ): Promise<ReviewItemRow[]> {
+    if (contentIds.length === 0) return [];
+
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("review_items")
+      .select(REVIEW_ITEM_COLUMNS)
+      .eq("user_id", userId)
+      .eq("content_type", contentType)
+      .in("content_id", contentIds);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []) as ReviewItemRow[];
+  }
+
   async upsertHiraganaItem(userId: string, contentId: string): Promise<void> {
     return this.upsertReviewItem(userId, "hiragana", contentId);
   }

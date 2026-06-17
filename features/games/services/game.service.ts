@@ -8,6 +8,9 @@ import {
   type PlayableGameSlug,
 } from "@/features/games/constants/game.constants";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
+import { reinforcementTargetIds } from "@/lib/learning/reinforcement.service";
+import { validateGoldenContentRule } from "@/lib/learning/golden-content.validator";
+import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
 import { buildKanjiHunterSession } from "@/features/games/services/kanji-hunter.service";
 import {
   buildMemoryDungeonSession,
@@ -111,6 +114,16 @@ class GameService {
         gameContentRepository.listLearnedKatakana(userId),
         gameContentRepository.listLearnedKanji(userId),
       ]);
+
+    const playerContext = await playerKnowledgeService.getGlobalContext(userId);
+    if (playerContext) {
+      const reinforcementIds = reinforcementTargetIds(playerContext, 20);
+      const knownSet = new Set(playerContext.knownVocabularyIds);
+      const validation = validateGoldenContentRule(reinforcementIds, knownSet);
+      if (!validation.valid) {
+        throw new Error("Game content violates the golden content rule.");
+      }
+    }
 
     if (slug === GAME_SLUGS.wordMatch) {
       const mode = resolveWordMatchMode(

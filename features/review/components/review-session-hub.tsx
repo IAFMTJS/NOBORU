@@ -11,6 +11,7 @@ type ReviewSessionHubProps = {
 };
 
 const PRESET_MODES = [
+  { label: "Daily retention", href: "/daily-challenge" },
   { label: "Quick 5", href: "/review?limit=5" },
   { label: "Quick 10", href: "/review?limit=10" },
   { label: "Quick 20", href: "/review?limit=20" },
@@ -49,6 +50,10 @@ export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
               <PrimaryClimbButton key={mode.label} asChild className="col-span-2">
                 <Link href={mode.href}>{mode.label}</Link>
               </PrimaryClimbButton>
+            ) : index === 1 ? (
+              <Button key={mode.label} variant="outline" asChild className="col-span-2">
+                <Link href={mode.href}>{mode.label}</Link>
+              </Button>
             ) : (
               <Button key={mode.label} variant="outline" asChild>
                 <Link href={mode.href}>{mode.label}</Link>

@@ -56,6 +56,7 @@ function buildQuestion(
     display: formatDisplay(word),
     options,
     correctIndex: correctIndex >= 0 ? correctIndex : 0,
+    lifecycleStage: "recognized",
     index,
     total,
   };

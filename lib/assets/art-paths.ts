@@ -4,8 +4,10 @@ export const ART_PUBLIC_ROOT = "/art";
 
 export type ArtCategory =
   | "backgrounds/camp"
-  | "backgrounds/trail"
+  | "backgrounds/core"
+  | "backgrounds/study"
   | "backgrounds/shrine"
+  | "world-tree"
   | "backgrounds/events"
   | "backgrounds/weather"
   | "backgrounds/utility"

@@ -47,6 +47,31 @@ import {
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
+import {
+  buildCheckpointExerciseCandidates,
+  capNewVocabularyInLessonContents,
+  extractExerciseContents,
+  partitionLessonContentsByKnown,
+  planLessonExerciseCandidates,
+} from "@/lib/learning/lesson-assembly.service";
+import { capNewGrammarInLessonContents } from "@/lib/learning/grammar-progression.service";
+import { planCheckpointActivities } from "@/lib/learning/checkpoint-assembly.service";
+import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
+import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
+
+type LessonAssemblyPlan = {
+  newContents: LessonContent[];
+  exerciseContents: LessonContent[];
+  exerciseIsReviewById: Map<string, boolean>;
+};
+
+function isKnownLessonContent(
+  content: LessonContent,
+  knownIdsByType: ReadonlyMap<string, ReadonlySet<string>>,
+): boolean {
+  const knownIds = knownIdsByType.get(content.type);
+  return knownIds?.has(content.id) ?? false;
+}
 
 function resolveUnlocksRegionSlug(
   regions: Awaited<
@@ -480,6 +505,229 @@ class LessonService {
     };
   }
 
+  private buildArchitectureExerciseBlock(
+    exerciseContents: LessonContent[],
+    exerciseIsReviewById: Map<string, boolean>,
+    includeGrammarProduction: boolean,
+  ): LessonStep[] {
+    if (exerciseContents.length === 0) return [];
+
+    const answers = exerciseContents.map(getRecallAnswer);
+    const recallSteps: LessonRecallStep[] = exerciseContents.map((content, index) =>
+      buildRecallStep(
+        content,
+        answers,
+        index + 1,
+        exerciseContents.length,
+        exerciseIsReviewById.get(content.id) ? "consolidation" : "standard",
+      ),
+    );
+
+    const grammarProductionSteps: LessonStep[] = [];
+    if (includeGrammarProduction) {
+      for (const [index, content] of exerciseContents.entries()) {
+        if (content.type !== "grammar") continue;
+        const productionStep = buildGrammarProductionStep(
+          content,
+          answers,
+          index + 1,
+          exerciseContents.length,
+        );
+        if (productionStep) grammarProductionSteps.push(productionStep);
+      }
+    }
+
+    const matchingStep = buildMatchingStep(exerciseContents);
+    const mixedRecallSteps = buildMixedRecallSteps(exerciseContents);
+
+    return [
+      ...recallSteps,
+      ...grammarProductionSteps,
+      ...(matchingStep ? [matchingStep] : []),
+      ...mixedRecallSteps,
+    ];
+  }
+
+  private buildDiscoverTeachSteps(contents: LessonContent[]): LessonTeachStep[] {
+    return contents.map((content, index) => ({
+      kind: "teach",
+      content,
+      index: index + 1,
+      total: contents.length,
+    }));
+  }
+
+  private async loadReviewVocabularyContents(
+    userId: string,
+    excludeIds: ReadonlySet<string>,
+    limit: number,
+  ): Promise<VocabularyLessonContent[]> {
+    if (limit <= 0) return [];
+
+    const reviewIds = await learnedContentRepository.getPrioritizedReviewIds(
+      userId,
+      "vocabulary",
+      { excludeIds, limit },
+    );
+    if (reviewIds.length === 0) return [];
+
+    const rows = await vocabularyRepository.findByIds(reviewIds);
+    const examples = await vocabularyRepository.listPublishedExamplesByVocabularyIds(
+      reviewIds,
+    );
+    const examplesById = groupExamplesByParentId(examples, "vocabulary_id");
+
+    return rows
+      .filter((row) => row.status === "published")
+      .map(
+        (row) =>
+          ({
+            type: "vocabulary",
+            id: row.id,
+            kana: row.kana,
+            kanji: row.kanji,
+            meaning: row.meaning,
+            partOfSpeech: row.part_of_speech,
+            audioUrl: row.audio_url,
+            examples: (examplesById.get(row.id) ?? []).map((example) => ({
+              japaneseText: example.japanese_text,
+              romaji: example.romaji,
+              english: example.english,
+            })),
+          }) satisfies VocabularyLessonContent,
+      );
+  }
+
+  private async prepareLessonAssembly(
+    userId: string,
+    lesson: {
+      id: string;
+      type: string;
+      checkpoint_activity_mix?: string[] | null;
+      unit: { id: string; region: { slug: string } };
+    },
+    contents: LessonContent[],
+  ): Promise<LessonAssemblyPlan | null> {
+    const architectureLessonTypes = new Set([
+      "vocabulary",
+      "grammar",
+      "kanji",
+      "hiragana",
+      "katakana",
+      "practice",
+    ]);
+    if (!architectureLessonTypes.has(lesson.type)) return null;
+
+    const playerContext = await playerKnowledgeService.getContext({
+      userId,
+      regionSlug: lesson.unit.region.slug,
+      unitId: lesson.unit.id,
+      lessonId: lesson.id,
+    });
+
+    const knownIdsByType = new Map<string, Set<string>>([
+      ["vocabulary", new Set(playerContext.knownVocabularyIds)],
+      ["grammar", new Set(playerContext.knownGrammarIds)],
+      [
+        "kanji",
+        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "kanji")),
+      ],
+      [
+        "hiragana",
+        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "hiragana")),
+      ],
+      [
+        "katakana",
+        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "katakana")),
+      ],
+    ]);
+
+    const workingContents =
+      lesson.type === "practice"
+        ? contents
+        : capNewGrammarInLessonContents(
+            capNewVocabularyInLessonContents(
+              contents,
+              playerContext.jlptLevel,
+              knownIdsByType.get("vocabulary") ?? new Set<string>(),
+            ),
+            playerContext.jlptLevel,
+            knownIdsByType.get("grammar") ?? new Set<string>(),
+          );
+
+    const { newContents, knownContents } = partitionLessonContentsByKnown(
+      workingContents,
+      new Set(
+        workingContents
+          .filter((content) => isKnownLessonContent(content, knownIdsByType))
+          .map((content) => content.id),
+      ),
+    );
+
+    const crossLessonReviewVocabulary = await this.loadReviewVocabularyContents(
+      userId,
+      new Set(workingContents.map((content) => content.id)),
+      Math.max(newContents.length * 3, 6),
+    );
+
+    const reviewContents = [
+      ...knownContents,
+      ...crossLessonReviewVocabulary.filter(
+        (content) => !workingContents.some((item) => item.id === content.id),
+      ),
+    ];
+
+    let exerciseCandidates = planLessonExerciseCandidates(
+      lesson.type === "practice" ? [] : newContents,
+      reviewContents,
+    );
+
+    if (lesson.type === "practice") {
+      const reviewPool = [
+        ...reviewContents,
+        ...workingContents.filter(
+          (content) => !reviewContents.some((item) => item.id === content.id),
+        ),
+      ];
+      const contentsById = new Map(reviewPool.map((content) => [content.id, content]));
+      const checkpointPlans = planCheckpointActivities({
+        vocabularyIds: reviewPool
+          .filter((content) => content.type === "vocabulary")
+          .map((content) => content.id),
+        grammarIds: reviewPool
+          .filter((content) => content.type === "grammar")
+          .map((content) => content.id),
+        listeningIds: reviewPool
+          .filter((content) => content.type === "listening")
+          .map((content) => content.id),
+        readingIds: reviewPool
+          .filter((content) => content.type === "reading")
+          .map((content) => content.id),
+        applicationIds: reviewPool
+          .filter((content) => content.type === "application")
+          .map((content) => content.id),
+      });
+      const checkpointCandidates = buildCheckpointExerciseCandidates(
+        checkpointPlans,
+        contentsById,
+        lesson.checkpoint_activity_mix,
+      );
+      if (checkpointCandidates.length > 0) {
+        exerciseCandidates = checkpointCandidates;
+      }
+    }
+
+    const exerciseIsReviewById = new Map(
+      exerciseCandidates.map((candidate) => [candidate.id, candidate.isReview]),
+    );
+
+    return {
+      newContents: lesson.type === "practice" ? [] : newContents,
+      exerciseContents: extractExerciseContents(exerciseCandidates),
+      exerciseIsReviewById,
+    };
+  }
+
   private buildTeachRecallSequence(
     contents: LessonContent[],
     answers: string[],
@@ -522,6 +770,7 @@ class LessonService {
       xp_reward: number;
     },
     contents: LessonContent[],
+    assembly?: LessonAssemblyPlan,
   ): LessonStep[] {
     const intro: LessonStep = {
       kind: "intro",
@@ -613,6 +862,18 @@ class LessonService {
     }
 
     if (lesson.type === "practice") {
+      if (assembly) {
+        return [
+          intro,
+          ...this.buildArchitectureExerciseBlock(
+            assembly.exerciseContents,
+            assembly.exerciseIsReviewById,
+            false,
+          ),
+          complete,
+        ];
+      }
+
       const practiceContents = contents.filter(
         (
           content,
@@ -639,6 +900,19 @@ class LessonService {
         ...recallSteps,
         ...(matchingStep ? [matchingStep] : []),
         ...mixedRecallSteps,
+        complete,
+      ];
+    }
+
+    if (assembly) {
+      return [
+        intro,
+        ...this.buildDiscoverTeachSteps(assembly.newContents),
+        ...this.buildArchitectureExerciseBlock(
+          assembly.exerciseContents,
+          assembly.exerciseIsReviewById,
+          lesson.type === "grammar",
+        ),
         complete,
       ];
     }
@@ -698,7 +972,8 @@ class LessonService {
       lesson.id,
       progressByLesson,
     );
-    let steps = this.buildSteps(lesson, contents);
+    const assembly = await this.prepareLessonAssembly(userId, lesson, contents);
+    let steps = this.buildSteps(lesson, contents, assembly ?? undefined);
 
     if (lesson.type === "application") {
       const script =

@@ -1,3 +1,6 @@
+import { assembleStoryForPlayer } from "@/lib/learning/story-assembly.service";
+import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
+import { vocabularyRepository } from "@/features/vocabulary/repositories/vocabulary.repository";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
@@ -135,11 +138,51 @@ class ReadingProgressService {
     const story = await readingRepository.findStoryBySlug(slug);
     if (!story) return null;
 
-    const [sections, questions, progress] = await Promise.all([
+    const [sections, questions, progress, playerContext] = await Promise.all([
       readingRepository.listPublishedSectionsByStoryId(story.id),
       readingRepository.listPublishedQuestionsByStoryId(story.id),
       readingRepository.findProgress(userId, "story", story.id),
+      playerKnowledgeService.getGlobalContext(userId),
     ]);
+
+    const baseSections = mapSections(sections);
+    let enrichedSections = baseSections;
+    let highlightedVocabularyIds: string[] | undefined;
+
+    if (playerContext) {
+      const vocabularyRows = await vocabularyRepository.findByIds(
+        playerContext.knownVocabularyIds,
+      );
+      const vocabularyLookup = new Map(
+        vocabularyRows.map((row) => [
+          row.id,
+          {
+            id: row.id,
+            surfaceForms: [row.kana, row.kanji].filter(
+              (value): value is string => Boolean(value),
+            ),
+          },
+        ]),
+      );
+
+      const assembly = assembleStoryForPlayer(
+        baseSections.map((section) => ({
+          id: section.id,
+          japaneseText: section.japaneseText,
+        })),
+        playerContext,
+        vocabularyLookup,
+      );
+
+      highlightedVocabularyIds = assembly.highlightedVocabularyIds;
+      enrichedSections = baseSections.map((section) => {
+        const assembled = assembly.sections.find((entry) => entry.id === section.id);
+        return {
+          ...section,
+          tokenAnnotations: assembled?.annotations,
+        };
+      });
+    }
 
     return {
       id: story.id,
@@ -148,8 +191,9 @@ class ReadingProgressService {
       summary: story.summary,
       jlptLevel: story.jlpt_level,
       estimatedReadTime: story.estimated_read_time,
-      sections: mapSections(sections),
+      sections: enrichedSections,
       questions: mapQuestions(questions),
+      highlightedVocabularyIds,
       completed: progress?.status === "completed",
       score: progress?.score ?? 0,
     };

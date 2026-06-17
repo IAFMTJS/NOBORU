@@ -1,18 +1,19 @@
 import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
-import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
-import { hiraganaRepository } from "@/features/hiragana/repositories/hiragana.repository";
-import { katakanaRepository } from "@/features/katakana/repositories/katakana.repository";
+import type { ReviewState } from "@/features/review/repositories/review.repository";
+import type {
+  LearnedContentSnapshot,
+  ReviewItemSnapshot,
+} from "@/lib/learning/player-knowledge.utils";import {
+  getKnownIdsFromSnapshot,
+  getMasteredIdsFromSnapshot,
+  getScheduledReviewIdsFromSnapshot,
+  getWeakIdsFromSnapshot,
+  prioritizeReviewContentIds,
+} from "@/lib/learning/player-knowledge.utils";
 
-type LearnedContentSnapshot = {
-  completedLessonIds: string[];
-  reviewIdsByType: Map<string, Set<string>>;
-  lessonItemIdsByType: Map<string, Set<string>>;
-};
-
-async function loadLearnedContentSnapshot(
-  userId: string,
+async function loadLearnedContentSnapshot(  userId: string,
 ): Promise<LearnedContentSnapshot> {
   const supabase = await createClient();
 
@@ -30,17 +31,27 @@ async function loadLearnedContentSnapshot(
 
   const { data: reviewRows, error: reviewError } = await supabase
     .from("review_items")
-    .select("content_type, content_id")
+    .select("content_type, content_id, state, mastery_score, next_review_at")
     .eq("user_id", userId);
 
   if (reviewError) throw new Error(reviewError.message);
 
   const reviewIdsByType = new Map<string, Set<string>>();
+  const reviewItems: ReviewItemSnapshot[] = [];
+
   for (const row of reviewRows ?? []) {
     const contentType = row.content_type as string;
+    const contentId = row.content_id as string;
     const ids = reviewIdsByType.get(contentType) ?? new Set<string>();
-    ids.add(row.content_id as string);
+    ids.add(contentId);
     reviewIdsByType.set(contentType, ids);
+    reviewItems.push({
+      contentType,
+      contentId,
+      state: row.state as ReviewState,
+      masteryScore: row.mastery_score as number,
+      nextReviewAt: row.next_review_at as string,
+    });
   }
 
   const lessonItemIdsByType = new Map<string, Set<string>>();
@@ -64,12 +75,17 @@ async function loadLearnedContentSnapshot(
     completedLessonIds,
     reviewIdsByType,
     lessonItemIdsByType,
+    reviewItems,
   };
 }
 
 const getLearnedContentSnapshot = cache(loadLearnedContentSnapshot);
 
 class LearnedContentRepository {
+  async getSnapshot(userId: string): Promise<LearnedContentSnapshot> {
+    return getLearnedContentSnapshot(userId);
+  }
+
   async countLearnedByContentType(
     userId: string,
     contentType: string,
@@ -100,6 +116,47 @@ class LearnedContentRepository {
     }
 
     return Array.from(learned);
+  }
+
+  async getKnownIdsByContentType(
+    userId: string,
+    contentType: string,
+  ): Promise<string[]> {
+    const snapshot = await getLearnedContentSnapshot(userId);
+    return getKnownIdsFromSnapshot(snapshot, contentType);
+  }
+
+  async getMasteredIdsByContentType(
+    userId: string,
+    contentType: string,
+  ): Promise<string[]> {
+    const snapshot = await getLearnedContentSnapshot(userId);
+    return getMasteredIdsFromSnapshot(snapshot, contentType);
+  }
+
+  async getWeakIdsByContentType(
+    userId: string,
+    contentType: string,
+  ): Promise<string[]> {
+    const snapshot = await getLearnedContentSnapshot(userId);
+    return getWeakIdsFromSnapshot(snapshot, contentType);
+  }
+
+  async getScheduledReviewIdsByContentType(
+    userId: string,
+    contentType: string,
+  ): Promise<string[]> {
+    const snapshot = await getLearnedContentSnapshot(userId);
+    return getScheduledReviewIdsFromSnapshot(snapshot, contentType);
+  }
+
+  async getPrioritizedReviewIds(
+    userId: string,
+    contentType: string,
+    options?: { excludeIds?: ReadonlySet<string>; limit?: number },
+  ): Promise<string[]> {
+    const snapshot = await getLearnedContentSnapshot(userId);
+    return prioritizeReviewContentIds(snapshot, contentType, options);
   }
 }
 

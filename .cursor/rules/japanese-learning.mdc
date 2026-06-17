@@ -14,7 +14,7 @@ Status: AUTHORITATIVE
 
 This rule governs Japanese-specific learning presentation, pedagogy, types, and learner-facing language UX within Noboru feature modules.
 
-Every component and type involved in lessons, reviews, readings, listening activities, kanji study, grammar explanation, and vocabulary drills must follow this document and docs/jlpt-content-architecture.md.
+Every component and type involved in lessons, reviews, readings, listening activities, kanji study, grammar explanation, and vocabulary drills must follow this document, docs/jlpt-content-architecture.md, and docs/NOBORU LEARNING ARCHITECTURE BIBLE.md.
 
 Noboru teaches Japanese with respect for the language and the learner.
 
@@ -43,6 +43,8 @@ Pedagogy
 
 * Follow the educational model in docs/jlpt-content-architecture.md:
   Exposure → Understanding → Recognition → Recall → Production → Mastery
+* Follow the runtime learning flow in docs/NOBORU LEARNING ARCHITECTURE BIBLE.md:
+  Discover → Practice → Reinforce → Apply → Test → Master → Review Forever
 * Activities must target a clear skill: recognition, recall, production, reading, or listening
 * Difficulty must match declared JLPT level and learner stage
 * Avoid punishing learners for respectful alternative valid answers when domain rules allow variants

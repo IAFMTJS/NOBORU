@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { StoryDetailViewModel } from "@/features/reading/types/reading.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
@@ -26,6 +27,7 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<boolean[]>([]);
   const [answered, setAnswered] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState(story.score);
@@ -96,6 +98,12 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
             <p className="font-japanese text-heading-4 leading-relaxed" lang="ja">
               {currentSection.japaneseText}
             </p>
+            {currentSection.tokenAnnotations?.some((annotation) => annotation.shouldHighlight) ? (
+              <p className="text-caption text-trail-glow">
+                Highlighted words are not in your active pool yet — they will be introduced in a
+                future lesson.
+              </p>
+            ) : null}
             {currentSection.romaji ? (
               <p className="text-body-sm text-muted-foreground">{currentSection.romaji}</p>
             ) : null}
@@ -136,6 +144,7 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
                 disabled={answered}
                 onClick={() => {
                   setAnswered(true);
+                  setSelectedOption(option);
                   const isCorrect = index === currentQuestion.correctOptionIndex;
                   setAnswers((current) => [...current, isCorrect]);
                 }}
@@ -143,6 +152,18 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
                 {option}
               </Button>
             ))}
+            {answered &&
+            selectedOption &&
+            selectedOption !==
+              currentQuestion.options[currentQuestion.correctOptionIndex] ? (
+              <LearningFailurePanel
+                userAnswer={selectedOption}
+                correctAnswer={
+                  currentQuestion.options[currentQuestion.correctOptionIndex] ?? ""
+                }
+                seed={questionIndex}
+              />
+            ) : null}
           </GlassPanel>
           <Button
             className="w-full"
@@ -156,6 +177,7 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
               }
               setQuestionIndex((current) => current + 1);
               setAnswered(false);
+              setSelectedOption(null);
             }}
           >
             Continue

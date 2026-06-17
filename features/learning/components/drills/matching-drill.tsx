@@ -4,10 +4,12 @@ import { useMemo, useState } from "react";
 
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import type { DrillDifficultyProps } from "@/features/learning/types/drill-difficulty.types";
 import { cn } from "@/lib/utils";
 import type { LessonMatchingStep } from "@/features/learning/types/lesson.types";
 
-type MatchingDrillProps = {
+type MatchingDrillProps = DrillDifficultyProps & {
   step: LessonMatchingStep;
   onAnswer: (correct: boolean, wrongAttempts?: number) => void;
   disabled?: boolean;
@@ -33,6 +35,11 @@ export function MatchingDrill({ step, onAnswer, disabled = false }: MatchingDril
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [glowPairId, setGlowPairId] = useState<string | null>(null);
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
+  const [failureFeedback, setFailureFeedback] = useState<{
+    userAnswer: string;
+    correctAnswer: string;
+    contentLabel: string;
+  } | null>(null);
 
   function handleAnswerClick(answer: string) {
     if (!selectedPromptId || result === "correct" || disabled) return;
@@ -56,6 +63,11 @@ export function MatchingDrill({ step, onAnswer, disabled = false }: MatchingDril
 
     setWrongAttempts((current) => current + 1);
     setResult("incorrect");
+    setFailureFeedback({
+      userAnswer: answer,
+      correctAnswer: pair.answer,
+      contentLabel: pair.prompt,
+    });
     setSelectedPromptId(null);
     window.setTimeout(() => setResult(null), 900);
   }
@@ -123,6 +135,17 @@ export function MatchingDrill({ step, onAnswer, disabled = false }: MatchingDril
             />
           </div>
         </div>
+      }
+      explanation={
+        failureFeedback ? (
+          <LearningFailurePanel
+            className="mt-3"
+            userAnswer={failureFeedback.userAnswer}
+            correctAnswer={failureFeedback.correctAnswer}
+            contentLabel={failureFeedback.contentLabel}
+            seed={step.index}
+          />
+        ) : null
       }
     />
   );

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
-import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 
 type TypedSentenceDrillProps = {
   prompt: string;
@@ -68,10 +68,11 @@ export function TypedSentenceDrill({
       }
       explanation={
         result === "incorrect" ? (
-          <LessonExplanationPanel
+          <LearningFailurePanel
             className="mt-3"
-            message="Not quite — here is the correct sentence."
-            correctAnswer={acceptedAnswers[0]}
+            userAnswer={value}
+            correctAnswer={acceptedAnswers[0] ?? ""}
+            seed={0}
           />
         ) : null
       }

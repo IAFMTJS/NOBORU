@@ -1,3 +1,4 @@
+import { contentMasteryService } from "@/features/vocabulary/services/content-mastery.service";
 import { grammarRepository } from "@/features/grammar/repositories/grammar.repository";
 import { hiraganaRepository } from "@/features/hiragana/repositories/hiragana.repository";
 import { kanjiRepository } from "@/features/kanji/repositories/kanji.repository";
@@ -247,6 +248,24 @@ class ReviewServerService {
       rating,
       clientEventId,
     );
+
+    if (
+      !alreadyApplied &&
+      rating !== "again" &&
+      (ratedItem.content_type === "vocabulary" ||
+        ratedItem.content_type === "kanji" ||
+        ratedItem.content_type === "grammar")
+    ) {
+      void contentMasteryService
+        .recordCorrectAnswer({
+          userId,
+          contentType: ratedItem.content_type,
+          contentId: ratedItem.content_id,
+          exerciseType: "review",
+          sessionId: clientEventId,
+        })
+        .catch(() => undefined);
+    }
 
     const [dueCount, dueItems] = await Promise.all([
       reviewRepository.countDue(userId),

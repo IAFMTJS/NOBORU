@@ -40,8 +40,8 @@ export const FX_ASSETS = {
 } as const satisfies Record<string, ArtAssetRef>;
 
 export const FOG_ASSETS = {
-  locked_region: { category: "backgrounds/trail", id: "bg-trail-temple-peak-locked" },
-  boss_atmosphere: { category: "backgrounds/trail", id: "bg-trail-temple-peak-boss" },
+  locked_region: { category: "backgrounds/shrine", id: "bg-shrine-locked-region" },
+  boss_atmosphere: { category: "backgrounds/shrine", id: "bg-shrine-boss-atmosphere" },
 } as const satisfies Record<string, ArtAssetRef>;
 
 export const INVENTORY_ITEM_ASSETS: Record<string, ArtAssetRef> = {

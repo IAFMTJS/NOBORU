@@ -117,6 +117,7 @@ export function buildRecallStep(
           ? "Recall · type the meaning of this word"
           : "Type the meaning of this word",
       display: content.kanji ?? content.kana,
+      reading: content.kanji ? content.kana : null,
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),
@@ -137,6 +138,7 @@ export function buildRecallStep(
           ? "Recall · type the meaning of this kanji"
           : "Type the meaning of this kanji",
       display: content.character,
+      reading: content.kunyomi[0] ?? content.onyomi[0] ?? null,
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),

@@ -1,39 +1,39 @@
 "use client";
 
-import { YamaAvatar } from "@/features/yama/components/yama-avatar";
-import { yamaService } from "@/features/yama/services/yama.service";
-import { GlassPanel } from "@/components/visual";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { cn } from "@/lib/utils";
 
 type LessonExplanationPanelProps = {
   message: string;
   correctAnswer?: string;
+  userAnswer?: string;
   className?: string;
 };
 
-/** Short, guided explanation after a mistake — never punitive (Doc 03). */
+/** @deprecated Prefer LearningFailurePanel — kept for existing lesson drill imports. */
 export function LessonExplanationPanel({
   message,
   correctAnswer,
+  userAnswer,
   className,
 }: LessonExplanationPanelProps) {
-  const presence = yamaService.resolveDrillFeedback("incorrect");
+  if (!correctAnswer) {
+    return (
+      <LearningFailurePanel
+        className={cn(className)}
+        correctAnswer="—"
+        explanation={message}
+        userAnswer={userAnswer}
+      />
+    );
+  }
 
   return (
-    <GlassPanel
-      className={cn("flex items-start gap-3 p-3", className)}
-      role="status"
-      aria-live="polite"
-    >
-      <YamaAvatar expression={presence.expression} size="sm" alt="" className="mt-0.5 shrink-0" />
-      <div className="min-w-0 space-y-1">
-        <p className="text-body-sm text-foreground">{message}</p>
-        {correctAnswer ? (
-          <p className="text-caption text-trail-glow">
-            Answer: <span className="font-medium">{correctAnswer}</span>
-          </p>
-        ) : null}
-      </div>
-    </GlassPanel>
+    <LearningFailurePanel
+      className={className}
+      correctAnswer={correctAnswer}
+      userAnswer={userAnswer}
+      explanation={message}
+    />
   );
 }

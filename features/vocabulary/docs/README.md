@@ -8,6 +8,7 @@ N5 vocabulary catalog, word detail views, lesson content, and mastery tracking f
 
 - Published vocabulary in `vocabulary` table
 - Example sentences in `vocabulary_examples`
+- Thematic categories in `vocabulary_categories` + `vocabulary_category_assignments` (bible topics)
 - N5 list and word detail via `vocabulary-progress.service.ts`
 - Learned state from completed lessons and review items
 

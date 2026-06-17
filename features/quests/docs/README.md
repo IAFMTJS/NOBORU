@@ -10,6 +10,10 @@ Purpose: Daily and weekly quest objectives that guide study habits toward educat
 - Display quest progress inside the home expedition hero and on the progress dashboard
 - Deep-link quest CTAs to the next incomplete lesson or review queue
 
+## Bible Language-Application Quests
+
+Separate from EP habit quests. `quest.service.getLanguageApplicationObjectives()` builds gameplay objectives from the player's active vocabulary pool via `lib/learning/quest-assembly.service.ts`.
+
 ## MVP Daily Quests
 
 | Slug | Target | EP Reward |

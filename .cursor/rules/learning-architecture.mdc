@@ -1,0 +1,87 @@
+---
+description: Noboru learning architecture — progression, vocabulary pools, golden content rule, session mix, mastery, and review per the Learning Architecture Bible.
+globs: **/features/learning/**, **/features/review/**, **/features/vocabulary/**, **/features/quests/**, **/features/reading/**, **/features/listening/**, **/features/games/**, **/lib/learning/**, **/services/ai/**
+alwaysApply: false
+---
+
+# NOBORU LEARNING ARCHITECTURE RULE
+
+Version: 1.0
+
+Priority: CRITICAL
+
+Status: AUTHORITATIVE
+
+This rule governs learning progression orchestration across Noboru.
+
+Every learning-related system must follow docs/NOBORU LEARNING ARCHITECTURE BIBLE.md and import shared rules from lib/learning/.
+
+docs/jlpt-content-architecture.md remains authoritative for curriculum structure (what content exists per JLPT level).
+
+This bible and lib/learning/ are authoritative for runtime pedagogy (how content is introduced, mixed, reviewed, and gated).
+
+⸻
+
+PURPOSE
+
+Ensure long-term retention over speed.
+
+Every piece of content must help the player remember and use Japanese six months from now.
+
+⸻
+
+REQUIREMENTS
+
+Shared Implementation
+
+* Import constants, validators, and mixers from lib/learning/ — never duplicate bible values inline
+* Golden Content Rule: validate at service boundaries via validateGoldenContentRule or assertGoldenContentRule
+* Active Vocabulary Pool: use buildActiveVocabularyPool for stories, quests, companion, games, and AI context
+* Session mix: use mixSessionItems / computeSessionMixCounts for ~70% review / 30% new
+* Vocabulary intro limits: enforce VOCAB_INTRO_LIMITS_BY_JLPT when assembling mini chapters
+* Mastery: evaluateWordMastery for bible depth requirements; SRS state maps via mapReviewStateToLifecycleStage
+* Review intervals: REVIEW_INTERVAL_DAYS from lib/learning/ is canonical
+
+World Tree Mapping (until branch schema exists)
+
+* region → JLPT level
+* unit → branch (thematic)
+* lesson → mini chapter
+* practice lesson → checkpoint
+* trial → boss examination
+
+See WORLD_TREE_CMS_ALIASES in lib/learning/learning-architecture.constants.ts.
+
+AI Content
+
+* All AI generation must receive PlayerKnowledgeContext
+* AI may only use known/mastered vocabulary and unlocked grammar
+* Application must function without AI
+
+Feature Boundaries
+
+* vocabulary owns word data and per-word progress persistence
+* review owns SRS scheduling and due queues
+* learning owns lesson assembly and path orchestration
+* lib/learning owns cross-feature pedagogy rules
+
+⸻
+
+FORBIDDEN
+
+* Introducing vocabulary in stories, quests, or exams without prior introduction (golden rule)
+* Increasing difficulty via random unknown vocabulary
+* Hardcoding bible constants outside lib/learning/
+* Skipping review mix for progression-only sessions labeled as learning
+* Treating single correct answers as mastery
+
+⸻
+
+REFERENCES
+
+* docs/NOBORU LEARNING ARCHITECTURE BIBLE.md — full specification
+* lib/learning/ — canonical implementation
+* docs/jlpt-content-architecture.md — curriculum structure
+* docs/world-map-learning-journey-system.md — journey UI and gating
+
+END OF learning-architecture.mdc

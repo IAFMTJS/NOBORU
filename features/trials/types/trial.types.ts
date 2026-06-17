@@ -4,7 +4,16 @@ import type { QuestCompletionViewModel } from "@/features/quests/types/quest.typ
 import type { ContentStatus } from "@/lib/content/types";
 
 export type TrialKind = "regional_challenge" | "boss_trial" | "final_trial";
-export type TrialStepKind = "typed_recall" | "choice_recall" | "matching";
+export type TrialStepKind =
+  | "typed_recall"
+  | "choice_recall"
+  | "matching"
+  | "reading_comprehension"
+  | "listening_comprehension"
+  | "writing_application"
+  | "grammar_context"
+  | "story_comprehension"
+  | "applied_vocabulary";
 export type TrialGrade = "pass" | "excellent" | "perfect" | "mastery" | "legendary";
 export type TrialAvailability = "locked" | "available" | "passed";
 
@@ -38,6 +47,8 @@ export type TrialStepRow = {
   options: string[] | null;
   correct_index: number | null;
   match_pairs: Array<{ id: string; prompt: string; answer: string }> | null;
+  content_type: string | null;
+  content_id: string | null;
   created_at: string;
   updated_at: string;
 };

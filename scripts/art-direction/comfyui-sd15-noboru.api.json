@@ -1,0 +1,59 @@
+{
+  "3": {
+    "inputs": {
+      "ckpt_name": "v1-5-pruned-emaonly-fp16.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "4": {
+    "inputs": {
+      "text": "Premium AAA fantasy adventure UI for Noboru, stylized realism, Japanese fantasy game icon, mountain trail marker stone with soft lantern gold glow, moss green accents, carved shrine detail, single centered object, simple muted background, game UI asset",
+      "clip": ["3", 1]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "5": {
+    "inputs": {
+      "text": "cartoon, chibi, kawaii, anime face, flat design, text, letters, watermark, blurry, duplicate, ugly, white background, logo",
+      "clip": ["3", 1]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "6": {
+    "inputs": {
+      "width": 384,
+      "height": 384,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage"
+  },
+  "7": {
+    "inputs": {
+      "seed": 42,
+      "steps": 10,
+      "cfg": 7,
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": ["3", 0],
+      "positive": ["4", 0],
+      "negative": ["5", 0],
+      "latent_image": ["6", 0]
+    },
+    "class_type": "KSampler"
+  },
+  "8": {
+    "inputs": {
+      "samples": ["7", 0],
+      "vae": ["3", 2]
+    },
+    "class_type": "VAEDecode"
+  },
+  "9": {
+    "inputs": {
+      "filename_prefix": "noboru",
+      "images": ["8", 0]
+    },
+    "class_type": "SaveImage"
+  }
+}

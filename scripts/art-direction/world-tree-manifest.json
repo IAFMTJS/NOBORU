@@ -21,15 +21,22 @@
     "MID": "Trunk-only — mist at BOTH top and bottom. No ground, no buildings, no roots, no canopy cutoffs.",
     "TOP": "Canopy transition — mist at bottom only (future batches)"
   },
+  "assemblyModel": "puzzle-pieces",
   "rules": {
+    "puzzlePieces": true,
+    "transparentRequired": true,
     "noUi": true,
     "noText": true,
     "noMockLessons": true,
-    "notTransparent": true,
+    "noFullBleedPanels": true,
+    "noBakedSky": true,
+    "noBakedGroundPlane": true,
     "lightDarkPairs": true,
     "sameTrunkSilhouette": "Identical trunk width and center X across all tiles in a stack",
+    "seamlessVerticalStack": "Any compatible segment must connect top-to-bottom without visible breaks",
+    "randomCombinable": "Segments shuffle and repeat — the tree must never look like one fixed wallpaper",
     "noRunesUnlessAll": false,
-    "forbiddenMidTile": ["ground", "roots", "buildings", "pagodas", "village", "canopy at top edge", "glowing runes"]
+    "forbiddenMidTile": ["full background fill", "opaque rectangle", "sky gradient", "ground plane", "buildings", "pagodas", "village", "canopy at top edge", "glowing runes"]
   },
   "palettes": {
     "light": ["#F4EFE3", "#E9E1D0", "#5E7357", "#7B8D5A"],
@@ -37,41 +44,132 @@
   },
   "segments": [
     {
-      "id": "roots",
-      "folder": "01_roots",
+      "id": "roots_a",
+      "folder": "segments/roots_a",
       "order": 0,
       "tileType": "BOTTOM",
-      "region": "foothills",
+      "region": "world-tree",
       "season": "spring",
       "desc": "Roots in earth bottom. Trunk center 50%. Top 20% mist only — trunk continues up, no branches at top."
     },
     {
-      "id": "foothills_01",
-      "folder": "02_foothills_01",
+      "id": "roots_b",
+      "folder": "segments/roots_b",
+      "order": 0.1,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "spring",
+      "desc": "Root segment — stacks above roots_a. Thicker root arches. Mist top+bottom. No ground plane."
+    },
+    {
+      "id": "roots_c",
+      "folder": "segments/roots_c",
+      "order": 0.2,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "spring",
+      "desc": "Root segment — glowing fungi cluster in root crevices. Mist top+bottom. No ground plane."
+    },
+    {
+      "id": "roots_d",
+      "folder": "segments/roots_d",
+      "order": 0.3,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "spring",
+      "desc": "Root segment — underground spring, turquoise water in root crevices. Mist top+bottom. No ground plane."
+    },
+    {
+      "id": "roots_e",
+      "folder": "segments/roots_e",
+      "order": 0.4,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "spring",
+      "desc": "Root segment — crystal root chamber, glowing crystals in bark crevices. Mist top+bottom. No ground plane."
+    },
+    {
+      "id": "trunk_a",
+      "folder": "segments/trunk_a",
       "order": 1,
       "tileType": "MID",
-      "region": "foothills",
+      "region": "world-tree",
       "season": "spring",
-      "desc": "Trunk-only mid tile. Mist top+bottom. Distant soft green hills at far edges only."
+      "desc": "Lower trunk mid tile. Mist top+bottom. Distant soft green hills at far edges only."
     },
     {
-      "id": "foothills_02",
-      "folder": "03_foothills_02",
+      "id": "trunk_b",
+      "folder": "segments/trunk_b",
       "order": 2,
       "tileType": "MID",
-      "region": "foothills",
+      "region": "world-tree",
       "season": "spring",
-      "desc": "Trunk-only mid tile. Same trunk width. Soft sakura hint far edges only."
+      "desc": "Lower trunk mid tile. Same trunk width. Soft sakura hint far edges only."
     },
     {
-      "id": "foothills_03",
-      "folder": "04_foothills_03",
+      "id": "trunk_c",
+      "folder": "segments/trunk_c",
       "order": 3,
       "tileType": "MID",
-      "region": "foothills",
+      "region": "world-tree",
       "season": "spring",
-      "desc": "Trunk-only mid tile. Denser edge foliage, trunk corridor stays open."
+      "desc": "Lower trunk mid tile. Denser edge foliage, trunk corridor stays open."
+    },
+    {
+      "id": "trunk_d",
+      "folder": "segments/trunk_d",
+      "order": 4,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3 Ring I. Ancient spiritual carvings and gold symbols on bark. Mist top+bottom."
+    },
+    {
+      "id": "trunk_e",
+      "folder": "segments/trunk_e",
+      "order": 5,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3 Ring I. Empty shrine niche carved into bark only — no baked objects. Mist top+bottom."
+    },
+    {
+      "id": "trunk_f",
+      "folder": "segments/trunk_f",
+      "order": 6,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3 Ring II. Luminous golden veins through bark. Mist top+bottom."
+    },
+    {
+      "id": "trunk_g",
+      "folder": "segments/trunk_g",
+      "order": 7,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3 Ring II. Hollow cavity with warm inner spiritual glow. Mist top+bottom."
+    },
+    {
+      "id": "trunk_h",
+      "folder": "segments/trunk_h",
+      "order": 8,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3 Ring III. Rune clusters carved into bark surface only. Mist top+bottom."
+    },
+    {
+      "id": "transition_ancient_to_canopy",
+      "folder": "transitions/ancient_to_canopy",
+      "order": 9,
+      "tileType": "MID",
+      "region": "world-tree",
+      "season": "summer",
+      "desc": "N3→N2 connector. Single trunk forks into branch stubs at top. Mist both edges."
     }
   ],
-  "batch1": ["roots", "foothills_01", "foothills_02", "foothills_03"]
+  "batch1": ["roots_a", "trunk_a", "trunk_b", "trunk_c"],
+  "batch2_partial": ["trunk_d", "trunk_e", "trunk_f", "trunk_g", "trunk_h", "transition_ancient_to_canopy"]
 }

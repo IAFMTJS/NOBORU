@@ -10,10 +10,10 @@ const OUT = join(LIB, "_previews");
 
 const version = process.argv[2] ?? "2";
 const STACK = [
-  `04_foothills_03/wt_foothills_03_light_v${version}.png`,
-  `03_foothills_02/wt_foothills_02_light_v${version}.png`,
-  `02_foothills_01/wt_foothills_01_light_v${version}.png`,
-  `01_roots/wt_roots_light_v${version}.png`,
+  `04_foothills_03/wt_foothills_03_light_v${version}.png`, // trunk_c (legacy file name)
+  `03_foothills_02/wt_foothills_02_light_v${version}.png`, // trunk_b (legacy file name)
+  `02_foothills_01/wt_foothills_01_light_v${version}.png`, // trunk_a (legacy file name)
+  `01_roots/wt_roots_light_v${version}.png`, // roots_a (legacy file name)
 ];
 
 mkdirSync(OUT, { recursive: true });

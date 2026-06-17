@@ -45,6 +45,7 @@ export type LessonRow = {
   difficulty: number;
   xp_reward: number;
   estimated_duration: number | null;
+  checkpoint_activity_mix?: string[] | null;
   status: ContentStatus;
   created_at: string;
   updated_at: string;

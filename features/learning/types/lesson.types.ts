@@ -1,4 +1,5 @@
 import type { ContentStatus } from "@/lib/content/types";
+import type { VocabularyLifecycleStage } from "@/lib/learning/learning-architecture.constants";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import type { RegionAvailability } from "@/lib/learning/region-unlock";
 import type {
@@ -149,10 +150,12 @@ export type LessonRecallStep = {
   contentType: LessonContentType;
   prompt: string;
   display: string;
+  reading?: string | null;
   options: string[];
   correctIndex: number;
   acceptedAnswers?: string[];
   phase?: LessonRecallPhase;
+  lifecycleStage?: VocabularyLifecycleStage;
   index: number;
   total: number;
 };

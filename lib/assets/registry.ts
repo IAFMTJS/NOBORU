@@ -1,7 +1,4 @@
-﻿/**
- * Art-direction asset registry — maps app APIs to published Art Library paths.
- */
-import {
+﻿import {
   ACHIEVEMENT_ART_ASSETS,
   AUTH_ATMOSPHERE_ASSET,
   BRAND_WORDMARK_ASSET,
@@ -14,11 +11,9 @@ import {
   NAV_TAB_ICON_INACTIVE_ASSETS,
   NAV_TAB_MASCOT_ASSETS,
   LOADING_SCENE_PROFILE_ASSETS,
-  REGION_HERO_ASSETS,
-  REGION_TRAIL_SCROLL_ASSETS,
+  REGION_WORLD_TREE_TILE,
   SCENE_BACKGROUND_ASSETS,
   TRAIL_COMPANION_ASSET,
-  TRAIL_SPINE_ASSET,
   UI_ICON_ASSETS,
   WORLD_ICON_ASSETS,
   NOBORU_POSE_ASSETS,
@@ -27,18 +22,19 @@ import {
 } from "@/lib/assets/art-mappings";
 import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 import type { SceneId } from "@/components/media/scene-image";
-import {
-  TRAIL_SCROLL_REGION_SLUGS,
-} from "@/lib/design-system/regions";
+import type { RegionSlug } from "@/lib/design-system/regions";
+import { worldTreeTilePath, type ArtLibraryTheme } from "@/lib/assets/art-library-paths";
 import type { NavPillSkinId } from "@/lib/navigation/nav-skin.resolver";
 import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
-
-export { TRAIL_SCROLL_REGION_SLUGS, type TrailScrollRegionSlug } from "@/lib/design-system/regions";
 
 export const ASSET_REGISTRY = {
   root: "/art-library",
   marketing: "/assets/marketing",
 } as const;
+
+function resolveTheme(theme?: string): ArtLibraryTheme {
+  return theme === "light" ? "light" : "dark";
+}
 
 export function getMascotPath(theme?: string): string {
   return resolveArtAsset(TRAIL_COMPANION_ASSET, theme);
@@ -148,28 +144,9 @@ export function getNavTabMascotExpression(tab: string): string {
 
 export function getRegionArtPath(slug?: string, theme?: string): string | null {
   if (!slug) return null;
-  const ref = REGION_HERO_ASSETS[slug as keyof typeof REGION_HERO_ASSETS];
-  return ref ? resolveArtAsset(ref, theme) : null;
-}
-
-export function getTrailSpineArtPath(theme?: string): string | null {
-  return resolveArtAsset(TRAIL_SPINE_ASSET, theme);
-}
-
-export function getTrailScrollArtPath(
-  regionSlug?: string,
-  theme?: string,
-  trailSegmentIndex?: number,
-): string | null {
-  void trailSegmentIndex;
-  if (!regionSlug) return null;
-  const ref = REGION_TRAIL_SCROLL_ASSETS[regionSlug as keyof typeof REGION_TRAIL_SCROLL_ASSETS];
-  return ref ? resolveArtAsset(ref, theme) : null;
-}
-
-export function hasTrailScrollArt(regionSlug?: string): boolean {
-  if (!regionSlug) return false;
-  return (TRAIL_SCROLL_REGION_SLUGS as readonly string[]).includes(regionSlug);
+  const tile = REGION_WORLD_TREE_TILE[slug as RegionSlug];
+  if (!tile) return null;
+  return worldTreeTilePath(tile, resolveTheme(theme));
 }
 
 export function getWordmarkPath(theme?: string): string | null {

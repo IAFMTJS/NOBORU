@@ -51,6 +51,6 @@ Purpose: Educational assessments that validate recall and comprehension through 
 
 ## Known Limitations
 
-- Trial step content is seeded statically in migration (not CMS-driven yet)
-- Region unlock after final trial is tracked via trial progress only
-- Listening/reading comprehension steps deferred to post-MVP trial expansion
+- Boss trial (`n5-sentinel`) uses bible step kinds: `applied_vocabulary`, `grammar_context`, `reading_comprehension`, `listening_comprehension`, `story_comprehension`, `writing_application` (see `20260617230000_n5_boss_examination_bible_steps.sql`)
+- Step `content_type` / `content_id` link to vocabulary, grammar, stories, listening, and application CMS rows where available
+- Final trial and regional challenges still use legacy step kinds until expanded

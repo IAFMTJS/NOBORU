@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
-import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { cn } from "@/lib/utils";
 import type { LessonFillBlankStep } from "@/features/learning/types/lesson.types";
@@ -81,10 +81,11 @@ export function FillBlankDrill({
       }
       explanation={
         result === "incorrect" ? (
-          <LessonExplanationPanel
+          <LearningFailurePanel
             className="mt-3"
-            message="Not quite — here is the right word."
-            correctAnswer={correctAnswer}
+            userAnswer={step.options[selected ?? 0] ?? ""}
+            correctAnswer={correctAnswer ?? ""}
+            seed={step.index}
           />
         ) : null
       }

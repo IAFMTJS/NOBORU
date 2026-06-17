@@ -11,10 +11,10 @@ export const PROTOTYPE_WORLD_TREE_OVERLAP_CLASS = "-mt-[9.375%]" as const;
  * Matches `scripts/art-direction/world-tree-manifest.json` stack order.
  */
 export const PROTOTYPE_WORLD_TREE_STACK: WorldTreeTileBase[] = [
-  WORLD_TREE_TILE_BASES.foothills03,
-  WORLD_TREE_TILE_BASES.foothills02,
-  WORLD_TREE_TILE_BASES.foothills01,
-  WORLD_TREE_TILE_BASES.roots,
+  WORLD_TREE_TILE_BASES.trunk_c,
+  WORLD_TREE_TILE_BASES.trunk_b,
+  WORLD_TREE_TILE_BASES.trunk_a,
+  WORLD_TREE_TILE_BASES.roots_a,
 ];
 
 /** @alias PROTOTYPE_WORLD_TREE_STACK — Kit tab preview uses the same batch. */

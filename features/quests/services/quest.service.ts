@@ -18,7 +18,9 @@ import type {
   WeeklyQuestsViewModel,
 } from "@/features/quests/types/quest.types";
 import { elevationService } from "@/features/elevation/services/elevation.service";
+import { buildLanguageQuestObjectives } from "@/lib/learning/quest-assembly.service";
 import { lessonService } from "@/features/learning/services/lesson.service";
+import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
 import { profileServerRepository } from "@/features/profile/repositories/profile-server.repository";
 
 function resolveQuestDate(timezone: string): string {
@@ -320,6 +322,13 @@ class QuestService {
       completedAt: input.completedAt,
       epAwarded: input.epAwarded,
     });
+  }
+
+  /** Bible language-application quest objectives (separate from EP habit quests). */
+  async getLanguageApplicationObjectives(userId: string) {
+    const context = await playerKnowledgeService.getGlobalContext(userId);
+    if (!context) return [];
+    return buildLanguageQuestObjectives(context);
   }
 }
 

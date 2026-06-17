@@ -38,6 +38,7 @@ function buildQuestion(
     display: kanji.character,
     options,
     correctIndex: correctIndex >= 0 ? correctIndex : 0,
+    lifecycleStage: "applied",
     index,
     total,
   };

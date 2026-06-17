@@ -1,16 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { FeedbackSparkOverlay } from "@/components/visual/feedback-spark-overlay";
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { DrillCompanionReaction } from "@/features/learning/components/lesson/drill-companion-reaction";
-import { LessonExplanationPanel } from "@/features/learning/components/lesson/lesson-explanation-panel";
+import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import { DrillRecognitionTimer } from "@/features/learning/components/drills/drill-recognition-timer";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
+import type { DrillDifficultyProps } from "@/features/learning/types/drill-difficulty.types";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
+import { resolveLifecycleStageFromPhase } from "@/features/learning/utils/drill-lifecycle";
+import { resolveDifficultyProfile } from "@/lib/learning/difficulty-scaling.service";
+import {
+  applyDifficultyToChoiceOptions,
+  recognitionTimerSeconds,
+  resolveFuriganaReading,
+  shouldAutoFailOnRecognitionTimeout,
+  shouldShowDrillHints,
+} from "@/lib/learning/drill-difficulty.utils";
 
-type ChoiceRecallDrillProps = {
+type ChoiceRecallDrillProps = DrillDifficultyProps & {
   step: LessonRecallStep;
   onAnswer: (correct: boolean) => void;
   disabled?: boolean;
@@ -32,22 +43,56 @@ export function ChoiceRecallDrill({
   onAnswer,
   disabled = false,
   soundEnabled = true,
+  lifecycleStage,
+  difficultyProfile,
 }: ChoiceRecallDrillProps) {
   const [selected, setSelected] = useState<number | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [shakeIndex, setShakeIndex] = useState<number | null>(null);
+  const [timerRunning, setTimerRunning] = useState(true);
+
+  const profile =
+    difficultyProfile ??
+    resolveDifficultyProfile(
+      lifecycleStage ?? resolveLifecycleStageFromPhase(step.phase, step.lifecycleStage),
+    );
+
+  const scaled = useMemo(
+    () =>
+      applyDifficultyToChoiceOptions(step.options, step.correctIndex, profile.choiceCount),
+    [profile.choiceCount, step.correctIndex, step.options],
+  );
+
+  const furiganaReading = resolveFuriganaReading({
+    display: step.display,
+    reading: step.reading,
+    profile,
+  });
+  const showHints = shouldShowDrillHints(profile);
+  const timerSeconds = recognitionTimerSeconds(profile);
+  const enforceTimeout = shouldAutoFailOnRecognitionTimeout(profile);
+
   const result =
     selected === null
       ? null
-      : selected === step.correctIndex
+      : selected === scaled.correctIndex
         ? ("correct" as const)
         : ("incorrect" as const);
 
   const japaneseFocus = isJapaneseFocusType(step.contentType);
-  const correctAnswer = step.options[step.correctIndex];
+  const correctAnswer = scaled.options[scaled.correctIndex];
+
+  const handleTimeout = useCallback(() => {
+    if (selected !== null || disabled) return;
+    setSelected(-1);
+    setSelectedLabel("");
+    setTimerRunning(false);
+    onAnswer(false);
+  }, [disabled, onAnswer, selected]);
 
   useEffect(() => {
-    if (result !== "incorrect" || selected === null) return;
-    setShakeIndex(selected);
+    if (result !== "incorrect" || selected === null || selected < 0) return;
+    if (selected >= 0) setShakeIndex(selected);
     const timeoutId = window.setTimeout(() => setShakeIndex(null), 420);
     return () => window.clearTimeout(timeoutId);
   }, [result, selected]);
@@ -58,6 +103,16 @@ export function ChoiceRecallDrill({
       <DrillCompanionReaction result={result} />
 
       <div className="relative flex flex-1 flex-col items-center justify-center px-2 py-6 text-center">
+        {timerSeconds ? (
+          <div className="absolute right-2 top-2">
+            <DrillRecognitionTimer
+              seconds={timerSeconds}
+              running={timerRunning && selected === null}
+              enforceTimeout={enforceTimeout}
+              onExpired={handleTimeout}
+            />
+          </div>
+        ) : null}
         {step.contentType === "kanji" ? (
           <p
             lang="ja"
@@ -71,6 +126,7 @@ export function ChoiceRecallDrill({
         {japaneseFocus ? (
           <JapaneseText
             text={step.display}
+            reading={furiganaReading}
             size="hero"
             className="relative text-foreground drop-shadow-sm"
           />
@@ -79,21 +135,21 @@ export function ChoiceRecallDrill({
             {step.display}
           </p>
         )}
-        {soundEnabled && japaneseFocus ? (
+        {soundEnabled && japaneseFocus && showHints ? (
           <div className="relative mt-4 flex justify-center">
             <AudioPlayback audioUrl={null} japaneseText={step.display} label="Listen" />
           </div>
         ) : null}
-        {step.phase === "consolidation" ? (
+        {step.phase === "consolidation" && showHints ? (
           <p className="relative mt-3 text-caption text-trail-glow">Final recall · no hints</p>
         ) : null}
       </div>
 
       <TrailAnswerPad
         className="mt-auto"
-        options={step.options.map((option, index) => {
+        options={scaled.options.map((option, index) => {
           const isSelected = selected === index;
-          const isCorrect = index === step.correctIndex;
+          const isCorrect = index === scaled.correctIndex;
           const showResult = selected !== null;
           let state: "default" | "selected" | "correct" | "incorrect" | "disabled" = "default";
           if (showResult && isCorrect) state = "correct";
@@ -110,17 +166,20 @@ export function ChoiceRecallDrill({
                 ? undefined
                 : () => {
                     setSelected(index);
+                    setSelectedLabel(option);
+                    setTimerRunning(false);
                     onAnswer(isCorrect);
                   },
           };
         })}
       />
 
-      {result === "incorrect" ? (
-        <LessonExplanationPanel
+      {result === "incorrect" && correctAnswer ? (
+        <LearningFailurePanel
           className="mt-3"
-          message="Not quite — here is the right reading."
+          userAnswer={selectedLabel ?? ""}
           correctAnswer={correctAnswer}
+          seed={step.index}
         />
       ) : null}
     </div>
