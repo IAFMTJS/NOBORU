@@ -36,7 +36,7 @@ import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 export { TRAIL_SCROLL_REGION_SLUGS, type TrailScrollRegionSlug } from "@/lib/design-system/regions";
 
 export const ASSET_REGISTRY = {
-  root: "/api/art-library",
+  root: "/art-library",
   marketing: "/assets/marketing",
 } as const;
 

@@ -1,4 +1,6 @@
-/** Build URLs for Art Library assets (API route reads public/art-library when published). */
+/** Build URLs for Art Library assets published under public/art-library/. */
+
+export const ART_LIBRARY_PUBLIC_ROOT = "/art-library";
 
 export type ArtLibraryTheme = "light" | "dark";
 
@@ -8,7 +10,7 @@ export function artLibraryPath(relativePath: string): string {
   const relative = normalized
     .replace(/^api\/art-library\//, "")
     .replace(/^art-library\//, "");
-  return `/api/art-library/${relative.split("/").map(encodeURIComponent).join("/")}`;
+  return `${ART_LIBRARY_PUBLIC_ROOT}/${relative.split("/").map(encodeURIComponent).join("/")}`;
 }
 
 /** Swap _light_ / _dark_ in a versioned Art Library filename. */

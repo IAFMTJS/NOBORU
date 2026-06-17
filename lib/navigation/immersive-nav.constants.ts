@@ -27,7 +27,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "journey",
     theme: "trail",
     skinId: "trail_mist",
-    barTexturePath: "/art/ui/navbars/nav-moonlit-journey-active-journey.webp",
+    barTexturePath: "",
     mascotExpression: "adventure",
     barSurfaceClass:
       "bg-gradient-to-r from-stone-950/95 via-amber-950/88 to-stone-950/95 shadow-[inset_0_1px_0_rgba(246,174,45,0.14)]",
@@ -43,7 +43,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "camp",
     theme: "campfire",
     skinId: "ember_night",
-    barTexturePath: "/art/ui/navbars/nav-ember-camp-active-camp.webp",
+    barTexturePath: "",
     mascotExpression: "encouraging",
     barSurfaceClass:
       "bg-gradient-to-r from-stone-950/95 via-stone-900/92 to-stone-950/95 shadow-[inset_0_1px_0_rgba(246,174,45,0.12)]",
@@ -59,7 +59,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "study",
     theme: "study",
     skinId: "study_scroll",
-    barTexturePath: "/art/ui/navbars/nav-app-dark-active-study.webp",
+    barTexturePath: "",
     mascotExpression: "studying",
     barSurfaceClass:
       "bg-gradient-to-r from-emerald-950/95 via-green-950/90 to-emerald-950/95 shadow-[inset_0_1px_0_rgba(74,222,128,0.1)]",
@@ -75,7 +75,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "bag",
     theme: "backpack",
     skinId: "travel_pack",
-    barTexturePath: "/art/ui/navbars/nav-app-dark-active-bag.webp",
+    barTexturePath: "",
     mascotExpression: "adventure",
     barSurfaceClass:
       "bg-gradient-to-r from-stone-950/95 via-amber-950/90 to-stone-950/95 shadow-[inset_0_1px_0_rgba(246,174,45,0.14)]",
@@ -91,7 +91,7 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     tab: "profile",
     theme: "journal",
     skinId: "stone_path",
-    barTexturePath: "/art/ui/navbars/nav-premium-gold-profile-active-profile.webp",
+    barTexturePath: "",
     mascotExpression: "victorious",
     barSurfaceClass:
       "bg-gradient-to-r from-amber-950/95 via-stone-900/92 to-amber-950/95 shadow-[inset_0_1px_0_rgba(250,204,21,0.1)]",
