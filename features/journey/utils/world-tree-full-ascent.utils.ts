@@ -1,4 +1,5 @@
 import {
+  WORLD_TREE_GLOBAL_STRUCTURE,
   WORLD_TREE_REALMS,
   WORLD_TREE_STRUCTURAL_SPAN,
   buildWorldTreeRealmBands,
@@ -26,7 +27,6 @@ export type WorldTreeStructuralPiece = {
   id: string;
   src: string;
   role: WorldTreeArtLayerRole;
-  realmId: WorldTreeRealmId;
 };
 
 export type WorldTreeDecorPiece = {
@@ -44,14 +44,12 @@ export type WorldTreeRealmLayout = {
   id: WorldTreeRealmId;
   label: string;
   band: { yMin: number; yMax: number };
-  structural: WorldTreeStructuralPiece[];
   backdrops: WorldTreeBackdropSlice[];
   decor: WorldTreeDecorPiece[];
 };
 
 export type WorldTreeFullAscentLayout = {
   realms: WorldTreeRealmLayout[];
-  /** @deprecated Flat list — prefer `realms` */
   structural: WorldTreeStructuralPiece[];
   backdrops: WorldTreeBackdropSlice[];
   decor: WorldTreeDecorPiece[];
@@ -77,20 +75,15 @@ function pickPieces(
   return all.slice(start);
 }
 
-function collectStructuralForRealm(
-  realmId: WorldTreeRealmId,
-  layers: readonly WorldTreeAscentLayerSpec[],
-  theme: ArtLibraryTheme,
-): WorldTreeStructuralPiece[] {
+function collectGlobalStructural(theme: ArtLibraryTheme): WorldTreeStructuralPiece[] {
   const structural: WorldTreeStructuralPiece[] = [];
 
-  for (const layer of layers) {
+  for (const layer of WORLD_TREE_GLOBAL_STRUCTURE) {
     for (const piece of pickPieces(layer, theme)) {
       structural.push({
         id: piece.id,
         src: worldTreeSheetRemasterUrl(piece),
         role: layer.role,
-        realmId,
       });
     }
   }
@@ -122,36 +115,30 @@ function layoutBackdropsForRealm(
 function decorWidth(category: WorldTreeDecorCategory, pieceId: string): number {
   switch (category) {
     case "settlement":
-      return 24 + (hashString(pieceId) % 10);
+      return 20 + (hashString(pieceId) % 6);
     case "bridge":
-      return 30 + (hashString(pieceId) % 8);
+      return 26 + (hashString(pieceId) % 6);
     case "shrine":
-      return 16 + (hashString(pieceId) % 6);
+      return 14 + (hashString(pieceId) % 4);
     case "camp":
-      return 18 + (hashString(pieceId) % 6);
+      return 16 + (hashString(pieceId) % 4);
     default:
-      return 14 + (hashString(pieceId) % 8);
+      return 12 + (hashString(pieceId) % 6);
   }
 }
 
-function decorLeftPercent(
-  category: WorldTreeDecorCategory,
-  index: number,
-  hash: number,
-): number {
-  const jitter = ((hash % 11) - 5) * 1.2;
+function decorLeftPercent(category: WorldTreeDecorCategory, index: number, hash: number): number {
+  const jitter = ((hash % 9) - 4) * 1.5;
 
   switch (category) {
     case "shrine":
-      return Math.min(58, Math.max(42, 50 + jitter));
-    case "bridge":
-      return Math.min(68, Math.max(32, 50 + (index % 2 === 0 ? -12 : 12) + jitter));
+      return Math.min(56, Math.max(44, 50 + jitter));
     case "camp":
-      return Math.min(76, Math.max(24, (index % 2 === 0 ? 38 : 62) + jitter));
+      return Math.min(72, Math.max(28, (index % 2 === 0 ? 40 : 60) + jitter));
     case "settlement":
-      return Math.min(80, Math.max(20, (index % 2 === 0 ? 30 : 70) + jitter));
+      return Math.min(76, Math.max(24, (index % 2 === 0 ? 32 : 68) + jitter));
     default:
-      return Math.min(78, Math.max(22, (index % 2 === 0 ? 34 : 66) + jitter));
+      return Math.min(70, Math.max(30, (index % 2 === 0 ? 36 : 64) + jitter));
   }
 }
 
@@ -163,13 +150,14 @@ function layoutDecorForRealm(
 ): WorldTreeDecorPiece[] {
   const decor: WorldTreeDecorPiece[] = [];
   const span = band.yMax - band.yMin;
+  let slotIndex = 0;
 
-  decorSpecs.forEach((spec, layerIndex) => {
+  for (const spec of decorSpecs) {
     const pieces = pickPieces(spec, theme);
-    pieces.forEach((piece, pieceIndex) => {
+    pieces.forEach((piece) => {
       const hash = hashString(piece.id);
-      const verticalSlot = (pieceIndex + 1) / (pieces.length + 1);
-      const layerOffset = layerIndex * 1.5;
+      slotIndex += 1;
+      const verticalAnchor = band.yMin + span * (0.35 + (slotIndex % 3) * 0.2);
 
       decor.push({
         id: piece.id,
@@ -177,20 +165,17 @@ function layoutDecorForRealm(
         role: spec.role,
         category: spec.category,
         realmId,
-        topPercent: Math.min(
-          band.yMax - 1.5,
-          Math.max(band.yMin + 1.5, band.yMin + span * verticalSlot + layerOffset),
-        ),
-        leftPercent: decorLeftPercent(spec.category, pieceIndex + layerIndex, hash),
+        topPercent: verticalAnchor,
+        leftPercent: decorLeftPercent(spec.category, slotIndex, hash),
         widthPercent: decorWidth(spec.category, piece.id),
       });
     });
-  });
+  }
 
   return decor;
 }
 
-/** Five-realm World Tree ascent using Noboru sheet-remaster puzzle pieces. */
+/** Five-realm atmosphere + one global trunk column. */
 export function buildWorldTreeFullAscentLayout(
   theme: ArtLibraryTheme,
 ): WorldTreeFullAscentLayout {
@@ -202,15 +187,16 @@ export function buildWorldTreeFullAscentLayout(
       id: realm.id,
       label: realm.label,
       band,
-      structural: collectStructuralForRealm(realm.id, realm.structural, theme),
       backdrops: layoutBackdropsForRealm(realm.id, band, realm.backdrop, theme),
       decor: layoutDecorForRealm(realm.id, band, realm.decor, theme),
     };
   });
 
+  const structural = collectGlobalStructural(theme);
+
   return {
     realms,
-    structural: realms.flatMap((realm) => realm.structural),
+    structural,
     backdrops: realms.flatMap((realm) => realm.backdrops),
     decor: realms.flatMap((realm) => realm.decor),
   };

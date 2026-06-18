@@ -88,7 +88,7 @@ export const WORLD_TREE_SKELETON_ZONES: readonly WorldTreeZone[] = [
 ] as const;
 
 /** Virtual canvas height reserved for the full skeleton (future art stacks upward). */
-export const WORLD_TREE_SKELETON_VH_PER_PERCENT = 5;
+export const WORLD_TREE_SKELETON_VH_PER_PERCENT = 6;
 export const WORLD_TREE_SKELETON_MIN_HEIGHT_VH =
   WORLD_TREE_SKELETON_ZONES.reduce((sum, zone) => sum + zone.heightPercent, 0) *
   WORLD_TREE_SKELETON_VH_PER_PERCENT;
