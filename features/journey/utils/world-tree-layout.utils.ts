@@ -6,12 +6,6 @@ import type {
   JourneyNode,
   JourneyPathViewModel,
 } from "@/features/journey/types/journey.types";
-import {
-  JOURNEY_WORLD_TREE_TILE_STACK,
-  WORLD_TREE_SEAM_OVERLAP_PERCENT,
-  type WorldTreeTileBase,
-} from "@/lib/assets/art-library-paths";
-import { segmentIdFromTileBase } from "@/lib/assets/world-tree-segment-presentation";
 
 export type WorldTreeBand = {
   yMin: number;
@@ -40,63 +34,9 @@ export function buildWorldTreeZoneBands(): Record<WorldTreeZoneId, WorldTreeBand
   return bands;
 }
 
-/** Per-segment vertical bands on the stacked tile canvas (y=100 base, y=0 crown). */
-export function buildWorldTreeTileBands(
-  stack: readonly WorldTreeTileBase[] = JOURNEY_WORLD_TREE_TILE_STACK,
-  overlapPercent = WORLD_TREE_SEAM_OVERLAP_PERCENT,
-): Map<string, WorldTreeBand> {
-  const tileCount = stack.length;
-  if (tileCount === 0) return new Map();
-
-  const step = 1 - overlapPercent / 100;
-  const totalHeight = 1 + (tileCount - 1) * step;
-  const bands = new Map<string, WorldTreeBand>();
-
-  stack.forEach((base, index) => {
-    const top = index * step;
-    const bottom = top + 1;
-    bands.set(segmentIdFromTileBase(base), {
-      yMin: 100 - (bottom / totalHeight) * 100,
-      yMax: 100 - (top / totalHeight) * 100,
-    });
-  });
-
-  return bands;
-}
-
-/** Aggregate tile bands per skeleton zone for regions that have produced art. */
-export function buildZoneTileBands(
-  stack: readonly WorldTreeTileBase[] = JOURNEY_WORLD_TREE_TILE_STACK,
-): Partial<Record<WorldTreeZoneId, WorldTreeBand>> {
-  const tileBands = buildWorldTreeTileBands(stack);
-  const zoneBands: Partial<Record<WorldTreeZoneId, WorldTreeBand>> = {};
-
-  for (const zone of WORLD_TREE_SKELETON_ZONES) {
-    const segmentIds = zone.artSegmentIds ?? [];
-    const present = segmentIds.filter((id) => tileBands.has(id));
-    if (present.length === 0) continue;
-
-    zoneBands[zone.id] = {
-      yMin: Math.min(...present.map((id) => tileBands.get(id)!.yMin)),
-      yMax: Math.max(...present.map((id) => tileBands.get(id)!.yMax)),
-    };
-  }
-
-  return zoneBands;
-}
-
-/** Full vertical span of the produced tile stack (roots base → highest tile). */
-export function buildProducedStackBand(
-  stack: readonly WorldTreeTileBase[] = JOURNEY_WORLD_TREE_TILE_STACK,
-): WorldTreeBand | null {
-  const tileBands = buildWorldTreeTileBands(stack);
-  if (tileBands.size === 0) return null;
-
-  const values = [...tileBands.values()];
-  return {
-    yMin: Math.min(...values.map((band) => band.yMin)),
-    yMax: Math.max(...values.map((band) => band.yMax)),
-  };
+/** Full vertical span reserved for the skeleton ascent (roots base → crown). */
+export function buildSkeletonAscentBand(): WorldTreeBand {
+  return { yMin: 0, yMax: 100 };
 }
 
 /** Gentle winding x-offset — lesson icons follow a path, no visible trail line. */
@@ -106,7 +46,7 @@ export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: 
   return 50 + wave + stagger;
 }
 
-/** Plot all journey nodes bottom-up on the produced stack — roots first, crown last. */
+/** Plot all journey nodes bottom-up on the skeleton — roots first, crown last. */
 export function plotJourneyNodesOnSkeleton(
   journey: JourneyPathViewModel,
 ): PlottedSkeletonNode[] {
@@ -121,9 +61,7 @@ export function plotJourneyNodesOnSkeleton(
 
   if (entries.length === 0) return [];
 
-  const stackBand = buildProducedStackBand();
-  if (!stackBand) return [];
-
+  const stackBand = buildSkeletonAscentBand();
   const ySpan = stackBand.yMax - stackBand.yMin;
   const lastIndex = entries.length - 1;
 

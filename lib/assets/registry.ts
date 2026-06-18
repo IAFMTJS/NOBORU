@@ -11,7 +11,7 @@
   NAV_TAB_ICON_INACTIVE_ASSETS,
   NAV_TAB_MASCOT_ASSETS,
   LOADING_SCENE_PROFILE_ASSETS,
-  REGION_WORLD_TREE_TILE,
+  REGION_THUMBNAIL_ASSETS,
   SCENE_BACKGROUND_ASSETS,
   TRAIL_COMPANION_ASSET,
   UI_ICON_ASSETS,
@@ -23,7 +23,6 @@
 import type { NoboruPoseId } from "@/lib/assets/art-mappings";
 import type { SceneId } from "@/components/media/scene-image";
 import type { RegionSlug } from "@/lib/design-system/regions";
-import { worldTreeTilePath, type ArtLibraryTheme } from "@/lib/assets/art-library-paths";
 import type { NavPillSkinId } from "@/lib/navigation/nav-skin.resolver";
 import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 
@@ -31,10 +30,6 @@ export const ASSET_REGISTRY = {
   root: "/art-library",
   marketing: "/assets/marketing",
 } as const;
-
-function resolveTheme(theme?: string): ArtLibraryTheme {
-  return theme === "light" ? "light" : "dark";
-}
 
 export function getMascotPath(theme?: string): string {
   return resolveArtAsset(TRAIL_COMPANION_ASSET, theme);
@@ -144,9 +139,9 @@ export function getNavTabMascotExpression(tab: string): string {
 
 export function getRegionArtPath(slug?: string, theme?: string): string | null {
   if (!slug) return null;
-  const tile = REGION_WORLD_TREE_TILE[slug as RegionSlug];
-  if (!tile) return null;
-  return worldTreeTilePath(tile, resolveTheme(theme));
+  const ref = REGION_THUMBNAIL_ASSETS[slug as RegionSlug];
+  if (!ref) return null;
+  return resolveArtAsset(ref, theme);
 }
 
 export function getWordmarkPath(theme?: string): string | null {

@@ -9,8 +9,8 @@ type JourneySkeletonArtLayerProps = {
 };
 
 /**
- * Dev scaffold — zone bands only. No corridor lines; lesson nodes define the path.
- * ComfyUI tiles attach to `data-art-segment` slots in production.
+ * Dev scaffold — zone bands only until sheet-extract art is wired in.
+ * Lesson nodes define the path; art slots attach per zone in production.
  */
 export function JourneySkeletonArtLayer({ className }: JourneySkeletonArtLayerProps) {
   const bands = buildWorldTreeZoneBands();
@@ -36,21 +36,6 @@ export function JourneySkeletonArtLayer({ className }: JourneySkeletonArtLayerPr
               height: `${height}%`,
             }}
           >
-            {zone.artSegmentIds?.map((segmentId, index, segments) => {
-              const slice = 100 / segments.length;
-              return (
-                <div
-                  key={segmentId}
-                  data-art-segment={segmentId}
-                  className="absolute inset-x-[22%] border border-dashed border-white/[0.06]"
-                  style={{
-                    top: `${index * slice}%`,
-                    height: `${slice}%`,
-                  }}
-                />
-              );
-            })}
-
             <span className="absolute left-3 top-2 text-[10px] font-medium uppercase tracking-widest text-black/20 dark:text-white/15">
               {zone.label}
             </span>

@@ -5,7 +5,6 @@ import type { SceneId } from "@/components/media/scene-image";
 import { ACHIEVEMENT_SLUGS } from "@/features/achievements/constants/achievement.constants";
 import { GAME_SLUGS } from "@/features/games/constants/game.constants";
 import type { YamaExpression } from "@/features/yama/types/yama.types";
-import { WORLD_TREE_TILE_BASES } from "@/lib/assets/art-library-paths";
 import type { ArtCategory } from "@/lib/assets/art-paths";
 import type { RegionSlug } from "@/lib/design-system/regions";
 import type { NavPillSkinId } from "@/lib/navigation/nav-skin.resolver";
@@ -20,7 +19,7 @@ export const SCENE_BACKGROUND_ASSETS: Record<SceneId, ArtAssetRef> = {
   camp_base: { category: "backgrounds/camp", id: "bg-camp-home-night" },
   dojo_forest: { category: "backgrounds/study", id: "bg-study-bamboo" },
   shrine_torii: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
-  world_map_peaks: { category: "world-tree", id: WORLD_TREE_TILE_BASES.trunk_c },
+  world_map_peaks: { category: "backgrounds/camp", id: "bg-camp-home-night" },
   shop_interior: { category: "backgrounds/utility", id: "bg-shop-general-store-dark" },
   lesson_complete: { category: "backgrounds/shrine", id: "bg-shrine-lesson-complete-path" },
   checkpoint_shrine: { category: "backgrounds/shrine", id: "bg-shrine-checkpoint" },
@@ -33,16 +32,16 @@ export const SCENE_BACKGROUND_ASSETS: Record<SceneId, ArtAssetRef> = {
   profile_lantern_path: { category: "backgrounds/utility", id: "bg-settings-dark-panel" },
 };
 
-/** World-tree tile used for region thumbnails in the trail atlas. */
-export const REGION_WORLD_TREE_TILE: Record<RegionSlug, string> = {
-  foothills: WORLD_TREE_TILE_BASES.trunk_b,
-  "mount-n5": WORLD_TREE_TILE_BASES.roots_a,
-  "forest-trail": WORLD_TREE_TILE_BASES.trunk_c,
-  "mount-n4": WORLD_TREE_TILE_BASES.trunk_c,
-  "mount-n3": WORLD_TREE_TILE_BASES.trunk_c,
-  "mount-n2": WORLD_TREE_TILE_BASES.canopy_a,
-  "mount-n1": WORLD_TREE_TILE_BASES.celestial_a,
-  "master-summit": WORLD_TREE_TILE_BASES.celestial_b,
+/** Region thumbnails in the trail atlas — world-tree art TBD. */
+export const REGION_THUMBNAIL_ASSETS: Record<RegionSlug, ArtAssetRef> = {
+  foothills: { category: "backgrounds/camp", id: "bg-camp-home-night" },
+  "mount-n5": { category: "backgrounds/camp", id: "bg-camp-lantern" },
+  "forest-trail": { category: "backgrounds/study", id: "bg-study-bamboo" },
+  "mount-n4": { category: "backgrounds/study", id: "bg-study-default" },
+  "mount-n3": { category: "backgrounds/shrine", id: "bg-shrine-checkpoint" },
+  "mount-n2": { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
+  "mount-n1": { category: "backgrounds/shrine", id: "bg-shrine-lesson-complete-path" },
+  "master-summit": { category: "backgrounds/shrine", id: "bg-shrine-region-transition-torii" },
 };
 
 export const YAMA_EXPRESSION_ASSETS: Record<YamaExpression, ArtAssetRef> = {
@@ -310,9 +309,9 @@ export const AUTH_ATMOSPHERE_ASSET: ArtAssetRef = {
 export const LOADING_SCENE_PROFILE_ASSETS = {
   default: AUTH_ATMOSPHERE_ASSET,
   home: AUTH_ATMOSPHERE_ASSET,
-  learn: { category: "world-tree", id: WORLD_TREE_TILE_BASES.roots_a },
+  learn: { category: "backgrounds/loading", id: "bg-loading-trail-moment-v1" },
   review: { category: "backgrounds/camp", id: "bg-camp-offline" },
-  lesson: { category: "world-tree", id: WORLD_TREE_TILE_BASES.roots_a },
+  lesson: { category: "backgrounds/loading", id: "bg-loading-trail-moment-v1" },
   "region-transition": {
     category: "backgrounds/shrine",
     id: "bg-shrine-region-transition-torii",
@@ -325,10 +324,10 @@ export const LOADING_SCENE_PROFILE_ASSETS = {
  */
 export const LOADING_BACKGROUND_ASSETS = {
   camp_moment: { category: "backgrounds/loading", id: "bg-loading-camp-moment-v1" },
-  trail_moment: { category: "world-tree", id: WORLD_TREE_TILE_BASES.roots_a },
+  trail_moment: { category: "backgrounds/loading", id: "bg-loading-trail-moment-v1" },
   study_moment: { category: "backgrounds/loading", id: "bg-loading-study-moment-v1" },
   region_enter: { category: "backgrounds/loading", id: "bg-loading-region-enter-v1" },
-  region_leave: { category: "world-tree", id: WORLD_TREE_TILE_BASES.trunk_a },
+  region_leave: { category: "backgrounds/loading", id: "bg-loading-trail-moment-v1" },
 } as const satisfies Record<string, ArtAssetRef>;
 
 export const TRAIL_COMPANION_ASSET: ArtAssetRef = {
@@ -375,7 +374,7 @@ export const CAMP_WORLD_ASSETS = {
   achievement_shrine: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
 } as const satisfies Record<string, ArtAssetRef>;
 
-import { artLibraryPath, worldTreeTilePath, type ArtLibraryTheme } from "@/lib/assets/art-library-paths";
+import { artLibraryPath, type ArtLibraryTheme } from "@/lib/assets/art-library-paths";
 import { mapLegacyAssetToArtLibrary } from "@/lib/assets/legacy-art-library-map";
 
 function resolveTheme(theme?: string): ArtLibraryTheme {
@@ -385,9 +384,6 @@ function resolveTheme(theme?: string): ArtLibraryTheme {
 /** Resolve legacy ArtAssetRef to a published WebP URL under /art-library/. */
 export function resolveArtAsset(ref: ArtAssetRef, theme?: string): string {
   const resolvedTheme = resolveTheme(theme);
-  if (ref.category === "world-tree") {
-    return worldTreeTilePath(ref.id, resolvedTheme);
-  }
   const relativePath = mapLegacyAssetToArtLibrary(ref, resolvedTheme);
   return relativePath ? artLibraryPath(relativePath) : "";
 }

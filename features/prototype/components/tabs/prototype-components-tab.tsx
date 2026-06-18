@@ -9,8 +9,6 @@ import {
   prototypeGlass,
 } from "@/features/prototype/components/prototype-glass-panel";
 import { PrototypeTabScene } from "@/features/prototype/components/prototype-viewport-background";
-import { PrototypeWorldTreeStack } from "@/features/prototype/components/prototype-world-tree-stack";
-import { PROTOTYPE_WORLD_TREE_BATCH1 } from "@/features/prototype/constants/world-tree";
 import {
   MOCK_ACHIEVEMENTS,
   MOCK_COMPONENT_ICONS,
@@ -95,15 +93,6 @@ export function PrototypeComponentsTab() {
               <span className="text-center text-caption font-medium">{badge.label}</span>
             </PrototypeGlassCard>
           ))}
-        </div>
-      </section>
-
-      <section>
-        <PrototypeHeading as="h2" className="mb-3">
-          World tree tiles (v2)
-        </PrototypeHeading>
-        <div className={cn("overflow-hidden", prototypeGlass.card, "p-0")}>
-          <PrototypeWorldTreeStack tiles={PROTOTYPE_WORLD_TREE_BATCH1} />
         </div>
       </section>
 

@@ -7,10 +7,8 @@ import type {
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
 import {
-  buildProducedStackBand,
-  buildWorldTreeTileBands,
+  buildSkeletonAscentBand,
   buildWorldTreeZoneBands,
-  buildZoneTileBands,
   computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
 } from "@/features/journey/utils/world-tree-layout.utils";
@@ -83,45 +81,9 @@ describe("buildWorldTreeZoneBands", () => {
   });
 });
 
-describe("buildWorldTreeTileBands", () => {
-  it("maps the bottom tile to the base of the stack", () => {
-    const bands = buildWorldTreeTileBands();
-    const rootsA = bands.get("roots_a");
-
-    expect(rootsA).toBeDefined();
-    expect(rootsA!.yMin).toBe(0);
-    expect(rootsA!.yMax).toBeGreaterThan(0);
-  });
-
-  it("maps the crown transition tile above the roots", () => {
-    const bands = buildWorldTreeTileBands();
-    const transition = bands.get("transition_ancient_to_canopy");
-    const rootsA = bands.get("roots_a");
-
-    expect(transition!.yMin).toBeGreaterThan(rootsA!.yMax);
-  });
-});
-
-describe("buildProducedStackBand", () => {
-  it("spans from roots base to highest produced tile", () => {
-    const stackBand = buildProducedStackBand();
-    const tileBands = buildWorldTreeTileBands();
-
-    expect(stackBand).not.toBeNull();
-    expect(stackBand!.yMin).toBe(0);
-    expect(stackBand!.yMax).toBe(
-      Math.max(...[...tileBands.values()].map((band) => band.yMax)),
-    );
-  });
-});
-
-describe("buildZoneTileBands", () => {
-  it("covers produced art zones on the stack", () => {
-    const zoneBands = buildZoneTileBands();
-
-    expect(zoneBands.n5_roots).toBeDefined();
-    expect(zoneBands.n4_foothills).toBeDefined();
-    expect(zoneBands.n3_trunk_1).toBeDefined();
+describe("buildSkeletonAscentBand", () => {
+  it("spans the full skeleton height", () => {
+    expect(buildSkeletonAscentBand()).toEqual({ yMin: 0, yMax: 100 });
   });
 });
 

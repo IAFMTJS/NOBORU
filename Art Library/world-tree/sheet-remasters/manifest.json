@@ -1,0 +1,2090 @@
+[
+  {
+    "id": "wt_01_trunk_segments_01_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:25:47.303Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_02_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:25:51.278Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_03_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:25:55.593Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_04_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:02.748Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_05_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:09.392Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_06_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:14.298Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_07_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:17.895Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_08_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:24.832Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_09_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:30.396Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_10_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:34.201Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_11_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:38.126Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_12_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:43.135Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_13_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:48.098Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_14_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:52.174Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_15_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:26:57.485Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_16_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:01.100Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_17_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:04.994Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_18_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:11.923Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_19_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:15.399Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_20_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:18.963Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_21_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:24.714Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_22_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:31.246Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_23_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_23_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_23_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_23_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:36.556Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_24_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_24_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_24_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_24_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:43.465Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_25_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_25_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_25_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_25_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:47.567Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_26_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_26_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_26_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_26_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:27:53.394Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_27_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_27_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_27_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_27_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:00.032Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_28_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_28_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_28_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_28_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:05.027Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_29_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_29_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_29_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_29_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:12.833Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_30_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_30_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_30_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_30_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:19.643Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_31_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_31_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_31_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_31_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:25.064Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_32_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_32_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_32_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_32_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:28.948Z"
+  },
+  {
+    "id": "wt_01_trunk_segments_33_light_v2",
+    "section": "01_trunk_segments",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/01_trunk_segments/wt_01_trunk_segments_33_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_33_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_33_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:28:32.329Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_01_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:23.757Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_02_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:31.644Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_03_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:36.134Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_04_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:43.721Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_05_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:49.551Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_06_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:35:55.410Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_07_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:36:00.371Z"
+  },
+  {
+    "id": "wt_02_branches_limbs_08_light_v2",
+    "section": "02_branches_limbs",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/02_branches_limbs/wt_02_branches_limbs_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:36:07.582Z"
+  },
+  {
+    "id": "wt_03_roots_bases_01_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:43:33.615Z"
+  },
+  {
+    "id": "wt_03_roots_bases_02_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:43:39.574Z"
+  },
+  {
+    "id": "wt_03_roots_bases_03_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:43:48.012Z"
+  },
+  {
+    "id": "wt_03_roots_bases_04_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:43:51.728Z"
+  },
+  {
+    "id": "wt_03_roots_bases_05_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:43:56.641Z"
+  },
+  {
+    "id": "wt_03_roots_bases_06_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:44:03.114Z"
+  },
+  {
+    "id": "wt_03_roots_bases_07_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:44:06.386Z"
+  },
+  {
+    "id": "wt_03_roots_bases_08_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:44:10.098Z"
+  },
+  {
+    "id": "wt_03_roots_bases_09_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:44:16.476Z"
+  },
+  {
+    "id": "wt_03_roots_bases_10_light_v2",
+    "section": "03_roots_bases",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/03_roots_bases/wt_03_roots_bases_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T00:44:22.755Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_01_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:41:33.470Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_02_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:41:39.326Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_03_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:41:45.415Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_04_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:41:51.295Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_05_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:41:57.609Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_06_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:03.255Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_07_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:09.174Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_08_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:15.404Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_09_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:21.150Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_10_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:26.936Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_11_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:32.805Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_12_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:38.550Z"
+  },
+  {
+    "id": "wt_04_platforms_ledges_13_light_v2",
+    "section": "04_platforms_ledges",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/04_platforms_ledges/wt_04_platforms_ledges_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/04_platforms_ledges/wt_04_platforms_ledges_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T10:42:44.598Z"
+  },
+  {
+    "id": "wt_05_floating_islands_01_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:09.984Z"
+  },
+  {
+    "id": "wt_05_floating_islands_02_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:16.006Z"
+  },
+  {
+    "id": "wt_05_floating_islands_03_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:21.833Z"
+  },
+  {
+    "id": "wt_05_floating_islands_04_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:27.579Z"
+  },
+  {
+    "id": "wt_05_floating_islands_05_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:33.270Z"
+  },
+  {
+    "id": "wt_05_floating_islands_06_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:39.042Z"
+  },
+  {
+    "id": "wt_05_floating_islands_07_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:45.054Z"
+  },
+  {
+    "id": "wt_05_floating_islands_08_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:50.941Z"
+  },
+  {
+    "id": "wt_05_floating_islands_09_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:05:56.875Z"
+  },
+  {
+    "id": "wt_05_floating_islands_10_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:02.671Z"
+  },
+  {
+    "id": "wt_05_floating_islands_11_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:08.662Z"
+  },
+  {
+    "id": "wt_05_floating_islands_12_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:14.402Z"
+  },
+  {
+    "id": "wt_05_floating_islands_13_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:20.281Z"
+  },
+  {
+    "id": "wt_05_floating_islands_14_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:26.393Z"
+  },
+  {
+    "id": "wt_05_floating_islands_15_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:32.267Z"
+  },
+  {
+    "id": "wt_05_floating_islands_16_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:38.127Z"
+  },
+  {
+    "id": "wt_05_floating_islands_17_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:43.952Z"
+  },
+  {
+    "id": "wt_05_floating_islands_18_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:49.905Z"
+  },
+  {
+    "id": "wt_05_floating_islands_19_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:06:55.850Z"
+  },
+  {
+    "id": "wt_05_floating_islands_20_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:07:01.653Z"
+  },
+  {
+    "id": "wt_05_floating_islands_21_light_v2",
+    "section": "05_floating_islands",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:07:07.529Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_01_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:00.221Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_02_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:05.919Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_03_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:11.466Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_04_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:17.084Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_05_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:22.760Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_06_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:28.620Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_07_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:34.451Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_08_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:40.267Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_09_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:46.116Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_10_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:52.158Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_11_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:28:58.072Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_12_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:04.102Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_13_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:09.988Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_14_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:15.817Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_15_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:21.517Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_16_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:27.346Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_17_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:33.045Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_18_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:38.888Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_19_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:45.396Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_20_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:51.956Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_21_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:29:58.719Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_22_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:30:05.615Z"
+  },
+  {
+    "id": "wt_07_shrines_sacred_23_light_v2",
+    "section": "07_shrines_sacred",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_23_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_23_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_23_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:30:12.799Z"
+  },
+  {
+    "id": "wt_08_camps_learning_01_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:52:41.665Z"
+  },
+  {
+    "id": "wt_08_camps_learning_02_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:52:47.511Z"
+  },
+  {
+    "id": "wt_08_camps_learning_03_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:52:53.330Z"
+  },
+  {
+    "id": "wt_08_camps_learning_04_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:52:59.242Z"
+  },
+  {
+    "id": "wt_08_camps_learning_05_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:05.224Z"
+  },
+  {
+    "id": "wt_08_camps_learning_06_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:11.084Z"
+  },
+  {
+    "id": "wt_08_camps_learning_07_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:16.849Z"
+  },
+  {
+    "id": "wt_08_camps_learning_08_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:22.703Z"
+  },
+  {
+    "id": "wt_08_camps_learning_09_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:28.481Z"
+  },
+  {
+    "id": "wt_08_camps_learning_10_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:34.174Z"
+  },
+  {
+    "id": "wt_08_camps_learning_11_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:39.752Z"
+  },
+  {
+    "id": "wt_08_camps_learning_12_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:45.386Z"
+  },
+  {
+    "id": "wt_08_camps_learning_13_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:51.053Z"
+  },
+  {
+    "id": "wt_08_camps_learning_14_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:53:57.014Z"
+  },
+  {
+    "id": "wt_08_camps_learning_15_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:02.641Z"
+  },
+  {
+    "id": "wt_08_camps_learning_16_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:08.370Z"
+  },
+  {
+    "id": "wt_08_camps_learning_17_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:14.028Z"
+  },
+  {
+    "id": "wt_08_camps_learning_18_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:19.715Z"
+  },
+  {
+    "id": "wt_08_camps_learning_19_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:25.582Z"
+  },
+  {
+    "id": "wt_08_camps_learning_20_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:31.258Z"
+  },
+  {
+    "id": "wt_08_camps_learning_21_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:37.993Z"
+  },
+  {
+    "id": "wt_08_camps_learning_22_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:43.663Z"
+  },
+  {
+    "id": "wt_08_camps_learning_23_light_v2",
+    "section": "08_camps_learning",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/08_camps_learning/wt_08_camps_learning_23_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_23_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_23_light_v2.webp",
+    "remasteredAt": "2026-06-18T11:54:49.486Z"
+  },
+  {
+    "id": "wt_09_bridges_connections_01_light_v2",
+    "section": "09_bridges_connections",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:04:21.513Z"
+  },
+  {
+    "id": "wt_10_decorations_props_01_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:20:37.045Z"
+  },
+  {
+    "id": "wt_10_decorations_props_02_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:20:43.538Z"
+  },
+  {
+    "id": "wt_10_decorations_props_03_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:20:49.708Z"
+  },
+  {
+    "id": "wt_10_decorations_props_04_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:20:55.909Z"
+  },
+  {
+    "id": "wt_10_decorations_props_05_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:02.215Z"
+  },
+  {
+    "id": "wt_10_decorations_props_06_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:08.030Z"
+  },
+  {
+    "id": "wt_10_decorations_props_07_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:13.975Z"
+  },
+  {
+    "id": "wt_10_decorations_props_08_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:19.677Z"
+  },
+  {
+    "id": "wt_10_decorations_props_09_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:25.643Z"
+  },
+  {
+    "id": "wt_10_decorations_props_10_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:31.677Z"
+  },
+  {
+    "id": "wt_10_decorations_props_11_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:37.423Z"
+  },
+  {
+    "id": "wt_10_decorations_props_12_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:43.329Z"
+  },
+  {
+    "id": "wt_10_decorations_props_13_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:48.934Z"
+  },
+  {
+    "id": "wt_10_decorations_props_14_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:21:55.419Z"
+  },
+  {
+    "id": "wt_10_decorations_props_15_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:02.738Z"
+  },
+  {
+    "id": "wt_10_decorations_props_16_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:08.526Z"
+  },
+  {
+    "id": "wt_10_decorations_props_17_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:14.328Z"
+  },
+  {
+    "id": "wt_10_decorations_props_18_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:20.002Z"
+  },
+  {
+    "id": "wt_10_decorations_props_19_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:26.101Z"
+  },
+  {
+    "id": "wt_10_decorations_props_20_light_v2",
+    "section": "10_decorations_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/10_decorations_props/wt_10_decorations_props_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/10_decorations_props/wt_10_decorations_props_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:22:32.589Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_01_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:42:53.428Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_02_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:42:57.673Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_03_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:01.208Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_04_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:04.366Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_05_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:08.847Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_06_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:14.746Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_07_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:20.670Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_08_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:26.574Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_09_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:32.417Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_10_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:38.070Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_11_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:43.807Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_12_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:50.107Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_13_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:43:56.226Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_14_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:02.382Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_15_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:08.491Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_16_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:14.405Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_17_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:20.350Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_18_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:26.393Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_19_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:32.416Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_20_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:38.391Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_21_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:44.367Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_22_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:50.059Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_23_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_23_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_23_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_23_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:44:56.369Z"
+  },
+  {
+    "id": "wt_11_nature_vegetation_24_light_v2",
+    "section": "11_nature_vegetation",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/11_nature_vegetation/wt_11_nature_vegetation_24_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_24_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_24_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:45:02.216Z"
+  },
+  {
+    "id": "wt_12_special_elements_01_light_v2",
+    "section": "12_special_elements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T12:51:22.054Z"
+  },
+  {
+    "id": "wt_13_background_composition_01_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:12:42.787Z"
+  },
+  {
+    "id": "wt_13_background_composition_02_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:12:52.227Z"
+  },
+  {
+    "id": "wt_13_background_composition_03_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:12:58.710Z"
+  },
+  {
+    "id": "wt_13_background_composition_04_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:04.528Z"
+  },
+  {
+    "id": "wt_13_background_composition_05_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:10.617Z"
+  },
+  {
+    "id": "wt_13_background_composition_06_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:16.415Z"
+  },
+  {
+    "id": "wt_13_background_composition_07_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:22.208Z"
+  },
+  {
+    "id": "wt_13_background_composition_08_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:28.501Z"
+  },
+  {
+    "id": "wt_13_background_composition_09_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:34.149Z"
+  },
+  {
+    "id": "wt_13_background_composition_10_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:39.852Z"
+  },
+  {
+    "id": "wt_13_background_composition_11_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:46.421Z"
+  },
+  {
+    "id": "wt_13_background_composition_12_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:52.170Z"
+  },
+  {
+    "id": "wt_13_background_composition_13_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:13:58.670Z"
+  },
+  {
+    "id": "wt_13_background_composition_14_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:04.510Z"
+  },
+  {
+    "id": "wt_13_background_composition_15_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:10.577Z"
+  },
+  {
+    "id": "wt_13_background_composition_16_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:16.229Z"
+  },
+  {
+    "id": "wt_13_background_composition_17_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:22.161Z"
+  },
+  {
+    "id": "wt_13_background_composition_18_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:28.062Z"
+  },
+  {
+    "id": "wt_13_background_composition_19_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:33.939Z"
+  },
+  {
+    "id": "wt_13_background_composition_20_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:39.303Z"
+  },
+  {
+    "id": "wt_13_background_composition_21_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:44.909Z"
+  },
+  {
+    "id": "wt_13_background_composition_22_light_v2",
+    "section": "13_background_composition",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/13_background_composition/wt_13_background_composition_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/13_background_composition/wt_13_background_composition_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T13:14:50.499Z"
+  },
+  {
+    "id": "wt_14_underground_root_passages_01_dark_v2",
+    "section": "14_underground_root_passages",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/14_underground_root_passages/wt_14_underground_root_passages_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:22:33.410Z"
+  },
+  {
+    "id": "wt_14_underground_root_passages_02_dark_v2",
+    "section": "14_underground_root_passages",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/14_underground_root_passages/wt_14_underground_root_passages_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:22:39.786Z"
+  },
+  {
+    "id": "wt_14_underground_root_passages_03_dark_v2",
+    "section": "14_underground_root_passages",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/14_underground_root_passages/wt_14_underground_root_passages_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/14_underground_root_passages/wt_14_underground_root_passages_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:22:45.507Z"
+  },
+  {
+    "id": "wt_15_root_chambers_caverns_01_dark_v2",
+    "section": "15_root_chambers_caverns",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/15_root_chambers_caverns/wt_15_root_chambers_caverns_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:32:15.496Z"
+  },
+  {
+    "id": "wt_15_root_chambers_caverns_02_dark_v2",
+    "section": "15_root_chambers_caverns",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/15_root_chambers_caverns/wt_15_root_chambers_caverns_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:32:22.121Z"
+  },
+  {
+    "id": "wt_15_root_chambers_caverns_03_dark_v2",
+    "section": "15_root_chambers_caverns",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/15_root_chambers_caverns/wt_15_root_chambers_caverns_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:32:28.185Z"
+  },
+  {
+    "id": "wt_15_root_chambers_caverns_04_dark_v2",
+    "section": "15_root_chambers_caverns",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/15_root_chambers_caverns/wt_15_root_chambers_caverns_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:32:33.911Z"
+  },
+  {
+    "id": "wt_15_root_chambers_caverns_05_dark_v2",
+    "section": "15_root_chambers_caverns",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/15_root_chambers_caverns/wt_15_root_chambers_caverns_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:32:39.953Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_01_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:47:35.277Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_02_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:47:43.807Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_03_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:47:51.779Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_04_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:00.052Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_05_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:06.727Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_06_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_06_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_06_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_06_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:12.689Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_07_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_07_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_07_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_07_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:18.544Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_08_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_08_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_08_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_08_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:24.443Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_09_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_09_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_09_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_09_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:30.879Z"
+  },
+  {
+    "id": "wt_16_underground_platforms_10_dark_v2",
+    "section": "16_underground_platforms",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/16_underground_platforms/wt_16_underground_platforms_10_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_10_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/16_underground_platforms/wt_16_underground_platforms_10_dark_v2.webp",
+    "remasteredAt": "2026-06-18T13:48:37.312Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_01_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:03:35.251Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_02_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:03:42.617Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_03_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:03:49.062Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_04_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:03:55.899Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_05_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:01.870Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_06_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_06_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_06_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_06_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:08.045Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_07_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_07_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_07_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_07_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:14.174Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_08_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_08_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_08_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_08_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:20.294Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_09_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_09_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_09_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_09_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:26.640Z"
+  },
+  {
+    "id": "wt_17_underground_settlements_10_dark_v2",
+    "section": "17_underground_settlements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/17_underground_settlements/wt_17_underground_settlements_10_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_10_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/17_underground_settlements/wt_17_underground_settlements_10_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:04:33.080Z"
+  },
+  {
+    "id": "wt_18_underground_props_01_dark_v2",
+    "section": "18_underground_props",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/18_underground_props/wt_18_underground_props_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/18_underground_props/wt_18_underground_props_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/18_underground_props/wt_18_underground_props_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T14:13:33.812Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_01_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:38:28.451Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_02_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:38:34.861Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_03_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:38:41.293Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_04_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:38:47.694Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_05_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:38:54.050Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_06_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_06_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_06_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_06_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:00.160Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_07_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_07_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_07_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_07_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:07.167Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_08_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_08_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_08_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_08_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:13.597Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_09_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_09_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_09_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_09_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:19.984Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_10_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_10_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_10_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_10_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:26.324Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_11_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_11_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_11_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_11_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:32.451Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_12_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_12_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_12_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_12_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:38.781Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_13_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_13_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_13_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_13_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:44.874Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_14_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_14_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_14_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_14_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:51.259Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_15_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_15_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_15_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_15_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:39:57.503Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_16_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_16_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_16_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_16_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:04.568Z"
+  },
+  {
+    "id": "wt_19_underground_fungi_17_dark_v2",
+    "section": "19_underground_fungi",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/19_underground_fungi/wt_19_underground_fungi_17_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_17_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_17_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:10.428Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_01_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:16.437Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_02_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:22.913Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_03_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:29.152Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_04_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:35.131Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_05_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:41.447Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_06_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_06_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_06_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_06_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:47.779Z"
+  },
+  {
+    "id": "wt_20_underground_crystals_07_dark_v2",
+    "section": "20_underground_crystals",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/20_underground_crystals/wt_20_underground_crystals_07_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_07_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_07_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:40:54.227Z"
+  },
+  {
+    "id": "wt_21_underground_special_01_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_01_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_01_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_01_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:02.467Z"
+  },
+  {
+    "id": "wt_21_underground_special_02_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_02_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_02_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_02_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:08.655Z"
+  },
+  {
+    "id": "wt_21_underground_special_03_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_03_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_03_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_03_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:17.572Z"
+  },
+  {
+    "id": "wt_21_underground_special_04_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_04_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_04_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_04_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:24.458Z"
+  },
+  {
+    "id": "wt_21_underground_special_05_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_05_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_05_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_05_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:30.895Z"
+  },
+  {
+    "id": "wt_21_underground_special_06_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_06_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_06_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_06_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:37.102Z"
+  },
+  {
+    "id": "wt_21_underground_special_07_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_07_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_07_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_07_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:43.486Z"
+  },
+  {
+    "id": "wt_21_underground_special_08_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_08_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_08_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_08_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:50.148Z"
+  },
+  {
+    "id": "wt_21_underground_special_09_dark_v2",
+    "section": "21_underground_special",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/21_underground_special/wt_21_underground_special_09_dark_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_09_dark_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/21_underground_special/wt_21_underground_special_09_dark_v2.webp",
+    "remasteredAt": "2026-06-18T17:41:56.252Z"
+  }
+]

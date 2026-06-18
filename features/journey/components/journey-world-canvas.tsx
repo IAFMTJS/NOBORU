@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 
+import { JourneyWorldTreeArtLayer } from "@/features/journey/components/journey-world-tree-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
+import { WORLD_TREE_SKELETON_MIN_HEIGHT_VH } from "@/features/journey/constants/world-tree-skeleton.constants";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
-import { WorldTreeStack } from "@/components/visual/world/world-tree-stack";
-import { JOURNEY_WORLD_TREE_TILE_STACK } from "@/lib/assets/art-library-paths";
 import { cn } from "@/lib/utils";
 
 type JourneyWorldCanvasProps = {
@@ -16,7 +16,7 @@ type JourneyWorldCanvasProps = {
   focusYPercent?: number | null;
 };
 
-/** World Tree journey canvas — vertically stacked modular art tiles with seam overlap. */
+/** World Tree journey canvas — sheet-remaster puzzle pieces on the skeleton. */
 export function JourneyWorldCanvas({
   journey,
   regionName,
@@ -49,8 +49,11 @@ export function JourneyWorldCanvas({
       aria-label="World tree journey"
     >
       <div className="relative mx-auto w-full min-w-full max-w-phone">
-        <div className="relative w-full">
-          <WorldTreeStack tiles={JOURNEY_WORLD_TREE_TILE_STACK} />
+        <div
+          className="relative w-full"
+          style={{ minHeight: `${WORLD_TREE_SKELETON_MIN_HEIGHT_VH}vh` }}
+        >
+          <JourneyWorldTreeArtLayer className="min-h-full" />
           <JourneyWorldNodeLayer journey={journey} regionName={regionName} />
         </div>
       </div>

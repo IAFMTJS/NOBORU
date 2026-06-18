@@ -10,7 +10,8 @@ import {
   PrototypeGlassPanel,
   prototypeGlass,
 } from "@/features/prototype/components/prototype-glass-panel";
-import { PrototypeWorldTreeStack } from "@/features/prototype/components/prototype-world-tree-stack";
+import { JourneyWorldTreeArtLayer } from "@/features/journey/components/journey-world-tree-art-layer";
+import { WORLD_TREE_SKELETON_MIN_HEIGHT_VH } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   MOCK_JOURNEY_NODES,
   MOCK_PLAYER,
@@ -131,8 +132,11 @@ export function PrototypeJourneyTab() {
         ref={scrollRef}
         className="absolute inset-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
       >
-        <div className="relative mx-auto w-full min-w-full max-w-phone">
-          <PrototypeWorldTreeStack />
+        <div
+          className="relative mx-auto w-full min-w-full max-w-phone"
+          style={{ minHeight: `${WORLD_TREE_SKELETON_MIN_HEIGHT_VH}vh` }}
+        >
+          <JourneyWorldTreeArtLayer className="min-h-full" />
 
           <div className="pointer-events-none absolute inset-0">
             <div className="pointer-events-auto relative h-full w-full min-h-full">
