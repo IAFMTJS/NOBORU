@@ -32,7 +32,20 @@ describe("buildWorldTreeZonePieceLayout", () => {
     const layout = buildWorldTreeZonePieceLayout("n4_foothills", "light");
     expect(layout.some((piece) => piece.role === "trunk")).toBe(true);
     expect(layout.some((piece) => piece.role === "overlay")).toBe(true);
-    expect(layout.every((piece) => piece.src.includes("world-tree/sheet-remasters"))).toBe(true);
+    expect(
+      layout.every(
+        (piece) =>
+          piece.src.startsWith("/art-library/world-tree/sheet-remasters") &&
+          piece.src.endsWith(".webp"),
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps surface trunk URLs on light assets even when app theme is dark", () => {
+    const layout = buildWorldTreeZonePieceLayout("n4_foothills", "dark");
+    const trunk = layout.filter((piece) => piece.role === "trunk");
+    expect(trunk.length).toBeGreaterThan(0);
+    expect(trunk.every((piece) => piece.src.includes("_light_"))).toBe(true);
   });
 
   it("uses underground assets in the deep root zone", () => {

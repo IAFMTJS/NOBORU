@@ -8,7 +8,7 @@ import type { ArtLibraryTheme } from "@/lib/assets/art-library-paths";
 import {
   listWorldTreeSheetPieces,
   sliceWorldTreeSheetPieces,
-  worldTreeSheetRemasterRelativePath,
+  worldTreeSheetRemasterUrl,
   type WorldTreeSheetRemaster,
 } from "@/lib/assets/world-tree-sheet";
 
@@ -95,7 +95,7 @@ function placeStackedPieces(
 ): WorldTreePlacedPiece[] {
   return pieces.map((piece, index) => ({
     id: piece.id,
-    src: worldTreeSheetRemasterRelativePath(piece),
+    src: worldTreeSheetRemasterUrl(piece),
     role,
     leftPercent: 50,
     topPercent: stackTopPercent(index, pieces.length, role),
@@ -112,7 +112,7 @@ function placeOverlayPieces(
     const position = overlayPosition(piece.id, index);
     return {
       id: piece.id,
-      src: worldTreeSheetRemasterRelativePath(piece),
+      src: worldTreeSheetRemasterUrl(piece),
       role,
       leftPercent: position.leftPercent,
       topPercent: position.topPercent,
