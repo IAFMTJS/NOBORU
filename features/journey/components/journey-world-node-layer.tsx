@@ -106,8 +106,8 @@ export function JourneyWorldNodeLayer({
               <div
                 key={node.id}
                 className={cn(
-                  "absolute -translate-x-1/2 -translate-y-1/2",
-                  isCurrent && "z-20",
+                  "absolute z-30 -translate-x-1/2 -translate-y-1/2",
+                  isCurrent && "z-40",
                 )}
                 style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
               >

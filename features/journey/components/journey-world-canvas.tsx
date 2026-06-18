@@ -4,7 +4,10 @@ import { useEffect, useRef } from "react";
 
 import { JourneyWorldTreeArtLayer } from "@/features/journey/components/journey-world-tree-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
-import { WORLD_TREE_SKELETON_MIN_HEIGHT_VH } from "@/features/journey/constants/world-tree-skeleton.constants";
+import {
+  countJourneyNodes,
+  resolveWorldTreeCanvasMinHeightVh,
+} from "@/features/journey/utils/world-tree-layout.utils";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +27,7 @@ export function JourneyWorldCanvas({
   focusYPercent = null,
 }: JourneyWorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(countJourneyNodes(journey));
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -51,10 +55,10 @@ export function JourneyWorldCanvas({
       <div className="relative mx-auto w-full min-w-full max-w-phone">
         <div
           className="relative w-full"
-          style={{ minHeight: `${WORLD_TREE_SKELETON_MIN_HEIGHT_VH}vh` }}
+          style={{ minHeight: `${canvasMinHeightVh}vh` }}
         >
           <JourneyWorldTreeArtLayer className="min-h-full" />
-          <JourneyWorldNodeLayer journey={journey} regionName={regionName} />
+          <JourneyWorldNodeLayer journey={journey} regionName={regionName} className="z-10" />
         </div>
       </div>
     </div>

@@ -11,7 +11,9 @@ import {
   buildWorldTreeZoneBands,
   computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
+  resolveWorldTreeCanvasMinHeightVh,
 } from "@/features/journey/utils/world-tree-layout.utils";
+import { WORLD_TREE_NODE_MIN_Y_GAP } from "@/features/journey/constants/world-tree-full-ascent.constants";
 
 function makeNode(overrides: Partial<JourneyNode> = {}): JourneyNode {
   return {
@@ -142,5 +144,30 @@ describe("plotJourneyNodesOnSkeleton", () => {
     const foothills = plotted.find((entry) => entry.node.id === "foothills");
 
     expect(n5!.yPercent).toBeGreaterThan(foothills!.yPercent);
+  });
+
+  it("enforces minimum vertical spacing between consecutive nodes", () => {
+    const journey = makeJourney([
+      makeRegion({
+        nodes: Array.from({ length: 8 }, (_, index) =>
+          makeNode({ id: `node-${index}`, globalIndex: index }),
+        ),
+      }),
+    ]);
+
+    const plotted = plotJourneyNodesOnSkeleton(journey);
+
+    for (let index = 1; index < plotted.length; index += 1) {
+      const gap = plotted[index - 1]!.yPercent - plotted[index]!.yPercent;
+      expect(gap).toBeGreaterThanOrEqual(WORLD_TREE_NODE_MIN_Y_GAP - 0.01);
+    }
+  });
+});
+
+describe("resolveWorldTreeCanvasMinHeightVh", () => {
+  it("grows the canvas when many nodes need more vertical spacing", () => {
+    expect(resolveWorldTreeCanvasMinHeightVh(1)).toBeLessThan(
+      resolveWorldTreeCanvasMinHeightVh(40),
+    );
   });
 });

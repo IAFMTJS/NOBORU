@@ -1,4 +1,13 @@
 import {
+  WORLD_TREE_NODE_MIN_Y_GAP,
+  buildWorldTreeRealmBands,
+  resolveRealmForZone,
+} from "@/features/journey/constants/world-tree-full-ascent.constants";
+import {
+  DEFAULT_WORLD_TREE_ZONE,
+  REGION_SLUG_TO_WORLD_TREE_ZONE,
+  WORLD_TREE_SKELETON_VH_PER_PERCENT,
+  WORLD_TREE_SKELETON_MIN_HEIGHT_VH,
   WORLD_TREE_SKELETON_ZONES,
   type WorldTreeZoneId,
 } from "@/features/journey/constants/world-tree-skeleton.constants";
@@ -6,6 +15,7 @@ import type {
   JourneyNode,
   JourneyPathViewModel,
 } from "@/features/journey/types/journey.types";
+import type { RegionSlug } from "@/lib/design-system/regions";
 
 export type WorldTreeBand = {
   yMin: number;
@@ -39,14 +49,56 @@ export function buildSkeletonAscentBand(): WorldTreeBand {
   return { yMin: 0, yMax: 100 };
 }
 
-/** Gentle winding x-offset — lesson icons follow a path, no visible trail line. */
+function resolveWorldTreeZone(regionSlug: string): WorldTreeZoneId {
+  return (
+    REGION_SLUG_TO_WORLD_TREE_ZONE[regionSlug as RegionSlug] ?? DEFAULT_WORLD_TREE_ZONE
+  );
+}
+
+/** Gentle winding x-offset — lesson icons follow a path beside the trunk corridor. */
 export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: number): number {
-  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 9;
-  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 3.5;
+  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 11;
+  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 5;
   return 50 + wave + stagger;
 }
 
-/** Plot all journey nodes bottom-up on the skeleton — roots first, crown last. */
+function realmAnchorY(
+  zoneId: WorldTreeZoneId,
+  realmBands: ReturnType<typeof buildWorldTreeRealmBands>,
+): number {
+  const realmId = resolveRealmForZone(zoneId);
+  const band = realmBands[realmId];
+  return (band.yMin + band.yMax) / 2;
+}
+
+/** Minimum canvas height (vh) so nodes can maintain vertical spacing. */
+export function resolveWorldTreeCanvasMinHeightVh(nodeCount: number): number {
+  if (nodeCount <= 1) return WORLD_TREE_SKELETON_MIN_HEIGHT_VH;
+
+  const requiredSpanPercent = (nodeCount - 1) * WORLD_TREE_NODE_MIN_Y_GAP + 12;
+  const scale = Math.max(1, requiredSpanPercent / 100);
+  return Math.ceil(WORLD_TREE_SKELETON_MIN_HEIGHT_VH * scale);
+}
+
+function enforceMinimumNodeSpacing(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
+  if (plotted.length <= 1) return plotted;
+
+  const adjusted = plotted.map((entry) => ({ ...entry }));
+
+  for (let index = 1; index < adjusted.length; index += 1) {
+    const previous = adjusted[index - 1]!;
+    const current = adjusted[index]!;
+    const gap = previous.yPercent - current.yPercent;
+
+    if (gap < WORLD_TREE_NODE_MIN_Y_GAP) {
+      current.yPercent = previous.yPercent - WORLD_TREE_NODE_MIN_Y_GAP;
+    }
+  }
+
+  return adjusted;
+}
+
+/** Plot journey nodes on the skeleton with zone-aware placement and minimum spacing. */
 export function plotJourneyNodesOnSkeleton(
   journey: JourneyPathViewModel,
 ): PlottedSkeletonNode[] {
@@ -61,20 +113,29 @@ export function plotJourneyNodesOnSkeleton(
 
   if (entries.length === 0) return [];
 
+  const zoneBands = buildWorldTreeZoneBands();
+  const realmBands = buildWorldTreeRealmBands();
   const stackBand = buildSkeletonAscentBand();
   const ySpan = stackBand.yMax - stackBand.yMin;
   const lastIndex = entries.length - 1;
 
-  return entries.map(({ node, regionSlug }, index) => {
-    const progress = lastIndex > 0 ? index / lastIndex : 0;
+  const plotted = entries.map(({ node, regionSlug }, index) => {
+    const globalProgress = lastIndex > 0 ? index / lastIndex : 0;
+    const zoneId = resolveWorldTreeZone(regionSlug);
+    const realmY = realmAnchorY(zoneId, realmBands);
+    const zoneY = (zoneBands[zoneId].yMin + zoneBands[zoneId].yMax) / 2;
+    const globalY = stackBand.yMax - globalProgress * ySpan;
+    const yPercent = globalY * 0.45 + realmY * 0.35 + zoneY * 0.2;
 
     return {
       node,
       regionSlug,
-      xPercent: computeWorldTreePathXPercent(progress, index),
-      yPercent: stackBand.yMax - progress * ySpan,
+      xPercent: computeWorldTreePathXPercent(globalProgress, index),
+      yPercent,
     };
   });
+
+  return enforceMinimumNodeSpacing(plotted);
 }
 
 export function findPlottedNode(
@@ -84,3 +145,10 @@ export function findPlottedNode(
   if (!nodeId) return null;
   return plotted.find((entry) => entry.node.id === nodeId) ?? null;
 }
+
+export function countJourneyNodes(journey: JourneyPathViewModel): number {
+  return journey.regions.reduce((sum, region) => sum + region.nodes.length, 0);
+}
+
+/** @internal test helper */
+export { WORLD_TREE_SKELETON_VH_PER_PERCENT };
