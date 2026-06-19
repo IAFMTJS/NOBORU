@@ -34,6 +34,7 @@ type FlatLesson = {
   title: string;
   xpReward: number;
   progress: ProgressStatus;
+  contentStatus: "published" | "draft";
 };
 
 type FlatLessonWithRegion = FlatLesson & {
@@ -54,7 +55,16 @@ function resolveNodeSubtitle(lessonType: string, xpReward: number): string | nul
 }
 
 function flattenRegionLessons(region: RegionJourneyInput): FlatLesson[] {
-  return region.units.flatMap((unit) => unit.lessons);
+  return region.units.flatMap((unit) =>
+    unit.lessons.map((lesson) => ({
+      id: lesson.id,
+      type: lesson.type,
+      title: lesson.title,
+      xpReward: lesson.xpReward,
+      progress: lesson.progress,
+      contentStatus: lesson.contentStatus ?? "published",
+    })),
+  );
 }
 
 function buildProgressMap(
@@ -202,6 +212,10 @@ function resolveLessonNodeState(
   regionLocked: boolean,
   gateOpen: boolean,
 ): { state: JourneyNodeState; gateOpen: boolean } {
+  if (lesson.contentStatus === "draft") {
+    return { state: "locked", gateOpen };
+  }
+
   if (regionLocked) {
     return { state: "locked", gateOpen: false };
   }
@@ -346,7 +360,9 @@ export function buildRegionJourney(
     }
 
     const href =
-      state === "locked" || regionLocked
+      draft.lesson.contentStatus === "draft" ||
+      state === "locked" ||
+      regionLocked
         ? null
         : `/learn/lesson/${draft.lesson.id}`;
 
@@ -363,6 +379,8 @@ export function buildRegionJourney(
       globalIndex: globalStartIndex + regionIndex,
       href,
       xpReward: draft.lesson.xpReward,
+      contentStatus: draft.lesson.contentStatus,
+      isDraft: draft.lesson.contentStatus === "draft",
     };
   });
 
@@ -632,17 +650,11 @@ class JourneyService {
   }
 
   async getJourneyPath(userId: string): Promise<JourneyPathViewModel> {
-    const [regions, progressRows, passedTrialSlugs] = await Promise.all([
-      learningPathRepository.listPublishedRegionsWithCurriculum(),
+    const [path, progressRows, passedTrialSlugs] = await Promise.all([
+      learningPathService.getJourneyLearningPath(userId),
       getCachedProgressRows(userId),
       learningPathService.getPassedTrialSlugs(userId),
     ]);
-
-    const path = learningPathService.buildLearningPath(
-      regions,
-      progressRows,
-      passedTrialSlugs,
-    );
 
     const landmarks = await journeyLandmarkRepository.listPublishedByRegionIds(
       path.regions.map((region) => region.id),

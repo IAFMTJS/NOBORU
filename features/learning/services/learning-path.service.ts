@@ -5,6 +5,7 @@ import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 import { trialTemplateRepository } from "@/features/trials/repositories/trial-template.repository";
 import { userTrialRepository } from "@/features/trials/repositories/user-trial.repository";
+import type { ContentStatus } from "@/lib/content/types";
 import type {
   LearningPathViewModel,
   LessonSummaryViewModel,
@@ -35,6 +36,7 @@ function mapLessonSummary(
     description: string | null;
     xp_reward: number;
     estimated_duration: number | null;
+    status: ContentStatus;
   },
   progressStatus: ProgressStatus,
   score: number,
@@ -49,13 +51,20 @@ function mapLessonSummary(
     estimatedDuration: lesson.estimated_duration,
     progress: progressStatus,
     score,
+    contentStatus: lesson.status,
   };
 }
+
+type BuildLearningPathOptions = {
+  /** When true, draft lessons appear on the tree but do not count toward progress or next lesson. */
+  includeDraftLessons?: boolean;
+};
 
 export function buildLearningPathFromData(
   regions: RegionWithUnits[],
   progressRows: UserProgressRow[],
   passedTrialSlugs: ReadonlySet<string> = new Set(),
+  options: BuildLearningPathOptions = {},
 ): LearningPathViewModel {
   const progressByLesson = new Map(
     progressRows.map((row) => [row.lesson_id, row]),
@@ -72,12 +81,23 @@ export function buildLearningPathFromData(
     const units: UnitSummaryViewModel[] = region.units.map((unit) => {
       let unitCompletedCount = 0;
 
-      const lessons = unit.lessons.map((lesson) => {
+      const lessons = unit.lessons
+        .filter(
+          (lesson) =>
+            options.includeDraftLessons || lesson.status === "published",
+        )
+        .map((lesson) => {
         const progress = progressByLesson.get(lesson.id);
         const status: ProgressStatus = progress?.status ?? "not_started";
-        if (status === "completed") unitCompletedCount += 1;
-        regionLessonCount += 1;
-        if (status === "completed") regionCompletedCount += 1;
+        const isPublished = lesson.status === "published";
+
+        if (isPublished) {
+          regionLessonCount += 1;
+          if (status === "completed") {
+            unitCompletedCount += 1;
+            regionCompletedCount += 1;
+          }
+        }
 
         const summary = mapLessonSummary(
           lesson,
@@ -85,7 +105,12 @@ export function buildLearningPathFromData(
           progress?.score ?? 0,
         );
 
-        if (!nextLesson && access.availability === "available" && status !== "completed") {
+        if (
+          !nextLesson &&
+          isPublished &&
+          access.availability === "available" &&
+          status !== "completed"
+        ) {
           nextLesson = summary;
           nextLessonHref = `/learn/lesson/${lesson.id}`;
         }
@@ -164,8 +189,21 @@ class LearningPathService {
     regions: RegionWithUnits[],
     progressRows: UserProgressRow[],
     passedTrialSlugs: ReadonlySet<string> = new Set(),
+    options: BuildLearningPathOptions = {},
   ): LearningPathViewModel {
-    return buildLearningPathFromData(regions, progressRows, passedTrialSlugs);
+    return buildLearningPathFromData(regions, progressRows, passedTrialSlugs, options);
+  }
+
+  async getJourneyLearningPath(userId: string): Promise<LearningPathViewModel> {
+    const [regions, progressRows, passedTrialSlugs] = await Promise.all([
+      learningPathRepository.listJourneyRegionsWithCurriculum(),
+      getCachedProgressRows(userId),
+      this.getPassedTrialSlugs(userId),
+    ]);
+
+    return buildLearningPathFromData(regions, progressRows, passedTrialSlugs, {
+      includeDraftLessons: true,
+    });
   }
 }
 

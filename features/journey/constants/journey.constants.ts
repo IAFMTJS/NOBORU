@@ -1,5 +1,8 @@
 import type { RegionSlug } from "@/lib/design-system/regions";
 
+/** When true, Journey renders skeleton scaffold instead of sheet-remaster art. */
+export const JOURNEY_SKELETON_MODE = true;
+
 /** Insert a landmark destination every N lesson nodes along a regional path. */
 export const LANDMARK_EVERY_N_LESSONS = 5;
 

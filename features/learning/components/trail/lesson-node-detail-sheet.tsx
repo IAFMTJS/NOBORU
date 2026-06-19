@@ -41,6 +41,8 @@ type LessonNodeDetailSheetProps = {
   regionName: string;
   unlockRequirements?: UnlockRequirement[];
   nextLessonLabel?: string | null;
+  /** Draft CMS lesson — show coming soon instead of lock/progression messaging. */
+  isComingSoon?: boolean;
 };
 
 function LessonPreviewRow({ labels }: { labels: string[] }) {
@@ -98,11 +100,12 @@ export function LessonNodeDetailSheet({
   regionName,
   unlockRequirements = [],
   nextLessonLabel = null,
+  isComingSoon = false,
 }: LessonNodeDetailSheetProps) {
   const [previewLabels, setPreviewLabels] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!open || !lesson?.id) {
+    if (!open || !lesson?.id || lesson.contentStatus === "draft") {
       setPreviewLabels([]);
       return;
     }
@@ -128,6 +131,7 @@ export function LessonNodeDetailSheet({
   if (!node) return null;
 
   const locked = node.state === "locked" || !node.href;
+  const showComingSoon = isComingSoon || lesson?.contentStatus === "draft";
   const lessonLabel =
     lessonNumber && lessonCount > 0
       ? `Lesson ${lessonNumber} of ${lessonCount}`
@@ -210,7 +214,9 @@ export function LessonNodeDetailSheet({
                       <UiIconImage name="lock" size={24} className="opacity-80" />
                     </div>
                     <p className="text-body-sm text-muted-foreground">
-                      This lesson is locked. Complete the lessons below to continue your climb.
+                      {showComingSoon
+                        ? "This lesson is planned for a future update. Keep climbing the main path — new content will appear here when it is ready."
+                        : "This lesson is locked. Complete the lessons below to continue your climb."}
                     </p>
                   </GlassPanel>
                   <UnlockChecklist items={unlockRequirements} />
@@ -236,7 +242,7 @@ export function LessonNodeDetailSheet({
 
               {locked ? (
                 <PrimaryClimbButton variant="outline" className="w-full" disabled>
-                  Locked — keep climbing
+                  {showComingSoon ? "Coming soon" : "Locked — keep climbing"}
                 </PrimaryClimbButton>
               ) : (
                 <div className="space-y-2">

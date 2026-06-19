@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
-import { JourneyWorldTreeArtLayer } from "@/features/journey/components/journey-world-tree-art-layer";
+import { JOURNEY_SKELETON_MODE } from "@/features/journey/constants/journey.constants";
+import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
 import {
-  countJourneyNodes,
-  resolveWorldTreeCanvasMinHeightVh,
+  buildWorldTreeLayout,
+  findPlottedNode,
 } from "@/features/journey/utils/world-tree-layout.utils";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
@@ -17,17 +18,24 @@ type JourneyWorldCanvasProps = {
   className?: string;
   /** Scroll focus along canvas height (0 = top, 100 = bottom). */
   focusYPercent?: number | null;
+  /** Deep link: highlight a specific node id. */
+  highlightNodeId?: string | null;
+  /** Deep link: scroll to zone band center. */
+  focusZoneId?: string | null;
 };
 
-/** World Tree journey canvas — sheet-remaster puzzle pieces on the skeleton. */
+/** World Tree journey canvas — skeleton scaffold or sheet-remaster art. */
 export function JourneyWorldCanvas({
   journey,
   regionName,
   className,
   focusYPercent = null,
+  highlightNodeId = null,
+  focusZoneId = null,
 }: JourneyWorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(countJourneyNodes(journey));
+  const layout = useMemo(() => buildWorldTreeLayout(journey), [journey]);
+  const canvasMinHeightVh = layout.canvasMinHeightVh;
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -43,6 +51,10 @@ export function JourneyWorldCanvas({
     container.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
   }, [focusYPercent]);
 
+  const ArtLayer = JOURNEY_SKELETON_MODE ? (
+    <JourneySkeletonArtLayer journey={journey} layout={layout} className="min-h-full" />
+  ) : null;
+
   return (
     <div
       ref={scrollRef}
@@ -57,10 +69,18 @@ export function JourneyWorldCanvas({
           className="relative w-full"
           style={{ minHeight: `${canvasMinHeightVh}vh` }}
         >
-          <JourneyWorldTreeArtLayer className="min-h-full" />
-          <JourneyWorldNodeLayer journey={journey} regionName={regionName} className="z-10" />
+          {ArtLayer}
+          <JourneyWorldNodeLayer
+            journey={journey}
+            regionName={regionName}
+            layout={layout}
+            highlightNodeId={highlightNodeId}
+            className="z-10"
+          />
         </div>
       </div>
     </div>
   );
 }
+
+export { findPlottedNode, buildWorldTreeLayout };

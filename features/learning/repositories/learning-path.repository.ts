@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { getPublishedRegionsWithCurriculum } from "@/lib/cache/content-cache";
+import { getPublishedRegionsWithCurriculum, getJourneyRegionsWithCurriculum } from "@/lib/cache/content-cache";
 
 import type { LessonItemRow } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
@@ -20,6 +20,11 @@ type RegionWithUnits = RegionRow & {
 class LearningPathRepository {
   async listPublishedRegionsWithCurriculum(): Promise<RegionWithUnits[]> {
     return getPublishedRegionsWithCurriculum();
+  }
+
+  /** Published regions plus draft units/lessons for the World Tree journey canvas. */
+  async listJourneyRegionsWithCurriculum(): Promise<RegionWithUnits[]> {
+    return getJourneyRegionsWithCurriculum();
   }
 
   async findPublishedRegionBySlug(slug: string): Promise<RegionWithUnits | null> {

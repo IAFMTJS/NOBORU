@@ -42,7 +42,8 @@ export type WorldTreeRealmSpec = {
   atmosphere: WorldTreeRealmAtmosphere;
 };
 
-export const WORLD_TREE_NODE_MIN_Y_GAP = 4.5;
+/** @deprecated Import from world-tree-skeleton.constants.ts */
+export { WORLD_TREE_NODE_MIN_Y_GAP } from "@/features/journey/constants/world-tree-skeleton.constants";
 
 export const WORLD_TREE_STRUCTURAL_SPAN = {
   yMin: 1,

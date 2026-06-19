@@ -9,14 +9,17 @@ import type { LessonSummaryViewModel } from "@/features/learning/types/lesson.ty
 import type { TrailNodeViewModel } from "@/features/learning/types/trail.types";
 import type { JourneyNode, JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import {
+  buildWorldTreeLayout,
   findPlottedNode,
-  plotJourneyNodesOnSkeleton,
+  type WorldTreeLayoutResult,
 } from "@/features/journey/utils/world-tree-layout.utils";
 import { cn } from "@/lib/utils";
 
 type JourneyWorldNodeLayerProps = {
   journey: JourneyPathViewModel;
   regionName: string;
+  layout?: WorldTreeLayoutResult;
+  highlightNodeId?: string | null;
   className?: string;
 };
 
@@ -57,6 +60,7 @@ function toLessonSummary(node: JourneyNode): LessonSummaryViewModel | null {
     estimatedDuration: null,
     progress,
     score: 0,
+    contentStatus: node.contentStatus ?? "published",
   };
 }
 
@@ -70,12 +74,18 @@ function nodeVisualSize(node: JourneyNode, isCurrent: boolean): "sm" | "md" | "l
 export function JourneyWorldNodeLayer({
   journey,
   regionName,
+  layout: layoutProp,
+  highlightNodeId = null,
   className,
 }: JourneyWorldNodeLayerProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const plotted = useMemo(() => plotJourneyNodesOnSkeleton(journey), [journey]);
+  const layout = useMemo(
+    () => layoutProp ?? buildWorldTreeLayout(journey),
+    [journey, layoutProp],
+  );
+  const plotted = layout.nodes;
   const selectedPlotted = findPlottedNode(plotted, selectedNodeId);
   const selectedNode = selectedPlotted?.node ?? null;
 
@@ -94,13 +104,17 @@ export function JourneyWorldNodeLayer({
         ).length
       : null;
 
+  const isDraft = selectedNode?.isDraft ?? selectedNode?.contentStatus === "draft";
+
   return (
     <>
       <div className={cn("pointer-events-none absolute inset-0", className)} data-journey-node-layer>
         <div className="pointer-events-auto relative h-full w-full min-h-full">
           {plotted.map(({ node, xPercent, yPercent }) => {
-            const isCurrent = node.id === journey.position.currentNodeId;
+            const isCurrent =
+              node.id === journey.position.currentNodeId || node.id === highlightNodeId;
             const size = nodeVisualSize(node, isCurrent);
+            const isDraftNode = node.isDraft ?? node.contentStatus === "draft";
 
             return (
               <div
@@ -108,8 +122,10 @@ export function JourneyWorldNodeLayer({
                 className={cn(
                   "absolute z-30 -translate-x-1/2 -translate-y-1/2",
                   isCurrent && "z-40",
+                  isDraftNode && "opacity-40",
                 )}
                 style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
+                data-segment-type={node.isDraft ? "draft" : undefined}
               >
                 {node.kind === "trial" ? (
                   <WorldBossNode
@@ -147,10 +163,13 @@ export function JourneyWorldNodeLayer({
         lessonNumber={lessonNumber}
         lessonCount={lessonCount}
         regionName={regionName}
+        isComingSoon={isDraft}
         unlockRequirements={
-          selectedNode?.state === "locked"
-            ? [{ label: "Complete the previous lesson", completed: false }]
-            : []
+          isDraft
+            ? [{ label: "This lesson is still being built", completed: false }]
+            : selectedNode?.state === "locked"
+              ? [{ label: "Complete the previous lesson", completed: false }]
+              : []
         }
       />
     </>

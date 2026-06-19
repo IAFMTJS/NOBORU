@@ -35,6 +35,9 @@ export type JourneyNode = {
   globalIndex: number;
   href: string | null;
   xpReward: number | null;
+  /** CMS content status — draft lessons show as coming soon on the tree. */
+  contentStatus?: "published" | "draft";
+  isDraft?: boolean;
 };
 
 export type JourneyPosition = {
@@ -78,12 +81,14 @@ export type RegionJourneyInput = {
   lessonCount: number;
   completedCount: number;
   units: Array<{
+    orderIndex?: number;
     lessons: Array<{
       id: string;
       type: string;
       title: string;
       xpReward: number;
       progress: ProgressStatus;
+      contentStatus?: "published" | "draft";
     }>;
   }>;
 };

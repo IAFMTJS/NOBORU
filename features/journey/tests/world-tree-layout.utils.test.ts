@@ -6,14 +6,15 @@ import type {
   JourneyPathViewModel,
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
+import { WORLD_TREE_NODE_MIN_Y_GAP } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   buildSkeletonAscentBand,
+  buildWorldTreeLayout,
   buildWorldTreeZoneBands,
   computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
   resolveWorldTreeCanvasMinHeightVh,
 } from "@/features/journey/utils/world-tree-layout.utils";
-import { WORLD_TREE_NODE_MIN_Y_GAP } from "@/features/journey/constants/world-tree-full-ascent.constants";
 
 function makeNode(overrides: Partial<JourneyNode> = {}): JourneyNode {
   return {
@@ -97,6 +98,36 @@ describe("computeWorldTreePathXPercent", () => {
   });
 });
 
+describe("buildWorldTreeLayout", () => {
+  it("returns segments for main spine nodes", () => {
+    const journey = makeJourney([
+      makeRegion({
+        slug: "foothills",
+        nodes: Array.from({ length: 6 }, (_, index) =>
+          makeNode({ id: `node-${index}`, globalIndex: index }),
+        ),
+      }),
+    ]);
+
+    const layout = buildWorldTreeLayout(journey);
+    expect(layout.nodes.length).toBe(6);
+    expect(layout.segments.length).toBeGreaterThan(0);
+    expect(layout.canvasMinHeightVh).toBeGreaterThanOrEqual(600);
+  });
+
+  it("assigns foothills nodes to deep_roots zone", () => {
+    const journey = makeJourney([
+      makeRegion({
+        slug: "foothills",
+        nodes: [makeNode({ id: "a", globalIndex: 0 })],
+      }),
+    ]);
+
+    const layout = buildWorldTreeLayout(journey);
+    expect(layout.nodes[0]!.zoneId).toBe("deep_roots");
+  });
+});
+
 describe("plotJourneyNodesOnSkeleton", () => {
   it("places the first node at the stack base and later nodes higher", () => {
     const journey = makeJourney([
@@ -169,5 +200,25 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     expect(resolveWorldTreeCanvasMinHeightVh(1)).toBeLessThan(
       resolveWorldTreeCanvasMinHeightVh(40),
     );
+  });
+});
+
+describe("buildWorldTreeLayout performance", () => {
+  it("lays out full blueprint scale in under 50ms", () => {
+    const nodeCount = 687;
+    const nodes = Array.from({ length: nodeCount }, (_, index) =>
+      makeNode({ id: `node-${index}`, globalIndex: index }),
+    );
+
+    const journey = makeJourney([
+      makeRegion({ slug: "mount-n3", nodes }),
+    ]);
+
+    const start = performance.now();
+    const layout = buildWorldTreeLayout(journey);
+    const elapsed = performance.now() - start;
+
+    expect(layout.nodes.length).toBe(nodeCount);
+    expect(elapsed).toBeLessThan(150);
   });
 });

@@ -307,6 +307,7 @@ export type LessonSummaryViewModel = {
   estimatedDuration: number | null;
   progress: ProgressStatus;
   score: number;
+  contentStatus: ContentStatus;
 };
 
 export type UnitSummaryViewModel = {

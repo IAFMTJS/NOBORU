@@ -31,6 +31,7 @@ function makeLesson(
   id: string,
   type: string,
   progress: "not_started" | "in_progress" | "completed" = "not_started",
+  contentStatus: "published" | "draft" = "published",
 ) {
   return {
     id,
@@ -38,6 +39,7 @@ function makeLesson(
     title: `Lesson ${id}`,
     xpReward: 10,
     progress,
+    contentStatus,
   };
 }
 
@@ -312,5 +314,48 @@ describe("canAccessLessonInPath", () => {
     expect(canAccessLessonInRegion(region, "1", progressRows, new Set())).toBe(true);
     expect(canAccessLessonInRegion(region, "2", progressRows, new Set())).toBe(true);
     expect(canAccessLessonInRegion(region, "2", [], new Set())).toBe(false);
+  });
+});
+
+describe("draft CMS lessons", () => {
+  it("shows draft lessons as locked with no href", () => {
+    const region = makeRegion({
+      slug: "mount-n3",
+      units: [
+        {
+          lessons: [makeLesson("draft-1", "vocabulary", "not_started", "draft")],
+        },
+      ],
+      lessonCount: 1,
+    });
+
+    const journey = buildRegionJourney(region, [], new Set());
+    const node = journey.nodes[0];
+
+    expect(node?.state).toBe("locked");
+    expect(node?.href).toBeNull();
+    expect(node?.isDraft).toBe(true);
+    expect(node?.contentStatus).toBe("draft");
+  });
+
+  it("does not block progression gate for published lessons after draft placeholders", () => {
+    const region = makeRegion({
+      slug: "mount-n5",
+      units: [
+        {
+          lessons: [
+            makeLesson("published-1", "vocabulary", "completed", "published"),
+            makeLesson("draft-2", "vocabulary", "not_started", "draft"),
+            makeLesson("published-3", "grammar", "not_started", "published"),
+          ],
+        },
+      ],
+      lessonCount: 2,
+    });
+
+    const journey = buildRegionJourney(region, [], new Set());
+    const publishedNode = journey.nodes.find((node) => node.id === "published-3");
+
+    expect(publishedNode?.state).toBe("available");
   });
 });

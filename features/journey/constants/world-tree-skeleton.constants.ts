@@ -93,21 +93,61 @@ export const WORLD_TREE_SKELETON_MIN_HEIGHT_VH =
   WORLD_TREE_SKELETON_ZONES.reduce((sum, zone) => sum + zone.heightPercent, 0) *
   WORLD_TREE_SKELETON_VH_PER_PERCENT;
 
+/** Max nodes on the main spine within one zone before overflow branches to caves. */
+export const WORLD_TREE_MAX_MAIN_SPINE_NODES = 28;
+
+/** Minimum vertical gap between nodes (percent of canvas height). */
+export const WORLD_TREE_NODE_MIN_Y_GAP = 5.5;
+
 /**
- * Maps app region slugs to skeleton zones until branch tables exist.
- * Multiple regions may share a zone — layout splits the band among them.
+ * Maps app region slugs to their primary skeleton zone.
+ * @see docs/Skeleton world tree.md — Region → Zone mapping
  */
 export const REGION_SLUG_TO_WORLD_TREE_ZONE: Partial<
   Record<RegionSlug, WorldTreeZoneId>
 > = {
-  foothills: "n4_foothills",
+  foothills: "deep_roots",
+  "forest-trail": "n5_roots",
   "mount-n5": "n5_roots",
-  "forest-trail": "n4_foothills",
-  "mount-n4": "n3_trunk_1",
-  "mount-n3": "n3_trunk_2",
+  "mount-n4": "n4_foothills",
+  "mount-n3": "n3_trunk_1",
   "mount-n2": "n2_canopy",
   "mount-n1": "n1_celestial",
   "master-summit": "n1_celestial",
 };
 
-export const DEFAULT_WORLD_TREE_ZONE: WorldTreeZoneId = "n4_foothills";
+/** N3 spans three trunk rings — resolved by unit index at layout time. */
+export const MOUNT_N3_TRUNK_ZONES: readonly WorldTreeZoneId[] = [
+  "n3_trunk_1",
+  "n3_trunk_2",
+  "n3_trunk_3",
+] as const;
+
+export const DEFAULT_WORLD_TREE_ZONE: WorldTreeZoneId = "deep_roots";
+
+/**
+ * Resolves skeleton zone for a node — handles forest-trail split and N3 rings.
+ */
+export function resolveWorldTreeZoneForNode(
+  regionSlug: string,
+  nodeIndexInRegion: number,
+  totalNodesInRegion: number,
+  unitOrderIndex?: number,
+): WorldTreeZoneId {
+  if (regionSlug === "foothills") return "deep_roots";
+
+  if (regionSlug === "forest-trail") {
+    const midpoint = Math.floor(totalNodesInRegion / 2);
+    return nodeIndexInRegion < midpoint ? "deep_roots" : "n5_roots";
+  }
+
+  if (regionSlug === "mount-n3" && unitOrderIndex != null) {
+    const ringIndex = Math.min(Math.floor(unitOrderIndex / 4), 2);
+    return MOUNT_N3_TRUNK_ZONES[ringIndex] ?? "n3_trunk_1";
+  }
+
+  return (
+    REGION_SLUG_TO_WORLD_TREE_ZONE[regionSlug as RegionSlug] ??
+    DEFAULT_WORLD_TREE_ZONE
+  );
+}

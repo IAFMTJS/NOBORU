@@ -1090,6 +1090,7 @@ class LessonService {
       estimatedDuration: lesson.estimated_duration,
       progress: progress?.status ?? "not_started",
       score: progress?.score ?? 0,
+      contentStatus: lesson.status,
     };
   }
 
@@ -1122,6 +1123,7 @@ class LessonService {
               estimatedDuration: lesson.estimated_duration,
               progress: progress?.status ?? "not_started",
               score: progress?.score ?? 0,
+              contentStatus: lesson.status,
             };
           }
         }

@@ -73,6 +73,43 @@ async function fetchPublishedKatakana(): Promise<KatakanaRow[]> {
   return (data ?? []) as KatakanaRow[];
 }
 
+async function fetchJourneyRegionsWithCurriculum(): Promise<RegionWithUnits[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("regions")
+    .select(
+      `
+        *,
+        units (
+          *,
+          lessons (*)
+        )
+      `,
+    )
+    .eq("status", "published")
+    .order("order_index", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  return ((data ?? []) as RegionWithUnits[]).map((region) => ({
+    ...region,
+    units: (region.units ?? [])
+      .filter((unit) => unit.status === "published" || unit.status === "draft")
+      .sort((a, b) => a.order_index - b.order_index)
+      .map((unit) => ({
+        ...unit,
+        lessons: (unit.lessons ?? [])
+          .filter(
+            (lesson) => lesson.status === "published" || lesson.status === "draft",
+          )
+          .sort((a, b) => a.order_index - b.order_index),
+      })),
+  }));
+}
+
+/** Journey tree includes draft placeholder lessons for upcoming content. */
+export const getJourneyRegionsWithCurriculum = cache(fetchJourneyRegionsWithCurriculum);
+
 /** Request-scoped dedupe. Do not use unstable_cache here — it cannot access cookies(). */
 export const getPublishedRegionsWithCurriculum = cache(
   fetchPublishedRegionsWithCurriculum,

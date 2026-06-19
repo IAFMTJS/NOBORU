@@ -185,3 +185,39 @@
                                                 WORLD HEART
 
                                                       ♥
+
+---
+
+## Region → Zone mapping (runtime)
+
+Authoritative mapping: `features/journey/constants/world-tree-skeleton.constants.ts`.
+
+| Region slug | Primary zone | Notes |
+|-------------|--------------|-------|
+| foothills | deep_roots | Journey begins at World Heart |
+| forest-trail | deep_roots → n5_roots | Second half transitions to N5 Roots |
+| mount-n5 | n5_roots | JLPT N5 |
+| mount-n4 | n4_foothills | JLPT N4 |
+| mount-n3 | n3_trunk_1/2/3 | Three trunk rings by branch index |
+| mount-n2 | n2_canopy | Branch-heavy canopy |
+| mount-n1 | n1_celestial | Celestial crown |
+| master-summit | n1_celestial | Post-N1 mastery |
+
+## Branch / cave naming
+
+- Branch id: `{regionSlug}-branch-{index}` (CMS units)
+- Cave group: `{branchId}-cave` for overflow / side content
+- Segment types: main_spine | branch | cave
+
+## Node budget (blueprint)
+
+| Zone | Target slots |
+|------|----------------|
+| Pre-JLPT | 37 |
+| n5_roots | 95 |
+| n4_foothills | 85 |
+| n3 trunk | 180 |
+| n2_canopy | 160 |
+| n1 + summit | 130 |
+
+Draft CMS lessons render as locked Coming soon nodes on the tree.

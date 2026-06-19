@@ -10,7 +10,7 @@ import {
   PrototypeGlassPanel,
   prototypeGlass,
 } from "@/features/prototype/components/prototype-glass-panel";
-import { JourneyWorldTreeArtLayer } from "@/features/journey/components/journey-world-tree-art-layer";
+import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
 import { WORLD_TREE_SKELETON_MIN_HEIGHT_VH } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   MOCK_JOURNEY_NODES,
@@ -136,7 +136,7 @@ export function PrototypeJourneyTab() {
           className="relative mx-auto w-full min-w-full max-w-phone"
           style={{ minHeight: `${WORLD_TREE_SKELETON_MIN_HEIGHT_VH}vh` }}
         >
-          <JourneyWorldTreeArtLayer className="min-h-full" />
+          <JourneySkeletonArtLayer className="min-h-full" />
 
           <div className="pointer-events-none absolute inset-0">
             <div className="pointer-events-auto relative h-full w-full min-h-full">
