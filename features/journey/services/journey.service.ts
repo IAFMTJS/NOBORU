@@ -17,7 +17,10 @@ import type {
   JourneyRegionViewModel,
   RegionJourneyInput,
 } from "@/features/journey/types/journey.types";
-import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
+import type {
+  LessonBlueprintMeta,
+  RegionPathViewModel,
+} from "@/features/learning/types/lesson.types";
 import type { ProgressStatus, UserProgressRow } from "@/features/learning/types/progress.types";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 import {
@@ -36,6 +39,7 @@ type FlatLesson = {
   xpReward: number;
   progress: ProgressStatus;
   contentStatus: "published" | "draft";
+  blueprint?: LessonBlueprintMeta;
 };
 
 type FlatLessonWithRegion = FlatLesson & {
@@ -64,6 +68,7 @@ function flattenRegionLessons(region: RegionJourneyInput): FlatLesson[] {
       xpReward: lesson.xpReward,
       progress: lesson.progress,
       contentStatus: lesson.contentStatus ?? "published",
+      blueprint: lesson.blueprint,
     })),
   );
 }
@@ -382,6 +387,7 @@ export function buildRegionJourney(
       xpReward: draft.lesson.xpReward,
       contentStatus: draft.lesson.contentStatus,
       isDraft: draft.lesson.contentStatus === "draft",
+      blueprint: draft.lesson.blueprint,
     };
   });
 

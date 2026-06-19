@@ -14,7 +14,7 @@ import type {
   JourneyNode,
   JourneyPathViewModel,
 } from "@/features/journey/types/journey.types";
-import type { RegionSlug } from "@/lib/design-system/regions";
+import type { LessonBlueprintMeta } from "@/features/learning/types/lesson.types";
 
 export type WorldTreeBand = {
   yMin: number;
@@ -125,12 +125,46 @@ type LayoutEntry = {
   lessonIndexInRegion: number;
 };
 
+function resolveLayoutMetaFromBlueprint(
+  blueprint: LessonBlueprintMeta,
+  regionSlug: string,
+  lessonIndexInRegion: number,
+  totalNodesInRegion: number,
+): Omit<LayoutEntry, "node" | "regionSlug" | "lessonIndexInRegion"> {
+  const zoneId =
+    regionSlug === "mount-n3"
+      ? resolveWorldTreeZoneForNode(
+          regionSlug,
+          lessonIndexInRegion,
+          totalNodesInRegion,
+          blueprint.branchIndex,
+        )
+      : blueprint.zoneId;
+
+  return {
+    zoneId,
+    spineRole: blueprint.spineRole,
+    segmentType: blueprint.segmentType,
+    branchId: blueprint.branchId,
+    caveGroup: blueprint.caveGroup,
+  };
+}
+
 function resolveLayoutMeta(
   node: JourneyNode,
   regionSlug: string,
   lessonIndexInRegion: number,
   totalNodesInRegion: number,
 ): Omit<LayoutEntry, "node" | "regionSlug" | "lessonIndexInRegion"> {
+  if (node.blueprint) {
+    return resolveLayoutMetaFromBlueprint(
+      node.blueprint,
+      regionSlug,
+      lessonIndexInRegion,
+      totalNodesInRegion,
+    );
+  }
+
   const blueprint = resolveBlueprintSlot(regionSlug, lessonIndexInRegion);
 
   const zoneId = resolveWorldTreeZoneForNode(
@@ -187,19 +221,35 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   const entries = journey.regions.flatMap((region) => {
     const lessonNodes = region.nodes.filter((node) => node.kind !== "landmark");
     let lessonIndex = 0;
+    let lastLessonBlueprint: LessonBlueprintMeta | undefined;
 
     return region.nodes.map((node) => {
       const isLessonLike =
         node.kind === "lesson" || node.kind === "checkpoint" || node.kind === "trial";
       const currentLessonIndex = isLessonLike ? lessonIndex : lessonIndex;
       if (isLessonLike) lessonIndex += 1;
+      if (isLessonLike && node.blueprint) {
+        lastLessonBlueprint = node.blueprint;
+      }
 
-      const meta = resolveLayoutMeta(
-        node,
-        region.slug,
-        isLessonLike ? currentLessonIndex : lessonIndex,
-        lessonNodes.length,
-      );
+      const meta =
+        node.kind === "landmark" && lastLessonBlueprint
+          ? {
+              ...resolveLayoutMetaFromBlueprint(
+                lastLessonBlueprint,
+                region.slug,
+                currentLessonIndex,
+                lessonNodes.length,
+              ),
+              spineRole: "main" as const,
+              segmentType: "main_spine" as const,
+            }
+          : resolveLayoutMeta(
+              node,
+              region.slug,
+              isLessonLike ? currentLessonIndex : lessonIndex,
+              lessonNodes.length,
+            );
 
       return {
         node,

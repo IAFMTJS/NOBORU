@@ -24,14 +24,17 @@ type JourneyWorldCanvasProps = {
   focusZoneId?: string | null;
 };
 
-/** World Tree journey canvas — skeleton scaffold or sheet-remaster art. */
+/**
+ * World Tree journey canvas — CSS skeleton only.
+ * Sheet-remaster puzzle art (JourneyWorldTreeArtLayer) is intentionally not used;
+ * nodes and spine define the tree until zone art is attached in a later pass.
+ */
 export function JourneyWorldCanvas({
   journey,
   regionName,
   className,
   focusYPercent = null,
   highlightNodeId = null,
-  focusZoneId = null,
 }: JourneyWorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const layout = useMemo(() => buildWorldTreeLayout(journey), [journey]);
@@ -51,10 +54,6 @@ export function JourneyWorldCanvas({
     container.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
   }, [focusYPercent]);
 
-  const ArtLayer = JOURNEY_SKELETON_MODE ? (
-    <JourneySkeletonArtLayer journey={journey} layout={layout} className="min-h-full" />
-  ) : null;
-
   return (
     <div
       ref={scrollRef}
@@ -63,13 +62,20 @@ export function JourneyWorldCanvas({
         className,
       )}
       aria-label="World tree journey"
+      data-journey-skeleton-mode={JOURNEY_SKELETON_MODE ? "true" : "false"}
     >
       <div className="relative mx-auto w-full min-w-full max-w-phone">
         <div
           className="relative w-full"
           style={{ minHeight: `${canvasMinHeightVh}vh` }}
         >
-          {ArtLayer}
+          {JOURNEY_SKELETON_MODE ? (
+            <JourneySkeletonArtLayer
+              journey={journey}
+              layout={layout}
+              className="min-h-full"
+            />
+          ) : null}
           <JourneyWorldNodeLayer
             journey={journey}
             regionName={regionName}

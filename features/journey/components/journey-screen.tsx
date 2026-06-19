@@ -47,7 +47,7 @@ export function JourneyScreen({
   const totalNodes = countTotalNodes(journey);
 
   return (
-    <div className="relative h-content min-h-0 overflow-hidden bg-[#E9E1D0] dark:bg-[#0D1320]">
+    <div className="relative h-content min-h-0 overflow-hidden bg-[#E9E1D0] dark:bg-[#0D1320] isolate">
       <JourneyWorldCanvas
         className="absolute inset-0"
         journey={journey}

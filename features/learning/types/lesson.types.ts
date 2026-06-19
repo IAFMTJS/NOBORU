@@ -297,6 +297,18 @@ export type LessonSessionViewModel = {
   unlocksRegionSlug?: string | null;
 };
 
+/** World Tree curriculum slot metadata — drives skeleton zone/spine layout. */
+export type LessonBlueprintMeta = {
+  slotId: string;
+  zoneId: string;
+  branchId: string;
+  branchIndex: number;
+  spineRole: "main" | "branch";
+  segmentType: "main_spine" | "branch" | "cave";
+  caveGroup?: string;
+  slotKind: "lesson" | "checkpoint" | "trial";
+};
+
 export type LessonSummaryViewModel = {
   id: string;
   unitId: string;
@@ -308,6 +320,8 @@ export type LessonSummaryViewModel = {
   progress: ProgressStatus;
   score: number;
   contentStatus: ContentStatus;
+  /** World Tree curriculum slot — authoritative for skeleton layout. */
+  blueprint?: LessonBlueprintMeta;
 };
 
 export type UnitSummaryViewModel = {

@@ -3,6 +3,7 @@ import {
   type BlueprintSlot,
 } from "@/features/journey/data/world-tree-curriculum-blueprint";
 import type {
+  LessonBlueprintMeta,
   LessonSummaryViewModel,
   RegionPathViewModel,
   UnitSummaryViewModel,
@@ -30,35 +31,99 @@ function blueprintKindToLessonType(slot: BlueprintSlot): string {
   return slot.lessonType;
 }
 
+function toBlueprintMeta(slot: BlueprintSlot): LessonBlueprintMeta {
+  return {
+    slotId: slot.slotId,
+    zoneId: slot.zoneId,
+    branchId: slot.branchId,
+    branchIndex: slot.branchIndex,
+    spineRole: slot.spineRole,
+    segmentType: slot.segmentType,
+    caveGroup: slot.caveGroup,
+    slotKind: slot.kind === "landmark" ? "lesson" : slot.kind,
+  };
+}
+
+function attachBlueprintMeta(
+  lesson: LessonSummaryViewModel,
+  slot: BlueprintSlot,
+): LessonSummaryViewModel {
+  return {
+    ...lesson,
+    blueprint: toBlueprintMeta(slot),
+  };
+}
+
 function lessonFromBlueprintSlot(
   slot: BlueprintSlot,
   unitId: string,
 ): LessonSummaryViewModel {
-  return {
-    id: `blueprint:${slot.slotId}`,
-    unitId,
-    type: blueprintKindToLessonType(slot),
-    title: slot.title,
-    description: "Planned — content in development",
-    xpReward: slot.kind === "trial" ? 50 : slot.kind === "checkpoint" ? 25 : 10,
-    estimatedDuration: 5,
-    progress: "not_started",
-    score: 0,
-    contentStatus: "draft",
-  };
+  return attachBlueprintMeta(
+    {
+      id: `blueprint:${slot.slotId}`,
+      unitId,
+      type: blueprintKindToLessonType(slot),
+      title: slot.title,
+      description: "Planned — content in development",
+      xpReward: slot.kind === "trial" ? 50 : slot.kind === "checkpoint" ? 25 : 10,
+      estimatedDuration: 5,
+      progress: "not_started",
+      score: 0,
+      contentStatus: "draft",
+    },
+    slot,
+  );
 }
 
-function flattenLessons(region: RegionPathViewModel): LessonSummaryViewModel[] {
-  return region.units.flatMap((unit) => unit.lessons);
+function contentIndexForSlot(
+  slots: readonly BlueprintSlot[],
+  slot: BlueprintSlot,
+): number {
+  const branchSlots = slots.filter((entry) => entry.branchId === slot.branchId);
+  const indexInBranch = branchSlots.findIndex((entry) => entry.slotId === slot.slotId);
+  if (indexInBranch < 0) return 0;
+
+  return branchSlots
+    .slice(0, indexInBranch)
+    .filter((entry) => entry.kind === "lesson" || entry.kind === "checkpoint" || entry.kind === "trial")
+    .length;
 }
 
+function resolveCmsLessonForSlot(
+  slot: BlueprintSlot,
+  slots: readonly BlueprintSlot[],
+  units: UnitSummaryViewModel[],
+): LessonSummaryViewModel | null {
+  const unit = units[slot.branchIndex];
+  if (!unit) return null;
+
+  const contentIndex = contentIndexForSlot(slots, slot);
+  return unit.lessons[contentIndex] ?? null;
+}
+
+/**
+ * Maps CMS lessons onto blueprint slots by branch unit order, falling back to
+ * flat CMS order, then virtual draft placeholders.
+ */
 function mergeLessonsIntoBlueprint(
   slots: readonly BlueprintSlot[],
-  cmsLessons: LessonSummaryViewModel[],
+  cmsUnits: UnitSummaryViewModel[],
 ): LessonSummaryViewModel[] {
-  return slots.map((slot, index) => {
-    const cmsLesson = cmsLessons[index];
-    if (cmsLesson) return cmsLesson;
+  const flatPool = cmsUnits.flatMap((unit) => unit.lessons);
+  let flatCursor = 0;
+
+  return slots.map((slot) => {
+    const branchLesson = resolveCmsLessonForSlot(slot, slots, cmsUnits);
+    if (branchLesson) {
+      return attachBlueprintMeta(branchLesson, slot);
+    }
+
+    if (flatCursor < flatPool.length) {
+      const lesson = flatPool[flatCursor]!;
+      flatCursor += 1;
+      return attachBlueprintMeta(lesson, slot);
+    }
+
     return lessonFromBlueprintSlot(slot, `blueprint-unit:${slot.branchId}`);
   });
 }
@@ -101,14 +166,14 @@ function buildUnitsFromSlotsAndLessons(
 
 function buildRegionFromBlueprint(
   regionSlug: RegionSlug,
-  cmsLessons: LessonSummaryViewModel[],
   passedTrialSlugs: ReadonlySet<string>,
   baseRegion?: RegionPathViewModel,
 ): RegionPathViewModel {
   const slots = getRegionBlueprintSlots(regionSlug);
   const access = resolveRegionAccess(regionSlug, passedTrialSlugs);
   const meta = REGION_META[regionSlug];
-  const mergedLessons = mergeLessonsIntoBlueprint(slots, cmsLessons);
+  const cmsUnits = baseRegion?.units ?? [];
+  const mergedLessons = mergeLessonsIntoBlueprint(slots, cmsUnits);
   const units = buildUnitsFromSlotsAndLessons(slots, mergedLessons);
 
   const lessonCount = units.reduce((sum, unit) => sum + unit.lessons.length, 0);
@@ -141,8 +206,7 @@ export function augmentRegionsWithBlueprint(
 
   return REGION_SLUGS.map((slug) => {
     const existing = bySlug.get(slug);
-    const cmsLessons = existing ? flattenLessons(existing) : [];
-    return buildRegionFromBlueprint(slug, cmsLessons, passedTrialSlugs, existing);
+    return buildRegionFromBlueprint(slug, passedTrialSlugs, existing);
   });
 }
 
