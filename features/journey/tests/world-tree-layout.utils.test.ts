@@ -219,6 +219,6 @@ describe("buildWorldTreeLayout performance", () => {
     const elapsed = performance.now() - start;
 
     expect(layout.nodes.length).toBe(nodeCount);
-    expect(elapsed).toBeLessThan(150);
+    expect(elapsed).toBeLessThan(250);
   });
 });

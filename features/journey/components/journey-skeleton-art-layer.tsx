@@ -11,7 +11,6 @@ import {
   type WorldTreeLayoutResult,
 } from "@/features/journey/utils/world-tree-layout.utils";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
-import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
 
 type JourneySkeletonArtLayerProps = {

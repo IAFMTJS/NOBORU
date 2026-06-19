@@ -43,6 +43,8 @@ type LessonNodeDetailSheetProps = {
   nextLessonLabel?: string | null;
   /** Draft CMS lesson — show coming soon instead of lock/progression messaging. */
   isComingSoon?: boolean;
+  /** Hide illustrated node art in the detail sheet. */
+  skeletonMode?: boolean;
 };
 
 function LessonPreviewRow({ labels }: { labels: string[] }) {
@@ -101,6 +103,7 @@ export function LessonNodeDetailSheet({
   unlockRequirements = [],
   nextLessonLabel = null,
   isComingSoon = false,
+  skeletonMode = false,
 }: LessonNodeDetailSheetProps) {
   const [previewLabels, setPreviewLabels] = useState<string[]>([]);
 
@@ -156,12 +159,26 @@ export function LessonNodeDetailSheet({
           <div className={cn("min-h-[20rem] rounded-t-3xl", glassSurface.sheet, "rounded-b-none border-x-0")}>
             <div className="space-y-4 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
               <div className="flex flex-col items-center gap-3 text-center">
-                <WorldLessonNode
-                  state={node.state}
-                  nodeKind={node.nodeKind}
-                  lessonType={lesson?.type}
-                  size="lg"
-                />
+                {skeletonMode ? (
+                  <span
+                    className={cn(
+                      "flex h-14 w-14 items-center justify-center rounded-full border-2 text-lg font-bold",
+                      locked
+                        ? "border-muted-foreground/40 text-muted-foreground"
+                        : "border-primary/70 text-primary",
+                    )}
+                    aria-hidden
+                  >
+                    {isCheckpoint ? "C" : "L"}
+                  </span>
+                ) : (
+                  <WorldLessonNode
+                    state={node.state}
+                    nodeKind={node.nodeKind}
+                    lessonType={lesson?.type}
+                    size="lg"
+                  />
+                )}
                 <div className="space-y-1">
                   <StoryTitle as="h2" className="text-xl">
                     {node.label}
@@ -173,20 +190,24 @@ export function LessonNodeDetailSheet({
                   </p>
                 </div>
                 {locked ? (
-                  <YamaPresence
-                    presence={yamaService.resolveEmptyPresence("trail")}
-                    size="sm"
-                    layout="vertical"
-                    className="items-center"
-                  />
+                  skeletonMode ? null : (
+                    <YamaPresence
+                      presence={yamaService.resolveEmptyPresence("trail")}
+                      size="sm"
+                      layout="vertical"
+                      className="items-center"
+                    />
+                  )
                 ) : isCheckpoint ? (
-                  <YamaPresence
-                    presence={yamaService.resolveCheckpointPresence(node.state === "completed")}
-                    size="sm"
-                    layout="vertical"
-                    className="items-center"
-                  />
-                ) : (
+                  skeletonMode ? null : (
+                    <YamaPresence
+                      presence={yamaService.resolveCheckpointPresence(node.state === "completed")}
+                      size="sm"
+                      layout="vertical"
+                      className="items-center"
+                    />
+                  )
+                ) : skeletonMode ? null : (
                   <YamaPresence
                     presence={yamaService.resolveLessonIntroPresence()}
                     size="sm"

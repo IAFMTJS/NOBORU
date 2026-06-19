@@ -26,6 +26,7 @@ import {
 } from "@/lib/design-system/journey-path-contracts";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import { journeyLandmarkRepository } from "@/features/journey/repositories/journey-landmark.repository";
+import { augmentRegionsWithBlueprint } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import type { JourneyLandmarkContent } from "@/features/journey/types/journey-content.types";
 
 type FlatLesson = {
@@ -656,12 +657,19 @@ class JourneyService {
       learningPathService.getPassedTrialSlugs(userId),
     ]);
 
+    const augmentedRegions = augmentRegionsWithBlueprint(
+      path.regions,
+      passedTrialSlugs,
+    );
+
     const landmarks = await journeyLandmarkRepository.listPublishedByRegionIds(
-      path.regions.map((region) => region.id),
+      augmentedRegions
+        .filter((region) => !region.id.startsWith("blueprint-region:"))
+        .map((region) => region.id),
     );
 
     return buildJourneyPathFromData(
-      path.regions,
+      augmentedRegions,
       progressRows,
       passedTrialSlugs,
       groupLandmarksByRegionId(landmarks),

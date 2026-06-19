@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import { JOURNEY_SKELETON_MODE } from "@/features/journey/constants/journey.constants";
+import { SkeletonJourneyNode } from "@/features/journey/components/skeleton-journey-node";
 import { WorldBossNode } from "@/components/visual/world/world-boss-node";
 import { WorldLessonNode } from "@/components/visual/world/world-lesson-node";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
@@ -106,6 +108,11 @@ export function JourneyWorldNodeLayer({
 
   const isDraft = selectedNode?.isDraft ?? selectedNode?.contentStatus === "draft";
 
+  const openNode = (nodeId: string) => {
+    setSelectedNodeId(nodeId);
+    setSheetOpen(true);
+  };
+
   return (
     <>
       <div className={cn("pointer-events-none absolute inset-0", className)} data-journey-node-layer>
@@ -122,19 +129,25 @@ export function JourneyWorldNodeLayer({
                 className={cn(
                   "absolute z-30 -translate-x-1/2 -translate-y-1/2",
                   isCurrent && "z-40",
-                  isDraftNode && "opacity-40",
                 )}
                 style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
-                data-segment-type={node.isDraft ? "draft" : undefined}
+                data-segment-type={isDraftNode ? "draft" : undefined}
               >
-                {node.kind === "trial" ? (
+                {JOURNEY_SKELETON_MODE ? (
+                  <SkeletonJourneyNode
+                    state={node.state}
+                    kind={node.kind}
+                    label={node.label}
+                    isCurrent={isCurrent}
+                    isDraft={isDraftNode}
+                    size={size}
+                    onClick={() => openNode(node.id)}
+                  />
+                ) : node.kind === "trial" ? (
                   <WorldBossNode
                     state={node.state}
                     isCurrent={isCurrent}
-                    onClick={() => {
-                      setSelectedNodeId(node.id);
-                      setSheetOpen(true);
-                    }}
+                    onClick={() => openNode(node.id)}
                   />
                 ) : (
                   <WorldLessonNode
@@ -143,10 +156,7 @@ export function JourneyWorldNodeLayer({
                     lessonType={node.lessonType}
                     isCurrent={isCurrent}
                     size={size}
-                    onClick={() => {
-                      setSelectedNodeId(node.id);
-                      setSheetOpen(true);
-                    }}
+                    onClick={() => openNode(node.id)}
                   />
                 )}
               </div>
@@ -164,6 +174,7 @@ export function JourneyWorldNodeLayer({
         lessonCount={lessonCount}
         regionName={regionName}
         isComingSoon={isDraft}
+        skeletonMode={JOURNEY_SKELETON_MODE}
         unlockRequirements={
           isDraft
             ? [{ label: "This lesson is still being built", completed: false }]
