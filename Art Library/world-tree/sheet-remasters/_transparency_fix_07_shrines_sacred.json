@@ -1,0 +1,768 @@
+{
+  "section": "07_shrines_sacred",
+  "processed": 23,
+  "dry_run": false,
+  "passed": 23,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_07_shrines_sacred_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_01_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 49.1,
+        "partial_alpha": 261023,
+        "black_fringe_pct": 26.91,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          878,
+          1002
+        ],
+        "transparent_pct": 55.7,
+        "partial_alpha": 61503,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 328991,
+        "defringe_removed": 41
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_02_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.3,
+        "partial_alpha": 254501,
+        "black_fringe_pct": 13.15,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1474,
+          982
+        ],
+        "transparent_pct": 65.5,
+        "partial_alpha": 147742,
+        "black_fringe_pct": 0.11,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 103035,
+        "defringe_removed": 491
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_03_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1033
+        ],
+        "transparent_pct": 40.2,
+        "partial_alpha": 281367,
+        "black_fringe_pct": 34.39,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          815,
+          997
+        ],
+        "transparent_pct": 53.7,
+        "partial_alpha": 45563,
+        "black_fringe_pct": 0.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 537669,
+        "defringe_removed": 6
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_04_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 50.8,
+        "partial_alpha": 398405,
+        "black_fringe_pct": 15.9,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1368,
+          885
+        ],
+        "transparent_pct": 55.3,
+        "partial_alpha": 261218,
+        "black_fringe_pct": 0.2,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 179275,
+        "defringe_removed": 689
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_05_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 36.7,
+        "partial_alpha": 233967,
+        "black_fringe_pct": 27.82,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1045,
+          986
+        ],
+        "transparent_pct": 47.0,
+        "partial_alpha": 63238,
+        "black_fringe_pct": 0.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 427300,
+        "defringe_removed": 27
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_06_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.6,
+        "partial_alpha": 251458,
+        "black_fringe_pct": 27.95,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          674,
+          952
+        ],
+        "transparent_pct": 63.2,
+        "partial_alpha": 26445,
+        "black_fringe_pct": 0.14,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 445271,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_07_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 45.6,
+        "partial_alpha": 315192,
+        "black_fringe_pct": 36.65,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          547,
+          1041
+        ],
+        "transparent_pct": 49.9,
+        "partial_alpha": 61293,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 569765,
+        "defringe_removed": 5
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_08_light_v2.png",
+      "before": {
+        "size": [
+          1474,
+          1048
+        ],
+        "transparent_pct": 51.3,
+        "partial_alpha": 313102,
+        "black_fringe_pct": 32.65,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          482,
+          966
+        ],
+        "transparent_pct": 46.7,
+        "partial_alpha": 29711,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 476084,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_09_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 55.6,
+        "partial_alpha": 385192,
+        "black_fringe_pct": 23.73,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1115,
+          1008
+        ],
+        "transparent_pct": 70.8,
+        "partial_alpha": 162289,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 317265,
+        "defringe_removed": 5
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_10_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.3,
+        "partial_alpha": 352571,
+        "black_fringe_pct": 36.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          369,
+          924
+        ],
+        "transparent_pct": 48.8,
+        "partial_alpha": 35413,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 587262,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_11_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_11_light_v2.png",
+      "before": {
+        "size": [
+          1470,
+          1048
+        ],
+        "transparent_pct": 62.6,
+        "partial_alpha": 283435,
+        "black_fringe_pct": 29.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          356,
+          1029
+        ],
+        "transparent_pct": 65.4,
+        "partial_alpha": 31217,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 444084,
+        "defringe_removed": 106
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_12_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_12_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 48.4,
+        "partial_alpha": 250300,
+        "black_fringe_pct": 20.73,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1139,
+          987
+        ],
+        "transparent_pct": 55.9,
+        "partial_alpha": 86755,
+        "black_fringe_pct": 0.11,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 292134,
+        "defringe_removed": 29
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_13_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_13_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 62.5,
+        "partial_alpha": 393862,
+        "black_fringe_pct": 25.34,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1537,
+          437
+        ],
+        "transparent_pct": 70.3,
+        "partial_alpha": 145095,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 363855,
+        "defringe_removed": 16
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_14_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_14_light_v2.png",
+      "before": {
+        "size": [
+          1422,
+          1048
+        ],
+        "transparent_pct": 40.9,
+        "partial_alpha": 349971,
+        "black_fringe_pct": 36.7,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          647,
+          976
+        ],
+        "transparent_pct": 47.2,
+        "partial_alpha": 89427,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 524172,
+        "defringe_removed": 27
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_15_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_15_light_v2.png",
+      "before": {
+        "size": [
+          1516,
+          1048
+        ],
+        "transparent_pct": 32.7,
+        "partial_alpha": 338001,
+        "black_fringe_pct": 31.75,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1013,
+          1026
+        ],
+        "transparent_pct": 50.1,
+        "partial_alpha": 111718,
+        "black_fringe_pct": 0.1,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 467249,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_16_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_16_light_v2.png",
+      "before": {
+        "size": [
+          1481,
+          602
+        ],
+        "transparent_pct": 57.9,
+        "partial_alpha": 202329,
+        "black_fringe_pct": 10.38,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1478,
+          599
+        ],
+        "transparent_pct": 68.1,
+        "partial_alpha": 147144,
+        "black_fringe_pct": 0.07,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 16248,
+        "defringe_removed": 22
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_17_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_17_light_v2.png",
+      "before": {
+        "size": [
+          1429,
+          664
+        ],
+        "transparent_pct": 54.0,
+        "partial_alpha": 265801,
+        "black_fringe_pct": 12.75,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1429,
+          649
+        ],
+        "transparent_pct": 66.4,
+        "partial_alpha": 191187,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 60258,
+        "defringe_removed": 2381
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_18_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_18_light_v2.png",
+      "before": {
+        "size": [
+          1429,
+          762
+        ],
+        "transparent_pct": 56.8,
+        "partial_alpha": 296859,
+        "black_fringe_pct": 20.65,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1429,
+          759
+        ],
+        "transparent_pct": 77.5,
+        "partial_alpha": 160144,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 102725,
+        "defringe_removed": 28
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_19_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_19_light_v2.png",
+      "before": {
+        "size": [
+          1353,
+          891
+        ],
+        "transparent_pct": 54.6,
+        "partial_alpha": 237517,
+        "black_fringe_pct": 10.72,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1352,
+          891
+        ],
+        "transparent_pct": 65.3,
+        "partial_alpha": 175403,
+        "black_fringe_pct": 0.16,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 15427,
+        "defringe_removed": 25
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_20_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_20_light_v2.png",
+      "before": {
+        "size": [
+          1539,
+          423
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 198300,
+        "black_fringe_pct": 13.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1539,
+          423
+        ],
+        "transparent_pct": 67.1,
+        "partial_alpha": 144231,
+        "black_fringe_pct": 0.14,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 30211,
+        "defringe_removed": 7314
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_21_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_21_light_v2.png",
+      "before": {
+        "size": [
+          1550,
+          751
+        ],
+        "transparent_pct": 52.7,
+        "partial_alpha": 316732,
+        "black_fringe_pct": 18.69,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1550,
+          696
+        ],
+        "transparent_pct": 69.2,
+        "partial_alpha": 194959,
+        "black_fringe_pct": 0.1,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 85800,
+        "defringe_removed": 359
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_22_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_22_light_v2.png",
+      "before": {
+        "size": [
+          1110,
+          1000
+        ],
+        "transparent_pct": 48.5,
+        "partial_alpha": 276252,
+        "black_fringe_pct": 14.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1102,
+          981
+        ],
+        "transparent_pct": 64.8,
+        "partial_alpha": 181701,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 104971,
+        "defringe_removed": 8782
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_07_shrines_sacred_23_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/07_shrines_sacred/wt_07_shrines_sacred_23_light_v2.png",
+      "before": {
+        "size": [
+          1462,
+          571
+        ],
+        "transparent_pct": 60.3,
+        "partial_alpha": 182098,
+        "black_fringe_pct": 14.53,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1420,
+          516
+        ],
+        "transparent_pct": 72.4,
+        "partial_alpha": 104464,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 53032,
+        "defringe_removed": 2224
+      },
+      "fixed": true
+    }
+  ]
+}

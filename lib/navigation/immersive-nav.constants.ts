@@ -1,7 +1,7 @@
 import type { YamaExpression } from "@/features/yama/types/yama.types";
 
-/** Primary destinations per VISUAL MD FILES Doc 01 — Journey · Camp · Study · Bag · Profile */
-export type ImmersiveNavTab = "journey" | "camp" | "study" | "bag" | "profile";
+/** Primary destinations per VISUAL MD FILES Doc 01 — Journey · Tree · Camp · Study · Bag · Profile */
+export type ImmersiveNavTab = "journey" | "tree" | "camp" | "study" | "bag" | "profile";
 
 export type ImmersiveNavTheme = "trail" | "campfire" | "study" | "backpack" | "journal";
 
@@ -38,6 +38,22 @@ export const IMMERSIVE_NAV_TAB_CONFIG: Record<ImmersiveNavTab, ImmersiveNavTabCo
     activeIconRingClass: "ring-amber-400/50 bg-amber-500/15",
     activeIndicatorClass: "bg-amber-400 shadow-[0_0_8px_rgba(246,174,45,0.7)]",
     particleClass: "bg-warning/55",
+  },
+  tree: {
+    tab: "tree",
+    theme: "trail",
+    skinId: "bamboo_grove",
+    barTexturePath: "",
+    mascotExpression: "adventure",
+    barSurfaceClass:
+      "bg-gradient-to-r from-stone-950/95 via-emerald-950/88 to-stone-950/95 shadow-[inset_0_1px_0_rgba(120,180,120,0.14)]",
+    barBorderClass: "border-emerald-700/35",
+    activeLabelClass: "text-emerald-200",
+    activeGlowClass: "shadow-[0_0_20px_rgba(120,180,120,0.35)]",
+    activeIconDropShadow: "drop-shadow-[0_0_8px_rgba(120,180,120,0.55)]",
+    activeIconRingClass: "ring-emerald-400/45 bg-emerald-500/15",
+    activeIndicatorClass: "bg-emerald-400 shadow-[0_0_8px_rgba(120,180,120,0.6)]",
+    particleClass: "bg-success/45",
   },
   camp: {
     tab: "camp",

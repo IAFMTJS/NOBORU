@@ -1,0 +1,702 @@
+{
+  "section": "05_floating_islands",
+  "processed": 21,
+  "dry_run": false,
+  "passed": 21,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_05_floating_islands_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_01_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 40.1,
+        "partial_alpha": 274556,
+        "black_fringe_pct": 13.65,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1545,
+          1031
+        ],
+        "transparent_pct": 52.3,
+        "partial_alpha": 176036,
+        "black_fringe_pct": 0.33,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 123272,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_02_light_v2.png",
+      "before": {
+        "size": [
+          1530,
+          1048
+        ],
+        "transparent_pct": 44.6,
+        "partial_alpha": 225591,
+        "black_fringe_pct": 34.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          761,
+          959
+        ],
+        "transparent_pct": 53.4,
+        "partial_alpha": 25611,
+        "black_fringe_pct": 0.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 218983,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_03_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 43.3,
+        "partial_alpha": 245394,
+        "black_fringe_pct": 34.65,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          918,
+          990
+        ],
+        "transparent_pct": 60.9,
+        "partial_alpha": 48383,
+        "black_fringe_pct": 0.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 499680,
+        "defringe_removed": 2
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_04_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 54.9,
+        "partial_alpha": 259363,
+        "black_fringe_pct": 32.2,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          547,
+          938
+        ],
+        "transparent_pct": 58.7,
+        "partial_alpha": 17198,
+        "black_fringe_pct": 0.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 484027,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_05_light_v2.png",
+      "before": {
+        "size": [
+          1535,
+          1031
+        ],
+        "transparent_pct": 43.3,
+        "partial_alpha": 197427,
+        "black_fringe_pct": 25.93,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1013,
+          976
+        ],
+        "transparent_pct": 50.9,
+        "partial_alpha": 43059,
+        "black_fringe_pct": 0.1,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 160390,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_06_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1029
+        ],
+        "transparent_pct": 40.5,
+        "partial_alpha": 271410,
+        "black_fringe_pct": 34.56,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          888,
+          900
+        ],
+        "transparent_pct": 50.6,
+        "partial_alpha": 82100,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 505341,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_07_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.5,
+        "partial_alpha": 265735,
+        "black_fringe_pct": 31.77,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          622,
+          993
+        ],
+        "transparent_pct": 61.0,
+        "partial_alpha": 35714,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 477901,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_08_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.2,
+        "partial_alpha": 274020,
+        "black_fringe_pct": 30.61,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          842,
+          974
+        ],
+        "transparent_pct": 68.2,
+        "partial_alpha": 68084,
+        "black_fringe_pct": 0.32,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 435721,
+        "defringe_removed": 62
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_09_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 51.3,
+        "partial_alpha": 315995,
+        "black_fringe_pct": 31.48,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          691,
+          998
+        ],
+        "transparent_pct": 59.2,
+        "partial_alpha": 82250,
+        "black_fringe_pct": 0.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 466988,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_10_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 41.8,
+        "partial_alpha": 241606,
+        "black_fringe_pct": 32.27,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          920,
+          932
+        ],
+        "transparent_pct": 50.8,
+        "partial_alpha": 42879,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 484723,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_11_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_11_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 49.8,
+        "partial_alpha": 276220,
+        "black_fringe_pct": 33.16,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          789,
+          909
+        ],
+        "transparent_pct": 61.6,
+        "partial_alpha": 43497,
+        "black_fringe_pct": 0.05,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 509015,
+        "defringe_removed": 9
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_12_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_12_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 41.4,
+        "partial_alpha": 252811,
+        "black_fringe_pct": 24.74,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1404,
+          865
+        ],
+        "transparent_pct": 54.5,
+        "partial_alpha": 82458,
+        "black_fringe_pct": 0.11,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 261410,
+        "defringe_removed": 7
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_13_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_13_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 40.7,
+        "partial_alpha": 277257,
+        "black_fringe_pct": 16.86,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1489,
+          924
+        ],
+        "transparent_pct": 49.5,
+        "partial_alpha": 132320,
+        "black_fringe_pct": 0.22,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 55496,
+        "defringe_removed": 2
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_14_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_14_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1028
+        ],
+        "transparent_pct": 49.4,
+        "partial_alpha": 215496,
+        "black_fringe_pct": 29.53,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          778,
+          1018
+        ],
+        "transparent_pct": 57.9,
+        "partial_alpha": 20727,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 426491,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_15_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_15_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 49.6,
+        "partial_alpha": 247375,
+        "black_fringe_pct": 32.17,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          701,
+          964
+        ],
+        "transparent_pct": 56.3,
+        "partial_alpha": 27752,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 473459,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_16_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_16_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 51.1,
+        "partial_alpha": 258299,
+        "black_fringe_pct": 26.97,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          823,
+          1013
+        ],
+        "transparent_pct": 57.1,
+        "partial_alpha": 56884,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 368529,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_17_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_17_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 55.2,
+        "partial_alpha": 318873,
+        "black_fringe_pct": 24.45,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          970,
+          942
+        ],
+        "transparent_pct": 63.9,
+        "partial_alpha": 109546,
+        "black_fringe_pct": 0.18,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 372185,
+        "defringe_removed": 17
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_18_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_18_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 44.8,
+        "partial_alpha": 258168,
+        "black_fringe_pct": 38.29,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          824,
+          996
+        ],
+        "transparent_pct": 66.4,
+        "partial_alpha": 17120,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 568146,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_19_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_19_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 49.3,
+        "partial_alpha": 282433,
+        "black_fringe_pct": 30.81,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          806,
+          942
+        ],
+        "transparent_pct": 57.4,
+        "partial_alpha": 38794,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 455422,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_20_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_20_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 36.1,
+        "partial_alpha": 288983,
+        "black_fringe_pct": 25.94,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1247,
+          904
+        ],
+        "transparent_pct": 45.3,
+        "partial_alpha": 75559,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 361868,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_05_floating_islands_21_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/05_floating_islands/wt_05_floating_islands_21_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 288548,
+        "black_fringe_pct": 27.15,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          787,
+          1011
+        ],
+        "transparent_pct": 60.7,
+        "partial_alpha": 68465,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 341146,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    }
+  ]
+}

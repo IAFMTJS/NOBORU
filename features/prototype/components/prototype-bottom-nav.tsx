@@ -8,6 +8,7 @@ import { prototypeGlass } from "@/features/prototype/components/prototype-glass-
 
 const NAV_ICON_BASE: Record<ImmersiveNavTab, string> = {
   journey: "icons/icon_nav_journey_mountain",
+  tree: "icons/icon_nav_world_pagoda",
   camp: "icons/icon_nav_camp_tent",
   study: "icons/icon_nav_dojo_torii",
   bag: "icons/icon_nav_bag_backpack",
@@ -16,6 +17,7 @@ const NAV_ICON_BASE: Record<ImmersiveNavTab, string> = {
 
 const NAV_LABELS: Record<ImmersiveNavTab, string> = {
   journey: "Journey",
+  tree: "Tree",
   camp: "Camp",
   study: "Study",
   bag: "Bag",

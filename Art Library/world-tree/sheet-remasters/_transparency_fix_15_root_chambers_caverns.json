@@ -1,0 +1,174 @@
+{
+  "section": "15_root_chambers_caverns",
+  "processed": 5,
+  "dry_run": false,
+  "passed": 5,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_15_root_chambers_caverns_01_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_01_dark_v2.png",
+      "before": {
+        "size": [
+          1465,
+          749
+        ],
+        "transparent_pct": 86.4,
+        "partial_alpha": 99071,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1465,
+          749
+        ],
+        "transparent_pct": 86.4,
+        "partial_alpha": 99071,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_15_root_chambers_caverns_02_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_02_dark_v2.png",
+      "before": {
+        "size": [
+          1065,
+          1026
+        ],
+        "transparent_pct": 80.4,
+        "partial_alpha": 111513,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1065,
+          1026
+        ],
+        "transparent_pct": 80.4,
+        "partial_alpha": 111513,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_15_root_chambers_caverns_03_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_03_dark_v2.png",
+      "before": {
+        "size": [
+          1446,
+          325
+        ],
+        "transparent_pct": 89.6,
+        "partial_alpha": 32995,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1446,
+          325
+        ],
+        "transparent_pct": 89.6,
+        "partial_alpha": 32995,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_15_root_chambers_caverns_04_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_04_dark_v2.png",
+      "before": {
+        "size": [
+          1468,
+          744
+        ],
+        "transparent_pct": 83.8,
+        "partial_alpha": 148549,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1468,
+          744
+        ],
+        "transparent_pct": 83.8,
+        "partial_alpha": 148549,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_15_root_chambers_caverns_05_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/15_root_chambers_caverns/wt_15_root_chambers_caverns_05_dark_v2.png",
+      "before": {
+        "size": [
+          1462,
+          933
+        ],
+        "transparent_pct": 80.7,
+        "partial_alpha": 197744,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1462,
+          933
+        ],
+        "transparent_pct": 80.7,
+        "partial_alpha": 197744,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    }
+  ]
+}

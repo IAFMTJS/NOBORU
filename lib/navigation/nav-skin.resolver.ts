@@ -28,6 +28,7 @@ export type NavSkinSeason = "spring" | "summer" | "autumn" | "winter";
 const SEASON_SKIN_BY_TAB: Record<NavSkinSeason, Record<ImmersiveNavTab, NavPillSkinId>> = {
   spring: {
     journey: "cherry_dawn",
+    tree: "bamboo_grove",
     camp: "sakura_bloom",
     study: "bamboo_grove",
     bag: "travel_pack",
@@ -35,6 +36,7 @@ const SEASON_SKIN_BY_TAB: Record<NavSkinSeason, Record<ImmersiveNavTab, NavPillS
   },
   summer: {
     journey: "trail_mist",
+    tree: "bamboo_grove",
     camp: "ember_night",
     study: "study_scroll",
     bag: "travel_pack",
@@ -42,6 +44,7 @@ const SEASON_SKIN_BY_TAB: Record<NavSkinSeason, Record<ImmersiveNavTab, NavPillS
   },
   autumn: {
     journey: "trail_mist",
+    tree: "bamboo_grove",
     camp: "ember_night",
     study: "study_scroll",
     bag: "travel_pack",
@@ -49,6 +52,7 @@ const SEASON_SKIN_BY_TAB: Record<NavSkinSeason, Record<ImmersiveNavTab, NavPillS
   },
   winter: {
     journey: "winter_summit",
+    tree: "cloud_sea",
     camp: "ember_night",
     study: "study_scroll",
     bag: "travel_pack",

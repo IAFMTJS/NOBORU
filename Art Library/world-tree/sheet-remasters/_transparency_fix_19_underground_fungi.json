@@ -1,0 +1,570 @@
+{
+  "section": "19_underground_fungi",
+  "processed": 17,
+  "dry_run": false,
+  "passed": 17,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_19_underground_fungi_01_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_01_dark_v2.png",
+      "before": {
+        "size": [
+          1415,
+          713
+        ],
+        "transparent_pct": 80.8,
+        "partial_alpha": 112226,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1415,
+          713
+        ],
+        "transparent_pct": 80.8,
+        "partial_alpha": 112226,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_02_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_02_dark_v2.png",
+      "before": {
+        "size": [
+          851,
+          1014
+        ],
+        "transparent_pct": 86.3,
+        "partial_alpha": 73887,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          851,
+          1014
+        ],
+        "transparent_pct": 86.3,
+        "partial_alpha": 73887,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_03_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_03_dark_v2.png",
+      "before": {
+        "size": [
+          462,
+          995
+        ],
+        "transparent_pct": 70.8,
+        "partial_alpha": 100555,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          462,
+          995
+        ],
+        "transparent_pct": 70.8,
+        "partial_alpha": 100555,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_04_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_04_dark_v2.png",
+      "before": {
+        "size": [
+          1401,
+          806
+        ],
+        "transparent_pct": 64.5,
+        "partial_alpha": 213608,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1401,
+          806
+        ],
+        "transparent_pct": 64.5,
+        "partial_alpha": 213608,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_05_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_05_dark_v2.png",
+      "before": {
+        "size": [
+          1232,
+          936
+        ],
+        "transparent_pct": 83.3,
+        "partial_alpha": 97133,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1232,
+          936
+        ],
+        "transparent_pct": 83.3,
+        "partial_alpha": 97133,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_06_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_06_dark_v2.png",
+      "before": {
+        "size": [
+          617,
+          995
+        ],
+        "transparent_pct": 69.1,
+        "partial_alpha": 147644,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          617,
+          995
+        ],
+        "transparent_pct": 69.1,
+        "partial_alpha": 147644,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_07_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_07_dark_v2.png",
+      "before": {
+        "size": [
+          1385,
+          783
+        ],
+        "transparent_pct": 74.7,
+        "partial_alpha": 179791,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1385,
+          783
+        ],
+        "transparent_pct": 74.7,
+        "partial_alpha": 179791,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_08_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_08_dark_v2.png",
+      "before": {
+        "size": [
+          578,
+          1012
+        ],
+        "transparent_pct": 59.8,
+        "partial_alpha": 99315,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          578,
+          1012
+        ],
+        "transparent_pct": 59.8,
+        "partial_alpha": 99315,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_09_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_09_dark_v2.png",
+      "before": {
+        "size": [
+          870,
+          955
+        ],
+        "transparent_pct": 63.3,
+        "partial_alpha": 186165,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          870,
+          955
+        ],
+        "transparent_pct": 63.3,
+        "partial_alpha": 186165,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_10_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_10_dark_v2.png",
+      "before": {
+        "size": [
+          541,
+          898
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 120772,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          541,
+          898
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 120772,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_11_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_11_dark_v2.png",
+      "before": {
+        "size": [
+          700,
+          906
+        ],
+        "transparent_pct": 67.4,
+        "partial_alpha": 115783,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          700,
+          906
+        ],
+        "transparent_pct": 67.4,
+        "partial_alpha": 115783,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_12_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_12_dark_v2.png",
+      "before": {
+        "size": [
+          578,
+          1026
+        ],
+        "transparent_pct": 56.4,
+        "partial_alpha": 124713,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          578,
+          1026
+        ],
+        "transparent_pct": 56.4,
+        "partial_alpha": 124713,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_13_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_13_dark_v2.png",
+      "before": {
+        "size": [
+          757,
+          967
+        ],
+        "transparent_pct": 52.8,
+        "partial_alpha": 153728,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          757,
+          967
+        ],
+        "transparent_pct": 52.8,
+        "partial_alpha": 153728,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_14_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_14_dark_v2.png",
+      "before": {
+        "size": [
+          511,
+          994
+        ],
+        "transparent_pct": 79.8,
+        "partial_alpha": 68432,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          511,
+          994
+        ],
+        "transparent_pct": 79.8,
+        "partial_alpha": 68432,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_15_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_15_dark_v2.png",
+      "before": {
+        "size": [
+          1382,
+          576
+        ],
+        "transparent_pct": 72.8,
+        "partial_alpha": 152009,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1382,
+          576
+        ],
+        "transparent_pct": 72.8,
+        "partial_alpha": 152009,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_16_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_16_dark_v2.png",
+      "before": {
+        "size": [
+          538,
+          990
+        ],
+        "transparent_pct": 59.9,
+        "partial_alpha": 93614,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          538,
+          990
+        ],
+        "transparent_pct": 59.9,
+        "partial_alpha": 93614,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_19_underground_fungi_17_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/19_underground_fungi/wt_19_underground_fungi_17_dark_v2.png",
+      "before": {
+        "size": [
+          1471,
+          363
+        ],
+        "transparent_pct": 86.0,
+        "partial_alpha": 40331,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1471,
+          363
+        ],
+        "transparent_pct": 86.0,
+        "partial_alpha": 40331,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    }
+  ]
+}

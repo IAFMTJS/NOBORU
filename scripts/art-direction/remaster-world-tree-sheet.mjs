@@ -34,10 +34,11 @@ const WEBP_OPTIONS = { quality: 92, effort: 6, alphaQuality: 100 };
 const MIN_LONG_EDGE = 512;
 
 function parseArgs(argv) {
-  const args = { ingest: null, id: null };
+  const args = { ingest: null, id: null, fromExtracts: null };
   for (let i = 2; i < argv.length; i += 1) {
     if (argv[i] === "--ingest") args.ingest = argv[++i];
     if (argv[i] === "--id") args.id = argv[++i];
+    if (argv[i] === "--from-extracts") args.fromExtracts = argv[++i];
   }
   return args;
 }
@@ -103,6 +104,7 @@ async function publishRemaster(entry, sourcePath) {
 
   await pipeline.clone().png({ compressionLevel: 9 }).toFile(pngPath);
   stripCheckerboard(pngPath);
+  await sharp(pngPath).webp(WEBP_OPTIONS).toFile(webpPath);
 
   return {
     id: v2Id,
@@ -112,6 +114,33 @@ async function publishRemaster(entry, sourcePath) {
     webp: webpPath.replace(/\\/g, "/").replace(`${ROOT}/`.replace(/\\/g, "/"), ""),
     remasteredAt: new Date().toISOString(),
   };
+}
+
+async function remasterFromExtracts(extractManifest, sections) {
+  const wanted = new Set(sections);
+  const entries = extractManifest.filter((item) => wanted.has(item.section));
+  let manifest = [];
+  if (existsSync(REMASTER_MANIFEST)) {
+    manifest = await loadJson(REMASTER_MANIFEST);
+  }
+
+  const results = [];
+  for (const entry of entries) {
+    const sourcePath = join(ROOT, entry.file);
+    if (!existsSync(sourcePath)) {
+      console.warn(`  skip missing extract: ${entry.file}`);
+      continue;
+    }
+    const result = await publishRemaster(entry, sourcePath);
+    manifest = manifest.filter((item) => item.id !== result.id);
+    manifest.push(result);
+    results.push(result);
+  }
+
+  manifest.sort((a, b) => a.id.localeCompare(b.id));
+  await mkdir(REMASTER_ROOT, { recursive: true });
+  await writeFile(REMASTER_MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+  return results;
 }
 
 async function ingestOne(sourcePath, assetId, extractManifest) {
@@ -153,6 +182,14 @@ async function main() {
     console.log(`Remastered: ${result.id}`);
     console.log(`  PNG:  ${result.png}`);
     console.log(`  WebP: ${result.webp}`);
+    return;
+  }
+
+  if (args.fromExtracts) {
+    const sections = args.fromExtracts.split(",").map((part) => part.trim()).filter(Boolean);
+    const results = await remasterFromExtracts(extractManifest, sections);
+    console.log(`Remastered ${results.length} extract(s) from: ${sections.join(", ")}`);
+    for (const result of results) console.log(`  ${result.id}`);
     return;
   }
 

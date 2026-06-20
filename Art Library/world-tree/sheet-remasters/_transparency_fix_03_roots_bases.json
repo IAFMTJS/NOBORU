@@ -1,0 +1,339 @@
+{
+  "section": "03_roots_bases",
+  "processed": 10,
+  "dry_run": false,
+  "passed": 10,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_03_roots_bases_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_01_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 44.5,
+        "partial_alpha": 257674,
+        "black_fringe_pct": 38.56,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          653,
+          899
+        ],
+        "transparent_pct": 53.7,
+        "partial_alpha": 39771,
+        "black_fringe_pct": 0.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 523744,
+        "defringe_removed": 8
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_02_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 48.5,
+        "partial_alpha": 245068,
+        "black_fringe_pct": 34.32,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          750,
+          895
+        ],
+        "transparent_pct": 57.8,
+        "partial_alpha": 59934,
+        "black_fringe_pct": 0.5,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 461633,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_03_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 42.2,
+        "partial_alpha": 217104,
+        "black_fringe_pct": 27.28,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1266,
+          997
+        ],
+        "transparent_pct": 60.2,
+        "partial_alpha": 70888,
+        "black_fringe_pct": 0.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 355678,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_04_light_v2.png",
+      "before": {
+        "size": [
+          1522,
+          1048
+        ],
+        "transparent_pct": 39.3,
+        "partial_alpha": 265468,
+        "black_fringe_pct": 13.75,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1507,
+          931
+        ],
+        "transparent_pct": 46.4,
+        "partial_alpha": 159781,
+        "black_fringe_pct": 0.32,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 61453,
+        "defringe_removed": 9
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_05_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 43.3,
+        "partial_alpha": 347758,
+        "black_fringe_pct": 30.52,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1072,
+          992
+        ],
+        "transparent_pct": 59.3,
+        "partial_alpha": 116997,
+        "black_fringe_pct": 0.7,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 293816,
+        "defringe_removed": 196
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_06_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 51.8,
+        "partial_alpha": 211712,
+        "black_fringe_pct": 26.71,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1001,
+          833
+        ],
+        "transparent_pct": 57.6,
+        "partial_alpha": 32948,
+        "black_fringe_pct": 0.41,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 384848,
+        "defringe_removed": 11
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_07_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 47.4,
+        "partial_alpha": 213843,
+        "black_fringe_pct": 30.34,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          909,
+          866
+        ],
+        "transparent_pct": 54.2,
+        "partial_alpha": 34285,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 449127,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_08_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 31.9,
+        "partial_alpha": 226858,
+        "black_fringe_pct": 32.52,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1301,
+          787
+        ],
+        "transparent_pct": 43.5,
+        "partial_alpha": 10478,
+        "black_fringe_pct": 0.17,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 473465,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_09_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 52.4,
+        "partial_alpha": 252790,
+        "black_fringe_pct": 35.76,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          614,
+          1022
+        ],
+        "transparent_pct": 69.5,
+        "partial_alpha": 31688,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 524351,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_03_roots_bases_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/03_roots_bases/wt_03_roots_bases_10_light_v2.png",
+      "before": {
+        "size": [
+          1508,
+          1048
+        ],
+        "transparent_pct": 55.3,
+        "partial_alpha": 281846,
+        "black_fringe_pct": 30.22,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          733,
+          1011
+        ],
+        "transparent_pct": 69.0,
+        "partial_alpha": 51596,
+        "black_fringe_pct": 0.1,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 282319,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    }
+  ]
+}

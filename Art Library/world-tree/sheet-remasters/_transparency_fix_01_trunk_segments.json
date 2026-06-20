@@ -1,0 +1,1098 @@
+{
+  "section": "01_trunk_segments",
+  "processed": 33,
+  "dry_run": false,
+  "passed": 33,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_01_trunk_segments_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_01_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 71.2,
+        "partial_alpha": 269108,
+        "black_fringe_pct": 19.96,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1413,
+          632
+        ],
+        "transparent_pct": 84.0,
+        "partial_alpha": 87822,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 161832,
+        "defringe_removed": 930
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_02_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 47.1,
+        "partial_alpha": 301852,
+        "black_fringe_pct": 20.98,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1170,
+          1014
+        ],
+        "transparent_pct": 56.6,
+        "partial_alpha": 127904,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 216711,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_03_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.6,
+        "partial_alpha": 233600,
+        "black_fringe_pct": 17.58,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1264,
+          982
+        ],
+        "transparent_pct": 65.6,
+        "partial_alpha": 82127,
+        "black_fringe_pct": 0.38,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 173951,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_04_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 59.4,
+        "partial_alpha": 236445,
+        "black_fringe_pct": 19.29,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1058,
+          1002
+        ],
+        "transparent_pct": 67.2,
+        "partial_alpha": 73289,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 246329,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_05_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.5,
+        "partial_alpha": 249554,
+        "black_fringe_pct": 30.77,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          745,
+          956
+        ],
+        "transparent_pct": 64.2,
+        "partial_alpha": 56997,
+        "black_fringe_pct": 0.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 439944,
+        "defringe_removed": 25
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_06_light_v2.png",
+      "before": {
+        "size": [
+          1504,
+          1048
+        ],
+        "transparent_pct": 29.2,
+        "partial_alpha": 227498,
+        "black_fringe_pct": 60.06,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          268,
+          939
+        ],
+        "transparent_pct": 35.8,
+        "partial_alpha": 8095,
+        "black_fringe_pct": 0.38,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 951463,
+        "defringe_removed": 3
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_07_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 53.9,
+        "partial_alpha": 231436,
+        "black_fringe_pct": 27.53,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          813,
+          949
+        ],
+        "transparent_pct": 60.7,
+        "partial_alpha": 15538,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 409390,
+        "defringe_removed": 4
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_08_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 30.5,
+        "partial_alpha": 218649,
+        "black_fringe_pct": 60.11,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          277,
+          916
+        ],
+        "transparent_pct": 39.6,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.15,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 976586,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_09_light_v2.png",
+      "before": {
+        "size": [
+          1499,
+          1048
+        ],
+        "transparent_pct": 30.5,
+        "partial_alpha": 223755,
+        "black_fringe_pct": 57.95,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          301,
+          981
+        ],
+        "transparent_pct": 38.3,
+        "partial_alpha": 556,
+        "black_fringe_pct": 0.41,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 903469,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_10_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 32.6,
+        "partial_alpha": 261183,
+        "black_fringe_pct": 56.59,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          283,
+          1027
+        ],
+        "transparent_pct": 39.2,
+        "partial_alpha": 6453,
+        "black_fringe_pct": 0.53,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 910898,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_11_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_11_light_v2.png",
+      "before": {
+        "size": [
+          1522,
+          1048
+        ],
+        "transparent_pct": 27.3,
+        "partial_alpha": 235460,
+        "black_fringe_pct": 59.71,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          326,
+          997
+        ],
+        "transparent_pct": 38.0,
+        "partial_alpha": 10795,
+        "black_fringe_pct": 0.23,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 948334,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_12_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_12_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 30.4,
+        "partial_alpha": 233958,
+        "black_fringe_pct": 58.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          286,
+          980
+        ],
+        "transparent_pct": 35.3,
+        "partial_alpha": 4049,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 951105,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_13_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_13_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1046
+        ],
+        "transparent_pct": 30.2,
+        "partial_alpha": 233948,
+        "black_fringe_pct": 60.41,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          250,
+          920
+        ],
+        "transparent_pct": 32.8,
+        "partial_alpha": 31,
+        "black_fringe_pct": 0.38,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 981678,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_14_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_14_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 31.0,
+        "partial_alpha": 236346,
+        "black_fringe_pct": 58.68,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          290,
+          934
+        ],
+        "transparent_pct": 38.1,
+        "partial_alpha": 94,
+        "black_fringe_pct": 0.15,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 951361,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_15_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_15_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 33.7,
+        "partial_alpha": 232346,
+        "black_fringe_pct": 55.39,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          298,
+          967
+        ],
+        "transparent_pct": 38.0,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.05,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 903992,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_16_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_16_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 32.2,
+        "partial_alpha": 212123,
+        "black_fringe_pct": 56.5,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          313,
+          963
+        ],
+        "transparent_pct": 41.0,
+        "partial_alpha": 3652,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 921723,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_17_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_17_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 36.7,
+        "partial_alpha": 222309,
+        "black_fringe_pct": 52.96,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          333,
+          974
+        ],
+        "transparent_pct": 48.8,
+        "partial_alpha": 3132,
+        "black_fringe_pct": 0.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 853802,
+        "defringe_removed": 6
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_18_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_18_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 36.1,
+        "partial_alpha": 221660,
+        "black_fringe_pct": 53.83,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          320,
+          966
+        ],
+        "transparent_pct": 47.4,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 875457,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_19_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_19_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 30.6,
+        "partial_alpha": 227249,
+        "black_fringe_pct": 57.96,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          308,
+          1007
+        ],
+        "transparent_pct": 39.5,
+        "partial_alpha": 179,
+        "black_fringe_pct": 0.28,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 935961,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_20_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_20_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 31.9,
+        "partial_alpha": 226817,
+        "black_fringe_pct": 59.14,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          285,
+          887
+        ],
+        "transparent_pct": 42.2,
+        "partial_alpha": 1401,
+        "black_fringe_pct": 0.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 956489,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_21_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_21_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 69.6,
+        "partial_alpha": 279767,
+        "black_fringe_pct": 14.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1248,
+          984
+        ],
+        "transparent_pct": 79.5,
+        "partial_alpha": 139532,
+        "black_fringe_pct": 0.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 163665,
+        "defringe_removed": 399
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_22_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_22_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 72.4,
+        "partial_alpha": 252584,
+        "black_fringe_pct": 17.2,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1560,
+          686
+        ],
+        "transparent_pct": 84.2,
+        "partial_alpha": 103569,
+        "black_fringe_pct": 0.12,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 193321,
+        "defringe_removed": 950
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_23_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_23_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 72.2,
+        "partial_alpha": 289412,
+        "black_fringe_pct": 10.97,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1479,
+          983
+        ],
+        "transparent_pct": 80.9,
+        "partial_alpha": 178701,
+        "black_fringe_pct": 0.23,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 71436,
+        "defringe_removed": 1203
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_24_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_24_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 68.6,
+        "partial_alpha": 241405,
+        "black_fringe_pct": 19.59,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1420,
+          575
+        ],
+        "transparent_pct": 77.4,
+        "partial_alpha": 71661,
+        "black_fringe_pct": 0.2,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 167511,
+        "defringe_removed": 1769
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_25_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_25_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.3,
+        "partial_alpha": 271980,
+        "black_fringe_pct": 12.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1487,
+          978
+        ],
+        "transparent_pct": 64.2,
+        "partial_alpha": 163372,
+        "black_fringe_pct": 0.37,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 56199,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_26_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_26_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 52.3,
+        "partial_alpha": 231288,
+        "black_fringe_pct": 19.43,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1201,
+          1016
+        ],
+        "transparent_pct": 61.8,
+        "partial_alpha": 81553,
+        "black_fringe_pct": 0.38,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 178126,
+        "defringe_removed": 24
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_27_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_27_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.9,
+        "partial_alpha": 242790,
+        "black_fringe_pct": 12.49,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1520,
+          977
+        ],
+        "transparent_pct": 66.7,
+        "partial_alpha": 137848,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 130560,
+        "defringe_removed": 74
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_28_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_28_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 67.6,
+        "partial_alpha": 252630,
+        "black_fringe_pct": 19.45,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1534,
+          581
+        ],
+        "transparent_pct": 77.0,
+        "partial_alpha": 99749,
+        "black_fringe_pct": 0.25,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 251316,
+        "defringe_removed": 185
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_29_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_29_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 72.6,
+        "partial_alpha": 286726,
+        "black_fringe_pct": 13.08,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1480,
+          898
+        ],
+        "transparent_pct": 82.3,
+        "partial_alpha": 154349,
+        "black_fringe_pct": 0.18,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 41744,
+        "defringe_removed": 2210
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_30_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_30_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 73.0,
+        "partial_alpha": 242423,
+        "black_fringe_pct": 16.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1557,
+          703
+        ],
+        "transparent_pct": 84.5,
+        "partial_alpha": 90828,
+        "black_fringe_pct": 0.18,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 215585,
+        "defringe_removed": 781
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_31_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_31_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 68.7,
+        "partial_alpha": 271508,
+        "black_fringe_pct": 17.21,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1417,
+          883
+        ],
+        "transparent_pct": 81.7,
+        "partial_alpha": 109594,
+        "black_fringe_pct": 0.22,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 132412,
+        "defringe_removed": 1010
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_32_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_32_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 65.1,
+        "partial_alpha": 324912,
+        "black_fringe_pct": 20.75,
+        "checker_remaining": 0,
+        "corner_black": 2,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1446,
+          658
+        ],
+        "transparent_pct": 77.1,
+        "partial_alpha": 131494,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 275506,
+        "defringe_removed": 8327
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_01_trunk_segments_33_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/01_trunk_segments/wt_01_trunk_segments_33_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 56.0,
+        "partial_alpha": 265070,
+        "black_fringe_pct": 30.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          594,
+          1005
+        ],
+        "transparent_pct": 62.1,
+        "partial_alpha": 35478,
+        "black_fringe_pct": 0.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 476202,
+        "defringe_removed": 25
+      },
+      "fixed": true
+    }
+  ]
+}

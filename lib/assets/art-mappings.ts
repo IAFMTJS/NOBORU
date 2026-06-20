@@ -187,6 +187,7 @@ export type NoboruPoseId = keyof typeof NOBORU_POSE_ASSETS;
 
 export const NAV_TAB_ICON_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
   journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-active-amber" },
+  tree: { category: "ui/icons/nav", id: "icon-nav-world-pagoda-active-green" },
   camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-active-amber" },
   study: { category: "ui/icons/nav", id: "icon-nav-study-book-active-green" },
   bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-active-amber" },
@@ -195,6 +196,7 @@ export const NAV_TAB_ICON_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
 
 export const NAV_TAB_ICON_INACTIVE_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
   journey: { category: "ui/icons/nav", id: "icon-nav-journey-mountain-inactive" },
+  tree: { category: "ui/icons/nav", id: "icon-nav-world-pagoda-inactive" },
   camp: { category: "ui/icons/nav", id: "icon-nav-camp-tent-inactive" },
   study: { category: "ui/icons/nav", id: "icon-nav-study-book-inactive" },
   bag: { category: "ui/icons/nav", id: "icon-nav-bag-backpack-inactive" },
@@ -203,6 +205,7 @@ export const NAV_TAB_ICON_INACTIVE_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> 
 
 export const NAV_TAB_MASCOT_ASSETS: Record<ImmersiveNavTab, ArtAssetRef> = {
   journey: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },
+  tree: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },
   camp: { category: "characters/noboru/base", id: "char-noboru-sitting-campfire" },
   study: { category: "characters/noboru/base", id: "char-noboru-reading-book" },
   bag: { category: "characters/noboru/base", id: "char-noboru-walking-backpack" },

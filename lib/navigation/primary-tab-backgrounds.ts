@@ -14,14 +14,17 @@ type BackgroundAssetPair = {
   dark: string;
 };
 
-const TAB_BACKGROUND_ASSETS: Record<Exclude<ImmersiveNavTab, "journey">, BackgroundAssetPair> = {
+const TAB_BACKGROUND_ASSETS: Record<
+  Exclude<ImmersiveNavTab, "journey" | "tree">,
+  BackgroundAssetPair
+> = {
   camp: PROTOTYPE_BACKGROUNDS.camp,
   study: PROTOTYPE_BACKGROUNDS.study,
   bag: PROTOTYPE_BACKGROUNDS.camp,
   profile: PROTOTYPE_BACKGROUNDS.shrine,
 };
 
-const TAB_SCRIMS: Record<Exclude<ImmersiveNavTab, "journey">, string> = {
+const TAB_SCRIMS: Record<Exclude<ImmersiveNavTab, "journey" | "tree">, string> = {
   camp: "bg-gradient-to-b from-background/20 via-background/35 to-background/65",
   study: "bg-gradient-to-b from-background/25 via-background/40 to-background/70",
   bag: "bg-gradient-to-b from-background/30 via-background/45 to-background/70",
@@ -36,7 +39,7 @@ export function resolvePrimaryTabBackground(
 
   for (const item of PRIMARY_NAV_ITEMS) {
     if (!isNavActive(pathname, item.href)) continue;
-    if (item.navTab === "journey") return null;
+    if (item.navTab === "journey" || item.navTab === "tree") return null;
     const assets = TAB_BACKGROUND_ASSETS[item.navTab];
     return {
       src: assets[theme],
@@ -49,7 +52,7 @@ export function resolvePrimaryTabBackground(
 
 /** @deprecated Use resolvePrimaryTabBackground — kept for imports. */
 export const PRIMARY_TAB_BACKGROUNDS: Record<
-  Exclude<ImmersiveNavTab, "journey">,
+  Exclude<ImmersiveNavTab, "journey" | "tree">,
   PrimaryTabBackground
 > = {
   camp: {

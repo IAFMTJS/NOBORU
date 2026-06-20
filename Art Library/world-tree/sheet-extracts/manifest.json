@@ -1530,6 +1530,546 @@
     "file": "Art Library/world-tree/sheet-extracts/05_floating_islands/wt_05_floating_islands_21_light_v1.webp"
   },
   {
+    "id": "wt_06_settlements_buildings_01_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 1,
+    "bbox": [
+      6,
+      165,
+      65,
+      206
+    ],
+    "source_area": 1301,
+    "output_size": [
+      177,
+      123
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_01_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_02_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 2,
+    "bbox": [
+      85,
+      165,
+      119,
+      179
+    ],
+    "source_area": 337,
+    "output_size": [
+      102,
+      42
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_02_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_03_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 3,
+    "bbox": [
+      188,
+      165,
+      222,
+      176
+    ],
+    "source_area": 238,
+    "output_size": [
+      102,
+      33
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_03_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_04_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 4,
+    "bbox": [
+      290,
+      165,
+      338,
+      205
+    ],
+    "source_area": 961,
+    "output_size": [
+      144,
+      120
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_04_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_05_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 5,
+    "bbox": [
+      347,
+      165,
+      389,
+      201
+    ],
+    "source_area": 795,
+    "output_size": [
+      126,
+      108
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_05_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_06_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 6,
+    "bbox": [
+      395,
+      165,
+      440,
+      207
+    ],
+    "source_area": 1139,
+    "output_size": [
+      135,
+      126
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_06_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_07_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 7,
+    "bbox": [
+      462,
+      165,
+      510,
+      195
+    ],
+    "source_area": 885,
+    "output_size": [
+      144,
+      90
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_07_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_08_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 8,
+    "bbox": [
+      520,
+      165,
+      554,
+      187
+    ],
+    "source_area": 438,
+    "output_size": [
+      102,
+      66
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_08_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_09_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 9,
+    "bbox": [
+      571,
+      165,
+      618,
+      191
+    ],
+    "source_area": 750,
+    "output_size": [
+      141,
+      78
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_09_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_10_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 10,
+    "bbox": [
+      890,
+      165,
+      917,
+      178
+    ],
+    "source_area": 258,
+    "output_size": [
+      81,
+      39
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_10_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_11_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 11,
+    "bbox": [
+      950,
+      165,
+      1019,
+      210
+    ],
+    "source_area": 2645,
+    "output_size": [
+      207,
+      135
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_11_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_12_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 12,
+    "bbox": [
+      640,
+      167,
+      681,
+      210
+    ],
+    "source_area": 1134,
+    "output_size": [
+      123,
+      129
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_12_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_13_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 13,
+    "bbox": [
+      774,
+      169,
+      818,
+      210
+    ],
+    "source_area": 1182,
+    "output_size": [
+      132,
+      123
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_13_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_14_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 14,
+    "bbox": [
+      858,
+      169,
+      880,
+      199
+    ],
+    "source_area": 360,
+    "output_size": [
+      66,
+      90
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_14_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_15_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 15,
+    "bbox": [
+      225,
+      172,
+      274,
+      210
+    ],
+    "source_area": 1299,
+    "output_size": [
+      147,
+      114
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_15_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_16_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 16,
+    "bbox": [
+      725,
+      172,
+      769,
+      210
+    ],
+    "source_area": 1142,
+    "output_size": [
+      132,
+      114
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_16_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_17_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 17,
+    "bbox": [
+      551,
+      176,
+      571,
+      206
+    ],
+    "source_area": 333,
+    "output_size": [
+      60,
+      90
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_17_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_18_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 18,
+    "bbox": [
+      686,
+      176,
+      720,
+      210
+    ],
+    "source_area": 682,
+    "output_size": [
+      102,
+      102
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_18_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_19_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 19,
+    "bbox": [
+      913,
+      177,
+      939,
+      210
+    ],
+    "source_area": 508,
+    "output_size": [
+      78,
+      99
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_19_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_20_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 20,
+    "bbox": [
+      825,
+      180,
+      860,
+      210
+    ],
+    "source_area": 694,
+    "output_size": [
+      105,
+      90
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_20_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_21_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 21,
+    "bbox": [
+      441,
+      182,
+      465,
+      210
+    ],
+    "source_area": 426,
+    "output_size": [
+      72,
+      84
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_21_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_22_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 22,
+    "bbox": [
+      148,
+      183,
+      218,
+      210
+    ],
+    "source_area": 1463,
+    "output_size": [
+      210,
+      81
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_22_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_23_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 23,
+    "bbox": [
+      81,
+      184,
+      140,
+      210
+    ],
+    "source_area": 1191,
+    "output_size": [
+      177,
+      78
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_23_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_24_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 24,
+    "bbox": [
+      329,
+      186,
+      355,
+      210
+    ],
+    "source_area": 417,
+    "output_size": [
+      78,
+      72
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_24_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_25_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 25,
+    "bbox": [
+      380,
+      189,
+      403,
+      210
+    ],
+    "source_area": 319,
+    "output_size": [
+      69,
+      63
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_25_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_26_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 26,
+    "bbox": [
+      509,
+      192,
+      531,
+      210
+    ],
+    "source_area": 261,
+    "output_size": [
+      66,
+      54
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_26_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_27_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 27,
+    "bbox": [
+      880,
+      192,
+      904,
+      210
+    ],
+    "source_area": 237,
+    "output_size": [
+      72,
+      54
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_27_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_28_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 28,
+    "bbox": [
+      602,
+      193,
+      626,
+      210
+    ],
+    "source_area": 292,
+    "output_size": [
+      72,
+      51
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_28_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_29_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 29,
+    "bbox": [
+      572,
+      194,
+      592,
+      210
+    ],
+    "source_area": 215,
+    "output_size": [
+      60,
+      48
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_29_light_v1.webp"
+  },
+  {
+    "id": "wt_06_settlements_buildings_30_light_v1",
+    "section": "06_settlements_buildings",
+    "index": 30,
+    "bbox": [
+      41,
+      196,
+      74,
+      210
+    ],
+    "source_area": 388,
+    "output_size": [
+      99,
+      42
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_30_light_v1.webp"
+  },
+  {
     "id": "wt_07_shrines_sacred_01_light_v1",
     "section": "07_shrines_sacred",
     "index": 1,
@@ -2362,18 +2902,90 @@
     "section": "09_bridges_connections",
     "index": 1,
     "bbox": [
-      671,
-      295,
-      699,
-      307
+      158,
+      298,
+      202,
+      305
     ],
-    "source_area": 206,
+    "source_area": 236,
     "output_size": [
-      56,
-      24
+      88,
+      14
     ],
     "theme": "light",
     "file": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_01_light_v1.webp"
+  },
+  {
+    "id": "wt_09_bridges_connections_02_light_v1",
+    "section": "09_bridges_connections",
+    "index": 2,
+    "bbox": [
+      242,
+      298,
+      273,
+      305
+    ],
+    "source_area": 164,
+    "output_size": [
+      62,
+      14
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_02_light_v1.webp"
+  },
+  {
+    "id": "wt_09_bridges_connections_03_light_v1",
+    "section": "09_bridges_connections",
+    "index": 3,
+    "bbox": [
+      363,
+      298,
+      410,
+      304
+    ],
+    "source_area": 169,
+    "output_size": [
+      94,
+      12
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_03_light_v1.webp"
+  },
+  {
+    "id": "wt_09_bridges_connections_04_light_v1",
+    "section": "09_bridges_connections",
+    "index": 4,
+    "bbox": [
+      671,
+      298,
+      699,
+      307
+    ],
+    "source_area": 188,
+    "output_size": [
+      56,
+      18
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_04_light_v1.webp"
+  },
+  {
+    "id": "wt_09_bridges_connections_05_light_v1",
+    "section": "09_bridges_connections",
+    "index": 5,
+    "bbox": [
+      249,
+      319,
+      280,
+      328
+    ],
+    "source_area": 172,
+    "output_size": [
+      62,
+      18
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_05_light_v1.webp"
   },
   {
     "id": "wt_10_decorations_props_01_light_v1",
@@ -3172,18 +3784,90 @@
     "section": "12_special_elements",
     "index": 1,
     "bbox": [
-      0,
-      0,
-      1024,
-      682
+      899,
+      388,
+      955,
+      395
     ],
-    "source_area": 5908,
+    "source_area": 275,
     "output_size": [
-      2048,
-      1364
+      112,
+      14
     ],
     "theme": "light",
     "file": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_01_light_v1.webp"
+  },
+  {
+    "id": "wt_12_special_elements_02_light_v1",
+    "section": "12_special_elements",
+    "index": 2,
+    "bbox": [
+      95,
+      405,
+      135,
+      418
+    ],
+    "source_area": 294,
+    "output_size": [
+      80,
+      26
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_02_light_v1.webp"
+  },
+  {
+    "id": "wt_12_special_elements_03_light_v1",
+    "section": "12_special_elements",
+    "index": 3,
+    "bbox": [
+      185,
+      405,
+      221,
+      418
+    ],
+    "source_area": 354,
+    "output_size": [
+      72,
+      26
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_03_light_v1.webp"
+  },
+  {
+    "id": "wt_12_special_elements_04_light_v1",
+    "section": "12_special_elements",
+    "index": 4,
+    "bbox": [
+      452,
+      407,
+      501,
+      418
+    ],
+    "source_area": 373,
+    "output_size": [
+      98,
+      22
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_04_light_v1.webp"
+  },
+  {
+    "id": "wt_12_special_elements_05_light_v1",
+    "section": "12_special_elements",
+    "index": 5,
+    "bbox": [
+      558,
+      407,
+      596,
+      418
+    ],
+    "source_area": 280,
+    "output_size": [
+      76,
+      22
+    ],
+    "theme": "light",
+    "file": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_05_light_v1.webp"
   },
   {
     "id": "wt_13_background_composition_01_light_v1",

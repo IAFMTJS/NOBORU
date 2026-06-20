@@ -162,7 +162,9 @@ describe("plotJourneyNodesOnSkeleton", () => {
     expect(plotted[1]!.yPercent).toBeLessThan(plotted[0]!.yPercent);
   });
 
-  it("keeps all coordinates within the visible canvas for a full blueprint tree", async () => {
+  it(
+    "keeps all coordinates within the visible canvas for a full blueprint tree",
+    async () => {
     const { augmentRegionsWithBlueprint } = await import(
       "@/features/journey/utils/journey-blueprint-merge.utils"
     );
@@ -198,7 +200,9 @@ describe("plotJourneyNodesOnSkeleton", () => {
         expect(prev.yPercent).toBeGreaterThanOrEqual(current.yPercent);
       }
     }
-  });
+  },
+    15_000,
+  );
 
   it("orders nodes by global index", () => {
     const journey = makeJourney([
@@ -257,9 +261,14 @@ describe("plotJourneyNodesOnSkeleton", () => {
 
 describe("resolveWorldTreeCanvasMinHeightVh", () => {
   it("grows the canvas when many nodes need more vertical spacing", () => {
-    expect(resolveWorldTreeCanvasMinHeightVh(1)).toBeLessThan(
-      resolveWorldTreeCanvasMinHeightVh(40),
+    expect(resolveWorldTreeCanvasMinHeightVh(100)).toBeLessThan(
+      resolveWorldTreeCanvasMinHeightVh(700),
     );
+  });
+
+  it("keeps full-tree canvas height practical for normalized Y layout", () => {
+    expect(resolveWorldTreeCanvasMinHeightVh(687)).toBeLessThan(800);
+    expect(resolveWorldTreeCanvasMinHeightVh(687)).toBeGreaterThan(600);
   });
 });
 

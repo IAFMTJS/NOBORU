@@ -32,7 +32,8 @@ SECTION_BANDS: list[tuple[str, int, int]] = [
     ("03_roots_bases", 118, 148),
     ("04_platforms_ledges", 148, 178),
     ("05_floating_islands", 178, 208),
-    ("06_settlements_buildings", 208, 238),
+    # Row 06 art sits above the label strip (208–238); label-only band yielded tiny fragments.
+    ("06_settlements_buildings", 165, 210),
     ("07_shrines_sacred", 238, 268),
     ("08_camps_learning", 268, 298),
     ("09_bridges_connections", 298, 328),
@@ -129,16 +130,41 @@ def crop_to_content(rgba: Image.Image, pad: int = PADDING) -> Image.Image:
     return Image.fromarray(arr[y0:y1, x0:x1], "RGBA")
 
 
-def extract_assets(source: Path, scale: int, min_area: int) -> list[ExtractedAsset]:
+def extract_assets(
+    source: Path,
+    scale: int,
+    min_area: int,
+    *,
+    only_sections: set[str] | None = None,
+) -> list[ExtractedAsset]:
     rgb = load_rgb(source)
     h, w = rgb.shape[:2]
+
+    if only_sections:
+        manifest: list[ExtractedAsset] = []
+        for section_id, y0, y1 in SECTION_BANDS:
+            if section_id not in only_sections:
+                continue
+            manifest.extend(
+                extract_band(
+                    rgb,
+                    section_id=section_id,
+                    y0=y0,
+                    y1=y1,
+                    scale=scale,
+                    min_area=min_area,
+                )
+            )
+        manifest.sort(key=lambda item: (item.section, item.index))
+        return manifest
+
     fg = ~background_mask(rgb)
 
     labeled, count = ndimage.label(fg)
     sizes = ndimage.sum(fg, labeled, range(1, count + 1))
 
     section_counters: dict[str, int] = {}
-    manifest: list[ExtractedAsset] = []
+    manifest = []
 
     base_rgba = Image.fromarray(rgb.astype(np.uint8), "RGB").convert("RGBA")
     base_arr = np.array(base_rgba)
@@ -190,32 +216,126 @@ def extract_assets(source: Path, scale: int, min_area: int) -> list[ExtractedAss
     return manifest
 
 
+def extract_band(
+    rgb: np.ndarray,
+    *,
+    section_id: str,
+    y0: int,
+    y1: int,
+    scale: int,
+    min_area: int,
+) -> list[ExtractedAsset]:
+    """Extract within one sheet band — avoids cross-row component mis-assignment."""
+    band_rgb = rgb[y0:y1, :, :]
+    light_theme = y0 < LIGHT_SPLIT_Y
+    cream = CREAM_BG if light_theme else DARK_BG
+    fg = np.linalg.norm(band_rgb - cream, axis=2) >= BG_TOLERANCE
+
+    labeled, count = ndimage.label(fg)
+    sizes = ndimage.sum(fg, labeled, range(1, count + 1))
+
+    base_rgba = Image.fromarray(band_rgb.astype(np.uint8), "RGB").convert("RGBA")
+    base_arr = np.array(base_rgba)
+    base_arr[..., 3] = (fg * 255).astype(np.uint8)
+    sheet = Image.fromarray(base_arr, "RGBA")
+
+    manifest: list[ExtractedAsset] = []
+    index = 0
+
+    for label_id, area in enumerate(sizes, start=1):
+        if area < min_area:
+            continue
+
+        component = labeled == label_id
+        ys, xs = np.where(component)
+        index += 1
+
+        x0, x1 = int(xs.min()), int(xs.max()) + 1
+        by0, by1 = int(ys.min()), int(ys.max()) + 1
+        crop = sheet.crop((x0, by0, x1, by1))
+        crop = refine_alpha(crop, light_theme=light_theme)
+        crop = crop_to_content(crop)
+
+        if scale > 1:
+            crop = crop.resize((crop.width * scale, crop.height * scale), Image.Resampling.LANCZOS)
+
+        theme = "light" if light_theme else "dark"
+        asset_id = f"wt_{section_id}_{index:02d}_{theme}_v1"
+        out_dir = OUTPUT_ROOT / section_id
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{asset_id}.webp"
+        crop.save(out_path, "WEBP", lossless=True, method=6)
+
+        manifest.append(
+            ExtractedAsset(
+                id=asset_id,
+                section=section_id,
+                index=index,
+                bbox=[x0, y0 + by0, x1, y0 + by1],
+                source_area=int(area),
+                output_size=[crop.width, crop.height],
+                theme=theme,
+                file=str(out_path.relative_to(ROOT)).replace("\\", "/"),
+            )
+        )
+
+    return manifest
+
+
+def merge_manifest(existing: list[dict], new_items: list[ExtractedAsset]) -> list[dict]:
+    if not new_items:
+        return existing
+    replaced = {item.section for item in new_items}
+    kept = [item for item in existing if item["section"] not in replaced]
+    merged = kept + [asdict(item) for item in new_items]
+    merged.sort(key=lambda item: (item["section"], item["index"]))
+    return merged
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Extract World Tree sheet sprites to transparent WebP.")
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--scale", type=int, default=2, help="Upscale factor after crop (default: 2)")
     parser.add_argument("--min-area", type=int, default=200, help="Minimum sprite area in source pixels")
+    parser.add_argument(
+        "--sections",
+        type=str,
+        default="",
+        help="Comma-separated section ids to re-extract in isolation and merge into manifest",
+    )
     args = parser.parse_args()
 
     if not args.source.exists():
         raise SystemExit(f"Source sheet not found: {args.source}")
 
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
-    manifest = extract_assets(args.source, scale=args.scale, min_area=args.min_area)
 
-    MANIFEST_PATH.write_text(
-        json.dumps([asdict(item) for item in manifest], indent=2),
-        encoding="utf-8",
+    only_sections = {part.strip() for part in args.sections.split(",") if part.strip()} or None
+    manifest_items = extract_assets(
+        args.source,
+        scale=args.scale,
+        min_area=args.min_area,
+        only_sections=only_sections,
     )
 
-    by_section: dict[str, int] = {}
-    for item in manifest:
-        by_section[item.section] = by_section.get(item.section, 0) + 1
+    if only_sections and MANIFEST_PATH.exists():
+        existing = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        manifest_payload = merge_manifest(existing, manifest_items)
+    else:
+        manifest_payload = [asdict(item) for item in manifest_items]
 
-    print(f"Extracted {len(manifest)} assets -> {OUTPUT_ROOT}")
+    MANIFEST_PATH.write_text(json.dumps(manifest_payload, indent=2), encoding="utf-8")
+
+    by_section: dict[str, int] = {}
+    for item in manifest_payload:
+        by_section[item["section"]] = by_section.get(item["section"], 0) + 1
+
+    print(f"Extracted {len(manifest_items)} assets -> {OUTPUT_ROOT}")
     for section, count in sorted(by_section.items()):
+        if only_sections and section not in only_sections:
+            continue
         print(f"  {section}: {count}")
-    print(f"Manifest: {MANIFEST_PATH}")
+    print(f"Manifest: {MANIFEST_PATH} ({len(manifest_payload)} total)")
 
 
 if __name__ == "__main__":

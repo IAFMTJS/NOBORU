@@ -17,6 +17,8 @@ type JourneySkeletonArtLayerProps = {
   journey?: JourneyPathViewModel;
   layout?: WorldTreeLayoutResult;
   className?: string;
+  /** Overview mode shows JLPT tags and per-zone node counts. */
+  variant?: "journey" | "overview";
 };
 
 const ZONE_TINTS: Record<string, string> = {
@@ -38,10 +40,17 @@ export function JourneySkeletonArtLayer({
   journey,
   layout: layoutProp,
   className,
+  variant = "journey",
 }: JourneySkeletonArtLayerProps) {
   const emptyJourney: JourneyPathViewModel = { regions: [], position: { currentRegionSlug: "foothills", currentRegionIndex: 0, currentLessonId: null, currentNodeId: null, globalNodeIndex: 0, globalLessonIndex: 0, pathPosition: 0 }, nextLessonId: null, nextLessonHref: null };
   const layout = layoutProp ?? (journey ? buildWorldTreeLayout(journey) : buildWorldTreeLayout(emptyJourney));
   const bands = buildWorldTreeZoneBands();
+  const isOverview = variant === "overview";
+
+  const nodeCountByZone = layout.nodes.reduce<Record<string, number>>((counts, entry) => {
+    counts[entry.zoneId] = (counts[entry.zoneId] ?? 0) + 1;
+    return counts;
+  }, {});
 
   return (
     <div
@@ -69,7 +78,18 @@ export function JourneySkeletonArtLayer({
           >
             <span className="absolute left-3 top-2 text-[10px] font-medium uppercase tracking-widest text-[#6B5344]/50 dark:text-[#D6A85F]/35">
               {zone.label}
+              {isOverview ? (
+                <span className="ml-1.5 normal-case tracking-normal opacity-80">
+                  · {zone.jlptLevel === "deep" ? "Start" : zone.jlptLevel.toUpperCase()}
+                  {nodeCountByZone[zone.id] ? ` · ${nodeCountByZone[zone.id]} nodes` : null}
+                </span>
+              ) : null}
             </span>
+            {isOverview && zone.id.startsWith("n3_trunk") ? (
+              <span className="absolute right-3 top-2 text-[9px] font-semibold uppercase tracking-widest text-[#D6A85F]/45">
+                Trunk ring
+              </span>
+            ) : null}
           </section>
         );
       })}

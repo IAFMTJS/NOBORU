@@ -1,0 +1,273 @@
+{
+  "section": "02_branches_limbs",
+  "processed": 8,
+  "dry_run": false,
+  "passed": 8,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_02_branches_limbs_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_01_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 47.1,
+        "partial_alpha": 299715,
+        "black_fringe_pct": 23.51,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1492,
+          727
+        ],
+        "transparent_pct": 55.5,
+        "partial_alpha": 138068,
+        "black_fringe_pct": 0.37,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 224692,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_02_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 44.8,
+        "partial_alpha": 291476,
+        "black_fringe_pct": 21.21,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1421,
+          971
+        ],
+        "transparent_pct": 59.1,
+        "partial_alpha": 135836,
+        "black_fringe_pct": 0.6,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 157431,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_03_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 51.1,
+        "partial_alpha": 281261,
+        "black_fringe_pct": 16.1,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1515,
+          889
+        ],
+        "transparent_pct": 60.0,
+        "partial_alpha": 152506,
+        "black_fringe_pct": 0.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 100054,
+        "defringe_removed": 7
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_04_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 39.7,
+        "partial_alpha": 286130,
+        "black_fringe_pct": 27.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1364,
+          716
+        ],
+        "transparent_pct": 45.5,
+        "partial_alpha": 101923,
+        "black_fringe_pct": 0.28,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 357127,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_05_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 70.0,
+        "partial_alpha": 223757,
+        "black_fringe_pct": 15.73,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1425,
+          709
+        ],
+        "transparent_pct": 76.4,
+        "partial_alpha": 86310,
+        "black_fringe_pct": 0.42,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 108745,
+        "defringe_removed": 8
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_06_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 66.8,
+        "partial_alpha": 263143,
+        "black_fringe_pct": 28.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1385,
+          404
+        ],
+        "transparent_pct": 85.8,
+        "partial_alpha": 35195,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 420705,
+        "defringe_removed": 105
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_07_light_v2.png",
+      "before": {
+        "size": [
+          1560,
+          1048
+        ],
+        "transparent_pct": 70.4,
+        "partial_alpha": 276420,
+        "black_fringe_pct": 19.74,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1360,
+          540
+        ],
+        "transparent_pct": 78.4,
+        "partial_alpha": 95878,
+        "black_fringe_pct": 0.16,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 239553,
+        "defringe_removed": 20
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_02_branches_limbs_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/02_branches_limbs/wt_02_branches_limbs_08_light_v2.png",
+      "before": {
+        "size": [
+          1554,
+          1048
+        ],
+        "transparent_pct": 68.5,
+        "partial_alpha": 316256,
+        "black_fringe_pct": 15.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1486,
+          871
+        ],
+        "transparent_pct": 79.7,
+        "partial_alpha": 164915,
+        "black_fringe_pct": 0.16,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 92715,
+        "defringe_removed": 1023
+      },
+      "fixed": true
+    }
+  ]
+}

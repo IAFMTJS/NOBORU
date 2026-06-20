@@ -1,0 +1,240 @@
+{
+  "section": "20_underground_crystals",
+  "processed": 7,
+  "dry_run": false,
+  "passed": 7,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_20_underground_crystals_01_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_01_dark_v2.png",
+      "before": {
+        "size": [
+          855,
+          972
+        ],
+        "transparent_pct": 50.7,
+        "partial_alpha": 203240,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          855,
+          972
+        ],
+        "transparent_pct": 50.7,
+        "partial_alpha": 203240,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_02_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_02_dark_v2.png",
+      "before": {
+        "size": [
+          629,
+          928
+        ],
+        "transparent_pct": 54.9,
+        "partial_alpha": 110654,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          629,
+          928
+        ],
+        "transparent_pct": 54.9,
+        "partial_alpha": 110654,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_03_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_03_dark_v2.png",
+      "before": {
+        "size": [
+          856,
+          914
+        ],
+        "transparent_pct": 69.8,
+        "partial_alpha": 169852,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          856,
+          914
+        ],
+        "transparent_pct": 69.8,
+        "partial_alpha": 169852,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_04_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_04_dark_v2.png",
+      "before": {
+        "size": [
+          927,
+          954
+        ],
+        "transparent_pct": 54.1,
+        "partial_alpha": 199307,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          927,
+          954
+        ],
+        "transparent_pct": 54.1,
+        "partial_alpha": 199307,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_05_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_05_dark_v2.png",
+      "before": {
+        "size": [
+          689,
+          1001
+        ],
+        "transparent_pct": 76.1,
+        "partial_alpha": 91005,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          689,
+          1001
+        ],
+        "transparent_pct": 76.1,
+        "partial_alpha": 91005,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_06_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_06_dark_v2.png",
+      "before": {
+        "size": [
+          638,
+          954
+        ],
+        "transparent_pct": 52.0,
+        "partial_alpha": 132412,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          638,
+          954
+        ],
+        "transparent_pct": 52.0,
+        "partial_alpha": 132412,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_20_underground_crystals_07_dark_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/20_underground_crystals/wt_20_underground_crystals_07_dark_v2.png",
+      "before": {
+        "size": [
+          652,
+          988
+        ],
+        "transparent_pct": 61.6,
+        "partial_alpha": 183429,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          652,
+          988
+        ],
+        "transparent_pct": 61.6,
+        "partial_alpha": 183429,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    }
+  ]
+}

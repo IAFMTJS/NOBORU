@@ -20,6 +20,7 @@ type JourneyHudProps = {
   totalNodes?: number;
   currentStreak?: number;
   totalXp?: number;
+  treeOverviewHref?: string | null;
   onRegionOverview: () => void;
   className?: string;
 };
@@ -34,6 +35,7 @@ export function JourneyHud({
   totalNodes = 0,
   currentStreak = 0,
   totalXp = 0,
+  treeOverviewHref = "/tree",
   onRegionOverview,
   className,
 }: JourneyHudProps) {
@@ -58,18 +60,32 @@ export function JourneyHud({
           {displayName.charAt(0).toUpperCase()}
         </Link>
 
-        <button
-          type="button"
-          onClick={onRegionOverview}
-          className={cn(glassSurface.chip, "focus-ring mx-auto max-w-[48%] px-2.5 py-1")}
-        >
-          <span className="block truncate font-sans text-[10px] font-medium uppercase text-muted-foreground">
-            {zoneLabel ?? regionName}
-          </span>
-          <span className="block truncate font-sans text-body font-semibold uppercase">
-            {regionName}
-          </span>
-        </button>
+        {treeOverviewHref ? (
+          <Link
+            href={treeOverviewHref}
+            className={cn(glassSurface.chip, "focus-ring mx-auto max-w-[48%] px-2.5 py-1")}
+          >
+            <span className="block truncate font-sans text-[10px] font-medium uppercase text-muted-foreground">
+              {zoneLabel ?? regionName}
+            </span>
+            <span className="block truncate font-sans text-body font-semibold uppercase">
+              {regionName}
+            </span>
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={onRegionOverview}
+            className={cn(glassSurface.chip, "focus-ring mx-auto max-w-[48%] px-2.5 py-1")}
+          >
+            <span className="block truncate font-sans text-[10px] font-medium uppercase text-muted-foreground">
+              {zoneLabel ?? regionName}
+            </span>
+            <span className="block truncate font-sans text-body font-semibold uppercase">
+              {regionName}
+            </span>
+          </button>
+        )}
 
         <div className="ml-auto flex shrink-0 items-center gap-1">
           <p className="text-caption text-muted-foreground">Lv {levelLabel}</p>

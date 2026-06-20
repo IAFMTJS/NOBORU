@@ -220,10 +220,11 @@ export const PROTOTYPE_SCREEN_TABS: ReadonlyArray<{
 ];
 
 export const PROTOTYPE_NAV_TAB_MAP: Record<
-  "journey" | "camp" | "study" | "bag" | "profile",
+  "journey" | "tree" | "camp" | "study" | "bag" | "profile",
   PrototypeScreenTab
 > = {
   journey: "journey",
+  tree: "journey",
   camp: "camp",
   study: "study",
   bag: "bag",

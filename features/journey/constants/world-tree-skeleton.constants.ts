@@ -96,8 +96,11 @@ export const WORLD_TREE_SKELETON_MIN_HEIGHT_VH =
 /** Max nodes on the main spine within one zone before overflow branches to caves. */
 export const WORLD_TREE_MAX_MAIN_SPINE_NODES = 28;
 
-/** Minimum vertical gap between nodes (percent of canvas height). */
+/** Minimum vertical gap between nodes (legacy layout spacing — normalized Y uses 0–100%). */
 export const WORLD_TREE_NODE_MIN_Y_GAP = 5.5;
+
+/** Target vertical gap between nodes in vh (touch-friendly, works with normalized Y 0–100%). */
+export const WORLD_TREE_MIN_NODE_GAP_VH = 0.9;
 
 /**
  * Maps app region slugs to their primary skeleton zone.

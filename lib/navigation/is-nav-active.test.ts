@@ -1,6 +1,29 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 import { isNavActive, resolveNavTabFromPath } from "@/lib/navigation/is-nav-active";
+import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
+
+describe("world tree route", () => {
+  it("registers the /tree page and screen", () => {
+    const page = readFileSync(resolve(process.cwd(), "app/(app)/tree/page.tsx"), "utf8");
+    expect(page).toContain("WorldTreeScreen");
+    expect(page).toContain('searchParams: Promise');
+  });
+
+  it("includes Tree in primary navigation", () => {
+    const treeItem = PRIMARY_NAV_ITEMS.find((item) => item.href === "/tree");
+    expect(treeItem?.label).toBe("Tree");
+    expect(treeItem?.navTab).toBe("tree");
+  });
+
+  it("highlights Tree tab on /tree routes", () => {
+    expect(isNavActive("/tree", "/tree")).toBe(true);
+    expect(isNavActive("/tree", "/learn")).toBe(false);
+    expect(resolveNavTabFromPath("/tree")).toBe("tree");
+  });
+});
 
 describe("isNavActive", () => {
   it("highlights the exact tab route", () => {
@@ -55,5 +78,6 @@ describe("resolveNavTabFromPath", () => {
     expect(resolveNavTabFromPath("/bag")).toBe("bag");
     expect(resolveNavTabFromPath("/learn/lesson/1")).toBe("journey");
     expect(resolveNavTabFromPath("/camp")).toBe("camp");
+    expect(resolveNavTabFromPath("/tree")).toBe("tree");
   });
 });

@@ -70,6 +70,7 @@ export function JourneyScreen({
           currentStreak={profileStats.currentStreak}
           totalXp={profileStats.totalXp}
           onRegionOverview={() => undefined}
+          treeOverviewHref="/tree"
         />
       ) : null}
     </div>

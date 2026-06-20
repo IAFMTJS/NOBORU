@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ICON_BASE: Record<ImmersiveNavTab, string> = {
   journey: "icons/icon_nav_journey_mountain",
+  tree: "icons/icon_nav_world_pagoda",
   camp: "icons/icon_nav_camp_tent",
   study: "icons/icon_nav_dojo_torii",
   bag: "icons/icon_nav_bag_backpack",

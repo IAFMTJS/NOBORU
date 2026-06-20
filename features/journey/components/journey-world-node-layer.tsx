@@ -14,6 +14,7 @@ import {
   buildWorldTreeLayout,
   findPlottedNode,
   type WorldTreeLayoutResult,
+  type WorldTreeVisibleYBand,
 } from "@/features/journey/utils/world-tree-layout.utils";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ type JourneyWorldNodeLayerProps = {
   regionName: string;
   layout?: WorldTreeLayoutResult;
   highlightNodeId?: string | null;
+  visibleYBand?: WorldTreeVisibleYBand;
   className?: string;
 };
 
@@ -78,6 +80,7 @@ export function JourneyWorldNodeLayer({
   regionName,
   layout: layoutProp,
   highlightNodeId = null,
+  visibleYBand,
   className,
 }: JourneyWorldNodeLayerProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -88,6 +91,16 @@ export function JourneyWorldNodeLayer({
     [journey, layoutProp],
   );
   const plotted = layout.nodes;
+  const renderedNodes = useMemo(() => {
+    if (!visibleYBand) return plotted;
+
+    const currentNodeId = journey.position.currentNodeId;
+
+    return plotted.filter(({ node, yPercent }) => {
+      if (node.id === highlightNodeId || node.id === currentNodeId) return true;
+      return yPercent >= visibleYBand.min && yPercent <= visibleYBand.max;
+    });
+  }, [highlightNodeId, journey.position.currentNodeId, plotted, visibleYBand]);
   const selectedPlotted = findPlottedNode(plotted, selectedNodeId);
   const selectedNode = selectedPlotted?.node ?? null;
 
@@ -117,7 +130,7 @@ export function JourneyWorldNodeLayer({
     <>
       <div className={cn("pointer-events-none absolute inset-0", className)} data-journey-node-layer>
         <div className="pointer-events-auto relative h-full w-full min-h-full">
-          {plotted.map(({ node, xPercent, yPercent }) => {
+          {renderedNodes.map(({ node, xPercent, yPercent }) => {
             const isCurrent =
               node.id === journey.position.currentNodeId || node.id === highlightNodeId;
             const size = nodeVisualSize(node, isCurrent);

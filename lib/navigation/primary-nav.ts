@@ -6,9 +6,10 @@ export type PrimaryNavItem = {
   navTab: ImmersiveNavTab;
 };
 
-/** VISUAL MD FILES Doc 01 — Journey · Camp · Study · Bag · Profile */
+/** VISUAL MD FILES Doc 01 — Journey · Tree · Camp · Study · Bag · Profile */
 export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
   { href: "/learn", label: "Journey", navTab: "journey" },
+  { href: "/tree", label: "Tree", navTab: "tree" },
   { href: "/camp", label: "Camp", navTab: "camp" },
   { href: "/study", label: "Study", navTab: "study" },
   { href: "/bag", label: "Bag", navTab: "bag" },

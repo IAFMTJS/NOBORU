@@ -3,6 +3,8 @@ import {
   WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_MAX_MAIN_SPINE_NODES,
   WORLD_TREE_NODE_MIN_Y_GAP,
+  WORLD_TREE_JOURNEY_CROWN_Y,
+  WORLD_TREE_MIN_NODE_GAP_VH,
   WORLD_TREE_SKELETON_MIN_HEIGHT_VH,
   WORLD_TREE_SKELETON_VH_PER_PERCENT,
   WORLD_TREE_SKELETON_ZONES,
@@ -48,6 +50,12 @@ export type WorldTreeLayoutResult = {
   nodes: PlottedSkeletonNode[];
   segments: WorldTreeLayoutSegment[];
   canvasMinHeightVh: number;
+};
+
+/** Visible y-percent band for viewport culling (0 = crown, 100 = base). */
+export type WorldTreeVisibleYBand = {
+  min: number;
+  max: number;
 };
 
 /** y=100 is the World Heart base — first lesson anchors here, then we climb up. */
@@ -105,13 +113,12 @@ function computeBranchXPercent(
   return Math.min(92, Math.max(8, forkX + direction * depth));
 }
 
-/** Minimum canvas height (vh) so nodes can maintain vertical spacing. */
+/** Canvas height (vh) for normalized Y layout — scales for tap spacing, not legacy y-gap %. */
 export function resolveWorldTreeCanvasMinHeightVh(nodeCount: number): number {
   if (nodeCount <= 1) return WORLD_TREE_SKELETON_MIN_HEIGHT_VH;
 
-  const requiredSpanPercent = (nodeCount - 1) * WORLD_TREE_NODE_MIN_Y_GAP + 12;
-  const scale = Math.max(1, requiredSpanPercent / 100);
-  return Math.ceil(WORLD_TREE_SKELETON_MIN_HEIGHT_VH * scale);
+  const ascentSpanVh = (nodeCount - 1) * WORLD_TREE_MIN_NODE_GAP_VH + 12;
+  return Math.ceil(Math.max(WORLD_TREE_SKELETON_MIN_HEIGHT_VH, ascentSpanVh));
 }
 
 function enforceMinimumNodeSpacing(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {

@@ -22,8 +22,9 @@ import { PROTOTYPE_TAB_BACKGROUNDS } from "@/features/prototype/constants/tab-ba
 import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 import { cn } from "@/lib/utils";
 
-function isNavTab(tab: PrototypeScreenTab): tab is ImmersiveNavTab {
-  return tab in PROTOTYPE_NAV_TAB_MAP;
+function resolveNavTabForScreen(tab: PrototypeScreenTab): ImmersiveNavTab | null {
+  const match = Object.entries(PROTOTYPE_NAV_TAB_MAP).find(([, screenTab]) => screenTab === tab);
+  return match ? (match[0] as ImmersiveNavTab) : null;
 }
 
 export function PrototypeScreen() {
@@ -36,6 +37,8 @@ export function PrototypeScreen() {
   };
 
   const activeBackground = PROTOTYPE_TAB_BACKGROUNDS[screenTab];
+
+  const activeNavTab = resolveNavTabForScreen(screenTab);
 
   return (
     <Tabs
@@ -113,8 +116,8 @@ export function PrototypeScreen() {
         <PrototypeComponentsTab />
       </TabsContent>
 
-      {showBottomNav && isNavTab(screenTab) ? (
-        <PrototypeBottomNav activeTab={screenTab} onTabChange={handleNavChange} />
+      {showBottomNav && activeNavTab ? (
+        <PrototypeBottomNav activeTab={activeNavTab} onTabChange={handleNavChange} />
       ) : null}
     </Tabs>
   );

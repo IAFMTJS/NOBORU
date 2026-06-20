@@ -1,0 +1,327 @@
+{
+  "version": 6,
+  "description": "Concept-map v6 — softer spine (40% width, 80% opacity, light roots).",
+  "canvas": { "width": 2048, "height": 4096 },
+  "trunkSpine": {
+    "targetTrunkWidthPercent": 0.4,
+    "centerX": 0.5,
+    "top": 0.1,
+    "bottom": 0.94,
+    "seamOverlapPx": 136,
+    "zIndex": 12,
+    "opacity": 0.8,
+    "pieces": [
+      { "id": "transition_ancient_to_canopy", "folder": "transitions/ancient_to_canopy", "theme": "light" },
+      { "id": "trunk_h", "theme": "light" },
+      { "id": "trunk_g", "theme": "light" },
+      { "id": "trunk_f", "theme": "light" },
+      { "id": "trunk_e", "theme": "light" },
+      { "id": "trunk_d", "theme": "light" },
+      { "id": "trunk_c", "theme": "light", "repeat": 2 },
+      { "id": "trunk_b", "theme": "light" },
+      { "id": "trunk_a", "theme": "light" },
+      { "id": "roots_e", "theme": "light" },
+      { "id": "roots_d", "theme": "light" },
+      { "id": "roots_c", "theme": "light" },
+      { "id": "roots_b", "theme": "light" },
+      { "id": "roots_a", "theme": "light" }
+    ]
+  },
+  "sky": {
+    "stops": [
+      { "offset": 0, "color": "#9fd4f0" },
+      { "offset": 0.08, "color": "#d4ecf8" },
+      { "offset": 0.2, "color": "#e8f4fc" },
+      { "offset": 0.45, "color": "#dce8d0" },
+      { "offset": 0.65, "color": "#c8b090" },
+      { "offset": 0.8, "color": "#5a4050" },
+      { "offset": 0.92, "color": "#2a1838" },
+      { "offset": 1, "color": "#080510" }
+    ],
+    "cloudLayers": [
+      { "section": "13_background_composition", "index": 1, "y": 0.04, "width": 1, "opacity": 0.2 },
+      { "section": "13_background_composition", "index": 2, "y": 0.11, "width": 1, "opacity": 0.16 },
+      { "section": "13_background_composition", "index": 3, "y": 0.2, "width": 1, "opacity": 0.12 }
+    ]
+  },
+  "tiers": [
+    {
+      "id": "celestial_spire",
+      "label": "Celestial Spire",
+      "y": 0.05,
+      "crown": [
+        { "section": "02_branches_limbs", "index": 6, "x": 0.5, "width": 0.98, "zIndex": 50 },
+        { "section": "02_branches_limbs", "index": 7, "x": 0.2, "width": 0.58, "zIndex": 49 },
+        { "section": "02_branches_limbs", "index": 8, "x": 0.8, "width": 0.52, "zIndex": 49 }
+      ],
+      "center": {
+        "section": "03_roots_bases",
+        "index": 5,
+        "width": 0.34,
+        "yOffset": 0.02,
+        "zIndex": 48
+      },
+      "left": {
+        "section": "05_floating_islands",
+        "index": 15,
+        "width": 0.28,
+        "x": 0.13,
+        "zIndex": 46
+      },
+      "right": {
+        "section": "07_shrines_sacred",
+        "index": 14,
+        "width": 0.24,
+        "x": 0.87,
+        "zIndex": 46
+      },
+      "bridges": [
+        {
+          "section": "09_bridges_connections",
+          "index": 4,
+          "width": 0.28,
+          "x": 0.32,
+          "yOffset": 0.025,
+          "zIndex": 47
+        },
+        {
+          "section": "09_bridges_connections",
+          "index": 5,
+          "width": 0.26,
+          "x": 0.7,
+          "yOffset": 0.02,
+          "zIndex": 47,
+          "flip": true
+        }
+      ]
+    },
+    {
+      "id": "canopy_realm",
+      "label": "Canopy Realm",
+      "y": 0.165,
+      "left": {
+        "section": "05_floating_islands",
+        "index": 3,
+        "width": 0.36,
+        "x": 0.11,
+        "yOffset": -0.01,
+        "zIndex": 44
+      },
+      "right": {
+        "section": "05_floating_islands",
+        "index": 7,
+        "width": 0.34,
+        "x": 0.89,
+        "yOffset": -0.01,
+        "zIndex": 44
+      },
+      "bridges": [
+        {
+          "section": "09_bridges_connections",
+          "index": 2,
+          "width": 0.42,
+          "x": 0.5,
+          "yOffset": 0.015,
+          "zIndex": 45
+        },
+        {
+          "section": "09_bridges_connections",
+          "index": 3,
+          "width": 0.2,
+          "x": 0.26,
+          "yOffset": 0.02,
+          "zIndex": 43
+        },
+        {
+          "section": "09_bridges_connections",
+          "index": 3,
+          "width": 0.2,
+          "x": 0.74,
+          "yOffset": 0.02,
+          "zIndex": 43,
+          "flip": true
+        }
+      ],
+      "center": {
+        "section": "04_platforms_ledges",
+        "index": 3,
+        "width": 0.4,
+        "yOffset": -0.025,
+        "zIndex": 43
+      },
+      "effects": [
+        {
+          "section": "12_special_elements",
+          "index": 2,
+          "width": 0.18,
+          "x": 0.62,
+          "yOffset": 0.04,
+          "opacity": 0.45,
+          "zIndex": 46
+        },
+        {
+          "section": "12_special_elements",
+          "index": 4,
+          "width": 0.14,
+          "x": 0.38,
+          "yOffset": 0.05,
+          "opacity": 0.35,
+          "zIndex": 46
+        }
+      ]
+    },
+    {
+      "id": "trunk_realm",
+      "label": "Trunk Realm",
+      "y": 0.31,
+      "center": {
+        "section": "04_platforms_ledges",
+        "index": 1,
+        "width": 0.82,
+        "yOffset": -0.03,
+        "zIndex": 40
+      },
+      "left": {
+        "section": "06_settlements_buildings",
+        "index": 1,
+        "width": 0.22,
+        "x": 0.08,
+        "yOffset": 0.02,
+        "zIndex": 39
+      },
+      "right": {
+        "section": "06_settlements_buildings",
+        "index": 11,
+        "width": 0.24,
+        "x": 0.91,
+        "yOffset": 0.01,
+        "zIndex": 39
+      },
+      "effects": [
+        {
+          "section": "12_special_elements",
+          "index": 1,
+          "width": 0.16,
+          "x": 0.72,
+          "yOffset": -0.02,
+          "opacity": 0.4,
+          "zIndex": 41
+        },
+        {
+          "section": "12_special_elements",
+          "index": 3,
+          "width": 0.12,
+          "x": 0.28,
+          "yOffset": -0.01,
+          "opacity": 0.35,
+          "zIndex": 41
+        }
+      ]
+    },
+    {
+      "id": "trunk_upper",
+      "label": "Wisdom Archive",
+      "y": 0.445,
+      "center": {
+        "section": "03_roots_bases",
+        "index": 1,
+        "width": 0.54,
+        "yOffset": -0.04,
+        "zIndex": 39
+      },
+      "left": {
+        "section": "06_settlements_buildings",
+        "index": 22,
+        "width": 0.2,
+        "x": 0.1,
+        "yOffset": -0.02,
+        "zIndex": 37
+      },
+      "right": {
+        "section": "08_camps_learning",
+        "index": 4,
+        "width": 0.22,
+        "x": 0.9,
+        "yOffset": -0.03,
+        "zIndex": 37
+      }
+    },
+    {
+      "id": "root_frontier",
+      "label": "Root Frontier",
+      "y": 0.58,
+      "center": {
+        "section": "03_roots_bases",
+        "index": 2,
+        "width": 0.92,
+        "yOffset": -0.05,
+        "zIndex": 36
+      },
+      "left": {
+        "section": "08_camps_learning",
+        "index": 1,
+        "width": 0.28,
+        "x": 0.09,
+        "yOffset": -0.04,
+        "zIndex": 35
+      },
+      "right": {
+        "section": "07_shrines_sacred",
+        "index": 5,
+        "width": 0.22,
+        "x": 0.91,
+        "yOffset": -0.03,
+        "zIndex": 35
+      },
+      "bridges": [
+        {
+          "section": "09_bridges_connections",
+          "index": 1,
+          "width": 0.24,
+          "x": 0.22,
+          "yOffset": -0.02,
+          "zIndex": 34
+        }
+      ]
+    },
+    {
+      "id": "deep_roots",
+      "label": "Deep Roots",
+      "y": 0.76,
+      "center": {
+        "section": "15_root_chambers_caverns",
+        "index": 1,
+        "theme": "dark",
+        "width": 0.78,
+        "yOffset": -0.03,
+        "zIndex": 30
+      },
+      "left": {
+        "section": "20_underground_crystals",
+        "index": 1,
+        "theme": "dark",
+        "width": 0.2,
+        "x": 0.11,
+        "yOffset": -0.02,
+        "zIndex": 34
+      },
+      "right": {
+        "section": "19_underground_fungi",
+        "index": 8,
+        "theme": "dark",
+        "width": 0.18,
+        "x": 0.89,
+        "yOffset": -0.02,
+        "zIndex": 34
+      },
+      "overlay": {
+        "section": "21_underground_special",
+        "index": 8,
+        "theme": "dark",
+        "width": 0.24,
+        "y": 0.94,
+        "zIndex": 38
+      }
+    }
+  ]
+}

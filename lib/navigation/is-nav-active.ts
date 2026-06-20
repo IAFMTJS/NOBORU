@@ -28,6 +28,8 @@ const PROFILE_CHILD_PREFIXES = ["/settings", "/achievements", "/progress", "/pro
 
 const JOURNEY_CHILD_PREFIXES = ["/trials", "/learn/world", "/explore", "/endgame"] as const;
 
+const TREE_CHILD_PREFIXES = [] as const;
+
 function matchesPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
 }
@@ -63,6 +65,10 @@ function isProfileRoute(pathname: string): boolean {
   );
 }
 
+function isTreeRoute(pathname: string): boolean {
+  return matchesPrefix(pathname, "/tree") || matchesAnyPrefix(pathname, TREE_CHILD_PREFIXES);
+}
+
 function isJourneyRoute(pathname: string): boolean {
   if (!matchesPrefix(pathname, "/learn")) return false;
   if (isStudyTrainingRoute(pathname)) return false;
@@ -76,6 +82,10 @@ export function isNavActive(pathname: string | null, href: string): boolean {
     return (
       isJourneyRoute(pathname) || matchesAnyPrefix(pathname, JOURNEY_CHILD_PREFIXES)
     );
+  }
+
+  if (href === "/tree") {
+    return isTreeRoute(pathname);
   }
 
   if (href === "/camp") {

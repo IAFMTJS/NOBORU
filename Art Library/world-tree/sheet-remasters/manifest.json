@@ -680,6 +680,246 @@
     "remasteredAt": "2026-06-18T11:07:07.529Z"
   },
   {
+    "id": "wt_06_settlements_buildings_01_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_01_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_01_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_01_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:09.420Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_02_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:16.406Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_03_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:22.024Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_04_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:30.982Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_05_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:39.135Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_06_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_06_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_06_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_06_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:45.394Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_07_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_07_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_07_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_07_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:51.632Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_08_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_08_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_08_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_08_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:05:58.631Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_09_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_09_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_09_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_09_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:05.217Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_10_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_10_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_10_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_10_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:13.093Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_11_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_11_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_11_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_11_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:19.394Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_12_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_12_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_12_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_12_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:26.289Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_13_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_13_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_13_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_13_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:33.252Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_14_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_14_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_14_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_14_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:41.878Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_15_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_15_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_15_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_15_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:49.557Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_16_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_16_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_16_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_16_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:06:58.368Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_17_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_17_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_17_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_17_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:05.419Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_18_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_18_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_18_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_18_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:13.587Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_19_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_19_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_19_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_19_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:21.865Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_20_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_20_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_20_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_20_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:30.620Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_21_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_21_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_21_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_21_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:39.563Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_22_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_22_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_22_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_22_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:47.565Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_23_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_23_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_23_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_23_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:07:57.257Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_24_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_24_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_24_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_24_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:03.613Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_25_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_25_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_25_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_25_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:09.813Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_26_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_26_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_26_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_26_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:18.463Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_27_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_27_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_27_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_27_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:27.448Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_28_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_28_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_28_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_28_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:35.617Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_29_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_29_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_29_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_29_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:44.013Z"
+  },
+  {
+    "id": "wt_06_settlements_buildings_30_light_v2",
+    "section": "06_settlements_buildings",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/06_settlements_buildings/wt_06_settlements_buildings_30_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_30_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/06_settlements_buildings/wt_06_settlements_buildings_30_light_v2.webp",
+    "remasteredAt": "2026-06-18T23:08:51.043Z"
+  },
+  {
     "id": "wt_07_shrines_sacred_01_light_v2",
     "section": "07_shrines_sacred",
     "sourceExtract": "Art Library/world-tree/sheet-extracts/07_shrines_sacred/wt_07_shrines_sacred_01_light_v1.webp",
@@ -1053,7 +1293,39 @@
     "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_01_light_v1.webp",
     "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_01_light_v2.png",
     "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_01_light_v2.webp",
-    "remasteredAt": "2026-06-18T12:04:21.513Z"
+    "remasteredAt": "2026-06-18T22:58:22.443Z"
+  },
+  {
+    "id": "wt_09_bridges_connections_02_light_v2",
+    "section": "09_bridges_connections",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:58:30.021Z"
+  },
+  {
+    "id": "wt_09_bridges_connections_03_light_v2",
+    "section": "09_bridges_connections",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:58:35.330Z"
+  },
+  {
+    "id": "wt_09_bridges_connections_04_light_v2",
+    "section": "09_bridges_connections",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:58:42.360Z"
+  },
+  {
+    "id": "wt_09_bridges_connections_05_light_v2",
+    "section": "09_bridges_connections",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/09_bridges_connections/wt_09_bridges_connections_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/09_bridges_connections/wt_09_bridges_connections_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:58:48.954Z"
   },
   {
     "id": "wt_10_decorations_props_01_light_v2",
@@ -1413,7 +1685,39 @@
     "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_01_light_v1.webp",
     "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_01_light_v2.png",
     "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_01_light_v2.webp",
-    "remasteredAt": "2026-06-18T12:51:22.054Z"
+    "remasteredAt": "2026-06-18T22:58:51.495Z"
+  },
+  {
+    "id": "wt_12_special_elements_02_light_v2",
+    "section": "12_special_elements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_02_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_02_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_02_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:58:59.018Z"
+  },
+  {
+    "id": "wt_12_special_elements_03_light_v2",
+    "section": "12_special_elements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_03_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_03_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_03_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:59:04.439Z"
+  },
+  {
+    "id": "wt_12_special_elements_04_light_v2",
+    "section": "12_special_elements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_04_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_04_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_04_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:59:09.214Z"
+  },
+  {
+    "id": "wt_12_special_elements_05_light_v2",
+    "section": "12_special_elements",
+    "sourceExtract": "Art Library/world-tree/sheet-extracts/12_special_elements/wt_12_special_elements_05_light_v1.webp",
+    "png": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_05_light_v2.png",
+    "webp": "Art Library/world-tree/sheet-remasters/12_special_elements/wt_12_special_elements_05_light_v2.webp",
+    "remasteredAt": "2026-06-18T22:59:14.207Z"
   },
   {
     "id": "wt_13_background_composition_01_light_v2",

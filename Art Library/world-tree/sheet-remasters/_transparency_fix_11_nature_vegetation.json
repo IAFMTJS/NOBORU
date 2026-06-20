@@ -1,0 +1,801 @@
+{
+  "section": "11_nature_vegetation",
+  "processed": 24,
+  "dry_run": false,
+  "passed": 24,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_11_nature_vegetation_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_01_light_v2.png",
+      "before": {
+        "size": [
+          462,
+          958
+        ],
+        "transparent_pct": 59.4,
+        "partial_alpha": 70517,
+        "black_fringe_pct": 12.27,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          435,
+          951
+        ],
+        "transparent_pct": 70.0,
+        "partial_alpha": 42407,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 4605,
+        "defringe_removed": 1470
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_02_light_v2.png",
+      "before": {
+        "size": [
+          372,
+          915
+        ],
+        "transparent_pct": 69.9,
+        "partial_alpha": 61391,
+        "black_fringe_pct": 7.37,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          340,
+          913
+        ],
+        "transparent_pct": 75.4,
+        "partial_alpha": 46543,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 1618,
+        "defringe_removed": 829
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_03_light_v2.png",
+      "before": {
+        "size": [
+          1197,
+          905
+        ],
+        "transparent_pct": 45.9,
+        "partial_alpha": 244434,
+        "black_fringe_pct": 14.5,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1173,
+          900
+        ],
+        "transparent_pct": 59.3,
+        "partial_alpha": 162406,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 82939,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_04_light_v2.png",
+      "before": {
+        "size": [
+          1064,
+          720
+        ],
+        "transparent_pct": 40.6,
+        "partial_alpha": 148036,
+        "black_fringe_pct": 26.9,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1030,
+          655
+        ],
+        "transparent_pct": 63.1,
+        "partial_alpha": 71425,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 24491,
+        "defringe_removed": 8
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_05_light_v2.png",
+      "before": {
+        "size": [
+          1201,
+          904
+        ],
+        "transparent_pct": 56.7,
+        "partial_alpha": 195711,
+        "black_fringe_pct": 14.45,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1066,
+          839
+        ],
+        "transparent_pct": 64.8,
+        "partial_alpha": 116268,
+        "black_fringe_pct": 0.28,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 31903,
+        "defringe_removed": 928
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_06_light_v2.png",
+      "before": {
+        "size": [
+          695,
+          1016
+        ],
+        "transparent_pct": 57.7,
+        "partial_alpha": 135131,
+        "black_fringe_pct": 8.27,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          678,
+          1012
+        ],
+        "transparent_pct": 65.0,
+        "partial_alpha": 102311,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 15586,
+        "defringe_removed": 245
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_07_light_v2.png",
+      "before": {
+        "size": [
+          782,
+          937
+        ],
+        "transparent_pct": 61.5,
+        "partial_alpha": 135742,
+        "black_fringe_pct": 6.53,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          763,
+          937
+        ],
+        "transparent_pct": 67.5,
+        "partial_alpha": 109679,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 4544,
+        "defringe_removed": 134
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_08_light_v2.png",
+      "before": {
+        "size": [
+          835,
+          971
+        ],
+        "transparent_pct": 46.2,
+        "partial_alpha": 197708,
+        "black_fringe_pct": 20.75,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          835,
+          970
+        ],
+        "transparent_pct": 69.0,
+        "partial_alpha": 103467,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 79069,
+        "defringe_removed": 16447
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_09_light_v2.png",
+      "before": {
+        "size": [
+          921,
+          898
+        ],
+        "transparent_pct": 49.0,
+        "partial_alpha": 238389,
+        "black_fringe_pct": 10.21,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          899,
+          897
+        ],
+        "transparent_pct": 59.0,
+        "partial_alpha": 188784,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 2286,
+        "defringe_removed": 6261
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_10_light_v2.png",
+      "before": {
+        "size": [
+          707,
+          994
+        ],
+        "transparent_pct": 64.2,
+        "partial_alpha": 141634,
+        "black_fringe_pct": 9.1,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          620,
+          994
+        ],
+        "transparent_pct": 70.2,
+        "partial_alpha": 100620,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 15045,
+        "defringe_removed": 4025
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_11_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_11_light_v2.png",
+      "before": {
+        "size": [
+          748,
+          876
+        ],
+        "transparent_pct": 41.2,
+        "partial_alpha": 205982,
+        "black_fringe_pct": 5.8,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          698,
+          876
+        ],
+        "transparent_pct": 43.2,
+        "partial_alpha": 186873,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 11134,
+        "defringe_removed": 59
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_12_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_12_light_v2.png",
+      "before": {
+        "size": [
+          1069,
+          988
+        ],
+        "transparent_pct": 49.9,
+        "partial_alpha": 227586,
+        "black_fringe_pct": 14.83,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1037,
+          976
+        ],
+        "transparent_pct": 64.9,
+        "partial_alpha": 128776,
+        "black_fringe_pct": 0.24,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 58276,
+        "defringe_removed": 18341
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_13_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_13_light_v2.png",
+      "before": {
+        "size": [
+          689,
+          922
+        ],
+        "transparent_pct": 46.2,
+        "partial_alpha": 193399,
+        "black_fringe_pct": 10.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          608,
+          894
+        ],
+        "transparent_pct": 51.3,
+        "partial_alpha": 146535,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 3899,
+        "defringe_removed": 11594
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_14_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_14_light_v2.png",
+      "before": {
+        "size": [
+          891,
+          990
+        ],
+        "transparent_pct": 66.1,
+        "partial_alpha": 143496,
+        "black_fringe_pct": 9.58,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          859,
+          984
+        ],
+        "transparent_pct": 75.1,
+        "partial_alpha": 96239,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 18315,
+        "defringe_removed": 1819
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_15_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_15_light_v2.png",
+      "before": {
+        "size": [
+          1414,
+          584
+        ],
+        "transparent_pct": 30.7,
+        "partial_alpha": 281327,
+        "black_fringe_pct": 14.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1409,
+          576
+        ],
+        "transparent_pct": 48.7,
+        "partial_alpha": 214900,
+        "black_fringe_pct": 0.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 136772,
+        "defringe_removed": 26
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_16_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_16_light_v2.png",
+      "before": {
+        "size": [
+          826,
+          851
+        ],
+        "transparent_pct": 50.9,
+        "partial_alpha": 190697,
+        "black_fringe_pct": 16.4,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          786,
+          801
+        ],
+        "transparent_pct": 67.1,
+        "partial_alpha": 115217,
+        "black_fringe_pct": 0.05,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 32101,
+        "defringe_removed": 9634
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_17_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_17_light_v2.png",
+      "before": {
+        "size": [
+          969,
+          1008
+        ],
+        "transparent_pct": 57.1,
+        "partial_alpha": 254806,
+        "black_fringe_pct": 14.87,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          852,
+          1006
+        ],
+        "transparent_pct": 68.1,
+        "partial_alpha": 170925,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 41527,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_18_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_18_light_v2.png",
+      "before": {
+        "size": [
+          1148,
+          871
+        ],
+        "transparent_pct": 49.0,
+        "partial_alpha": 283912,
+        "black_fringe_pct": 13.58,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1148,
+          852
+        ],
+        "transparent_pct": 62.1,
+        "partial_alpha": 209958,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 8229,
+        "defringe_removed": 162
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_19_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_19_light_v2.png",
+      "before": {
+        "size": [
+          1245,
+          978
+        ],
+        "transparent_pct": 54.9,
+        "partial_alpha": 247911,
+        "black_fringe_pct": 16.27,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1245,
+          974
+        ],
+        "transparent_pct": 71.0,
+        "partial_alpha": 151150,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 6010,
+        "defringe_removed": 24
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_20_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_20_light_v2.png",
+      "before": {
+        "size": [
+          1142,
+          998
+        ],
+        "transparent_pct": 51.3,
+        "partial_alpha": 252285,
+        "black_fringe_pct": 13.89,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1121,
+          945
+        ],
+        "transparent_pct": 64.2,
+        "partial_alpha": 154322,
+        "black_fringe_pct": 0.17,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 27919,
+        "defringe_removed": 18862
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_21_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_21_light_v2.png",
+      "before": {
+        "size": [
+          872,
+          937
+        ],
+        "transparent_pct": 43.5,
+        "partial_alpha": 174586,
+        "black_fringe_pct": 16.85,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          859,
+          937
+        ],
+        "transparent_pct": 59.8,
+        "partial_alpha": 115627,
+        "black_fringe_pct": 0.07,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 52342,
+        "defringe_removed": 808
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_22_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_22_light_v2.png",
+      "before": {
+        "size": [
+          989,
+          272
+        ],
+        "transparent_pct": 63.1,
+        "partial_alpha": 44289,
+        "black_fringe_pct": 36.87,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          347,
+          195
+        ],
+        "transparent_pct": 99.9,
+        "partial_alpha": 67,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 99132,
+        "defringe_removed": 1
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_23_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_23_light_v2.png",
+      "before": {
+        "size": [
+          1088,
+          956
+        ],
+        "transparent_pct": 50.2,
+        "partial_alpha": 218816,
+        "black_fringe_pct": 11.79,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1035,
+          939
+        ],
+        "transparent_pct": 59.5,
+        "partial_alpha": 161458,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 17954,
+        "defringe_removed": 124
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_11_nature_vegetation_24_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/11_nature_vegetation/wt_11_nature_vegetation_24_light_v2.png",
+      "before": {
+        "size": [
+          1501,
+          958
+        ],
+        "transparent_pct": 32.1,
+        "partial_alpha": 339246,
+        "black_fringe_pct": 30.55,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1450,
+          897
+        ],
+        "transparent_pct": 60.6,
+        "partial_alpha": 156110,
+        "black_fringe_pct": 0.41,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 347510,
+        "defringe_removed": 546
+      },
+      "fixed": true
+    }
+  ]
+}

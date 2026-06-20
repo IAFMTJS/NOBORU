@@ -1,0 +1,768 @@
+{
+  "section": "08_camps_learning",
+  "processed": 23,
+  "dry_run": false,
+  "passed": 23,
+  "failed": 0,
+  "results": [
+    {
+      "file": "wt_08_camps_learning_01_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_01_light_v2.png",
+      "before": {
+        "size": [
+          1467,
+          1015
+        ],
+        "transparent_pct": 61.5,
+        "partial_alpha": 228509,
+        "black_fringe_pct": 9.44,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1462,
+          984
+        ],
+        "transparent_pct": 69.7,
+        "partial_alpha": 161713,
+        "black_fringe_pct": 0.32,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 27409,
+        "defringe_removed": 603
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_02_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_02_light_v2.png",
+      "before": {
+        "size": [
+          1169,
+          1009
+        ],
+        "transparent_pct": 52.8,
+        "partial_alpha": 197530,
+        "black_fringe_pct": 11.5,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1169,
+          1007
+        ],
+        "transparent_pct": 64.3,
+        "partial_alpha": 129362,
+        "black_fringe_pct": 0.18,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 54622,
+        "defringe_removed": 1916
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_03_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_03_light_v2.png",
+      "before": {
+        "size": [
+          1173,
+          937
+        ],
+        "transparent_pct": 50.5,
+        "partial_alpha": 228558,
+        "black_fringe_pct": 9.25,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1132,
+          937
+        ],
+        "transparent_pct": 60.5,
+        "partial_alpha": 183084,
+        "black_fringe_pct": 0.12,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 75570,
+        "defringe_removed": 251
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_04_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_04_light_v2.png",
+      "before": {
+        "size": [
+          1527,
+          533
+        ],
+        "transparent_pct": 64.8,
+        "partial_alpha": 173135,
+        "black_fringe_pct": 9.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1527,
+          533
+        ],
+        "transparent_pct": 74.2,
+        "partial_alpha": 128091,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 15673,
+        "defringe_removed": 1942
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_05_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_05_light_v2.png",
+      "before": {
+        "size": [
+          1535,
+          596
+        ],
+        "transparent_pct": 59.4,
+        "partial_alpha": 205642,
+        "black_fringe_pct": 12.44,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1532,
+          588
+        ],
+        "transparent_pct": 71.4,
+        "partial_alpha": 137104,
+        "black_fringe_pct": 0.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 23870,
+        "defringe_removed": 1789
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_06_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_06_light_v2.png",
+      "before": {
+        "size": [
+          1294,
+          989
+        ],
+        "transparent_pct": 61.5,
+        "partial_alpha": 181088,
+        "black_fringe_pct": 11.04,
+        "checker_remaining": 0,
+        "corner_black": 1,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1166,
+          983
+        ],
+        "transparent_pct": 69.3,
+        "partial_alpha": 108045,
+        "black_fringe_pct": 0.15,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 37102,
+        "defringe_removed": 1136
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_07_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_07_light_v2.png",
+      "before": {
+        "size": [
+          1392,
+          416
+        ],
+        "transparent_pct": 47.5,
+        "partial_alpha": 109891,
+        "black_fringe_pct": 6.39,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1392,
+          416
+        ],
+        "transparent_pct": 53.8,
+        "partial_alpha": 89530,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 17966,
+        "defringe_removed": 3
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_08_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_08_light_v2.png",
+      "before": {
+        "size": [
+          1273,
+          769
+        ],
+        "transparent_pct": 61.4,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.94,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1273,
+          769
+        ],
+        "transparent_pct": 62.3,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_09_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_09_light_v2.png",
+      "before": {
+        "size": [
+          1443,
+          906
+        ],
+        "transparent_pct": 54.1,
+        "partial_alpha": 201256,
+        "black_fringe_pct": 12.46,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1432,
+          906
+        ],
+        "transparent_pct": 66.6,
+        "partial_alpha": 109144,
+        "black_fringe_pct": 0.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 79354,
+        "defringe_removed": 353
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_10_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_10_light_v2.png",
+      "before": {
+        "size": [
+          855,
+          968
+        ],
+        "transparent_pct": 46.5,
+        "partial_alpha": 200422,
+        "black_fringe_pct": 9.34,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          855,
+          966
+        ],
+        "transparent_pct": 55.6,
+        "partial_alpha": 164071,
+        "black_fringe_pct": 0.32,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 6685,
+        "defringe_removed": 462
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_11_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_11_light_v2.png",
+      "before": {
+        "size": [
+          1160,
+          1012
+        ],
+        "transparent_pct": 51.8,
+        "partial_alpha": 213927,
+        "black_fringe_pct": 10.61,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1087,
+          1002
+        ],
+        "transparent_pct": 59.4,
+        "partial_alpha": 141865,
+        "black_fringe_pct": 0.21,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 49611,
+        "defringe_removed": 207
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_12_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_12_light_v2.png",
+      "before": {
+        "size": [
+          947,
+          979
+        ],
+        "transparent_pct": 28.8,
+        "partial_alpha": 202254,
+        "black_fringe_pct": 16.8,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          947,
+          910
+        ],
+        "transparent_pct": 47.4,
+        "partial_alpha": 143556,
+        "black_fringe_pct": 0.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 143794,
+        "defringe_removed": 32
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_13_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_13_light_v2.png",
+      "before": {
+        "size": [
+          938,
+          1003
+        ],
+        "transparent_pct": 45.0,
+        "partial_alpha": 205006,
+        "black_fringe_pct": 18.39,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          937,
+          993
+        ],
+        "transparent_pct": 62.9,
+        "partial_alpha": 110364,
+        "black_fringe_pct": 0.17,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 75104,
+        "defringe_removed": 179
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_14_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_14_light_v2.png",
+      "before": {
+        "size": [
+          1396,
+          843
+        ],
+        "transparent_pct": 53.7,
+        "partial_alpha": 183238,
+        "black_fringe_pct": 11.73,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1343,
+          784
+        ],
+        "transparent_pct": 63.1,
+        "partial_alpha": 99753,
+        "black_fringe_pct": 0.33,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 32970,
+        "defringe_removed": 9738
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_15_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_15_light_v2.png",
+      "before": {
+        "size": [
+          858,
+          954
+        ],
+        "transparent_pct": 46.9,
+        "partial_alpha": 257147,
+        "black_fringe_pct": 8.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          858,
+          949
+        ],
+        "transparent_pct": 55.0,
+        "partial_alpha": 217770,
+        "black_fringe_pct": 0.16,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 5505,
+        "defringe_removed": 629
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_16_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_16_light_v2.png",
+      "before": {
+        "size": [
+          1366,
+          808
+        ],
+        "transparent_pct": 38.6,
+        "partial_alpha": 260527,
+        "black_fringe_pct": 12.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1347,
+          797
+        ],
+        "transparent_pct": 51.1,
+        "partial_alpha": 184810,
+        "black_fringe_pct": 0.31,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 70129,
+        "defringe_removed": 13408
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_17_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_17_light_v2.png",
+      "before": {
+        "size": [
+          1146,
+          922
+        ],
+        "transparent_pct": 35.2,
+        "partial_alpha": 275821,
+        "black_fringe_pct": 7.69,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1142,
+          914
+        ],
+        "transparent_pct": 44.5,
+        "partial_alpha": 216344,
+        "black_fringe_pct": 0.39,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 4342,
+        "defringe_removed": 24760
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_18_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_18_light_v2.png",
+      "before": {
+        "size": [
+          1069,
+          963
+        ],
+        "transparent_pct": 44.6,
+        "partial_alpha": 186320,
+        "black_fringe_pct": 12.64,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1069,
+          963
+        ],
+        "transparent_pct": 57.2,
+        "partial_alpha": 127749,
+        "black_fringe_pct": 0.33,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 7502,
+        "defringe_removed": 777
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_19_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_19_light_v2.png",
+      "before": {
+        "size": [
+          1290,
+          998
+        ],
+        "transparent_pct": 35.8,
+        "partial_alpha": 368946,
+        "black_fringe_pct": 15.96,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1241,
+          992
+        ],
+        "transparent_pct": 54.5,
+        "partial_alpha": 249737,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 240372,
+        "defringe_removed": 527
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_20_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_20_light_v2.png",
+      "before": {
+        "size": [
+          1134,
+          889
+        ],
+        "transparent_pct": 39.4,
+        "partial_alpha": 249495,
+        "black_fringe_pct": 11.69,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1116,
+          858
+        ],
+        "transparent_pct": 49.7,
+        "partial_alpha": 192377,
+        "black_fringe_pct": 0.19,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 27092,
+        "defringe_removed": 784
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_21_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_21_light_v2.png",
+      "before": {
+        "size": [
+          1012,
+          862
+        ],
+        "transparent_pct": 31.1,
+        "partial_alpha": 256061,
+        "black_fringe_pct": 14.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          991,
+          862
+        ],
+        "transparent_pct": 45.5,
+        "partial_alpha": 192194,
+        "black_fringe_pct": 0.56,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 38817,
+        "defringe_removed": 196
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_22_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_22_light_v2.png",
+      "before": {
+        "size": [
+          1359,
+          927
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 332711,
+        "black_fringe_pct": 11.76,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1346,
+          927
+        ],
+        "transparent_pct": 64.9,
+        "partial_alpha": 248671,
+        "black_fringe_pct": 0.37,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 20417,
+        "defringe_removed": 1188
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_08_camps_learning_23_light_v2.png",
+      "path": "Art Library/world-tree/sheet-remasters/08_camps_learning/wt_08_camps_learning_23_light_v2.png",
+      "before": {
+        "size": [
+          1458,
+          389
+        ],
+        "transparent_pct": 54.2,
+        "partial_alpha": 128820,
+        "black_fringe_pct": 4.51,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1458,
+          389
+        ],
+        "transparent_pct": 58.8,
+        "partial_alpha": 113641,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 3913,
+        "defringe_removed": 55
+      },
+      "fixed": true
+    }
+  ]
+}
