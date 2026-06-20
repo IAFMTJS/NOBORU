@@ -13,11 +13,12 @@ type WorldTreeTrunkSkeletonProps = {
 };
 
 const ROOT_ARMS = [
-  { rotate: -52, width: 22, offsetX: -18 },
-  { rotate: -28, width: 18, offsetX: -8 },
-  { rotate: 0, width: 14, offsetX: 0 },
-  { rotate: 28, width: 18, offsetX: 8 },
-  { rotate: 52, width: 22, offsetX: 18 },
+  { rotate: -58, width: 26, offsetX: -28 },
+  { rotate: -34, width: 22, offsetX: -14 },
+  { rotate: -12, width: 18, offsetX: -4 },
+  { rotate: 12, width: 18, offsetX: 4 },
+  { rotate: 34, width: 22, offsetX: 14 },
+  { rotate: 58, width: 26, offsetX: 28 },
 ] as const;
 
 /** CSS-only World Tree trunk, roots, rings, and crown — readable skeleton scaffold. */
@@ -38,10 +39,10 @@ export function WorldTreeTrunkSkeleton({ className }: WorldTreeTrunkSkeletonProp
       data-world-tree-trunk-skeleton
       aria-hidden
     >
-      {/* Root spread — fans outward from World Heart */}
+      {/* Root spread — wide horizontal network from World Heart */}
       <div
         className="absolute left-1/2 -translate-x-1/2"
-        style={{ bottom: "0.5%", width: "48%", height: "9%" }}
+        style={{ bottom: "0.5%", width: "72%", height: "11%" }}
         data-world-tree-roots
       >
         {ROOT_ARMS.map((arm, index) => (

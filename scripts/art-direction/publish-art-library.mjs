@@ -29,7 +29,7 @@ const SAMPLE_FILES = [
 
 function walkRasterFiles(dir, results = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === "_rejected") continue;
+    if (entry.name === "_rejected" || entry.name === "_source") continue;
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
       walkRasterFiles(fullPath, results);

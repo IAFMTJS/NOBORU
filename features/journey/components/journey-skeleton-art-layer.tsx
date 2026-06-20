@@ -19,6 +19,11 @@ type JourneySkeletonArtLayerProps = {
   className?: string;
   /** Overview mode shows JLPT tags and per-zone node counts. */
   variant?: "journey" | "overview";
+  /** Hide CSS zone tints and trunk when JLPT band art is active; keep spine path. */
+  hideScaffold?: boolean;
+  /** Continuous JLPT-colored ascent trail (tree overview). */
+  continuousTrail?: boolean;
+  coloredTrailByJlpt?: boolean;
 };
 
 const ZONE_TINTS: Record<string, string> = {
@@ -41,6 +46,9 @@ export function JourneySkeletonArtLayer({
   layout: layoutProp,
   className,
   variant = "journey",
+  hideScaffold = false,
+  continuousTrail = false,
+  coloredTrailByJlpt = false,
 }: JourneySkeletonArtLayerProps) {
   const emptyJourney: JourneyPathViewModel = { regions: [], position: { currentRegionSlug: "foothills", currentRegionIndex: 0, currentLessonId: null, currentNodeId: null, globalNodeIndex: 0, globalLessonIndex: 0, pathPosition: 0 }, nextLessonId: null, nextLessonHref: null };
   const layout = layoutProp ?? (journey ? buildWorldTreeLayout(journey) : buildWorldTreeLayout(emptyJourney));
@@ -58,57 +66,66 @@ export function JourneySkeletonArtLayer({
       data-journey-art-layer="skeleton"
       aria-hidden
     >
-      {WORLD_TREE_SKELETON_ZONES.map((zone) => {
-        const band = bands[zone.id];
-        const height = band.yMax - band.yMin;
+      {!hideScaffold
+        ? WORLD_TREE_SKELETON_ZONES.map((zone) => {
+            const band = bands[zone.id];
+            const height = band.yMax - band.yMin;
 
-        return (
-          <section
-            key={zone.id}
-            data-world-tree-zone={zone.id}
-            data-jlpt-level={zone.jlptLevel}
-            className={cn(
-              "absolute inset-x-0 border-t border-[#8B7355]/20 dark:border-[#A0896C]/15",
-              ZONE_TINTS[zone.id],
-            )}
-            style={{
-              top: `${band.yMin}%`,
-              height: `${height}%`,
-            }}
-          >
-            <span className="absolute left-3 top-2 text-[10px] font-medium uppercase tracking-widest text-[#6B5344]/50 dark:text-[#D6A85F]/35">
-              {zone.label}
-              {isOverview ? (
-                <span className="ml-1.5 normal-case tracking-normal opacity-80">
-                  · {zone.jlptLevel === "deep" ? "Start" : zone.jlptLevel.toUpperCase()}
-                  {nodeCountByZone[zone.id] ? ` · ${nodeCountByZone[zone.id]} nodes` : null}
+            return (
+              <section
+                key={zone.id}
+                data-world-tree-zone={zone.id}
+                data-jlpt-level={zone.jlptLevel}
+                className={cn(
+                  "absolute inset-x-0 border-t border-[#8B7355]/20 dark:border-[#A0896C]/15",
+                  ZONE_TINTS[zone.id],
+                )}
+                style={{
+                  top: `${band.yMin}%`,
+                  height: `${height}%`,
+                }}
+              >
+                <span className="absolute left-3 top-2 text-[10px] font-medium uppercase tracking-widest text-[#6B5344]/50 dark:text-[#D6A85F]/35">
+                  {zone.label}
+                  {isOverview ? (
+                    <span className="ml-1.5 normal-case tracking-normal opacity-80">
+                      · {zone.jlptLevel === "deep" ? "Start" : zone.jlptLevel.toUpperCase()}
+                      {nodeCountByZone[zone.id] ? ` · ${nodeCountByZone[zone.id]} nodes` : null}
+                    </span>
+                  ) : null}
                 </span>
-              ) : null}
-            </span>
-            {isOverview && zone.id.startsWith("n3_trunk") ? (
-              <span className="absolute right-3 top-2 text-[9px] font-semibold uppercase tracking-widest text-[#D6A85F]/45">
-                Trunk ring
-              </span>
-            ) : null}
-          </section>
-        );
-      })}
+                {isOverview && zone.id.startsWith("n3_trunk") ? (
+                  <span className="absolute right-3 top-2 text-[9px] font-semibold uppercase tracking-widest text-[#D6A85F]/45">
+                    Trunk ring
+                  </span>
+                ) : null}
+              </section>
+            );
+          })
+        : null}
 
-      <WorldTreeTrunkSkeleton />
+      {!hideScaffold ? <WorldTreeTrunkSkeleton /> : null}
 
-      {/* World Heart marker */}
-      <div
-        className="absolute left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center"
-        style={{ bottom: "1.5%" }}
-        data-world-tree-heart
-      >
-        <span className="h-4 w-4 rounded-full border-2 border-[#D6A85F]/80 bg-[#D6A85F]/50 shadow-[0_0_16px_rgba(214,168,95,0.65)]" />
-        <span className="mt-1 text-[9px] font-semibold uppercase tracking-widest text-[#8B7355]/70 dark:text-[#D6A85F]/60">
-          World Heart
-        </span>
-      </div>
+      {!hideScaffold ? (
+        <div
+          className="absolute left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center"
+          style={{ bottom: "1.5%" }}
+          data-world-tree-heart
+        >
+          <span className="h-4 w-4 rounded-full border-2 border-[#D6A85F]/80 bg-[#D6A85F]/50 shadow-[0_0_16px_rgba(214,168,95,0.65)]" />
+          <span className="mt-1 text-[9px] font-semibold uppercase tracking-widest text-[#8B7355]/70 dark:text-[#D6A85F]/60">
+            World Heart
+          </span>
+        </div>
+      ) : null}
 
-      <WorldTreeSpinePath segments={layout.segments} nodes={layout.nodes} />
+      <WorldTreeSpinePath
+        segments={layout.segments}
+        nodes={layout.nodes}
+        hubPositions={layout.hubPositions}
+        continuousTrail={continuousTrail}
+        coloredByJlpt={coloredTrailByJlpt}
+      />
     </div>
   );
 }

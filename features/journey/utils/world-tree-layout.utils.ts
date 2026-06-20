@@ -2,6 +2,7 @@ import {
   DEFAULT_WORLD_TREE_ZONE,
   WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_MAX_MAIN_SPINE_NODES,
+  WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT,
   WORLD_TREE_MIN_NODE_GAP_VH,
   WORLD_TREE_SKELETON_MIN_HEIGHT_VH,
   WORLD_TREE_SKELETON_VH_PER_PERCENT,
@@ -138,7 +139,7 @@ type TreeLimbPosition = {
   yPercent: number;
 };
 
-/** Place branch nodes along a limb that buds from a trunk ring hub. */
+/** Place branch nodes along a horizontal limb rail that buds from a trunk ring hub. */
 function computeTreeLimbPosition(
   hubX: number,
   hubY: number,
@@ -147,48 +148,62 @@ function computeTreeLimbPosition(
   hubCount: number,
   depth: number,
   segmentType: BlueprintSegmentType,
-  limbStepPercent: number,
   profile: TrunkLimbProfile,
+  zoneBand: WorldTreeBand,
+  globalIndex: number,
 ): TreeLimbPosition {
-  const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
-  const side = branchIndex % 2 === 0 ? -1 : 1;
-  const tier = Math.floor(branchIndex / 2);
+  const side = forkSlot % 2 === 0 ? -1 : 1;
+  const tier = Math.floor(branchIndex / Math.max(hubCount, 1));
   const hubRing = Math.floor(branchIndex / Math.max(hubCount, 1));
   const isCave = segmentType === "cave" || profile === "root";
 
-  const reach = (depth + 1) * limbStepPercent;
-  const spreadGain =
-    profile === "canopy" ? 1.25 : profile === "crown" ? 1.05 : isCave ? 1.1 : 0.88;
-  const riseGain =
+  const horizontalStep =
     profile === "canopy"
-      ? 0.38
+      ? 6.2
       : profile === "crown"
-        ? 0.72
+        ? 5.8
         : profile === "root" || isCave
-          ? -0.48
-          : 0.56;
+          ? 5.4
+          : 5;
   const baseSpread =
-    profile === "canopy" ? 8 + tier * 3 : profile === "crown" ? 6 + tier * 2.5 : 3 + tier * 2.5;
-  const hubCollisionSpread = hubRing * 5.5 + forkSlot * 0.35;
+    profile === "canopy" ? 7 + tier * 2.5 : profile === "crown" ? 5.5 + tier * 2 : 2.5 + tier * 1.5;
+  const hubCollisionSpread = hubRing * 4.5;
+  const xReach = baseSpread + hubCollisionSpread + (depth + 1) * horizontalStep;
 
-  const targetX = trunkCenter + side * (baseSpread + hubCollisionSpread + reach * spreadGain);
-  const targetY = hubY - reach * riseGain - hubRing * 0.35 - depth * 0.42;
+  const targetX = hubX + side * xReach + depth * 0.06 * side + (globalIndex % 9) * 0.04 * side;
+
+  const verticalArc =
+    profile === "root" || isCave
+      ? depth * 0.85 + hubRing * 0.25
+      : profile === "canopy"
+        ? -depth * 0.18
+        : profile === "crown"
+          ? -depth * 0.42
+          : -depth * 0.22;
+
+  const zoneMargin = Math.min(1.2, (zoneBand.yMax - zoneBand.yMin) * 0.08);
+  const branchYOffset = ((branchIndex % hubCount) - (hubCount - 1) / 2) * 0.55;
+  let targetY = hubY + verticalArc + branchYOffset + (globalIndex % 7) * 0.03;
 
   if (depth === 0) {
-    const budBlend = isCave ? 0.28 : 0.18;
+    const budBlend = isCave ? 0.32 : 0.22;
     return {
       xPercent: clampPercent(hubX * (1 - budBlend) + targetX * budBlend, 12, 88),
       yPercent: clampPercent(
-        hubY - limbStepPercent * (isCave ? 0.24 : 0.28),
-        WORLD_TREE_JOURNEY_CROWN_Y,
-        WORLD_TREE_JOURNEY_BASE_Y,
+        hubY + (isCave ? 0.35 : -0.25),
+        zoneBand.yMin + zoneMargin,
+        zoneBand.yMax - zoneMargin,
       ),
     };
   }
 
   return {
     xPercent: clampPercent(targetX, 12, 88),
-    yPercent: clampPercent(targetY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y),
+    yPercent: clampPercent(
+      targetY,
+      zoneBand.yMin + zoneMargin,
+      zoneBand.yMax - zoneMargin,
+    ),
   };
 }
 
@@ -215,12 +230,13 @@ function buildBranchDepthIndex(entries: LayoutEntry[]): Map<string, number> {
   return depthByNodeId;
 }
 
-/** Canvas height (vh) for normalized Y layout — scales for tap spacing, not legacy y-gap %. */
+/** Canvas height (vh) — zone bands define vertical structure; branches spread horizontally. */
 export function resolveWorldTreeCanvasMinHeightVh(nodeCount: number): number {
   if (nodeCount <= 1) return WORLD_TREE_SKELETON_MIN_HEIGHT_VH;
 
-  const ascentSpanVh = (nodeCount - 1) * WORLD_TREE_MIN_NODE_GAP_VH + 12;
-  return Math.ceil(Math.max(WORLD_TREE_SKELETON_MIN_HEIGHT_VH, ascentSpanVh));
+  const spineSlots = Math.max(8, Math.ceil(nodeCount / 12));
+  const spineExtraVh = spineSlots * WORLD_TREE_MIN_NODE_GAP_VH * 0.35;
+  return Math.ceil(Math.max(WORLD_TREE_SKELETON_MIN_HEIGHT_VH, WORLD_TREE_SKELETON_MIN_HEIGHT_VH + spineExtraVh));
 }
 
 function enforceMinimumNodeSpacing(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
@@ -417,17 +433,24 @@ function separateNearbyNodes(
         const dy = Math.abs(a.yPercent - b.yPercent);
         const dx = Math.abs(a.xPercent - b.xPercent);
 
-        if (dy >= minYGapPercent * 0.9 || dx >= WORLD_TREE_MIN_NODE_X_GAP_PERCENT * 2) {
+        if (dy >= minYGapPercent * 0.9 && dx >= WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT) {
           continue;
         }
 
-        const pushY = (minYGapPercent - dy) + 0.08;
+        const sameBranchRail =
+          a.branchId === b.branchId &&
+          a.zoneId === b.zoneId &&
+          !isMainSpineLessonNode(a) &&
+          !isMainSpineLessonNode(b);
+
+        const pushY = sameBranchRail ? 0 : (minYGapPercent - dy) + 0.08;
         const pushX =
-          dx < WORLD_TREE_MIN_NODE_X_GAP_PERCENT
-            ? (WORLD_TREE_MIN_NODE_X_GAP_PERCENT - dx) + 0.5
+          dx < WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT
+            ? (WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT - dx) + 0.5
             : 0;
 
         const nudgeY = (target: PlottedSkeletonNode, delta: number) => {
+          if (delta === 0) return;
           target.yPercent = clampPercent(
             target.yPercent + delta,
             WORLD_TREE_JOURNEY_CROWN_Y,
@@ -438,6 +461,17 @@ function separateNearbyNodes(
         const nudgeX = (target: PlottedSkeletonNode, delta: number) => {
           target.xPercent = clampPercent(target.xPercent + delta, 12, 88);
         };
+
+        if (sameBranchRail && pushX > 0) {
+          nudgeX(a, a.node.globalIndex % 2 === 0 ? -pushX / 2 : pushX / 2);
+          nudgeX(b, b.node.globalIndex % 2 === 0 ? pushX / 2 : -pushX / 2);
+          moved = true;
+          continue;
+        }
+
+        if (dy >= minYGapPercent * 0.9 || dx >= WORLD_TREE_MIN_NODE_X_GAP_PERCENT * 2) {
+          continue;
+        }
 
         if (isMainSpineLessonNode(a)) {
           nudgeY(b, b.yPercent < a.yPercent ? -pushY : pushY);
@@ -481,8 +515,10 @@ function separateNearbyNodes(
   return result;
 }
 
-function stabilizeBranchLimbs(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
-  const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
+function stabilizeBranchLimbs(
+  plotted: PlottedSkeletonNode[],
+  hubPositions: Record<string, { xPercent: number; yPercent: number }>,
+): PlottedSkeletonNode[] {
   const result = plotted.map((entry) => ({ ...entry }));
   const branchGroups = new Map<string, PlottedSkeletonNode[]>();
 
@@ -495,19 +531,81 @@ function stabilizeBranchLimbs(plotted: PlottedSkeletonNode[]): PlottedSkeletonNo
 
   for (const branchNodes of branchGroups.values()) {
     const ordered = [...branchNodes].sort((a, b) => a.node.globalIndex - b.node.globalIndex);
-    let minSpread = 0;
+    const anchor = ordered[0];
+    if (!anchor) continue;
 
-    for (const node of ordered) {
-      const side = node.xPercent >= trunkCenter ? 1 : node.xPercent < trunkCenter ? -1 : 1;
-      const spread = Math.abs(node.xPercent - trunkCenter);
-      const nextSpread = Math.max(spread, minSpread + 2.2);
+    const hub =
+      anchor.forkFromNodeId && hubPositions[anchor.forkFromNodeId]
+        ? hubPositions[anchor.forkFromNodeId]!
+        : { xPercent: anchor.xPercent, yPercent: anchor.yPercent };
+    const side = anchor.xPercent >= hub.xPercent ? 1 : -1;
+    let minReach = Math.abs(anchor.xPercent - hub.xPercent);
 
-      node.xPercent = clampPercent(trunkCenter + side * nextSpread, 12, 88);
-      minSpread = Math.abs(node.xPercent - trunkCenter);
+    for (let index = 1; index < ordered.length; index += 1) {
+      const node = ordered[index]!;
+      const reach = Math.abs(node.xPercent - hub.xPercent);
+      const nextReach = Math.max(reach, minReach + WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT * 0.85);
+
+      node.xPercent = clampPercent(hub.xPercent + side * nextReach, 12, 88);
+      minReach = nextReach;
     }
   }
 
   return result;
+}
+
+function spreadBranchRailCollisions(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
+  const result = plotted.map((entry) => ({ ...entry }));
+  const branchGroups = new Map<string, PlottedSkeletonNode[]>();
+
+  for (const node of result) {
+    if (isMainSpineLessonNode(node)) continue;
+    const bucket = branchGroups.get(node.branchId) ?? [];
+    bucket.push(node);
+    branchGroups.set(node.branchId, bucket);
+  }
+
+  for (const branchNodes of branchGroups.values()) {
+    const ordered = [...branchNodes].sort((a, b) => a.node.globalIndex - b.node.globalIndex);
+    const anchor = ordered[0];
+    if (!anchor) continue;
+
+    const side = anchor.xPercent >= WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent ? 1 : -1;
+
+    for (let index = 1; index < ordered.length; index += 1) {
+      const prev = ordered[index - 1]!;
+      const node = ordered[index]!;
+      const gap = Math.abs(node.xPercent - prev.xPercent);
+
+      if (gap >= WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT * 0.85) continue;
+
+      node.xPercent = clampPercent(
+        prev.xPercent + side * WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT,
+        12,
+        88,
+      );
+    }
+  }
+
+  return result;
+}
+
+function clampBranchNodesToZones(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
+  const bands = buildWorldTreeZoneBands();
+
+  return plotted.map((node) => {
+    if (isMainSpineLessonNode(node) || node.node.kind === "landmark") {
+      return node;
+    }
+
+    const band = bands[node.zoneId] ?? bands[DEFAULT_WORLD_TREE_ZONE]!;
+    const margin = Math.min(0.6, (band.yMax - band.yMin) * 0.06);
+
+    return {
+      ...node,
+      yPercent: clampPercent(node.yPercent, band.yMin + margin, band.yMax - margin),
+    };
+  });
 }
 
 function enforceUniqueCoordinates(
@@ -520,12 +618,16 @@ function enforceUniqueCoordinates(
     let key = `${node.xPercent.toFixed(1)}:${node.yPercent.toFixed(1)}`;
     let attempt = 0;
 
-    while (seen.has(key) && attempt < 24) {
+    while (seen.has(key) && attempt < 32) {
       if (!isMainSpineLessonNode(node)) {
-        const direction = attempt % 2 === 0 ? 1 : -1;
-        node.xPercent = clampPercent(node.xPercent + direction * (attempt + 1) * 0.9, 12, 88);
+        const direction = node.xPercent >= WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent ? 1 : -1;
+        node.xPercent = clampPercent(
+          node.xPercent + direction * (1.1 + attempt * 0.35),
+          12,
+          88,
+        );
         node.yPercent = clampPercent(
-          node.yPercent - 0.35,
+          node.yPercent + (attempt % 2 === 0 ? 0.18 : -0.18),
           WORLD_TREE_JOURNEY_CROWN_Y,
           WORLD_TREE_JOURNEY_BASE_Y,
         );
@@ -603,7 +705,6 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   }
 
   const plotted: PlottedSkeletonNode[] = [];
-  const minBranchYGapPercent = resolveMinYGapPercent(entries.length) * 0.9;
 
   for (const entry of entries) {
     const zoneEntries = zoneGroups.get(entry.zoneId) ?? [entry];
@@ -637,8 +738,9 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
         hub.hubCount,
         depth,
         entry.segmentType,
-        minBranchYGapPercent,
         hub.profile,
+        zoneBand,
+        entry.node.globalIndex,
       );
 
       xPercent = limb.xPercent;
@@ -662,19 +764,25 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
 
   const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(plotted.length);
   const minYGapPercent = (WORLD_TREE_MIN_NODE_GAP_VH / canvasMinHeightVh) * 100;
-  const spaced = enforceUniqueCoordinates(
-    stabilizeBranchLimbs(
-      separateNearbyNodes(
-        enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
-        minYGapPercent,
+  const spaced = clampBranchNodesToZones(
+    enforceUniqueCoordinates(
+      spreadBranchRailCollisions(
+        stabilizeBranchLimbs(
+          separateNearbyNodes(
+            enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
+            minYGapPercent,
+          ),
+          hubPositions,
+        ),
       ),
     ),
   );
+  const finalized = enforceUniqueCoordinates(spaced);
 
   const segments: WorldTreeLayoutSegment[] = [];
   const segmentMap = new Map<string, PlottedSkeletonNode[]>();
 
-  for (const node of spaced) {
+  for (const node of finalized) {
     const segmentKey = `${node.zoneId}-${node.segmentType}-${node.branchId}`;
     const bucket = segmentMap.get(segmentKey) ?? [];
     bucket.push(node);
@@ -699,7 +807,7 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   }
 
   return {
-    nodes: spaced,
+    nodes: finalized,
     segments,
     canvasMinHeightVh,
     hubPositions,

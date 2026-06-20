@@ -62,10 +62,11 @@ export function resolveTrunkHubPosition(
   const forkSlot = branchIndex % hubCount;
   const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
   const ringY = ringYForZone(zoneId, zoneBands);
+  const hubSpread = (forkSlot - (hubCount - 1) / 2) * 2.8;
 
   return {
     hubKey: `hub:${zoneId}:${forkSlot}`,
-    xPercent: trunkCenter,
+    xPercent: trunkCenter + hubSpread,
     yPercent: ringY,
     forkSlot,
     hubCount,

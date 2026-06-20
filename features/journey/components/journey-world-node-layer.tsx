@@ -25,6 +25,8 @@ type JourneyWorldNodeLayerProps = {
   highlightNodeId?: string | null;
   visibleYBand?: WorldTreeVisibleYBand;
   className?: string;
+  /** Tree overview uses illustrated lesson node art instead of skeleton letters. */
+  useArtNodes?: boolean;
 };
 
 function toTrailNode(node: JourneyNode): TrailNodeViewModel {
@@ -82,6 +84,7 @@ export function JourneyWorldNodeLayer({
   highlightNodeId = null,
   visibleYBand,
   className,
+  useArtNodes = false,
 }: JourneyWorldNodeLayerProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -101,6 +104,7 @@ export function JourneyWorldNodeLayer({
       return yPercent >= visibleYBand.min && yPercent <= visibleYBand.max;
     });
   }, [highlightNodeId, journey.position.currentNodeId, plotted, visibleYBand]);
+  const showArtNodes = useArtNodes || !JOURNEY_SKELETON_MODE;
   const selectedPlotted = findPlottedNode(plotted, selectedNodeId);
   const selectedNode = selectedPlotted?.node ?? null;
 
@@ -146,28 +150,30 @@ export function JourneyWorldNodeLayer({
                 style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
                 data-segment-type={isDraftNode ? "draft" : undefined}
               >
-                {JOURNEY_SKELETON_MODE ? (
+                {showArtNodes ? (
+                  node.kind === "trial" ? (
+                    <WorldBossNode
+                      state={node.state}
+                      isCurrent={isCurrent}
+                      onClick={() => openNode(node.id)}
+                    />
+                  ) : (
+                    <WorldLessonNode
+                      state={node.state}
+                      nodeKind={node.kind}
+                      lessonType={node.lessonType}
+                      isCurrent={isCurrent}
+                      size={size}
+                      onClick={() => openNode(node.id)}
+                    />
+                  )
+                ) : (
                   <SkeletonJourneyNode
                     state={node.state}
                     kind={node.kind}
                     label={node.label}
                     isCurrent={isCurrent}
                     isDraft={isDraftNode}
-                    size={size}
-                    onClick={() => openNode(node.id)}
-                  />
-                ) : node.kind === "trial" ? (
-                  <WorldBossNode
-                    state={node.state}
-                    isCurrent={isCurrent}
-                    onClick={() => openNode(node.id)}
-                  />
-                ) : (
-                  <WorldLessonNode
-                    state={node.state}
-                    nodeKind={node.kind}
-                    lessonType={node.lessonType}
-                    isCurrent={isCurrent}
                     size={size}
                     onClick={() => openNode(node.id)}
                   />
@@ -187,7 +193,7 @@ export function JourneyWorldNodeLayer({
         lessonCount={lessonCount}
         regionName={regionName}
         isComingSoon={isDraft}
-        skeletonMode={JOURNEY_SKELETON_MODE}
+        skeletonMode={!showArtNodes}
         unlockRequirements={
           isDraft
             ? [{ label: "This lesson is still being built", completed: false }]

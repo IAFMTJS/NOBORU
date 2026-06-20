@@ -7,21 +7,24 @@ function readSource(relativePath: string): string {
 }
 
 describe("world tree screen", () => {
-  it("composes overview canvas, realm backdrop, rail, legend, and continue fab", () => {
+  it("composes JLPT overview canvas, backdrop, rail, legend, and continue fab", () => {
     const screen = readSource("features/journey/components/world-tree-screen.tsx");
     const canvas = readSource("features/journey/components/journey-world-canvas.tsx");
 
-    expect(screen).toContain("WorldTreeScrollRail");
-    expect(screen).toContain("WorldTreeRegionLegend");
+    expect(screen).toContain("WorldTreeJlptScrollRail");
+    expect(screen).toContain("WorldTreeJlptLegend");
     expect(screen).toContain('variant="overview"');
     expect(screen).toContain("WorldTreeMapFab");
     expect(canvas).toContain("WorldTreeRealmBackdrop");
-    expect(canvas).toContain("data-world-tree-variant={variant}");
+    expect(canvas).toContain("WorldTreeJlptBandArtLayer");
+    expect(canvas).toContain("useJlptBands={isOverview}");
+    expect(canvas).toContain("continuousTrail={isOverview}");
+    expect(canvas).toContain("useArtNodes={isOverview}");
   });
 });
 
 describe("journey world canvas art isolation", () => {
-  it("does not import sheet-remaster art layer", () => {
+  it("uses JLPT band art layer instead of sheet remasters", () => {
     const source = readSource("features/journey/components/journey-world-canvas.tsx");
 
     expect(source).not.toContain("JourneyWorldTreeArtLayer");

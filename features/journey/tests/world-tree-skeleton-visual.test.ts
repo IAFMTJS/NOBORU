@@ -24,7 +24,8 @@ describe("world tree skeleton visuals", () => {
   it("draws a continuous main spine with pixel-scale stroke widths", () => {
     const source = readSource("features/journey/components/world-tree-spine-path.tsx");
 
-    expect(source).toContain("collectMainSpineNodes");
+    expect(source).toContain("buildTrunkColumnPath");
+    expect(source).toContain("hubPositions");
     expect(source).toContain('strokeWidth={isMain ? 10 : 6}');
     expect(source).toContain('strokeWidth={isMain ? 3.5 : 2.25}');
     expect(source).toContain('vectorEffect="non-scaling-stroke"');

@@ -102,6 +102,9 @@ export const WORLD_TREE_NODE_MIN_Y_GAP = 5.5;
 /** Target vertical gap between nodes in vh (touch-friendly, works with normalized Y 0–100%). */
 export const WORLD_TREE_MIN_NODE_GAP_VH = 8;
 
+/** Horizontal gap between lessons on the same branch limb (% of canvas width). */
+export const WORLD_TREE_MIN_BRANCH_X_GAP_PERCENT = 5.5;
+
 /**
  * Maps app region slugs to their primary skeleton zone.
  * @see docs/Skeleton world tree.md — Region → Zone mapping

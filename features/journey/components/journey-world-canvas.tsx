@@ -11,7 +11,9 @@ import {
 
 import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
+import { WorldTreeJlptBandArtLayer } from "@/features/journey/components/world-tree-jlpt-band-art-layer";
 import { WorldTreeRealmBackdrop } from "@/features/journey/components/world-tree-realm-backdrop";
+import { JOURNEY_JLPT_BAND_ART } from "@/features/journey/constants/journey.constants";
 import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   buildWorldTreeLayout,
@@ -159,11 +161,22 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
             className="relative w-full"
             style={{ minHeight: `${canvasMinHeightVh}vh` }}
           >
-            {isOverview ? <WorldTreeRealmBackdrop className="z-0" /> : null}
+            {isOverview || JOURNEY_JLPT_BAND_ART ? (
+              <WorldTreeRealmBackdrop className="z-0" useJlptBands={isOverview} />
+            ) : null}
+            {JOURNEY_JLPT_BAND_ART ? (
+              <WorldTreeJlptBandArtLayer
+                className="z-[1] min-h-full"
+                showJlptChrome={isOverview}
+              />
+            ) : null}
             <JourneySkeletonArtLayer
               journey={journey}
               layout={layout}
               variant={variant}
+              hideScaffold={JOURNEY_JLPT_BAND_ART}
+              continuousTrail={isOverview}
+              coloredTrailByJlpt={isOverview}
               className="min-h-full"
             />
             <JourneyWorldNodeLayer
@@ -172,6 +185,7 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
               layout={layout}
               highlightNodeId={highlightNodeId}
               visibleYBand={visibleYBand}
+              useArtNodes={isOverview}
               className="z-10"
             />
           </div>

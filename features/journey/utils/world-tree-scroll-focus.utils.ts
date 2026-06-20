@@ -1,5 +1,12 @@
 import { REGION_SLUG_TO_WORLD_TREE_ZONE } from "@/features/journey/constants/world-tree-skeleton.constants";
 import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
+import {
+  findJlptBandCenterY,
+  isWorldTreeJlptBandId,
+  resolveJlptBandForRegion,
+  resolveJlptBandForZone,
+  type WorldTreeJlptBandId,
+} from "@/features/journey/constants/world-tree-jlpt-band.constants";
 import type {
   JourneyNode,
   JourneyPathViewModel,
@@ -16,6 +23,7 @@ export type WorldTreeScrollFocus = {
   anchorScrollToBottom: boolean;
   highlightNodeId: string | null;
   focusZoneId: WorldTreeZoneId | null;
+  focusJlptBandId: WorldTreeJlptBandId | null;
 };
 
 const LESSON_LIKE_KINDS = new Set(["lesson", "checkpoint", "trial"]);
@@ -63,6 +71,7 @@ export function resolveWorldTreeScrollFocus(
     highlightNodeId?: string | null;
     regionSlug?: string | null;
     zoneId?: WorldTreeZoneId | null;
+    jlptBandId?: WorldTreeJlptBandId | null;
   } = {},
 ): WorldTreeScrollFocus {
   const highlightNodeId = options.highlightNodeId ?? null;
@@ -73,6 +82,17 @@ export function resolveWorldTreeScrollFocus(
       anchorScrollToBottom: false,
       highlightNodeId,
       focusZoneId: null,
+      focusJlptBandId: null,
+    };
+  }
+
+  if (options.jlptBandId) {
+    return {
+      focusYPercent: findJlptBandCenterY(options.jlptBandId),
+      anchorScrollToBottom: false,
+      highlightNodeId: null,
+      focusZoneId: null,
+      focusJlptBandId: options.jlptBandId,
     };
   }
 
@@ -82,17 +102,20 @@ export function resolveWorldTreeScrollFocus(
       anchorScrollToBottom: false,
       highlightNodeId: null,
       focusZoneId: options.zoneId,
+      focusJlptBandId: resolveJlptBandForZone(options.zoneId),
     };
   }
 
   if (options.regionSlug) {
+    const jlptBandId = resolveJlptBandForRegion(options.regionSlug);
     const zoneId = REGION_SLUG_TO_WORLD_TREE_ZONE[options.regionSlug as RegionSlug];
-    if (zoneId) {
+    if (jlptBandId) {
       return {
-        focusYPercent: findZoneBandCenterY(zoneId),
+        focusYPercent: findJlptBandCenterY(jlptBandId),
         anchorScrollToBottom: false,
         highlightNodeId: null,
-        focusZoneId: zoneId,
+        focusZoneId: zoneId ?? null,
+        focusJlptBandId: jlptBandId,
       };
     }
   }
@@ -104,6 +127,7 @@ export function resolveWorldTreeScrollFocus(
       anchorScrollToBottom: false,
       highlightNodeId: lastCompleted.id,
       focusZoneId: null,
+      focusJlptBandId: null,
     };
   }
 
@@ -114,6 +138,7 @@ export function resolveWorldTreeScrollFocus(
     anchorScrollToBottom: true,
     highlightNodeId: firstNode?.id ?? null,
     focusZoneId: null,
+    focusJlptBandId: "n5",
   };
 }
 

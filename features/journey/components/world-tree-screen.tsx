@@ -5,21 +5,17 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { JourneyHud } from "@/features/journey/components/journey-hud";
 import { JourneyWorldCanvas } from "@/features/journey/components/journey-world-canvas";
 import type { JourneyWorldCanvasHandle } from "@/features/journey/components/journey-world-canvas";
+import { WorldTreeJlptLegend } from "@/features/journey/components/world-tree-jlpt-legend";
+import { WorldTreeJlptScrollRail } from "@/features/journey/components/world-tree-jlpt-scroll-rail";
 import { WorldTreeMapFab } from "@/features/journey/components/world-tree-map-fab";
-import { WorldTreeRegionLegend } from "@/features/journey/components/world-tree-region-legend";
-import { WorldTreeScrollRail } from "@/features/journey/components/world-tree-scroll-rail";
 import {
-  REGION_SLUG_TO_WORLD_TREE_ZONE,
-  WORLD_TREE_SKELETON_ZONES,
-  type WorldTreeZoneId,
-} from "@/features/journey/constants/world-tree-skeleton.constants";
+  resolveJlptBandForRegion,
+  resolveJlptBandFromY,
+  resolveJlptBandLabel,
+  type WorldTreeJlptBandId,
+} from "@/features/journey/constants/world-tree-jlpt-band.constants";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
-import {
-  buildWorldTreeLayout,
-  buildWorldTreeZoneBands,
-  findPlottedNode,
-} from "@/features/journey/utils/world-tree-layout.utils";
-import type { RegionSlug } from "@/lib/design-system/regions";
+import { buildWorldTreeLayout } from "@/features/journey/utils/world-tree-layout.utils";
 import { cn } from "@/lib/utils";
 
 type WorldTreeScreenProps = {
@@ -28,7 +24,7 @@ type WorldTreeScreenProps = {
   focusYPercent?: number | null;
   anchorScrollToBottom?: boolean;
   highlightNodeId?: string | null;
-  focusZoneId?: WorldTreeZoneId | null;
+  focusJlptBandId?: WorldTreeJlptBandId | null;
   profileStats?: {
     displayName: string;
     levelLabel: string;
@@ -37,52 +33,32 @@ type WorldTreeScreenProps = {
   } | null;
 };
 
-function resolveZoneLabel(regionSlug: string): string | null {
-  const zoneId = REGION_SLUG_TO_WORLD_TREE_ZONE[regionSlug as RegionSlug];
-  if (!zoneId) return null;
-  return WORLD_TREE_SKELETON_ZONES.find((zone) => zone.id === zoneId)?.label ?? null;
-}
-
 function countTotalNodes(journey: JourneyPathViewModel): number {
   return journey.regions.reduce((sum, region) => sum + region.nodes.length, 0);
 }
 
-function resolveZoneFromY(yPercent: number): WorldTreeZoneId {
-  const bands = buildWorldTreeZoneBands();
-  let match: WorldTreeZoneId = "deep_roots";
-  let bestDistance = Number.POSITIVE_INFINITY;
-
-  for (const zone of WORLD_TREE_SKELETON_ZONES) {
-    const band = bands[zone.id];
-    const center = (band.yMin + band.yMax) / 2;
-    const distance = Math.abs(center - yPercent);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      match = zone.id;
-    }
-  }
-
-  return match;
-}
-
-/** Full World Tree overview — all zones, nodes, and ascent structure (skeleton until art ships). */
+/** Full World Tree overview — JLPT bands, transparent art, trail, and nodes. */
 export function WorldTreeScreen({
   journey,
   regionName,
   focusYPercent = null,
   anchorScrollToBottom = false,
   highlightNodeId = null,
-  focusZoneId = null,
+  focusJlptBandId = null,
   profileStats,
 }: WorldTreeScreenProps) {
   const canvasRef = useRef<JourneyWorldCanvasHandle>(null);
   const layout = useMemo(() => buildWorldTreeLayout(journey), [journey]);
-  const [activeZoneId, setActiveZoneId] = useState<WorldTreeZoneId | null>(focusZoneId);
+  const [activeJlptBandId, setActiveJlptBandId] = useState<WorldTreeJlptBandId | null>(
+    focusJlptBandId,
+  );
 
-  const resolvedZoneLabel =
-    activeZoneId != null
-      ? (WORLD_TREE_SKELETON_ZONES.find((zone) => zone.id === activeZoneId)?.label ?? null)
-      : resolveZoneLabel(journey.position.currentRegionSlug);
+  const resolvedJlptLabel = resolveJlptBandLabel(
+    activeJlptBandId ??
+      focusJlptBandId ??
+      resolveJlptBandForRegion(journey.position.currentRegionSlug) ??
+      "n5",
+  );
 
   const totalNodes = countTotalNodes(journey);
   const continueHref =
@@ -91,14 +67,14 @@ export function WorldTreeScreen({
       ? `/learn?node=${encodeURIComponent(journey.position.currentNodeId)}`
       : "/learn");
 
-  const handleZoneSelect = useCallback((_zoneId: WorldTreeZoneId, centerYPercent: number) => {
-    setActiveZoneId(_zoneId);
+  const handleBandSelect = useCallback((_bandId: WorldTreeJlptBandId, centerYPercent: number) => {
+    setActiveJlptBandId(_bandId);
     canvasRef.current?.scrollToYPercent(centerYPercent);
   }, []);
 
   const handleViewportYChange = useCallback((yPercent: number) => {
-    setActiveZoneId((current) => {
-      const next = resolveZoneFromY(yPercent);
+    setActiveJlptBandId((current) => {
+      const next = resolveJlptBandFromY(yPercent);
       return current === next ? current : next;
     });
   }, []);
@@ -118,11 +94,11 @@ export function WorldTreeScreen({
         onViewportCenterYChange={handleViewportYChange}
       />
 
-      <WorldTreeRegionLegend journey={journey} />
+      <WorldTreeJlptLegend journey={journey} />
 
-      <WorldTreeScrollRail
-        activeZoneId={activeZoneId ?? focusZoneId}
-        onZoneSelect={handleZoneSelect}
+      <WorldTreeJlptScrollRail
+        activeBandId={activeJlptBandId ?? focusJlptBandId}
+        onBandSelect={handleBandSelect}
       />
 
       <WorldTreeMapFab href={continueHref} label="Continue climb" />
@@ -133,7 +109,7 @@ export function WorldTreeScreen({
           "text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#6B5344]/45 dark:text-[#D6A85F]/35",
         )}
       >
-        Scroll to explore the World Tree
+        Scroll the World Tree · N5 at the roots → N1 at the crown
       </p>
 
       {profileStats ? (
@@ -141,7 +117,7 @@ export function WorldTreeScreen({
           displayName={profileStats.displayName}
           levelLabel={profileStats.levelLabel}
           regionName="World Tree"
-          zoneLabel={resolvedZoneLabel ?? "Full ascent"}
+          zoneLabel={resolvedJlptLabel}
           globalNodeIndex={journey.position.globalNodeIndex}
           totalNodes={totalNodes}
           currentStreak={profileStats.currentStreak}
@@ -154,4 +130,4 @@ export function WorldTreeScreen({
   );
 }
 
-export { findPlottedNode, buildWorldTreeLayout };
+export { buildWorldTreeLayout };

@@ -58,6 +58,7 @@ function makeLessonSummary(
     estimatedDuration: 5,
     progress,
     score: progress === "completed" ? 100 : 0,
+    contentStatus: "published" as const,
   };
 }
 

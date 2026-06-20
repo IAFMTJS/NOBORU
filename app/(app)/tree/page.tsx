@@ -1,4 +1,8 @@
 import { WorldTreeScreen } from "@/features/journey/components/world-tree-screen";
+import {
+  isWorldTreeJlptBandId,
+  type WorldTreeJlptBandId,
+} from "@/features/journey/constants/world-tree-jlpt-band.constants";
 import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
 import { buildWorldTreeLayout } from "@/features/journey/utils/world-tree-layout.utils";
 import { resolveWorldTreeScrollFocus } from "@/features/journey/utils/world-tree-scroll-focus.utils";
@@ -10,6 +14,7 @@ type TreePageProps = {
     region?: string;
     node?: string;
     zone?: string;
+    jlpt?: string;
   }>;
 };
 
@@ -34,11 +39,16 @@ export default async function TreePage({ searchParams }: TreePageProps) {
     params.zone && WORLD_TREE_ZONE_IDS.has(params.zone)
       ? (params.zone as WorldTreeZoneId)
       : null;
+  const jlptBandId =
+    params.jlpt && isWorldTreeJlptBandId(params.jlpt)
+      ? (params.jlpt as WorldTreeJlptBandId)
+      : null;
 
   const scrollFocus = resolveWorldTreeScrollFocus(journey, layout, {
     highlightNodeId: params.node ?? null,
     regionSlug: params.region ?? null,
     zoneId,
+    jlptBandId,
   });
 
   return (
@@ -46,7 +56,7 @@ export default async function TreePage({ searchParams }: TreePageProps) {
       journey={journey}
       regionName="World Tree"
       focusYPercent={scrollFocus.focusYPercent}
-      focusZoneId={scrollFocus.focusZoneId}
+      focusJlptBandId={scrollFocus.focusJlptBandId}
       anchorScrollToBottom={scrollFocus.anchorScrollToBottom}
       highlightNodeId={scrollFocus.highlightNodeId}
       profileStats={profileStats}

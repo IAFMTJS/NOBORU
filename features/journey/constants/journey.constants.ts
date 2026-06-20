@@ -3,6 +3,9 @@ import type { RegionSlug } from "@/lib/design-system/regions";
 /** When true, Journey renders skeleton scaffold instead of sheet-remaster art. */
 export const JOURNEY_SKELETON_MODE = true;
 
+/** When true, stack JLPT hero band art (transparent PNG) on the World Tree canvas. */
+export const JOURNEY_JLPT_BAND_ART = true;
+
 /** Insert a landmark destination every N lesson nodes along a regional path. */
 export const LANDMARK_EVERY_N_LESSONS = 5;
 

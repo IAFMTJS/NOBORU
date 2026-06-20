@@ -99,7 +99,18 @@ describe("resolveWorldTreeScrollFocus", () => {
       anchorScrollToBottom: true,
       highlightNodeId: "first",
       focusZoneId: null,
+      focusJlptBandId: "n5",
     });
+  });
+
+  it("focuses a JLPT band when jlpt query param is provided", () => {
+    const journey = makeJourney([makeRegion()]);
+    const layout = buildWorldTreeLayout(journey);
+
+    const focus = resolveWorldTreeScrollFocus(journey, layout, { jlptBandId: "n3" });
+
+    expect(focus.focusJlptBandId).toBe("n3");
+    expect(focus.focusYPercent).toBe(50);
   });
 
   it("focuses the last completed lesson when progress exists", () => {
