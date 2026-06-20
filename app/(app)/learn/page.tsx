@@ -30,6 +30,7 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
   const layout = buildWorldTreeLayout(journey);
 
   let focusYPercent: number | null = null;
+  let anchorScrollToBottom = false;
   const highlightNodeId = params.node ?? null;
 
   if (highlightNodeId) {
@@ -42,6 +43,7 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
   } else {
     focusYPercent =
       findPlottedNode(layout.nodes, journey.position.currentNodeId)?.yPercent ?? null;
+    anchorScrollToBottom = journey.position.globalNodeIndex === 0;
   }
 
   return (
@@ -49,6 +51,7 @@ export default async function LearnPage({ searchParams }: LearnPageProps) {
       journey={journey}
       regionName={currentRegion?.name ?? "Foothills"}
       focusYPercent={focusYPercent}
+      anchorScrollToBottom={anchorScrollToBottom}
       highlightNodeId={highlightNodeId}
       profileStats={profileStats}
     />

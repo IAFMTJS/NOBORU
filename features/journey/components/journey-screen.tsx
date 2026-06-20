@@ -14,6 +14,7 @@ type JourneyScreenProps = {
   regionName: string;
   zoneLabel?: string | null;
   focusYPercent?: number | null;
+  anchorScrollToBottom?: boolean;
   highlightNodeId?: string | null;
   profileStats?: {
     displayName: string;
@@ -39,6 +40,7 @@ export function JourneyScreen({
   regionName,
   zoneLabel = null,
   focusYPercent = null,
+  anchorScrollToBottom = false,
   highlightNodeId = null,
   profileStats,
 }: JourneyScreenProps) {
@@ -53,6 +55,7 @@ export function JourneyScreen({
         journey={journey}
         regionName={regionName}
         focusYPercent={focusYPercent}
+        anchorScrollToBottom={anchorScrollToBottom}
         highlightNodeId={highlightNodeId}
       />
 

@@ -17,6 +17,8 @@ type JourneyWorldCanvasProps = {
   className?: string;
   /** Scroll focus along canvas height (0 = top, 100 = bottom). */
   focusYPercent?: number | null;
+  /** When true, anchor the focus point near the bottom of the viewport (journey start). */
+  anchorScrollToBottom?: boolean;
   /** Deep link: highlight a specific node id. */
   highlightNodeId?: string | null;
   /** Deep link: scroll to zone band center. */
@@ -29,6 +31,7 @@ export function JourneyWorldCanvas({
   regionName,
   className,
   focusYPercent = null,
+  anchorScrollToBottom = false,
   highlightNodeId = null,
 }: JourneyWorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,7 +42,7 @@ export function JourneyWorldCanvas({
     const container = scrollRef.current;
     if (!container) return;
 
-    if (focusYPercent == null) {
+    if (focusYPercent == null || anchorScrollToBottom) {
       container.scrollTop = container.scrollHeight - container.clientHeight;
       return;
     }
@@ -47,7 +50,7 @@ export function JourneyWorldCanvas({
     const focusY = (focusYPercent / 100) * container.scrollHeight;
     const targetTop = focusY - container.clientHeight * 0.55;
     container.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
-  }, [focusYPercent]);
+  }, [anchorScrollToBottom, focusYPercent]);
 
   return (
     <div

@@ -14,6 +14,7 @@ import {
   computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
   resolveWorldTreeCanvasMinHeightVh,
+  WORLD_TREE_JOURNEY_BASE_Y,
 } from "@/features/journey/utils/world-tree-layout.utils";
 
 function makeNode(overrides: Partial<JourneyNode> = {}): JourneyNode {
@@ -140,7 +141,26 @@ describe("plotJourneyNodesOnSkeleton", () => {
     ]);
 
     const plotted = plotJourneyNodesOnSkeleton(journey);
+    expect(plotted[0]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y);
     expect(plotted[0]!.yPercent).toBeGreaterThan(plotted[1]!.yPercent);
+  });
+
+  it("anchors global index 0 at the World Heart base before climbing upward", () => {
+    const journey = makeJourney([
+      makeRegion({
+        slug: "foothills",
+        nodes: [
+          makeNode({ id: "first", globalIndex: 0 }),
+          makeNode({ id: "second", globalIndex: 1 }),
+          makeNode({ id: "third", globalIndex: 2 }),
+        ],
+      }),
+    ]);
+
+    const plotted = plotJourneyNodesOnSkeleton(journey);
+    expect(plotted[0]!.node.id).toBe("first");
+    expect(plotted[0]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y);
+    expect(plotted[1]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y - WORLD_TREE_NODE_MIN_Y_GAP);
   });
 
   it("orders nodes by global index", () => {

@@ -206,12 +206,38 @@ function resolveLayoutMeta(
   };
 }
 
+/** y=100 is the World Heart base — first lesson anchors here, then we climb up. */
+export const WORLD_TREE_JOURNEY_BASE_Y = 100;
+
+function isMainSpineEntry(entry: LayoutEntry): boolean {
+  return entry.spineRole === "main" && entry.segmentType === "main_spine";
+}
+
+/** Bottom-anchored ascent: global order 0 sits at the base, each step climbs upward. */
+function assignGlobalSpineYPositions(entries: LayoutEntry[]): Map<string, number> {
+  const spineEntries = entries
+    .filter(isMainSpineEntry)
+    .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
+
+  const yByNodeId = new Map<string, number>();
+
+  for (let rank = 0; rank < spineEntries.length; rank += 1) {
+    const entry = spineEntries[rank]!;
+    yByNodeId.set(
+      entry.node.id,
+      WORLD_TREE_JOURNEY_BASE_Y - rank * WORLD_TREE_NODE_MIN_Y_GAP,
+    );
+  }
+
+  return yByNodeId;
+}
+
 function distributeYInZone(
   zoneBand: WorldTreeBand,
   indexInZone: number,
   totalInZone: number,
 ): number {
-  if (totalInZone <= 1) return (zoneBand.yMin + zoneBand.yMax) / 2;
+  if (totalInZone <= 1) return zoneBand.yMax;
   const progress = indexInZone / (totalInZone - 1);
   return zoneBand.yMax - progress * (zoneBand.yMax - zoneBand.yMin);
 }
@@ -266,6 +292,7 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
 
   const zoneBands = buildWorldTreeZoneBands();
   const zoneGroups = new Map<WorldTreeZoneId, LayoutEntry[]>();
+  const globalSpineY = assignGlobalSpineYPositions(entries);
 
   for (const entry of entries) {
     const bucket = zoneGroups.get(entry.zoneId) ?? [];
@@ -280,7 +307,9 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
     const zoneEntries = zoneGroups.get(entry.zoneId) ?? [entry];
     const indexInZone = zoneEntries.findIndex((e) => e.node.id === entry.node.id);
     const zoneBand = zoneBands[entry.zoneId] ?? zoneBands[DEFAULT_WORLD_TREE_ZONE]!;
-    let yPercent = distributeYInZone(zoneBand, Math.max(0, indexInZone), zoneEntries.length);
+    let yPercent =
+      globalSpineY.get(entry.node.id) ??
+      distributeYInZone(zoneBand, Math.max(0, indexInZone), zoneEntries.length);
 
     const globalProgress =
       entries.length > 1
