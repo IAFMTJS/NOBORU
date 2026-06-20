@@ -100,7 +100,7 @@ export const WORLD_TREE_MAX_MAIN_SPINE_NODES = 28;
 export const WORLD_TREE_NODE_MIN_Y_GAP = 5.5;
 
 /** Target vertical gap between nodes in vh (touch-friendly, works with normalized Y 0–100%). */
-export const WORLD_TREE_MIN_NODE_GAP_VH = 0.9;
+export const WORLD_TREE_MIN_NODE_GAP_VH = 8;
 
 /**
  * Maps app region slugs to their primary skeleton zone.

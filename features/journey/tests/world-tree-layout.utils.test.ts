@@ -266,9 +266,13 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     );
   });
 
-  it("keeps full-tree canvas height practical for normalized Y layout", () => {
-    expect(resolveWorldTreeCanvasMinHeightVh(687)).toBeLessThan(800);
-    expect(resolveWorldTreeCanvasMinHeightVh(687)).toBeGreaterThan(600);
+  it("reserves enough vertical space for readable node spacing on full tree", () => {
+    const canvasVh = resolveWorldTreeCanvasMinHeightVh(687);
+    const yStepPercent = 97 / 686;
+    const physicalGapVh = (yStepPercent / 100) * canvasVh;
+
+    expect(canvasVh).toBeGreaterThan(5000);
+    expect(physicalGapVh).toBeGreaterThanOrEqual(7);
   });
 });
 
