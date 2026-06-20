@@ -2,7 +2,6 @@ import {
   DEFAULT_WORLD_TREE_ZONE,
   WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_MAX_MAIN_SPINE_NODES,
-  WORLD_TREE_NODE_MIN_Y_GAP,
   WORLD_TREE_MIN_NODE_GAP_VH,
   WORLD_TREE_SKELETON_MIN_HEIGHT_VH,
   WORLD_TREE_SKELETON_VH_PER_PERCENT,
@@ -63,8 +62,24 @@ export const WORLD_TREE_JOURNEY_BASE_Y = 100;
 /** Small top margin so the crown node stays inside the canvas. */
 export const WORLD_TREE_JOURNEY_CROWN_Y = 3;
 
+/** Minimum horizontal separation when nodes share a similar height band. */
+const WORLD_TREE_MIN_NODE_X_GAP_PERCENT = 5;
+
 function clampPercent(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
+}
+
+function resolveMinYGapPercent(nodeCount: number): number {
+  const canvasVh = resolveWorldTreeCanvasMinHeightVh(nodeCount);
+  return (WORLD_TREE_MIN_NODE_GAP_VH / canvasVh) * 100;
+}
+
+function isMainSpineLessonEntry(entry: LayoutEntry): boolean {
+  return (
+    entry.node.kind !== "landmark" &&
+    entry.spineRole === "main" &&
+    entry.segmentType === "main_spine"
+  );
 }
 
 /** Cumulative y bands per zone — y=100 is base, y=0 is crown. */
@@ -224,14 +239,9 @@ function resolveLayoutMeta(
   };
 }
 
-function isMainSpineEntry(entry: LayoutEntry): boolean {
-  return entry.spineRole === "main" && entry.segmentType === "main_spine";
-}
-
-/** Bottom-anchored ascent: global order 0 at base, last node near crown — always within 0–100%. */
 function assignGlobalSpineYPositions(entries: LayoutEntry[]): Map<string, number> {
   const spineEntries = entries
-    .filter(isMainSpineEntry)
+    .filter(isMainSpineLessonEntry)
     .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 
   const yByNodeId = new Map<string, number>();
@@ -284,33 +294,114 @@ function distributeYInZone(
   return zoneBand.yMax - progress * (zoneBand.yMax - zoneBand.yMin);
 }
 
+function attachLandmarkSpurs(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
+  return plotted.map((entry) => {
+    if (entry.node.kind !== "landmark") return entry;
+
+    const anchor = plotted
+      .filter(
+        (candidate) =>
+          candidate.node.kind !== "landmark" &&
+          candidate.node.globalIndex < entry.node.globalIndex,
+      )
+      .sort((a, b) => b.node.globalIndex - a.node.globalIndex)[0];
+
+    if (!anchor) return entry;
+
+    const side = entry.node.globalIndex % 2 === 0 ? 1 : -1;
+
+    return {
+      ...entry,
+      spineRole: "branch",
+      segmentType: "branch",
+      branchId: `landmark-spur-${entry.node.id}`,
+      xPercent: clampPercent(anchor.xPercent + side * 18, 10, 90),
+      yPercent: clampPercent(
+        anchor.yPercent - 0.6,
+        WORLD_TREE_JOURNEY_CROWN_Y,
+        WORLD_TREE_JOURNEY_BASE_Y,
+      ),
+      forkFromNodeId: anchor.node.id,
+    };
+  });
+}
+
+function separateNearbyNodes(
+  plotted: PlottedSkeletonNode[],
+  minYGapPercent: number,
+): PlottedSkeletonNode[] {
+  const result = plotted.map((entry) => ({ ...entry }));
+
+  for (let iteration = 0; iteration < 6; iteration += 1) {
+    let moved = false;
+
+    for (let left = 0; left < result.length; left += 1) {
+      for (let right = left + 1; right < result.length; right += 1) {
+        const a = result[left]!;
+        const b = result[right]!;
+        const dy = Math.abs(a.yPercent - b.yPercent);
+        const dx = Math.abs(a.xPercent - b.xPercent);
+
+        if (dy >= minYGapPercent * 0.9 || dx >= WORLD_TREE_MIN_NODE_X_GAP_PERCENT * 2) {
+          continue;
+        }
+
+        const pushY = (minYGapPercent - dy) / 2 + 0.08;
+        if (a.yPercent >= b.yPercent) {
+          a.yPercent = clampPercent(a.yPercent + pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
+          b.yPercent = clampPercent(b.yPercent - pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
+        } else {
+          a.yPercent = clampPercent(a.yPercent - pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
+          b.yPercent = clampPercent(b.yPercent + pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
+        }
+
+        if (dx < WORLD_TREE_MIN_NODE_X_GAP_PERCENT) {
+          const pushX = (WORLD_TREE_MIN_NODE_X_GAP_PERCENT - dx) / 2 + 0.5;
+          a.xPercent = clampPercent(
+            a.xPercent + (a.node.globalIndex % 2 === 0 ? pushX : -pushX),
+            12,
+            88,
+          );
+          b.xPercent = clampPercent(
+            b.xPercent + (b.node.globalIndex % 2 === 0 ? -pushX : pushX),
+            12,
+            88,
+          );
+        }
+
+        moved = true;
+      }
+    }
+
+    if (!moved) break;
+  }
+
+  return result;
+}
+
 /** Plot journey nodes on the skeleton with zone-aware placement, branches, and spacing. */
 export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLayoutResult {
   const entries = journey.regions.flatMap((region) => {
     const lessonNodes = region.nodes.filter((node) => node.kind !== "landmark");
     let lessonIndex = 0;
-    let lastLessonBlueprint: LessonBlueprintMeta | undefined;
 
     return region.nodes.map((node) => {
       const isLessonLike =
         node.kind === "lesson" || node.kind === "checkpoint" || node.kind === "trial";
       const currentLessonIndex = isLessonLike ? lessonIndex : lessonIndex;
       if (isLessonLike) lessonIndex += 1;
-      if (isLessonLike && node.blueprint) {
-        lastLessonBlueprint = node.blueprint;
-      }
 
       const meta =
-        node.kind === "landmark" && lastLessonBlueprint
+        node.kind === "landmark"
           ? {
-              ...resolveLayoutMetaFromBlueprint(
-                lastLessonBlueprint,
+              zoneId: resolveWorldTreeZoneForNode(
                 region.slug,
                 currentLessonIndex,
                 lessonNodes.length,
               ),
-              spineRole: "main" as const,
-              segmentType: "main_spine" as const,
+              spineRole: "branch" as const,
+              segmentType: "branch" as const,
+              branchId: `landmark-spur-${node.id}`,
             }
           : resolveLayoutMeta(
               node,
@@ -344,13 +435,16 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
 
   const plotted: PlottedSkeletonNode[] = [];
   const mainSpineTrail: { globalIndex: number; x: number; y: number; nodeId: string }[] = [];
-  const branchCounts = new Map<string, number>();
+  const branchDepthByKey = new Map<string, number>();
+  const branchForkSlotByBranchId = new Map<string, number>();
+  const forkSlotByForkId = new Map<string, number>();
+  const minBranchYGapPercent = resolveMinYGapPercent(entries.length) * 0.9;
 
   for (const entry of entries) {
     const zoneEntries = zoneGroups.get(entry.zoneId) ?? [entry];
     const indexInZone = zoneEntries.findIndex((e) => e.node.id === entry.node.id);
     const zoneBand = zoneBands[entry.zoneId] ?? zoneBands[DEFAULT_WORLD_TREE_ZONE]!;
-    const onMainSpine = isMainSpineEntry(entry);
+    const onMainSpine = isMainSpineLessonEntry(entry);
 
     let yPercent =
       globalSpineY.get(entry.node.id) ??
@@ -366,13 +460,21 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
 
     if (!onMainSpine) {
       const fork = findLatestMainSpineBefore(mainSpineTrail, entry.node.globalIndex);
-      const branchKey = `${entry.branchId}-${fork?.nodeId ?? entry.zoneId}`;
-      const branchIndex = branchCounts.get(branchKey) ?? 0;
-      branchCounts.set(branchKey, branchIndex + 1);
 
       if (fork) {
-        xPercent = computeBranchXPercent(fork.x, branchIndex, entry.segmentType);
-        yPercent = fork.y - (branchIndex + 1) * (WORLD_TREE_NODE_MIN_Y_GAP * 0.25);
+        const depthKey = `${fork.nodeId}-${entry.branchId}`;
+        const depth = branchDepthByKey.get(depthKey) ?? 0;
+        branchDepthByKey.set(depthKey, depth + 1);
+
+        let forkSlot = branchForkSlotByBranchId.get(entry.branchId);
+        if (forkSlot == null) {
+          forkSlot = forkSlotByForkId.get(fork.nodeId) ?? 0;
+          forkSlotByForkId.set(fork.nodeId, forkSlot + 1);
+          branchForkSlotByBranchId.set(entry.branchId, forkSlot);
+        }
+
+        xPercent = computeBranchXPercent(fork.x, forkSlot, entry.segmentType);
+        yPercent = fork.y - (depth + 1) * minBranchYGapPercent;
         forkFromNodeId = fork.nodeId;
       }
     }
@@ -402,7 +504,12 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
     plotted.push(plottedNode);
   }
 
-  const spaced = enforceMinimumNodeSpacing(plotted);
+  const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(plotted.length);
+  const minYGapPercent = (WORLD_TREE_MIN_NODE_GAP_VH / canvasMinHeightVh) * 100;
+  const spaced = separateNearbyNodes(
+    enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
+    minYGapPercent,
+  );
 
   const segments: WorldTreeLayoutSegment[] = [];
   const segmentMap = new Map<string, PlottedSkeletonNode[]>();
@@ -428,7 +535,7 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   return {
     nodes: spaced,
     segments,
-    canvasMinHeightVh: resolveWorldTreeCanvasMinHeightVh(spaced.length),
+    canvasMinHeightVh,
   };
 }
 

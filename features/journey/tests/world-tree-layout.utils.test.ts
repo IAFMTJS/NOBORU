@@ -194,11 +194,24 @@ describe("plotJourneyNodesOnSkeleton", () => {
       if (
         prev.segmentType === "main_spine" &&
         prev.spineRole === "main" &&
+        prev.node.kind !== "landmark" &&
         current.segmentType === "main_spine" &&
-        current.spineRole === "main"
+        current.spineRole === "main" &&
+        current.node.kind !== "landmark"
       ) {
         expect(prev.yPercent).toBeGreaterThanOrEqual(current.yPercent);
       }
+    }
+
+    const coordKey = (entry: (typeof layout.nodes)[number]) =>
+      `${entry.xPercent.toFixed(1)}:${entry.yPercent.toFixed(1)}`;
+    const uniqueCoords = new Set(layout.nodes.map(coordKey));
+    expect(uniqueCoords.size).toBe(layout.nodes.length);
+
+    const landmarks = layout.nodes.filter((entry) => entry.node.kind === "landmark");
+    for (const landmark of landmarks) {
+      expect(landmark.forkFromNodeId).toBeTruthy();
+      expect(landmark.segmentType).toBe("branch");
     }
   },
     15_000,

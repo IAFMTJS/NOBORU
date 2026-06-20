@@ -12,12 +12,20 @@ type WorldTreeSpinePathProps = {
   className?: string;
 };
 
-function buildSegmentPath(nodes: PlottedSkeletonNode[]): string | null {
-  if (nodes.length < 2) return null;
+function buildSegmentPath(
+  nodes: PlottedSkeletonNode[],
+  fork?: PlottedSkeletonNode | null,
+): string | null {
+  if (nodes.length === 0) return null;
 
   const sorted = [...nodes].sort((a, b) => b.yPercent - a.yPercent);
   const first = sorted[0]!;
-  let path = `M ${first.xPercent} ${first.yPercent}`;
+
+  let path = fork
+    ? `M ${fork.xPercent} ${fork.yPercent} L ${first.xPercent} ${first.yPercent}`
+    : `M ${first.xPercent} ${first.yPercent}`;
+
+  if (sorted.length < 2) return path;
 
   for (let index = 1; index < sorted.length; index += 1) {
     const prev = sorted[index - 1]!;
@@ -31,7 +39,12 @@ function buildSegmentPath(nodes: PlottedSkeletonNode[]): string | null {
 
 function collectMainSpineNodes(nodes: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
   return nodes
-    .filter((entry) => entry.segmentType === "main_spine" && entry.spineRole === "main")
+    .filter(
+      (entry) =>
+        entry.node.kind !== "landmark" &&
+        entry.segmentType === "main_spine" &&
+        entry.spineRole === "main",
+    )
     .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 }
 
@@ -86,6 +99,7 @@ function SpineStroke({ d, variant }: SpineStrokeProps) {
 
 /** SVG paths connecting nodes on the World Tree skeleton. */
 export function WorldTreeSpinePath({ segments, nodes, className }: WorldTreeSpinePathProps) {
+  const nodeById = new Map(nodes.map((entry) => [entry.node.id, entry]));
   const mainSpinePath = buildSegmentPath(collectMainSpineNodes(nodes));
   const branchSegments = collectBranchSegments(segments);
 
@@ -100,7 +114,10 @@ export function WorldTreeSpinePath({ segments, nodes, className }: WorldTreeSpin
       {mainSpinePath ? <SpineStroke d={mainSpinePath} variant="main" /> : null}
 
       {branchSegments.map((segment) => {
-        const pathD = buildSegmentPath(segment.nodes);
+        const fork = segment.forkFromNodeId
+          ? (nodeById.get(segment.forkFromNodeId) ?? null)
+          : null;
+        const pathD = buildSegmentPath(segment.nodes, fork);
         if (!pathD) return null;
 
         const variant = segment.type === "cave" ? "cave" : "branch";
