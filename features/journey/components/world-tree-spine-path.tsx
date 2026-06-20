@@ -12,20 +12,22 @@ type WorldTreeSpinePathProps = {
   className?: string;
 };
 
-function buildForkConnector(fork: PlottedSkeletonNode, first: PlottedSkeletonNode): string {
-  const rise = fork.yPercent - first.yPercent;
-  const ctrl1X = fork.xPercent + (first.xPercent - fork.xPercent) * 0.12;
-  const ctrl1Y = fork.yPercent - rise * 0.12;
-  const ctrl2X = fork.xPercent + (first.xPercent - fork.xPercent) * 0.72;
-  const ctrl2Y = fork.yPercent - rise * 0.62;
+function buildTreeLimbConnector(
+  fork: PlottedSkeletonNode,
+  first: PlottedSkeletonNode,
+): string {
+  const dx = first.xPercent - fork.xPercent;
+  const dy = first.yPercent - fork.yPercent;
+  const ctrlX = fork.xPercent + dx * 0.38;
+  const ctrlY = fork.yPercent + dy * 0.22 - Math.abs(dx) * 0.05;
 
-  return `M ${fork.xPercent} ${fork.yPercent} C ${ctrl1X} ${ctrl1Y}, ${ctrl2X} ${ctrl2Y}, ${first.xPercent} ${first.yPercent}`;
+  return `M ${fork.xPercent} ${fork.yPercent} Q ${ctrlX} ${ctrlY}, ${first.xPercent} ${first.yPercent}`;
 }
 
 function buildSegmentPath(
   nodes: PlottedSkeletonNode[],
   fork?: PlottedSkeletonNode | null,
-  spiral = false,
+  limb = false,
 ): string | null {
   if (nodes.length === 0) return null;
 
@@ -33,7 +35,7 @@ function buildSegmentPath(
   const first = sorted[0]!;
 
   let path = fork
-    ? buildForkConnector(fork, first)
+    ? buildTreeLimbConnector(fork, first)
     : `M ${first.xPercent} ${first.yPercent}`;
 
   if (sorted.length < 2) return path;
@@ -41,12 +43,15 @@ function buildSegmentPath(
   for (let index = 1; index < sorted.length; index += 1) {
     const prev = sorted[index - 1]!;
     const node = sorted[index]!;
-    const midY = (prev.yPercent + node.yPercent) / 2;
 
-    if (spiral) {
+    if (limb) {
       const midX = (prev.xPercent + node.xPercent) / 2;
-      path += ` C ${midX} ${prev.yPercent}, ${midX} ${node.yPercent}, ${node.xPercent} ${node.yPercent}`;
+      const midY =
+        (prev.yPercent + node.yPercent) / 2 -
+        Math.abs(prev.xPercent - node.xPercent) * 0.05;
+      path += ` Q ${midX} ${midY}, ${node.xPercent} ${node.yPercent}`;
     } else {
+      const midY = (prev.yPercent + node.yPercent) / 2;
       path += ` C ${prev.xPercent} ${midY}, ${node.xPercent} ${midY}, ${node.xPercent} ${node.yPercent}`;
     }
   }

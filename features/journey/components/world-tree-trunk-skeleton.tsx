@@ -83,6 +83,27 @@ export function WorldTreeTrunkSkeleton({ className }: WorldTreeTrunkSkeletonProp
         />
       </div>
 
+      {/* Limb buds at zone rings — alternating sides like a living tree */}
+      {ringPositions.map((yMin, index) => {
+        const side = index % 2 === 0 ? -1 : 1;
+        const length = 11 + (index % 3) * 2;
+        const rotate = side * (28 + (index % 2) * 8);
+
+        return (
+          <span
+            key={`limb-${yMin}`}
+            className="absolute left-1/2 block origin-left rounded-full border-b-[2px] border-[#8B7355]/45 bg-gradient-to-r from-[#6B5344]/25 to-transparent dark:border-[#A0896C]/35 dark:from-[#4A3828]/30"
+            style={{
+              top: `${yMin}%`,
+              width: `${length}%`,
+              height: "0.45%",
+              transform: `translateX(${side * 12}%) rotate(${rotate}deg)`,
+            }}
+            data-world-tree-limb-stub
+          />
+        );
+      })}
+
       {/* Trunk rings at zone transitions (N3 rings, root collar, etc.) */}
       {ringPositions.map((yMin) => (
         <div

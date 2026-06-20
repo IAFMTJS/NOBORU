@@ -110,10 +110,10 @@ export function buildSkeletonAscentBand(): WorldTreeBand {
   return { yMin: 0, yMax: 100 };
 }
 
-/** Gentle winding x-offset — stays inside the trunk corridor. */
+/** Trunk ascent — stays inside the corridor with a subtle natural sway. */
 export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: number): number {
-  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 4;
-  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 2;
+  const wave = Math.sin(globalProgress * Math.PI * 1.35 + nodeIndex * 0.08) * 1.4;
+  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 0.75;
   const corridorHalf = WORLD_TREE_MANIFEST_ANCHORS.pathCorridorWidthPercent / 2;
   const raw =
     WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent + wave + stagger;
@@ -125,29 +125,49 @@ export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: 
   );
 }
 
-function computeBranchSpiralXPercent(
+type TreeLimbPosition = {
+  xPercent: number;
+  yPercent: number;
+};
+
+/** Place branch nodes along a limb that buds from the trunk and grows up-and-out. */
+function computeTreeLimbPosition(
   forkX: number,
   forkY: number,
   forkSlot: number,
   depth: number,
   segmentType: BlueprintSegmentType,
-): number {
+  limbStepPercent: number,
+): TreeLimbPosition {
   const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
-  const slotAngle = (forkSlot / 5) * Math.PI * 2 - Math.PI / 2;
-  const heightBias = ((WORLD_TREE_JOURNEY_BASE_Y - forkY) / WORLD_TREE_JOURNEY_BASE_Y) * 0.35;
-  const spiralTwist = segmentType === "cave" ? 0.5 : 0.34;
-  const angle = slotAngle + heightBias + depth * spiralTwist;
+  const side = forkSlot % 2 === 0 ? -1 : 1;
+  const tier = Math.floor(forkSlot / 2);
+  const isCave = segmentType === "cave";
 
-  const minRadius = 6;
-  const maxRadius = segmentType === "cave" ? 30 : 22;
-  const radius =
-    minRadius + Math.min(1, (depth + 1) / 4.5) * (maxRadius - minRadius);
+  const reach = (depth + 1) * limbStepPercent;
+  const spreadGain = isCave ? 1.1 : 0.88;
+  const riseGain = isCave ? -0.42 : 0.56;
+  const baseSpread = 3 + tier * 2.5;
 
-  const spiralX = trunkCenter + Math.cos(angle) * radius;
-  const trunkAnchorWeight = Math.exp(-depth * 0.6);
-  const blendedX = forkX * trunkAnchorWeight + spiralX * (1 - trunkAnchorWeight);
+  const targetX = trunkCenter + side * (baseSpread + reach * spreadGain);
+  const targetY = forkY - reach * riseGain;
 
-  return clampPercent(blendedX, 12, 88);
+  if (depth === 0) {
+    const budBlend = isCave ? 0.24 : 0.2;
+    return {
+      xPercent: clampPercent(forkX * (1 - budBlend) + targetX * budBlend, 12, 88),
+      yPercent: clampPercent(
+        forkY - limbStepPercent * (isCave ? 0.22 : 0.3),
+        WORLD_TREE_JOURNEY_CROWN_Y,
+        WORLD_TREE_JOURNEY_BASE_Y,
+      ),
+    };
+  }
+
+  return {
+    xPercent: clampPercent(targetX, 12, 88),
+    yPercent: clampPercent(targetY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y),
+  };
 }
 
 /** Canvas height (vh) for normalized Y layout — scales for tap spacing, not legacy y-gap %. */
@@ -433,6 +453,35 @@ function separateNearbyNodes(
   return result;
 }
 
+function stabilizeBranchLimbs(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
+  const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
+  const result = plotted.map((entry) => ({ ...entry }));
+  const branchGroups = new Map<string, PlottedSkeletonNode[]>();
+
+  for (const node of result) {
+    if (isMainSpineLessonNode(node)) continue;
+    const bucket = branchGroups.get(node.branchId) ?? [];
+    bucket.push(node);
+    branchGroups.set(node.branchId, bucket);
+  }
+
+  for (const branchNodes of branchGroups.values()) {
+    const ordered = [...branchNodes].sort((a, b) => b.yPercent - a.yPercent);
+    let minSpread = 0;
+
+    for (const node of ordered) {
+      const side = node.xPercent >= trunkCenter ? 1 : node.xPercent < trunkCenter ? -1 : 1;
+      const spread = Math.abs(node.xPercent - trunkCenter);
+      const nextSpread = Math.max(spread, minSpread + 2.2);
+
+      node.xPercent = clampPercent(trunkCenter + side * nextSpread, 12, 88);
+      minSpread = Math.abs(node.xPercent - trunkCenter);
+    }
+  }
+
+  return result;
+}
+
 function resolveDuplicateCoordinates(
   plotted: PlottedSkeletonNode[],
 ): PlottedSkeletonNode[] {
@@ -559,14 +608,16 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
           branchForkSlotByBranchId.set(entry.branchId, forkSlot);
         }
 
-        xPercent = computeBranchSpiralXPercent(
+        const limb = computeTreeLimbPosition(
           fork.x,
           fork.y,
           forkSlot,
           depth,
           entry.segmentType,
+          minBranchYGapPercent,
         );
-        yPercent = fork.y - (depth + 1) * minBranchYGapPercent;
+        xPercent = limb.xPercent;
+        yPercent = limb.yPercent;
         forkFromNodeId = fork.nodeId;
       }
     }
@@ -599,9 +650,11 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(plotted.length);
   const minYGapPercent = (WORLD_TREE_MIN_NODE_GAP_VH / canvasMinHeightVh) * 100;
   const spaced = resolveDuplicateCoordinates(
-    separateNearbyNodes(
-      enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
-      minYGapPercent,
+    stabilizeBranchLimbs(
+      separateNearbyNodes(
+        enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
+        minYGapPercent,
+      ),
     ),
   );
 

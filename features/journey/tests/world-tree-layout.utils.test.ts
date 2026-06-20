@@ -279,7 +279,7 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     );
   });
 
-  it("wraps branch lessons around the trunk instead of a flat sideways column", async () => {
+  it("grows branch lessons outward along tree limbs from the trunk", async () => {
     const { augmentRegionsWithBlueprint } = await import(
       "@/features/journey/utils/journey-blueprint-merge.utils"
     );
@@ -294,24 +294,21 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     );
     const layout = buildWorldTreeLayout(journey);
     const branchSegment = layout.segments.find(
-      (segment) =>
-        (segment.type === "branch" || segment.type === "cave") &&
-        segment.nodes.length >= 3,
+      (segment) => segment.type === "branch" && segment.nodes.length >= 3,
     );
 
     expect(branchSegment).toBeTruthy();
 
-    const xs = branchSegment!.nodes.map((entry) => entry.xPercent);
-    expect(new Set(xs.map((x) => x.toFixed(1))).size).toBeGreaterThan(2);
+    const trunkCenter = 50;
+    const ordered = [...branchSegment!.nodes].sort((a, b) => b.yPercent - a.yPercent);
+    const inner = ordered[0]!;
+    const outer = ordered[ordered.length - 1]!;
 
-    const fork = layout.nodes.find(
-      (entry) => entry.node.id === branchSegment!.forkFromNodeId,
+    expect(Math.abs(inner.xPercent - trunkCenter)).toBeLessThan(16);
+    expect(Math.abs(outer.xPercent - trunkCenter)).toBeGreaterThan(
+      Math.abs(inner.xPercent - trunkCenter),
     );
-    const closestToFork = branchSegment!.nodes.reduce((best, entry) =>
-      entry.yPercent > best.yPercent ? entry : best,
-    );
-
-    expect(Math.abs(closestToFork.xPercent - (fork?.xPercent ?? 50))).toBeLessThan(14);
+    expect(outer.yPercent).toBeLessThan(inner.yPercent);
   });
 
   it("reserves enough vertical space for readable node spacing on full tree", () => {
