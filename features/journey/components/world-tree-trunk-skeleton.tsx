@@ -4,6 +4,7 @@ import {
   WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_SKELETON_ZONES,
 } from "@/features/journey/constants/world-tree-skeleton.constants";
+import { listTrunkRingHubStubs } from "@/features/journey/constants/world-tree-trunk-hubs.constants";
 import { buildWorldTreeZoneBands } from "@/features/journey/utils/world-tree-layout.utils";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ const ROOT_ARMS = [
 /** CSS-only World Tree trunk, roots, rings, and crown — readable skeleton scaffold. */
 export function WorldTreeTrunkSkeleton({ className }: WorldTreeTrunkSkeletonProps) {
   const bands = buildWorldTreeZoneBands();
+  const hubStubs = listTrunkRingHubStubs(bands);
   const { trunkCenterXPercent, trunkWidthPercent } = WORLD_TREE_MANIFEST_ANCHORS;
   const trunkLeft = trunkCenterXPercent - trunkWidthPercent / 2;
   const innerWidth = trunkWidthPercent * 0.55;
@@ -55,12 +57,13 @@ export function WorldTreeTrunkSkeleton({ className }: WorldTreeTrunkSkeletonProp
         ))}
       </div>
 
-      {/* Outer trunk shell — bark mass */}
+      {/* Outer trunk shell — bark mass with crown taper */}
       <div
         className="absolute inset-y-0 overflow-hidden rounded-sm border-x-[3px] border-[#6B5344]/55 bg-gradient-to-b from-[#5C4638]/30 via-[#8B7355]/40 to-[#5C4638]/35 shadow-[inset_0_0_40px_rgba(0,0,0,0.25)] dark:border-[#A0896C]/45 dark:from-[#3A2C22]/50 dark:via-[#6B5344]/55 dark:to-[#3A2C22]/45"
         style={{
           left: `${trunkLeft}%`,
           width: `${trunkWidthPercent}%`,
+          clipPath: "polygon(18% 0%, 82% 0%, 100% 100%, 0% 100%)",
         }}
         data-world-tree-trunk-shell
       >
@@ -83,23 +86,28 @@ export function WorldTreeTrunkSkeleton({ className }: WorldTreeTrunkSkeletonProp
         />
       </div>
 
-      {/* Limb buds at zone rings — alternating sides like a living tree */}
-      {ringPositions.map((yMin, index) => {
-        const side = index % 2 === 0 ? -1 : 1;
-        const length = 11 + (index % 3) * 2;
-        const rotate = side * (28 + (index % 2) * 8);
+      {/* Limb buds at trunk ring hubs — aligned with layout fork points */}
+      {hubStubs.map((hub) => {
+        const side = hub.forkSlot % 2 === 0 ? -1 : 1;
+        const length =
+          hub.profile === "canopy" ? 14 : hub.profile === "crown" ? 12 : hub.profile === "root" ? 10 : 11;
+        const rotate =
+          hub.profile === "root"
+            ? side * (38 + (hub.forkSlot % 2) * 6)
+            : side * (24 + (hub.forkSlot % 3) * 6);
 
         return (
           <span
-            key={`limb-${yMin}`}
+            key={hub.hubKey}
             className="absolute left-1/2 block origin-left rounded-full border-b-[2px] border-[#8B7355]/45 bg-gradient-to-r from-[#6B5344]/25 to-transparent dark:border-[#A0896C]/35 dark:from-[#4A3828]/30"
             style={{
-              top: `${yMin}%`,
+              top: `${hub.yPercent}%`,
               width: `${length}%`,
               height: "0.45%",
-              transform: `translateX(${side * 12}%) rotate(${rotate}deg)`,
+              transform: `translateX(${side * 10}%) rotate(${rotate}deg)`,
             }}
             data-world-tree-limb-stub
+            data-hub-key={hub.hubKey}
           />
         );
       })}

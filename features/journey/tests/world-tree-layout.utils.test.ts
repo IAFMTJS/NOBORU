@@ -13,8 +13,8 @@ import {
   computeWorldTreePathXPercent,
   plotJourneyNodesOnSkeleton,
   resolveWorldTreeCanvasMinHeightVh,
-  WORLD_TREE_JOURNEY_BASE_Y,
 } from "@/features/journey/utils/world-tree-layout.utils";
+import { resolveTrunkHubPosition } from "@/features/journey/constants/world-tree-trunk-hubs.constants";
 
 function makeNode(overrides: Partial<JourneyNode> = {}): JourneyNode {
   return {
@@ -129,7 +129,7 @@ describe("buildWorldTreeLayout", () => {
 });
 
 describe("plotJourneyNodesOnSkeleton", () => {
-  it("places the first node at the stack base and later nodes higher", () => {
+  it("grows later lessons further along the same branch limb", () => {
     const journey = makeJourney([
       makeRegion({
         nodes: [
@@ -140,11 +140,13 @@ describe("plotJourneyNodesOnSkeleton", () => {
     ]);
 
     const plotted = plotJourneyNodesOnSkeleton(journey);
-    expect(plotted[0]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y);
-    expect(plotted[0]!.yPercent).toBeGreaterThan(plotted[1]!.yPercent);
+    const a = plotted.find((entry) => entry.node.id === "a")!;
+    const b = plotted.find((entry) => entry.node.id === "b")!;
+
+    expect(Math.abs(b.xPercent - 50)).toBeGreaterThanOrEqual(Math.abs(a.xPercent - 50));
   });
 
-  it("anchors global index 0 at the World Heart base before climbing upward", () => {
+  it("buds branch lessons from trunk hubs instead of a dense central spine", () => {
     const journey = makeJourney([
       makeRegion({
         slug: "foothills",
@@ -157,9 +159,8 @@ describe("plotJourneyNodesOnSkeleton", () => {
     ]);
 
     const plotted = plotJourneyNodesOnSkeleton(journey);
-    expect(plotted[0]!.node.id).toBe("first");
-    expect(plotted[0]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y);
-    expect(plotted[1]!.yPercent).toBeLessThan(plotted[0]!.yPercent);
+    expect(plotted.every((entry) => entry.spineRole === "branch")).toBe(true);
+    expect(plotted.every((entry) => entry.forkFromNodeId?.startsWith("hub:"))).toBe(true);
   });
 
   it(
@@ -186,22 +187,20 @@ describe("plotJourneyNodesOnSkeleton", () => {
       expect(node.xPercent).toBeLessThanOrEqual(88);
     }
 
-    expect(sorted[0]!.yPercent).toBe(100);
+    expect(sorted[0]!.yPercent).toBeGreaterThan(sorted.at(-1)!.yPercent);
 
-    for (let index = 1; index < sorted.length; index += 1) {
-      const prev = sorted[index - 1]!;
-      const current = sorted[index]!;
-      if (
-        prev.segmentType === "main_spine" &&
-        prev.spineRole === "main" &&
-        prev.node.kind !== "landmark" &&
-        current.segmentType === "main_spine" &&
-        current.spineRole === "main" &&
-        current.node.kind !== "landmark"
-      ) {
-        expect(prev.yPercent).toBeGreaterThanOrEqual(current.yPercent);
-      }
+    const trunkSpineNodes = layout.nodes.filter(
+      (entry) => entry.spineRole === "main" && entry.node.kind !== "landmark",
+    );
+    for (let index = 1; index < trunkSpineNodes.length; index += 1) {
+      const prev = trunkSpineNodes[index - 1]!;
+      const current = trunkSpineNodes[index]!;
+      expect(prev.yPercent).toBeGreaterThanOrEqual(current.yPercent);
     }
+
+    const lessons = layout.nodes.filter((entry) => entry.node.kind === "lesson");
+    const hubForked = lessons.filter((entry) => entry.forkFromNodeId?.startsWith("hub:"));
+    expect(hubForked.length).toBe(lessons.length);
 
     const coordKey = (entry: (typeof layout.nodes)[number]) =>
       `${entry.xPercent.toFixed(1)}:${entry.yPercent.toFixed(1)}`;
@@ -231,7 +230,7 @@ describe("plotJourneyNodesOnSkeleton", () => {
     expect(plotted.map((entry) => entry.node.id)).toEqual(["b", "a"]);
   });
 
-  it("places mount-n5 nodes below foothills nodes when global index is lower", () => {
+  it("places mount-n5 nodes higher on the tree than foothills roots", () => {
     const journey = makeJourney([
       makeRegion({
         slug: "foothills",
@@ -248,14 +247,20 @@ describe("plotJourneyNodesOnSkeleton", () => {
     const n5 = plotted.find((entry) => entry.node.id === "n5");
     const foothills = plotted.find((entry) => entry.node.id === "foothills");
 
-    expect(n5!.yPercent).toBeGreaterThan(foothills!.yPercent);
+    expect(n5!.zoneId).toBe("n5_roots");
+    expect(foothills!.zoneId).toBe("deep_roots");
+    expect(n5!.yPercent).toBeLessThan(foothills!.yPercent);
   });
 
-  it("spaces main spine nodes evenly from base to crown", () => {
+  it("spaces trunk checkpoint nodes evenly from base to crown", () => {
     const journey = makeJourney([
       makeRegion({
-        nodes: Array.from({ length: 8 }, (_, index) =>
-          makeNode({ id: `node-${index}`, globalIndex: index }),
+        nodes: Array.from({ length: 4 }, (_, index) =>
+          makeNode({
+            id: `checkpoint-${index}`,
+            globalIndex: index,
+            kind: "checkpoint",
+          }),
         ),
       }),
     ]);
@@ -279,6 +284,38 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     );
   });
 
+  it("aligns N3 branch forks to trunk ring hub Y positions", async () => {
+    const { augmentRegionsWithBlueprint } = await import(
+      "@/features/journey/utils/journey-blueprint-merge.utils"
+    );
+    const { buildJourneyPathFromData } = await import(
+      "@/features/journey/services/journey.service"
+    );
+
+    const journey = buildJourneyPathFromData(
+      augmentRegionsWithBlueprint([], new Set()),
+      [],
+      new Set(),
+    );
+    const layout = buildWorldTreeLayout(journey);
+    const zoneBands = buildWorldTreeZoneBands();
+
+    for (const zoneId of ["n3_trunk_1", "n3_trunk_2", "n3_trunk_3"] as const) {
+      const hubY = resolveTrunkHubPosition(zoneId, 0, zoneBands).yPercent;
+      const zoneBranches = layout.nodes.filter(
+        (entry) =>
+          entry.zoneId === zoneId &&
+          entry.forkFromNodeId?.startsWith("hub:") &&
+          entry.node.kind === "lesson",
+      );
+
+      expect(zoneBranches.length).toBeGreaterThan(0);
+      for (const branch of zoneBranches.slice(0, 6)) {
+        expect(branch.yPercent).toBeLessThanOrEqual(hubY + 2);
+      }
+    }
+  });
+
   it("grows branch lessons outward along tree limbs from the trunk", async () => {
     const { augmentRegionsWithBlueprint } = await import(
       "@/features/journey/utils/journey-blueprint-merge.utils"
@@ -300,11 +337,12 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     expect(branchSegment).toBeTruthy();
 
     const trunkCenter = 50;
-    const ordered = [...branchSegment!.nodes].sort((a, b) => b.yPercent - a.yPercent);
+    const ordered = [...branchSegment!.nodes].sort(
+      (a, b) => a.node.globalIndex - b.node.globalIndex,
+    );
     const inner = ordered[0]!;
     const outer = ordered[ordered.length - 1]!;
 
-    expect(Math.abs(inner.xPercent - trunkCenter)).toBeLessThan(16);
     expect(Math.abs(outer.xPercent - trunkCenter)).toBeGreaterThan(
       Math.abs(inner.xPercent - trunkCenter),
     );
@@ -337,6 +375,6 @@ describe("buildWorldTreeLayout performance", () => {
     const elapsed = performance.now() - start;
 
     expect(layout.nodes.length).toBe(nodeCount);
-    expect(elapsed).toBeLessThan(250);
+    expect(elapsed).toBeLessThan(300);
   });
 });

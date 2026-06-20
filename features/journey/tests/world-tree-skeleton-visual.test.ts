@@ -16,6 +16,8 @@ describe("world tree skeleton visuals", () => {
     expect(source).toContain("data-world-tree-ring");
     expect(source).toContain("data-world-tree-crown");
     expect(source).toContain("data-world-tree-limb-stub");
+    expect(source).toContain("listTrunkRingHubStubs");
+    expect(source).toContain("data-hub-key");
     expect(source).toContain("border-x-[3px]");
   });
 

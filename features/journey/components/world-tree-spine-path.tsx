@@ -13,20 +13,21 @@ type WorldTreeSpinePathProps = {
 };
 
 function buildTreeLimbConnector(
-  fork: PlottedSkeletonNode,
+  forkX: number,
+  forkY: number,
   first: PlottedSkeletonNode,
 ): string {
-  const dx = first.xPercent - fork.xPercent;
-  const dy = first.yPercent - fork.yPercent;
-  const ctrlX = fork.xPercent + dx * 0.38;
-  const ctrlY = fork.yPercent + dy * 0.22 - Math.abs(dx) * 0.05;
+  const dx = first.xPercent - forkX;
+  const dy = first.yPercent - forkY;
+  const ctrlX = forkX + dx * 0.38;
+  const ctrlY = forkY + dy * 0.22 - Math.abs(dx) * 0.05;
 
-  return `M ${fork.xPercent} ${fork.yPercent} Q ${ctrlX} ${ctrlY}, ${first.xPercent} ${first.yPercent}`;
+  return `M ${forkX} ${forkY} Q ${ctrlX} ${ctrlY}, ${first.xPercent} ${first.yPercent}`;
 }
 
 function buildSegmentPath(
   nodes: PlottedSkeletonNode[],
-  fork?: PlottedSkeletonNode | null,
+  fork?: { xPercent: number; yPercent: number } | null,
   limb = false,
 ): string | null {
   if (nodes.length === 0) return null;
@@ -35,7 +36,7 @@ function buildSegmentPath(
   const first = sorted[0]!;
 
   let path = fork
-    ? buildTreeLimbConnector(fork, first)
+    ? buildTreeLimbConnector(fork.xPercent, fork.yPercent, first)
     : `M ${first.xPercent} ${first.yPercent}`;
 
   if (sorted.length < 2) return path;
@@ -64,14 +65,15 @@ function collectMainSpineNodes(nodes: PlottedSkeletonNode[]): PlottedSkeletonNod
     .filter(
       (entry) =>
         entry.node.kind !== "landmark" &&
-        entry.segmentType === "main_spine" &&
         entry.spineRole === "main",
     )
     .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 }
 
 function collectBranchSegments(segments: WorldTreeLayoutSegment[]): WorldTreeLayoutSegment[] {
-  return segments.filter((segment) => segment.type !== "main_spine");
+  return segments.filter(
+    (segment) => segment.forkPoint != null || segment.type !== "main_spine",
+  );
 }
 
 type SpineStrokeProps = {
@@ -121,7 +123,6 @@ function SpineStroke({ d, variant }: SpineStrokeProps) {
 
 /** SVG paths connecting nodes on the World Tree skeleton. */
 export function WorldTreeSpinePath({ segments, nodes, className }: WorldTreeSpinePathProps) {
-  const nodeById = new Map(nodes.map((entry) => [entry.node.id, entry]));
   const mainSpinePath = buildSegmentPath(collectMainSpineNodes(nodes));
   const branchSegments = collectBranchSegments(segments);
 
@@ -136,9 +137,7 @@ export function WorldTreeSpinePath({ segments, nodes, className }: WorldTreeSpin
       {mainSpinePath ? <SpineStroke d={mainSpinePath} variant="main" /> : null}
 
       {branchSegments.map((segment) => {
-        const fork = segment.forkFromNodeId
-          ? (nodeById.get(segment.forkFromNodeId) ?? null)
-          : null;
+        const fork = segment.forkPoint ?? null;
         const pathD = buildSegmentPath(segment.nodes, fork, true);
         if (!pathD) return null;
 
