@@ -5,15 +5,15 @@ import type {
 import type { JlptWorldPathViewModel } from "@/features/worlds/types/world.types";
 import type { RegionSlug } from "@/lib/design-system/regions";
 import {
-  interpolateN5Waypoints,
-  N5_REGION_Y_BANDS,
-  N5_WORLD_LAYOUT,
-  resolveN5BranchReach,
-  resolveN5BranchSide,
-  resolveN5LaneOffset,
-  resolveN5RegionProgress,
-  resolveN5RegionY,
-} from "@/features/worlds/worlds/n5/n5-world-layout.constants";
+  interpolateN4Waypoints,
+  N4_REGION_Y_BANDS,
+  N4_WORLD_LAYOUT,
+  resolveN4BranchReach,
+  resolveN4BranchSide,
+  resolveN4LaneOffset,
+  resolveN4RegionProgress,
+  resolveN4RegionY,
+} from "@/features/worlds/worlds/n4/n4-world-layout.constants";
 
 const CLIMB_NODE_KINDS = new Set(["lesson", "checkpoint", "trial", "landmark"]);
 
@@ -31,12 +31,12 @@ function isBranchPlaced(entry: PlottedSkeletonNode): boolean {
 
 function resolveMinRegionYGap(regionSlug: string): number {
   return (
-    N5_WORLD_LAYOUT.minRegionYGap[regionSlug as keyof typeof N5_WORLD_LAYOUT.minRegionYGap] ??
+    N4_WORLD_LAYOUT.minRegionYGap[regionSlug as keyof typeof N4_WORLD_LAYOUT.minRegionYGap] ??
     0.4
   );
 }
 
-function enforceN5RegionYSpacing(entries: PlottedSkeletonNode[]): void {
+function enforceN4RegionYSpacing(entries: PlottedSkeletonNode[]): void {
   const byRegion = new Map<string, PlottedSkeletonNode[]>();
 
   for (const entry of entries) {
@@ -46,7 +46,7 @@ function enforceN5RegionYSpacing(entries: PlottedSkeletonNode[]): void {
   }
 
   for (const [regionSlug, regionNodes] of byRegion) {
-    const band = N5_REGION_Y_BANDS[regionSlug as RegionSlug];
+    const band = N4_REGION_Y_BANDS[regionSlug as RegionSlug];
     if (!band || regionNodes.length <= 1) continue;
 
     const minGap = resolveMinRegionYGap(regionSlug);
@@ -80,21 +80,18 @@ function enforceN5RegionYSpacing(entries: PlottedSkeletonNode[]): void {
   }
 }
 
-function resolveSpineXBounds(regionSlug: string): { min: number; max: number } {
-  if (regionSlug === "foothills") {
+function resolveSpineXBounds(progress: number): { min: number; max: number } {
+  if (progress < 0.18) {
     return {
-      min: N5_WORLD_LAYOUT.foothillsSpineXMin,
-      max: N5_WORLD_LAYOUT.foothillsSpineXMax,
+      min: N4_WORLD_LAYOUT.baseSpineXMin,
+      max: N4_WORLD_LAYOUT.baseSpineXMax,
     };
   }
-  return { min: N5_WORLD_LAYOUT.spineXMin, max: N5_WORLD_LAYOUT.spineXMax };
+  return { min: N4_WORLD_LAYOUT.spineXMin, max: N4_WORLD_LAYOUT.spineXMax };
 }
 
-/**
- * Region Y bands control vertical spacing; waypoint path controls horizontal sweep.
- * Prevents the bottom overlap pile and vertical column artifacts.
- */
-export function tuneN5WorldLayout(
+/** N4 single-region layout — wide serpentine path with enforced vertical spacing. */
+export function tuneN4WorldLayout(
   layout: WorldTreeLayoutResult,
   _worldPath: JlptWorldPathViewModel,
 ): WorldTreeLayoutResult {
@@ -115,31 +112,31 @@ export function tuneN5WorldLayout(
     const indexInRegion = regionIndices.get(entry.regionSlug) ?? 0;
     regionIndices.set(entry.regionSlug, indexInRegion + 1);
 
-    const progress = resolveN5RegionProgress(entry.regionSlug, indexInRegion, countInRegion);
-    const pathX = interpolateN5Waypoints(progress).x;
-    const yPercent = resolveN5RegionY(entry.regionSlug, indexInRegion, countInRegion);
-    const lane = resolveN5LaneOffset(indexInRegion, entry.branchId);
+    const progress = resolveN4RegionProgress(entry.regionSlug, indexInRegion, countInRegion);
+    const pathX = interpolateN4Waypoints(progress).x;
+    const yPercent = resolveN4RegionY(entry.regionSlug, indexInRegion, countInRegion);
+    const lane = resolveN4LaneOffset(indexInRegion, entry.branchId);
     const alternating =
       climbRank % 2 === 0
-        ? -N5_WORLD_LAYOUT.spineAlternatingNudge
-        : N5_WORLD_LAYOUT.spineAlternatingNudge;
-    const spineBounds = resolveSpineXBounds(entry.regionSlug);
+        ? -N4_WORLD_LAYOUT.spineAlternatingNudge
+        : N4_WORLD_LAYOUT.spineAlternatingNudge;
+    const spineBounds = resolveSpineXBounds(progress);
 
     if (isBranchPlaced(entry)) {
-      const side = resolveN5BranchSide(entry.branchId, climbRank);
-      const reach = resolveN5BranchReach(entry.regionSlug, climbRank);
+      const side = resolveN4BranchSide(entry.branchId, climbRank);
+      const reach = resolveN4BranchReach(entry.regionSlug, climbRank);
 
       entry.xPercent = clampPercent(
         pathX + lane + side * reach,
-        N5_WORLD_LAYOUT.branchXMin,
-        N5_WORLD_LAYOUT.branchXMax,
+        N4_WORLD_LAYOUT.branchXMin,
+        N4_WORLD_LAYOUT.branchXMax,
       );
       entry.yPercent = yPercent;
       return;
     }
 
     if (entry.node.kind === "landmark") {
-      entry.xPercent = clampPercent(pathX + lane, spineBounds.min - 6, spineBounds.max + 6);
+      entry.xPercent = clampPercent(pathX + lane, spineBounds.min - 8, spineBounds.max + 8);
       entry.yPercent = yPercent;
       return;
     }
@@ -152,19 +149,15 @@ export function tuneN5WorldLayout(
     entry.yPercent = yPercent;
   });
 
-  enforceN5RegionYSpacing(climbNodes);
+  enforceN4RegionYSpacing(climbNodes);
 
   return {
     ...layout,
     nodes,
-    canvasMinHeightVh: N5_WORLD_LAYOUT.canvasMinHeightVh,
+    canvasMinHeightVh: N4_WORLD_LAYOUT.canvasMinHeightVh,
   };
 }
 
-export function resolveN5PortalYPercent(): number {
-  return N5_WORLD_LAYOUT.portalYPercent;
-}
-
-export function countN5ClimbNodes(layout: WorldTreeLayoutResult): number {
-  return layout.nodes.filter((entry) => CLIMB_NODE_KINDS.has(entry.node.kind)).length;
+export function resolveN4PortalYPercent(): number {
+  return N4_WORLD_LAYOUT.portalYPercent;
 }

@@ -55,6 +55,22 @@ Underground root network. Moss, ancient bark, fungi, soil.
 
 ---
 
+## 1b. JLPT world heroes (full-canvas)
+
+Per-world hero masses for `/worlds/{jlpt}` lazy-loaded canvases.
+
+| Status | ID | Target folder | Target filename | World | Notes |
+|--------|----|--------------|-----------------|-------|-------|
+| [x] | `jlpt_n5` | `jlpt-bands/n5/` | `wt_jlpt_n5_{theme}_v1.png` | N5 | Floating island — production |
+| [~] | `jlpt_n4` | `jlpt-bands/n4/` | `wt_jlpt_n4_{theme}_v2.png` | N4 | v2 POC — run transparency pass before `[x]` |
+| [ ] | `jlpt_n3` | `jlpt-bands/n3/` | `wt_jlpt_n3_{theme}_v2.png` | N3 | v1 exists, needs world-canvas pass |
+| [ ] | `jlpt_n2` | `jlpt-bands/n2/` | `wt_jlpt_n2_{theme}_v2.png` | N2 | v1 exists, needs world-canvas pass |
+| [ ] | `jlpt_n1` | `jlpt-bands/n1/` | `wt_jlpt_n1_{theme}_v2.png` | N1 | v1 exists, needs world-canvas pass |
+
+Spec: `Art Library/world-tree/worlds/n4/WORLD_ART_SPEC.md`
+
+---
+
 ## 2. Trunk segments (N4 / N3)
 
 Main vertical tree body. Normal bark, golden veins, carvings, hollow sections.
@@ -80,7 +96,7 @@ Seamless shifts between root → trunk → ancient → canopy → celestial.
 
 | Status | ID | Target folder | Target filename | Connects | Notes |
 |--------|----|--------------|-----------------|----------|-------|
-| [ ] | `transition_root_to_trunk` | `transitions/root_to_trunk/` | `wt_transition_root_to_trunk_{theme}_v2.png` | N5 → N4 | Earth gives way to lower trunk |
+| [ ] | `transition_root_to_trunk` | `transitions/root_to_trunk/` | `wt_transition_root_to_trunk_{theme}_v2.png` | N5 → N4 | Earth gives way to lower trunk — **[~] v2 POC generated** |
 | [ ] | `transition_trunk_to_ancient` | `transitions/trunk_to_ancient/` | `wt_transition_trunk_to_ancient_{theme}_v2.png` | N4 → N3 | Bark darkens, carvings appear |
 | [x] | `transition_ancient_to_canopy` | `transitions/ancient_to_canopy/` | `wt_transition_ancient_to_canopy_{theme}_v2.png` | N3 → N2 | Single trunk Y-fork into branches (strict) |
 | [ ] | `transition_canopy_to_celestial` | `transitions/canopy_to_celestial/` | `wt_transition_canopy_to_celestial_{theme}_v2.png` | N2 → N1 | Leaves become golden, sky opens |

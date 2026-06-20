@@ -2,12 +2,18 @@ import { describe, expect, it } from "vitest";
 
 import type { PlottedSkeletonNode } from "@/features/journey/utils/world-tree-layout.utils";
 import { getJlptWorldDefinition } from "@/features/worlds/constants/world-registry.constants";
-import { interpolateN5Waypoints } from "@/features/worlds/worlds/n5/n5-world-layout.constants";
+import {
+  interpolateN5Waypoints,
+  N5_REGION_SLOT_TARGETS,
+  resolveN5RegionProgress,
+  resolveN5RegionY,
+} from "@/features/worlds/worlds/n5/n5-world-layout.constants";
 import { tuneN5WorldLayout } from "@/features/worlds/worlds/n5/n5-world-layout.utils";
 
 function makeNode(
   id: string,
   globalIndex: number,
+  regionSlug: string,
   options: {
     spineRole?: PlottedSkeletonNode["spineRole"];
     segmentType?: PlottedSkeletonNode["segmentType"];
@@ -29,7 +35,7 @@ function makeNode(
       href: null,
       xpReward: 10,
     },
-    regionSlug: "mount-n5",
+    regionSlug,
     zoneId: "n5_roots",
     xPercent: 50,
     yPercent: 50,
@@ -50,21 +56,18 @@ const stubWorldPath = {
 };
 
 describe("N5 waypoint layout", () => {
-  it("uses a wide horizontal swing on the path", () => {
-    const left = interpolateN5Waypoints(0.48);
-    const right = interpolateN5Waypoints(0.16);
+  it("documents expected N5 slot targets", () => {
+    const total =
+      N5_REGION_SLOT_TARGETS.foothills +
+      N5_REGION_SLOT_TARGETS["forest-trail"] +
+      N5_REGION_SLOT_TARGETS["mount-n5"];
 
-    expect(left.x).toBeLessThan(40);
-    expect(right.x).toBeGreaterThan(65);
+    expect(total).toBe(132);
   });
 
-  it("distributes nodes evenly by climb rank instead of collapsing at the base", () => {
-    const nodes = Array.from({ length: 40 }, (_, index) =>
-      makeNode(`node-${index}`, index * 5, {
-        spineRole: index % 4 === 0 ? "branch" : "main",
-        segmentType: index % 4 === 0 ? "branch" : "main_spine",
-        branchId: index % 4 === 0 ? `branch-${index % 3}` : "main",
-      }),
+  it("anchors foothills on the World Heart tree center", () => {
+    const nodes = Array.from({ length: 5 }, (_, index) =>
+      makeNode(`fh-${index}`, index, "foothills"),
     );
 
     const tuned = tuneN5WorldLayout(
@@ -72,16 +75,35 @@ describe("N5 waypoint layout", () => {
       stubWorldPath,
     );
 
-    const yValues = tuned.nodes.map((node) => node.yPercent);
-    const xValues = tuned.nodes.map((node) => node.xPercent);
+    for (const node of tuned.nodes) {
+      expect(node.xPercent).toBeGreaterThan(30);
+      expect(node.xPercent).toBeLessThan(70);
+      expect(node.yPercent).toBeGreaterThan(78);
+      expect(node.yPercent).toBeLessThanOrEqual(99.5);
+    }
+  });
 
-    expect(Math.max(...yValues) - Math.min(...yValues)).toBeGreaterThan(60);
-    expect(Math.max(...xValues) - Math.min(...xValues)).toBeGreaterThan(35);
+  it("gives mount-n5 most of the vertical climb band", () => {
+    const mountStart = resolveN5RegionProgress("mount-n5", 0, 95);
+    const mountEnd = resolveN5RegionProgress("mount-n5", 94, 95);
+    const foothillsEnd = resolveN5RegionProgress("foothills", 19, 20);
 
-    const bottomThird = tuned.nodes.slice(0, 13);
-    const bottomYSpread =
-      Math.max(...bottomThird.map((n) => n.yPercent)) -
-      Math.min(...bottomThird.map((n) => n.yPercent));
-    expect(bottomYSpread).toBeGreaterThan(8);
+    expect(mountStart).toBeGreaterThan(foothillsEnd);
+    expect(mountEnd - mountStart).toBeGreaterThan(0.5);
+
+    const mountYStart = resolveN5RegionY("mount-n5", 0, 95);
+    const mountYEnd = resolveN5RegionY("mount-n5", 94, 95);
+    const foothillsYEnd = resolveN5RegionY("foothills", 19, 20);
+
+    expect(mountYStart).toBeLessThan(foothillsYEnd);
+    expect(mountYStart - mountYEnd).toBeGreaterThan(45);
+  });
+
+  it("uses a wide horizontal swing on the path", () => {
+    const left = interpolateN5Waypoints(0.48);
+    const right = interpolateN5Waypoints(0.16);
+
+    expect(left.x).toBeLessThan(40);
+    expect(right.x).toBeGreaterThan(65);
   });
 });

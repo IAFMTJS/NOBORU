@@ -9,6 +9,10 @@ import {
 import type { JlptWorldPathViewModel } from "@/features/worlds/types/world.types";
 import type { JlptLevel } from "@/lib/content/types";
 import {
+  resolveN4PortalYPercent,
+  tuneN4WorldLayout,
+} from "@/features/worlds/worlds/n4/n4-world-layout.utils";
+import {
   resolveN5PortalYPercent,
   tuneN5WorldLayout,
 } from "@/features/worlds/worlds/n5/n5-world-layout.utils";
@@ -102,6 +106,8 @@ function applyWorldLayoutTuning(
   switch (worldPath.world.id) {
     case "n5":
       return tuneN5WorldLayout(layout, worldPath);
+    case "n4":
+      return tuneN4WorldLayout(layout, worldPath);
     default:
       return layout;
   }
@@ -112,5 +118,6 @@ export { findPlottedNode };
 /** Y-percent for the portal anchor at the crown of a world canvas. */
 export function resolveWorldPortalYPercent(worldId?: JlptLevel): number {
   if (worldId === "n5") return resolveN5PortalYPercent();
+  if (worldId === "n4") return resolveN4PortalYPercent();
   return 4;
 }

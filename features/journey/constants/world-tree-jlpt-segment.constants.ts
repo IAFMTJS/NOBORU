@@ -15,7 +15,9 @@ export type WorldTreeSegmentId =
   | "trunk_g"
   | "trunk_h";
 
-export type WorldTreeTransitionId = "transition_ancient_to_canopy";
+export type WorldTreeTransitionId =
+  | "transition_root_to_trunk"
+  | "transition_ancient_to_canopy";
 
 export type WorldTreeJlptHeroAnchor = "bottom" | "center" | "top";
 
@@ -38,9 +40,8 @@ export const WORLD_TREE_JLPT_BAND_ART: Record<WorldTreeJlptBandId, WorldTreeJlpt
     heroAnchor: "bottom",
   },
   n4: {
-    fillSegments: ["roots_e", "trunk_a", "trunk_b"],
-    heroAnchor: "center",
-    transitionTop: undefined,
+    fillSegments: ["roots_e", "trunk_a", "trunk_b", "trunk_c"],
+    heroAnchor: "bottom",
   },
   n3: {
     fillSegments: ["trunk_c", "trunk_d", "trunk_e", "trunk_f"],

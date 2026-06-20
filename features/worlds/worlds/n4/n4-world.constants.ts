@@ -22,6 +22,6 @@ export const N4_WORLD: JlptWorldDefinition = {
     heroFileBase: "wt_jlpt_n4",
     heroAnchor: "bottom",
   },
-  canvasMinHeightVh: 110,
+  canvasMinHeightVh: 380,
   audioThemeId: "world_n4_foothills",
 };

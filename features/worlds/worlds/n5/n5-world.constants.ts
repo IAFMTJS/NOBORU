@@ -13,8 +13,8 @@ export const N5_WORLD: JlptWorldDefinition = {
   theme: {
     accentColor: "#D64045",
     accentGlow: "rgba(214, 64, 69, 0.55)",
-    backgroundLight: "#E9E1D0",
-    backgroundDark: "#0D1320",
+    backgroundLight: "#D8CDB8",
+    backgroundDark: "#080C14",
     label: "N5 Roots",
     subtitle: "Deep Root Network",
   },
@@ -22,6 +22,6 @@ export const N5_WORLD: JlptWorldDefinition = {
     heroFileBase: "wt_jlpt_n5",
     heroAnchor: "bottom",
   },
-  canvasMinHeightVh: 420,
+  canvasMinHeightVh: 480,
   audioThemeId: "world_n5_roots",
 };

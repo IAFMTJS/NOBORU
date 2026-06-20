@@ -18,22 +18,50 @@ export const N5_CLIMB_WAYPOINTS = [
   { progress: 1, x: 50, y: 10 },
 ] as const;
 
+/** Dedicated vertical bands per region — prevents bottom overlap clusters. */
+export const N5_REGION_Y_BANDS: Partial<
+  Record<RegionSlug, { yMin: number; yMax: number }>
+> = {
+  foothills: { yMin: 80, yMax: 99.5 },
+  "forest-trail": { yMin: 62, yMax: 82 },
+  "mount-n5": { yMin: 6, yMax: 64 },
+};
+
+/** Horizontal path progress per region (waypoint interpolation input). */
+export const N5_REGION_PATH_BANDS: Partial<
+  Record<RegionSlug, { progressStart: number; progressEnd: number }>
+> = {
+  foothills: { progressStart: 0, progressEnd: 0.1 },
+  "forest-trail": { progressStart: 0.1, progressEnd: 0.22 },
+  "mount-n5": { progressStart: 0.22, progressEnd: 0.98 },
+};
+
+export const N5_REGION_SLOT_TARGETS = {
+  foothills: 20,
+  "forest-trail": 17,
+  "mount-n5": 95,
+} as const;
+
 export const N5_WORLD_LAYOUT = {
-  branchReachMin: 16,
-  branchReachMax: 30,
-  branchXMin: 10,
-  branchXMax: 90,
-  spineXMin: 24,
-  spineXMax: 76,
-  spineAlternatingNudge: 5,
+  branchReachMin: 14,
+  branchReachMax: 28,
+  foothillsBranchReachMax: 16,
+  forestBranchReachMax: 14,
+  branchXMin: 12,
+  branchXMax: 88,
+  spineXMin: 26,
+  spineXMax: 74,
+  foothillsSpineXMin: 32,
+  foothillsSpineXMax: 68,
+  spineAlternatingNudge: 3,
+  laneSpread: 5.5,
+  minRegionYGap: {
+    foothills: 0.72,
+    "forest-trail": 0.58,
+    "mount-n5": 0.38,
+  },
   portalYPercent: 5,
-  minNodeYGapPercent: 0.55,
-  canvasMinHeightVh: 420,
-  regionSpineRanges: {
-    foothills: { yMin: 88, yMax: 98 },
-    "forest-trail": { yMin: 58, yMax: 92 },
-    "mount-n5": { yMin: 8, yMax: 72 },
-  } satisfies Partial<Record<RegionSlug, { yMin: number; yMax: number }>>,
+  canvasMinHeightVh: 480,
 } as const;
 
 export function interpolateN5Waypoints(progress: number): { x: number; y: number } {
@@ -64,6 +92,43 @@ export function interpolateN5Waypoints(progress: number): { x: number; y: number
   return { x: 50, y: 50 };
 }
 
+export function resolveN5RegionProgress(
+  regionSlug: string,
+  indexInRegion: number,
+  countInRegion: number,
+): number {
+  const band = N5_REGION_PATH_BANDS[regionSlug as RegionSlug];
+  if (!band) {
+    return countInRegion > 1 ? indexInRegion / (countInRegion - 1) : 0.5;
+  }
+  if (countInRegion <= 1) return (band.progressStart + band.progressEnd) / 2;
+
+  const t = indexInRegion / (countInRegion - 1);
+  return band.progressStart + t * (band.progressEnd - band.progressStart);
+}
+
+export function resolveN5RegionY(
+  regionSlug: string,
+  indexInRegion: number,
+  countInRegion: number,
+): number {
+  const band = N5_REGION_Y_BANDS[regionSlug as RegionSlug];
+  if (!band) return 50;
+  if (countInRegion <= 1) return (band.yMin + band.yMax) / 2;
+
+  const t = indexInRegion / (countInRegion - 1);
+  return band.yMax - t * (band.yMax - band.yMin);
+}
+
+export function resolveN5LaneOffset(indexInRegion: number, branchId: string): number {
+  let hash = indexInRegion;
+  for (let i = 0; i < branchId.length; i += 1) {
+    hash = (hash * 17 + branchId.charCodeAt(i)) | 0;
+  }
+  const lane = hash % 5;
+  return (lane - 2) * N5_WORLD_LAYOUT.laneSpread;
+}
+
 export function resolveN5BranchSide(branchId: string, climbRank: number): number {
   let hash = climbRank * 31;
   for (let i = 0; i < branchId.length; i += 1) {
@@ -72,9 +137,14 @@ export function resolveN5BranchSide(branchId: string, climbRank: number): number
   return (hash & 1) === 0 ? -1 : 1;
 }
 
-export function resolveN5BranchReach(climbRank: number): number {
-  const { branchReachMin, branchReachMax } = N5_WORLD_LAYOUT;
+export function resolveN5BranchReach(regionSlug: string, climbRank: number): number {
+  const { branchReachMin, branchReachMax, foothillsBranchReachMax, forestBranchReachMax } =
+    N5_WORLD_LAYOUT;
   const slot = climbRank % 6;
   const span = branchReachMax - branchReachMin;
-  return branchReachMin + (slot / 5) * span;
+  const base = branchReachMin + (slot / 5) * span;
+
+  if (regionSlug === "foothills") return Math.min(base, foothillsBranchReachMax);
+  if (regionSlug === "forest-trail") return Math.min(base, forestBranchReachMax);
+  return base;
 }
