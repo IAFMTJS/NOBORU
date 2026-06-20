@@ -142,7 +142,7 @@ function resolveLayoutMetaFromBlueprint(
       : blueprint.zoneId;
 
   return {
-    zoneId,
+    zoneId: zoneId as WorldTreeZoneId,
     spineRole: blueprint.spineRole,
     segmentType: blueprint.segmentType,
     branchId: blueprint.branchId,

@@ -31,6 +31,7 @@ import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import { journeyLandmarkRepository } from "@/features/journey/repositories/journey-landmark.repository";
 import { augmentRegionsWithBlueprint } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import type { JourneyLandmarkContent } from "@/features/journey/types/journey-content.types";
+import type { ContentStatus } from "@/lib/content/types";
 
 type FlatLesson = {
   id: string;
@@ -38,7 +39,7 @@ type FlatLesson = {
   title: string;
   xpReward: number;
   progress: ProgressStatus;
-  contentStatus: "published" | "draft";
+  contentStatus: ContentStatus;
   blueprint?: LessonBlueprintMeta;
 };
 

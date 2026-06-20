@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-import { JOURNEY_SKELETON_MODE } from "@/features/journey/constants/journey.constants";
 import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
 import {
@@ -24,11 +23,7 @@ type JourneyWorldCanvasProps = {
   focusZoneId?: string | null;
 };
 
-/**
- * World Tree journey canvas — CSS skeleton only.
- * Sheet-remaster puzzle art (JourneyWorldTreeArtLayer) is intentionally not used;
- * nodes and spine define the tree until zone art is attached in a later pass.
- */
+/** World Tree journey canvas — CSS skeleton only (no sheet-remaster assets). */
 export function JourneyWorldCanvas({
   journey,
   regionName,
@@ -62,20 +57,18 @@ export function JourneyWorldCanvas({
         className,
       )}
       aria-label="World tree journey"
-      data-journey-skeleton-mode={JOURNEY_SKELETON_MODE ? "true" : "false"}
+      data-journey-skeleton-mode="true"
     >
       <div className="relative mx-auto w-full min-w-full max-w-phone">
         <div
           className="relative w-full"
           style={{ minHeight: `${canvasMinHeightVh}vh` }}
         >
-          {JOURNEY_SKELETON_MODE ? (
-            <JourneySkeletonArtLayer
-              journey={journey}
-              layout={layout}
-              className="min-h-full"
-            />
-          ) : null}
+          <JourneySkeletonArtLayer
+            journey={journey}
+            layout={layout}
+            className="min-h-full"
+          />
           <JourneyWorldNodeLayer
             journey={journey}
             regionName={regionName}

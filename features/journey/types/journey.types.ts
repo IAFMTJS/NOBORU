@@ -1,5 +1,6 @@
 import type { LessonBlueprintMeta } from "@/features/learning/types/lesson.types";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
+import type { ContentStatus } from "@/lib/content/types";
 import type { RegionAvailability } from "@/lib/learning/region-unlock";
 
 export type JourneyNodeState =
@@ -37,7 +38,7 @@ export type JourneyNode = {
   href: string | null;
   xpReward: number | null;
   /** CMS content status — draft lessons show as coming soon on the tree. */
-  contentStatus?: "published" | "draft";
+  contentStatus?: ContentStatus;
   isDraft?: boolean;
   /** Curriculum blueprint placement — drives skeleton zone/spine layout. */
   blueprint?: LessonBlueprintMeta;
@@ -91,7 +92,7 @@ export type RegionJourneyInput = {
       title: string;
       xpReward: number;
       progress: ProgressStatus;
-      contentStatus?: "published" | "draft";
+      contentStatus?: ContentStatus;
       blueprint?: LessonBlueprintMeta;
     }>;
   }>;
