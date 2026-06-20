@@ -82,6 +82,14 @@ function isMainSpineLessonEntry(entry: LayoutEntry): boolean {
   );
 }
 
+function isMainSpineLessonNode(entry: PlottedSkeletonNode): boolean {
+  return (
+    entry.node.kind !== "landmark" &&
+    entry.spineRole === "main" &&
+    entry.segmentType === "main_spine"
+  );
+}
+
 /** Cumulative y bands per zone — y=100 is base, y=0 is crown. */
 export function buildWorldTreeZoneBands(): Record<WorldTreeZoneId, WorldTreeBand> {
   let cursor = 100;
@@ -117,14 +125,29 @@ export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: 
   );
 }
 
-function computeBranchXPercent(
+function computeBranchSpiralXPercent(
   forkX: number,
-  branchIndex: number,
+  forkY: number,
+  forkSlot: number,
+  depth: number,
   segmentType: BlueprintSegmentType,
 ): number {
-  const direction = branchIndex % 2 === 0 ? -1 : 1;
-  const depth = segmentType === "cave" ? 38 : 28;
-  return Math.min(92, Math.max(8, forkX + direction * depth));
+  const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
+  const slotAngle = (forkSlot / 5) * Math.PI * 2 - Math.PI / 2;
+  const heightBias = ((WORLD_TREE_JOURNEY_BASE_Y - forkY) / WORLD_TREE_JOURNEY_BASE_Y) * 0.35;
+  const spiralTwist = segmentType === "cave" ? 0.5 : 0.34;
+  const angle = slotAngle + heightBias + depth * spiralTwist;
+
+  const minRadius = 6;
+  const maxRadius = segmentType === "cave" ? 30 : 22;
+  const radius =
+    minRadius + Math.min(1, (depth + 1) / 4.5) * (maxRadius - minRadius);
+
+  const spiralX = trunkCenter + Math.cos(angle) * radius;
+  const trunkAnchorWeight = Math.exp(-depth * 0.6);
+  const blendedX = forkX * trunkAnchorWeight + spiralX * (1 - trunkAnchorWeight);
+
+  return clampPercent(blendedX, 12, 88);
 }
 
 /** Canvas height (vh) for normalized Y layout — scales for tap spacing, not legacy y-gap %. */
@@ -339,6 +362,10 @@ function separateNearbyNodes(
       for (let right = left + 1; right < result.length; right += 1) {
         const a = result[left]!;
         const b = result[right]!;
+        if (isMainSpineLessonNode(a) && isMainSpineLessonNode(b)) {
+          continue;
+        }
+
         const dy = Math.abs(a.yPercent - b.yPercent);
         const dx = Math.abs(a.xPercent - b.xPercent);
 
@@ -346,27 +373,54 @@ function separateNearbyNodes(
           continue;
         }
 
-        const pushY = (minYGapPercent - dy) / 2 + 0.08;
-        if (a.yPercent >= b.yPercent) {
-          a.yPercent = clampPercent(a.yPercent + pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
-          b.yPercent = clampPercent(b.yPercent - pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
-        } else {
-          a.yPercent = clampPercent(a.yPercent - pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
-          b.yPercent = clampPercent(b.yPercent + pushY, WORLD_TREE_JOURNEY_CROWN_Y, WORLD_TREE_JOURNEY_BASE_Y);
+        const pushY = (minYGapPercent - dy) + 0.08;
+        const pushX =
+          dx < WORLD_TREE_MIN_NODE_X_GAP_PERCENT
+            ? (WORLD_TREE_MIN_NODE_X_GAP_PERCENT - dx) + 0.5
+            : 0;
+
+        const nudgeY = (target: PlottedSkeletonNode, delta: number) => {
+          target.yPercent = clampPercent(
+            target.yPercent + delta,
+            WORLD_TREE_JOURNEY_CROWN_Y,
+            WORLD_TREE_JOURNEY_BASE_Y,
+          );
+        };
+
+        const nudgeX = (target: PlottedSkeletonNode, delta: number) => {
+          target.xPercent = clampPercent(target.xPercent + delta, 12, 88);
+        };
+
+        if (isMainSpineLessonNode(a)) {
+          nudgeY(b, b.yPercent < a.yPercent ? -pushY : pushY);
+          if (pushX > 0) {
+            nudgeX(b, b.node.globalIndex % 2 === 0 ? pushX : -pushX);
+          }
+          moved = true;
+          continue;
         }
 
-        if (dx < WORLD_TREE_MIN_NODE_X_GAP_PERCENT) {
-          const pushX = (WORLD_TREE_MIN_NODE_X_GAP_PERCENT - dx) / 2 + 0.5;
-          a.xPercent = clampPercent(
-            a.xPercent + (a.node.globalIndex % 2 === 0 ? pushX : -pushX),
-            12,
-            88,
-          );
-          b.xPercent = clampPercent(
-            b.xPercent + (b.node.globalIndex % 2 === 0 ? -pushX : pushX),
-            12,
-            88,
-          );
+        if (isMainSpineLessonNode(b)) {
+          nudgeY(a, a.yPercent < b.yPercent ? -pushY : pushY);
+          if (pushX > 0) {
+            nudgeX(a, a.node.globalIndex % 2 === 0 ? pushX : -pushX);
+          }
+          moved = true;
+          continue;
+        }
+
+        const halfPushY = pushY / 2;
+        if (a.yPercent >= b.yPercent) {
+          nudgeY(a, halfPushY);
+          nudgeY(b, -halfPushY);
+        } else {
+          nudgeY(a, -halfPushY);
+          nudgeY(b, halfPushY);
+        }
+
+        if (pushX > 0) {
+          nudgeX(a, a.node.globalIndex % 2 === 0 ? pushX / 2 : -pushX / 2);
+          nudgeX(b, b.node.globalIndex % 2 === 0 ? -pushX / 2 : pushX / 2);
         }
 
         moved = true;
@@ -374,6 +428,38 @@ function separateNearbyNodes(
     }
 
     if (!moved) break;
+  }
+
+  return result;
+}
+
+function resolveDuplicateCoordinates(
+  plotted: PlottedSkeletonNode[],
+): PlottedSkeletonNode[] {
+  const result = plotted.map((entry) => ({ ...entry }));
+  const buckets = new Map<string, PlottedSkeletonNode[]>();
+
+  for (const node of result) {
+    const key = `${node.xPercent.toFixed(1)}:${node.yPercent.toFixed(1)}`;
+    const bucket = buckets.get(key) ?? [];
+    bucket.push(node);
+    buckets.set(key, bucket);
+  }
+
+  for (const bucket of buckets.values()) {
+    if (bucket.length < 2) continue;
+
+    bucket.forEach((node, index) => {
+      if (index === 0 || isMainSpineLessonNode(node)) return;
+
+      const direction = index % 2 === 0 ? 1 : -1;
+      node.xPercent = clampPercent(node.xPercent + direction * index * 1.1, 12, 88);
+      node.yPercent = clampPercent(
+        node.yPercent - index * 0.45,
+        WORLD_TREE_JOURNEY_CROWN_Y,
+        WORLD_TREE_JOURNEY_BASE_Y,
+      );
+    });
   }
 
   return result;
@@ -473,7 +559,13 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
           branchForkSlotByBranchId.set(entry.branchId, forkSlot);
         }
 
-        xPercent = computeBranchXPercent(fork.x, forkSlot, entry.segmentType);
+        xPercent = computeBranchSpiralXPercent(
+          fork.x,
+          fork.y,
+          forkSlot,
+          depth,
+          entry.segmentType,
+        );
         yPercent = fork.y - (depth + 1) * minBranchYGapPercent;
         forkFromNodeId = fork.nodeId;
       }
@@ -506,9 +598,11 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
 
   const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(plotted.length);
   const minYGapPercent = (WORLD_TREE_MIN_NODE_GAP_VH / canvasMinHeightVh) * 100;
-  const spaced = separateNearbyNodes(
-    enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
-    minYGapPercent,
+  const spaced = resolveDuplicateCoordinates(
+    separateNearbyNodes(
+      enforceMinimumNodeSpacing(attachLandmarkSpurs(plotted)),
+      minYGapPercent,
+    ),
   );
 
   const segments: WorldTreeLayoutSegment[] = [];

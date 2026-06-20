@@ -279,6 +279,41 @@ describe("resolveWorldTreeCanvasMinHeightVh", () => {
     );
   });
 
+  it("wraps branch lessons around the trunk instead of a flat sideways column", async () => {
+    const { augmentRegionsWithBlueprint } = await import(
+      "@/features/journey/utils/journey-blueprint-merge.utils"
+    );
+    const { buildJourneyPathFromData } = await import(
+      "@/features/journey/services/journey.service"
+    );
+
+    const journey = buildJourneyPathFromData(
+      augmentRegionsWithBlueprint([], new Set()),
+      [],
+      new Set(),
+    );
+    const layout = buildWorldTreeLayout(journey);
+    const branchSegment = layout.segments.find(
+      (segment) =>
+        (segment.type === "branch" || segment.type === "cave") &&
+        segment.nodes.length >= 3,
+    );
+
+    expect(branchSegment).toBeTruthy();
+
+    const xs = branchSegment!.nodes.map((entry) => entry.xPercent);
+    expect(new Set(xs.map((x) => x.toFixed(1))).size).toBeGreaterThan(2);
+
+    const fork = layout.nodes.find(
+      (entry) => entry.node.id === branchSegment!.forkFromNodeId,
+    );
+    const closestToFork = branchSegment!.nodes.reduce((best, entry) =>
+      entry.yPercent > best.yPercent ? entry : best,
+    );
+
+    expect(Math.abs(closestToFork.xPercent - (fork?.xPercent ?? 50))).toBeLessThan(14);
+  });
+
   it("reserves enough vertical space for readable node spacing on full tree", () => {
     const canvasVh = resolveWorldTreeCanvasMinHeightVh(687);
     const yStepPercent = 97 / 686;

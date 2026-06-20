@@ -12,9 +12,20 @@ type WorldTreeSpinePathProps = {
   className?: string;
 };
 
+function buildForkConnector(fork: PlottedSkeletonNode, first: PlottedSkeletonNode): string {
+  const rise = fork.yPercent - first.yPercent;
+  const ctrl1X = fork.xPercent + (first.xPercent - fork.xPercent) * 0.12;
+  const ctrl1Y = fork.yPercent - rise * 0.12;
+  const ctrl2X = fork.xPercent + (first.xPercent - fork.xPercent) * 0.72;
+  const ctrl2Y = fork.yPercent - rise * 0.62;
+
+  return `M ${fork.xPercent} ${fork.yPercent} C ${ctrl1X} ${ctrl1Y}, ${ctrl2X} ${ctrl2Y}, ${first.xPercent} ${first.yPercent}`;
+}
+
 function buildSegmentPath(
   nodes: PlottedSkeletonNode[],
   fork?: PlottedSkeletonNode | null,
+  spiral = false,
 ): string | null {
   if (nodes.length === 0) return null;
 
@@ -22,7 +33,7 @@ function buildSegmentPath(
   const first = sorted[0]!;
 
   let path = fork
-    ? `M ${fork.xPercent} ${fork.yPercent} L ${first.xPercent} ${first.yPercent}`
+    ? buildForkConnector(fork, first)
     : `M ${first.xPercent} ${first.yPercent}`;
 
   if (sorted.length < 2) return path;
@@ -31,7 +42,13 @@ function buildSegmentPath(
     const prev = sorted[index - 1]!;
     const node = sorted[index]!;
     const midY = (prev.yPercent + node.yPercent) / 2;
-    path += ` C ${prev.xPercent} ${midY}, ${node.xPercent} ${midY}, ${node.xPercent} ${node.yPercent}`;
+
+    if (spiral) {
+      const midX = (prev.xPercent + node.xPercent) / 2;
+      path += ` C ${midX} ${prev.yPercent}, ${midX} ${node.yPercent}, ${node.xPercent} ${node.yPercent}`;
+    } else {
+      path += ` C ${prev.xPercent} ${midY}, ${node.xPercent} ${midY}, ${node.xPercent} ${node.yPercent}`;
+    }
   }
 
   return path;
@@ -117,7 +134,7 @@ export function WorldTreeSpinePath({ segments, nodes, className }: WorldTreeSpin
         const fork = segment.forkFromNodeId
           ? (nodeById.get(segment.forkFromNodeId) ?? null)
           : null;
-        const pathD = buildSegmentPath(segment.nodes, fork);
+        const pathD = buildSegmentPath(segment.nodes, fork, true);
         if (!pathD) return null;
 
         const variant = segment.type === "cave" ? "cave" : "branch";
