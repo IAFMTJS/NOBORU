@@ -6,7 +6,6 @@ import type {
   JourneyPathViewModel,
   JourneyRegionViewModel,
 } from "@/features/journey/types/journey.types";
-import { WORLD_TREE_NODE_MIN_Y_GAP } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   buildSkeletonAscentBand,
   buildWorldTreeLayout,
@@ -92,9 +91,9 @@ describe("buildSkeletonAscentBand", () => {
 });
 
 describe("computeWorldTreePathXPercent", () => {
-  it("keeps nodes near the trunk center with gentle variation", () => {
-    expect(computeWorldTreePathXPercent(0, 0)).toBeGreaterThan(38);
-    expect(computeWorldTreePathXPercent(0, 0)).toBeLessThan(62);
+  it("keeps nodes inside the trunk corridor with gentle variation", () => {
+    expect(computeWorldTreePathXPercent(0, 0)).toBeGreaterThan(44);
+    expect(computeWorldTreePathXPercent(0, 0)).toBeLessThan(56);
     expect(computeWorldTreePathXPercent(0.5, 4)).not.toBe(50);
   });
 });
@@ -160,7 +159,45 @@ describe("plotJourneyNodesOnSkeleton", () => {
     const plotted = plotJourneyNodesOnSkeleton(journey);
     expect(plotted[0]!.node.id).toBe("first");
     expect(plotted[0]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y);
-    expect(plotted[1]!.yPercent).toBe(WORLD_TREE_JOURNEY_BASE_Y - WORLD_TREE_NODE_MIN_Y_GAP);
+    expect(plotted[1]!.yPercent).toBeLessThan(plotted[0]!.yPercent);
+  });
+
+  it("keeps all coordinates within the visible canvas for a full blueprint tree", async () => {
+    const { augmentRegionsWithBlueprint } = await import(
+      "@/features/journey/utils/journey-blueprint-merge.utils"
+    );
+    const { buildJourneyPathFromData } = await import(
+      "@/features/journey/services/journey.service"
+    );
+
+    const augmented = augmentRegionsWithBlueprint([], new Set());
+    const journey = buildJourneyPathFromData(augmented, [], new Set());
+    const layout = buildWorldTreeLayout(journey);
+    const sorted = [...layout.nodes].sort(
+      (a, b) => a.node.globalIndex - b.node.globalIndex,
+    );
+
+    for (const node of layout.nodes) {
+      expect(node.yPercent).toBeGreaterThanOrEqual(3);
+      expect(node.yPercent).toBeLessThanOrEqual(100);
+      expect(node.xPercent).toBeGreaterThanOrEqual(12);
+      expect(node.xPercent).toBeLessThanOrEqual(88);
+    }
+
+    expect(sorted[0]!.yPercent).toBe(100);
+
+    for (let index = 1; index < sorted.length; index += 1) {
+      const prev = sorted[index - 1]!;
+      const current = sorted[index]!;
+      if (
+        prev.segmentType === "main_spine" &&
+        prev.spineRole === "main" &&
+        current.segmentType === "main_spine" &&
+        current.spineRole === "main"
+      ) {
+        expect(prev.yPercent).toBeGreaterThanOrEqual(current.yPercent);
+      }
+    }
   });
 
   it("orders nodes by global index", () => {
@@ -197,7 +234,7 @@ describe("plotJourneyNodesOnSkeleton", () => {
     expect(n5!.yPercent).toBeGreaterThan(foothills!.yPercent);
   });
 
-  it("enforces minimum vertical spacing between consecutive nodes", () => {
+  it("spaces main spine nodes evenly from base to crown", () => {
     const journey = makeJourney([
       makeRegion({
         nodes: Array.from({ length: 8 }, (_, index) =>
@@ -210,8 +247,11 @@ describe("plotJourneyNodesOnSkeleton", () => {
 
     for (let index = 1; index < plotted.length; index += 1) {
       const gap = plotted[index - 1]!.yPercent - plotted[index]!.yPercent;
-      expect(gap).toBeGreaterThanOrEqual(WORLD_TREE_NODE_MIN_Y_GAP - 0.01);
+      expect(gap).toBeGreaterThan(0);
     }
+
+    expect(plotted[0]!.yPercent).toBe(100);
+    expect(plotted.at(-1)!.yPercent).toBe(3);
   });
 });
 

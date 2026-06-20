@@ -50,6 +50,16 @@ export type WorldTreeLayoutResult = {
   canvasMinHeightVh: number;
 };
 
+/** y=100 is the World Heart base — first lesson anchors here, then we climb up. */
+export const WORLD_TREE_JOURNEY_BASE_Y = 100;
+
+/** Small top margin so the crown node stays inside the canvas. */
+export const WORLD_TREE_JOURNEY_CROWN_Y = 3;
+
+function clampPercent(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
 /** Cumulative y bands per zone — y=100 is base, y=0 is crown. */
 export function buildWorldTreeZoneBands(): Record<WorldTreeZoneId, WorldTreeBand> {
   let cursor = 100;
@@ -70,11 +80,19 @@ export function buildSkeletonAscentBand(): WorldTreeBand {
   return { yMin: 0, yMax: 100 };
 }
 
-/** Gentle winding x-offset for main spine nodes beside the trunk corridor. */
+/** Gentle winding x-offset — stays inside the trunk corridor. */
 export function computeWorldTreePathXPercent(globalProgress: number, nodeIndex: number): number {
-  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 11;
-  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 5;
-  return WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent + wave + stagger;
+  const wave = Math.sin(globalProgress * Math.PI * 2.75 + nodeIndex * 0.12) * 4;
+  const stagger = (nodeIndex % 2 === 0 ? 1 : -1) * 2;
+  const corridorHalf = WORLD_TREE_MANIFEST_ANCHORS.pathCorridorWidthPercent / 2;
+  const raw =
+    WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent + wave + stagger;
+
+  return clampPercent(
+    raw,
+    WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent - corridorHalf + 2,
+    WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent + corridorHalf - 2,
+  );
 }
 
 function computeBranchXPercent(
@@ -97,21 +115,15 @@ export function resolveWorldTreeCanvasMinHeightVh(nodeCount: number): number {
 }
 
 function enforceMinimumNodeSpacing(plotted: PlottedSkeletonNode[]): PlottedSkeletonNode[] {
-  if (plotted.length <= 1) return plotted;
-
-  const adjusted = plotted.map((entry) => ({ ...entry }));
-
-  for (let index = 1; index < adjusted.length; index += 1) {
-    const previous = adjusted[index - 1]!;
-    const current = adjusted[index]!;
-    const gap = previous.yPercent - current.yPercent;
-
-    if (gap < WORLD_TREE_NODE_MIN_Y_GAP) {
-      current.yPercent = previous.yPercent - WORLD_TREE_NODE_MIN_Y_GAP;
-    }
-  }
-
-  return adjusted;
+  return plotted.map((entry) => ({
+    ...entry,
+    xPercent: clampPercent(entry.xPercent, 12, 88),
+    yPercent: clampPercent(
+      entry.yPercent,
+      WORLD_TREE_JOURNEY_CROWN_Y,
+      WORLD_TREE_JOURNEY_BASE_Y,
+    ),
+  }));
 }
 
 type LayoutEntry = {
@@ -206,30 +218,54 @@ function resolveLayoutMeta(
   };
 }
 
-/** y=100 is the World Heart base — first lesson anchors here, then we climb up. */
-export const WORLD_TREE_JOURNEY_BASE_Y = 100;
-
 function isMainSpineEntry(entry: LayoutEntry): boolean {
   return entry.spineRole === "main" && entry.segmentType === "main_spine";
 }
 
-/** Bottom-anchored ascent: global order 0 sits at the base, each step climbs upward. */
+/** Bottom-anchored ascent: global order 0 at base, last node near crown — always within 0–100%. */
 function assignGlobalSpineYPositions(entries: LayoutEntry[]): Map<string, number> {
   const spineEntries = entries
     .filter(isMainSpineEntry)
     .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 
   const yByNodeId = new Map<string, number>();
+  const count = spineEntries.length;
 
-  for (let rank = 0; rank < spineEntries.length; rank += 1) {
-    const entry = spineEntries[rank]!;
+  if (count === 0) return yByNodeId;
+
+  if (count === 1) {
+    yByNodeId.set(spineEntries[0]!.node.id, WORLD_TREE_JOURNEY_BASE_Y);
+    return yByNodeId;
+  }
+
+  const span = WORLD_TREE_JOURNEY_BASE_Y - WORLD_TREE_JOURNEY_CROWN_Y;
+
+  for (let rank = 0; rank < count; rank += 1) {
+    const progress = rank / (count - 1);
     yByNodeId.set(
-      entry.node.id,
-      WORLD_TREE_JOURNEY_BASE_Y - rank * WORLD_TREE_NODE_MIN_Y_GAP,
+      spineEntries[rank]!.node.id,
+      WORLD_TREE_JOURNEY_BASE_Y - progress * span,
     );
   }
 
   return yByNodeId;
+}
+
+function findLatestMainSpineBefore(
+  mainSpineByGlobalIndex: { globalIndex: number; x: number; y: number; nodeId: string }[],
+  globalIndex: number,
+): { x: number; y: number; nodeId: string } | null {
+  let latest: { globalIndex: number; x: number; y: number; nodeId: string } | null = null;
+
+  for (const entry of mainSpineByGlobalIndex) {
+    if (entry.globalIndex <= globalIndex) {
+      latest = entry;
+    } else {
+      break;
+    }
+  }
+
+  return latest;
 }
 
 function distributeYInZone(
@@ -301,12 +337,15 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
   }
 
   const plotted: PlottedSkeletonNode[] = [];
-  const forkPoints = new Map<string, { x: number; y: number; nodeId: string }>();
+  const mainSpineTrail: { globalIndex: number; x: number; y: number; nodeId: string }[] = [];
+  const branchCounts = new Map<string, number>();
 
   for (const entry of entries) {
     const zoneEntries = zoneGroups.get(entry.zoneId) ?? [entry];
     const indexInZone = zoneEntries.findIndex((e) => e.node.id === entry.node.id);
     const zoneBand = zoneBands[entry.zoneId] ?? zoneBands[DEFAULT_WORLD_TREE_ZONE]!;
+    const onMainSpine = isMainSpineEntry(entry);
+
     let yPercent =
       globalSpineY.get(entry.node.id) ??
       distributeYInZone(zoneBand, Math.max(0, indexInZone), zoneEntries.length);
@@ -319,15 +358,15 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
     let xPercent = computeWorldTreePathXPercent(globalProgress, entry.node.globalIndex);
     let forkFromNodeId: string | undefined;
 
-    if (entry.spineRole === "branch" || entry.segmentType !== "main_spine") {
-      const mainInZone = zoneEntries.filter((e) => e.spineRole === "main");
-      const forkSource = mainInZone[Math.min(mainInZone.length - 1, Math.floor(indexInZone / 3))];
-      const forkKey = forkSource?.node.id ?? `${entry.zoneId}-root`;
-      const fork = forkPoints.get(forkKey);
+    if (!onMainSpine) {
+      const fork = findLatestMainSpineBefore(mainSpineTrail, entry.node.globalIndex);
+      const branchKey = `${entry.branchId}-${fork?.nodeId ?? entry.zoneId}`;
+      const branchIndex = branchCounts.get(branchKey) ?? 0;
+      branchCounts.set(branchKey, branchIndex + 1);
 
       if (fork) {
-        xPercent = computeBranchXPercent(fork.x, entry.node.globalIndex, entry.segmentType);
-        yPercent = fork.y - (indexInZone % 5) * (WORLD_TREE_NODE_MIN_Y_GAP * 0.35);
+        xPercent = computeBranchXPercent(fork.x, branchIndex, entry.segmentType);
+        yPercent = fork.y - (branchIndex + 1) * (WORLD_TREE_NODE_MIN_Y_GAP * 0.25);
         forkFromNodeId = fork.nodeId;
       }
     }
@@ -345,8 +384,13 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
       forkFromNodeId,
     };
 
-    if (entry.spineRole === "main" && entry.segmentType === "main_spine") {
-      forkPoints.set(entry.node.id, { x: xPercent, y: yPercent, nodeId: entry.node.id });
+    if (onMainSpine) {
+      mainSpineTrail.push({
+        globalIndex: entry.node.globalIndex,
+        x: xPercent,
+        y: yPercent,
+        nodeId: entry.node.id,
+      });
     }
 
     plotted.push(plottedNode);
