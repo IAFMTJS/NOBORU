@@ -11,7 +11,7 @@ import {
 
 import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
-import { WorldTreeJlptBandArtLayer } from "@/features/journey/components/world-tree-jlpt-band-art-layer";
+import { WorldTreeJlptArtStack } from "@/features/journey/components/world-tree-jlpt-art-stack";
 import { WorldTreeRealmBackdrop } from "@/features/journey/components/world-tree-realm-backdrop";
 import { JOURNEY_JLPT_BAND_ART } from "@/features/journey/constants/journey.constants";
 import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
@@ -47,6 +47,8 @@ type JourneyWorldCanvasProps = {
   focusZoneId?: WorldTreeZoneId | null;
   /** Reports viewport center as canvas y-percent while scrolling (overview rail sync). */
   onViewportCenterYChange?: (yPercent: number) => void;
+  /** Full-height flat canvas for screenshot export (no nested scroll). */
+  exportMode?: boolean;
 };
 
 /** World Tree journey canvas — CSS skeleton only (no sheet-remaster assets). */
@@ -62,6 +64,7 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
       anchorScrollToBottom = false,
       highlightNodeId = null,
       onViewportCenterYChange,
+      exportMode = false,
     },
     ref,
   ) {
@@ -91,6 +94,7 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
     }));
 
     useEffect(() => {
+      if (exportMode) return;
       const container = scrollRef.current;
       if (!container) return;
 
@@ -105,9 +109,10 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
         top: resolveWorldTreeScrollTargetTop(container, focusYPercent),
         behavior: "auto",
       });
-    }, [anchorScrollToBottom, focusYPercent]);
+    }, [anchorScrollToBottom, exportMode, focusYPercent]);
 
     useEffect(() => {
+      if (exportMode) return;
       const container = scrollRef.current;
       if (!container) return;
 
@@ -143,18 +148,23 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
           window.cancelAnimationFrame(scrollRafRef.current);
         }
       };
-    }, [onViewportCenterYChange, canvasMinHeightVh]);
+    }, [canvasMinHeightVh, exportMode, onViewportCenterYChange]);
+
+    const nodeVisibleBand = exportMode ? undefined : visibleYBand;
 
     return (
       <div
         ref={scrollRef}
         className={cn(
-          "h-full min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]",
+          exportMode
+            ? "overflow-visible"
+            : "h-full min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]",
           className,
         )}
         aria-label={isOverview ? "World tree overview" : "World tree journey"}
         data-journey-skeleton-mode="true"
         data-world-tree-variant={variant}
+        data-world-tree-export={exportMode ? "true" : undefined}
       >
         <div className="relative mx-auto w-full min-w-full max-w-phone">
           <div
@@ -165,7 +175,7 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
               <WorldTreeRealmBackdrop className="z-0" useJlptBands={isOverview} />
             ) : null}
             {JOURNEY_JLPT_BAND_ART ? (
-              <WorldTreeJlptBandArtLayer
+              <WorldTreeJlptArtStack
                 className="z-[1] min-h-full"
                 showJlptChrome={isOverview}
               />
@@ -184,7 +194,7 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
               regionName={regionName}
               layout={layout}
               highlightNodeId={highlightNodeId}
-              visibleYBand={visibleYBand}
+              visibleYBand={nodeVisibleBand}
               useArtNodes={isOverview}
               className="z-10"
             />

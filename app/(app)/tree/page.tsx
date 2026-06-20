@@ -1,12 +1,6 @@
-import { WorldTreeScreen } from "@/features/journey/components/world-tree-screen";
-import {
-  isWorldTreeJlptBandId,
-  type WorldTreeJlptBandId,
-} from "@/features/journey/constants/world-tree-jlpt-band.constants";
-import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
-import { buildWorldTreeLayout } from "@/features/journey/utils/world-tree-layout.utils";
-import { resolveWorldTreeScrollFocus } from "@/features/journey/utils/world-tree-scroll-focus.utils";
-import { getJourneyPathWithContext } from "@/lib/orchestration/learn.orchestrator";
+import { redirect } from "next/navigation";
+
+import { worldService } from "@/features/worlds/services/world.service";
 import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
 
 type TreePageProps = {
@@ -18,48 +12,18 @@ type TreePageProps = {
   }>;
 };
 
-const WORLD_TREE_ZONE_IDS = new Set<string>([
-  "deep_roots",
-  "n5_roots",
-  "n4_foothills",
-  "n3_trunk_1",
-  "n3_trunk_2",
-  "n3_trunk_3",
-  "n2_canopy",
-  "n1_celestial",
-]);
-
+/** Tree tab — redirects to the current JLPT world in overview mode. */
 export default async function TreePage({ searchParams }: TreePageProps) {
-  await requireAuthenticatedUserId();
+  const userId = await requireAuthenticatedUserId();
   const params = await searchParams;
-  const { journey, profileStats } = await getJourneyPathWithContext();
+  const worldId = await worldService.resolveCurrentWorldId(userId);
 
-  const layout = buildWorldTreeLayout(journey);
-  const zoneId =
-    params.zone && WORLD_TREE_ZONE_IDS.has(params.zone)
-      ? (params.zone as WorldTreeZoneId)
-      : null;
-  const jlptBandId =
-    params.jlpt && isWorldTreeJlptBandId(params.jlpt)
-      ? (params.jlpt as WorldTreeJlptBandId)
-      : null;
+  const targetWorld =
+    params.jlpt && worldService.isValidWorldId(params.jlpt) ? params.jlpt : worldId;
 
-  const scrollFocus = resolveWorldTreeScrollFocus(journey, layout, {
-    highlightNodeId: params.node ?? null,
-    regionSlug: params.region ?? null,
-    zoneId,
-    jlptBandId,
-  });
+  const query = new URLSearchParams({ mode: "overview" });
+  if (params.region) query.set("region", params.region);
+  if (params.node) query.set("node", params.node);
 
-  return (
-    <WorldTreeScreen
-      journey={journey}
-      regionName="World Tree"
-      focusYPercent={scrollFocus.focusYPercent}
-      focusJlptBandId={scrollFocus.focusJlptBandId}
-      anchorScrollToBottom={scrollFocus.anchorScrollToBottom}
-      highlightNodeId={scrollFocus.highlightNodeId}
-      profileStats={profileStats}
-    />
-  );
+  redirect(`/worlds/${targetWorld}?${query}`);
 }

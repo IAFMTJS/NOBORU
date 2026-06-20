@@ -1,5 +1,6 @@
+import { resolveJlptBandForZone } from "@/features/journey/constants/world-tree-jlpt-band.constants";
+import { resolveJlptZoneSpec } from "@/features/journey/constants/world-tree-jlpt-zone-layout.constants";
 import {
-  WORLD_TREE_MANIFEST_ANCHORS,
   WORLD_TREE_SKELETON_ZONES,
   type WorldTreeZoneId,
 } from "@/features/journey/constants/world-tree-skeleton.constants";
@@ -60,7 +61,8 @@ export function resolveTrunkHubPosition(
 ): TrunkHubPosition {
   const hubCount = HUBS_PER_ZONE[zoneId];
   const forkSlot = branchIndex % hubCount;
-  const trunkCenter = WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent;
+  const jlptBand = resolveJlptBandForZone(zoneId);
+  const trunkCenter = resolveJlptZoneSpec(jlptBand).trunkCenterX;
   const ringY = ringYForZone(zoneId, zoneBands);
   const hubSpread = (forkSlot - (hubCount - 1) / 2) * 2.8;
 

@@ -1,4 +1,5 @@
-import { AppViewportBackground, BottomNav } from "@/components/visual/navigation";
+import { AppViewportBackground } from "@/components/visual/navigation/app-viewport-background";
+import { BottomNav } from "@/components/visual/navigation/bottom-nav";
 import { BetaBanner } from "@/features/feedback/components/beta-banner";
 import { OfflineProvider } from "@/features/offline/components/offline-provider";
 import { getCachedAuthSession } from "@/lib/cache/request-cache";

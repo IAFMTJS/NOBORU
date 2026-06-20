@@ -16,7 +16,7 @@ describe("world tree screen", () => {
     expect(screen).toContain('variant="overview"');
     expect(screen).toContain("WorldTreeMapFab");
     expect(canvas).toContain("WorldTreeRealmBackdrop");
-    expect(canvas).toContain("WorldTreeJlptBandArtLayer");
+    expect(canvas).toContain("WorldTreeJlptArtStack");
     expect(canvas).toContain("useJlptBands={isOverview}");
     expect(canvas).toContain("continuousTrail={isOverview}");
     expect(canvas).toContain("useArtNodes={isOverview}");

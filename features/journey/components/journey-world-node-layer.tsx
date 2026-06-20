@@ -142,7 +142,7 @@ export function JourneyWorldNodeLayer({
 
             return (
               <div
-                key={node.id}
+                key={node.globalIndex}
                 className={cn(
                   "absolute z-30 -translate-x-1/2 -translate-y-1/2",
                   isCurrent && "z-40",

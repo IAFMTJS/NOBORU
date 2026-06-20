@@ -31,6 +31,8 @@ type WorldTreeScreenProps = {
     currentStreak: number;
     totalXp: number;
   } | null;
+  /** Flatten scroll — full canvas height for screenshot export. */
+  exportMode?: boolean;
 };
 
 function countTotalNodes(journey: JourneyPathViewModel): number {
@@ -46,6 +48,7 @@ export function WorldTreeScreen({
   highlightNodeId = null,
   focusJlptBandId = null,
   profileStats,
+  exportMode = false,
 }: WorldTreeScreenProps) {
   const canvasRef = useRef<JourneyWorldCanvasHandle>(null);
   const layout = useMemo(() => buildWorldTreeLayout(journey), [journey]);
@@ -80,10 +83,16 @@ export function WorldTreeScreen({
   }, []);
 
   return (
-    <div className="relative h-content min-h-0 overflow-hidden bg-[#E9E1D0] dark:bg-[#0D1320] isolate">
+    <div
+      className={cn(
+        "relative isolate bg-[#E9E1D0] dark:bg-[#0D1320]",
+        exportMode ? "min-h-0" : "h-content min-h-0 overflow-hidden",
+      )}
+      data-world-tree-export={exportMode ? "true" : undefined}
+    >
       <JourneyWorldCanvas
         ref={canvasRef}
-        className="absolute inset-0"
+        className={exportMode ? "relative" : "absolute inset-0"}
         journey={journey}
         regionName={regionName}
         layout={layout}
@@ -91,28 +100,33 @@ export function WorldTreeScreen({
         focusYPercent={focusYPercent}
         anchorScrollToBottom={anchorScrollToBottom}
         highlightNodeId={highlightNodeId}
-        onViewportCenterYChange={handleViewportYChange}
+        exportMode={exportMode}
+        onViewportCenterYChange={exportMode ? undefined : handleViewportYChange}
       />
 
-      <WorldTreeJlptLegend journey={journey} />
+      {exportMode ? null : (
+        <>
+          <WorldTreeJlptLegend journey={journey} />
 
-      <WorldTreeJlptScrollRail
-        activeBandId={activeJlptBandId ?? focusJlptBandId}
-        onBandSelect={handleBandSelect}
-      />
+          <WorldTreeJlptScrollRail
+            activeBandId={activeJlptBandId ?? focusJlptBandId}
+            onBandSelect={handleBandSelect}
+          />
 
-      <WorldTreeMapFab href={continueHref} label="Continue climb" />
+          <WorldTreeMapFab href={continueHref} label="Continue climb" />
 
-      <p
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-[calc(var(--nav-clearance)+3.75rem)] z-20",
-          "text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#6B5344]/45 dark:text-[#D6A85F]/35",
-        )}
-      >
-        Scroll the World Tree · N5 at the roots → N1 at the crown
-      </p>
+          <p
+            className={cn(
+              "pointer-events-none absolute inset-x-0 bottom-[calc(var(--nav-clearance)+3.75rem)] z-20",
+              "text-center text-[10px] font-medium uppercase tracking-[0.2em] text-[#6B5344]/45 dark:text-[#D6A85F]/35",
+            )}
+          >
+            Scroll the World Tree · N5 at the roots → N1 at the crown
+          </p>
+        </>
+      )}
 
-      {profileStats ? (
+      {profileStats && !exportMode ? (
         <JourneyHud
           displayName={profileStats.displayName}
           levelLabel={profileStats.levelLabel}
@@ -129,5 +143,3 @@ export function WorldTreeScreen({
     </div>
   );
 }
-
-export { buildWorldTreeLayout };

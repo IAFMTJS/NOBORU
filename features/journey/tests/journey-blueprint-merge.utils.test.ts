@@ -105,6 +105,23 @@ describe("augmentRegionsWithBlueprint", () => {
     expect(firstBranchFirstLesson?.id).toBe("mount-n4-b0-lesson-0");
     expect(firstBranchFirstLesson?.blueprint?.branchIndex).toBe(0);
   });
+
+  it("does not assign the same CMS lesson id to multiple blueprint slots", () => {
+    const cmsRegions = [
+      makeCmsRegion("foothills", 20),
+      makeCmsRegion("mount-n5", 35, 3),
+    ];
+    const augmented = augmentRegionsWithBlueprint(cmsRegions, new Set());
+    const cmsLessonIds = augmented.flatMap((region) =>
+      region.units.flatMap((unit) =>
+        unit.lessons
+          .map((lesson) => lesson.id)
+          .filter((id) => !id.startsWith("blueprint:")),
+      ),
+    );
+
+    expect(new Set(cmsLessonIds).size).toBe(cmsLessonIds.length);
+  });
 });
 
 describe("blueprint-driven journey path", () => {
@@ -120,6 +137,7 @@ describe("blueprint-driven journey path", () => {
 
     expect(lessonNodes.length).toBe(WORLD_TREE_BLUEPRINT_TOTAL_SLOTS);
     expect(lessonNodes.every((node) => node.blueprint?.slotId)).toBe(true);
+    expect(new Set(lessonNodes.map((node) => node.id)).size).toBe(lessonNodes.length);
     expect(layout.nodes.length).toBeGreaterThanOrEqual(WORLD_TREE_BLUEPRINT_TOTAL_SLOTS);
 
     const zonesUsed = new Set(layout.nodes.map((node) => node.zoneId));

@@ -65,7 +65,7 @@ export function WorldTreeRealmBackdrop({
                   top: `${layout.yMin}%`,
                   height: `${height}%`,
                   background: `linear-gradient(to top, ${atmosphere.light.bottom}, ${atmosphere.light.mid} 45%, ${atmosphere.light.top})`,
-                  opacity: 0.5,
+                  opacity: 0.28,
                 }}
                 data-jlpt-atmosphere={band.id}
               />
@@ -75,7 +75,7 @@ export function WorldTreeRealmBackdrop({
                   top: `${layout.yMin}%`,
                   height: `${height}%`,
                   background: `linear-gradient(to top, ${atmosphere.dark.bottom}, ${atmosphere.dark.mid} 45%, ${atmosphere.dark.top})`,
-                  opacity: 0.62,
+                  opacity: 0.35,
                 }}
                 data-jlpt-atmosphere={`${band.id}-dark`}
               />

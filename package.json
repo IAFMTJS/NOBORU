@@ -19,11 +19,15 @@
     "test:watch": "vitest",
     "assets:validate": "node scripts/art-direction/validate-mappings.mjs",
     "assets:publish-library": "node scripts/art-direction/publish-art-library.mjs",
+    "assets:publish-world-tree-jlpt": "node scripts/art-direction/publish-world-tree-jlpt-bands.mjs",
+    "assets:publish-world-tree-segments": "node scripts/art-direction/publish-world-tree-segments.mjs",
+    "assets:publish-world-tree": "node scripts/art-direction/publish-world-tree-jlpt-bands.mjs && node scripts/art-direction/publish-world-tree-segments.mjs",
     "assets:audit-immersion": "node scripts/art-direction/audit-immersion.mjs",
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
     "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs",
-    "assets:preview-world-tree-composition": "node scripts/art-direction/preview-world-tree-composition.mjs"
+    "assets:preview-world-tree-composition": "node scripts/art-direction/preview-world-tree-composition.mjs",
+    "assets:export-world-tree-audit": "node scripts/art-direction/export-world-tree-page-audit.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",
@@ -60,6 +64,7 @@
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.5.19",
+    "playwright": "^1.51.1",
     "postcss": "^8.5.15",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19",

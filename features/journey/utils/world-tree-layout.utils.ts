@@ -1,3 +1,8 @@
+import { JOURNEY_JLPT_BAND_ART } from "@/features/journey/constants/journey.constants";
+import {
+  assignSpineXByJlptBand,
+  assignSpineYByJlptBand,
+} from "@/features/journey/utils/world-tree-jlpt-zone-layout.utils";
 import {
   DEFAULT_WORLD_TREE_ZONE,
   WORLD_TREE_MANIFEST_ANCHORS,
@@ -760,6 +765,21 @@ export function buildWorldTreeLayout(journey: JourneyPathViewModel): WorldTreeLa
       caveGroup: entry.caveGroup,
       forkFromNodeId,
     });
+  }
+
+  if (JOURNEY_JLPT_BAND_ART) {
+    const jlptSpineY = assignSpineYByJlptBand(plotted);
+    const jlptSpineX = assignSpineXByJlptBand(plotted);
+
+    for (let index = 0; index < plotted.length; index += 1) {
+      const entry = plotted[index]!;
+      if (!isMainSpineLessonNode(entry)) continue;
+
+      const nextY = jlptSpineY.get(entry.node.id);
+      const nextX = jlptSpineX.get(entry.node.id);
+      if (nextY != null) entry.yPercent = nextY;
+      if (nextX != null) entry.xPercent = clampPercent(nextX, 12, 88);
+    }
   }
 
   const canvasMinHeightVh = resolveWorldTreeCanvasMinHeightVh(plotted.length);

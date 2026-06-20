@@ -9,6 +9,10 @@ import {
   worldTreeJlptBandArtPath,
   type WorldTreeJlptBandId,
 } from "@/features/journey/constants/world-tree-jlpt-band.constants";
+import {
+  WORLD_TREE_JLPT_BAND_ART,
+  resolveHeroObjectPosition,
+} from "@/features/journey/constants/world-tree-jlpt-segment.constants";
 import { artLibraryPath } from "@/lib/assets/art-library-paths";
 import { cn } from "@/lib/utils";
 
@@ -108,12 +112,23 @@ export function WorldTreeJlptBandArtLayer({
               </>
             ) : null}
 
-            <div className="relative h-full w-full">
+            <div
+              className="absolute inset-x-0 z-[2]"
+              style={{
+                top: 0,
+                height: "100%",
+              }}
+            >
               <Image
                 src={src}
                 alt=""
                 fill
-                className="object-contain object-center"
+                className="object-contain"
+                style={{
+                  objectPosition: resolveHeroObjectPosition(
+                    WORLD_TREE_JLPT_BAND_ART[band.id].heroAnchor,
+                  ),
+                }}
                 sizes="100vw"
                 priority={band.id === "n5" || band.id === "n4"}
                 unoptimized

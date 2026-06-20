@@ -101,27 +101,46 @@ function resolveCmsLessonForSlot(
   return unit.lessons[contentIndex] ?? null;
 }
 
+function takeNextUnusedLesson(
+  flatPool: readonly LessonSummaryViewModel[],
+  usedLessonIds: ReadonlySet<string>,
+  flatCursor: { current: number },
+): LessonSummaryViewModel | null {
+  while (flatCursor.current < flatPool.length) {
+    const lesson = flatPool[flatCursor.current]!;
+    flatCursor.current += 1;
+    if (!usedLessonIds.has(lesson.id)) {
+      return lesson;
+    }
+  }
+
+  return null;
+}
+
 /**
  * Maps CMS lessons onto blueprint slots by branch unit order, falling back to
- * flat CMS order, then virtual draft placeholders.
+ * flat CMS order, then virtual draft placeholders. Each CMS lesson is consumed at
+ * most once so journey nodes keep unique ids.
  */
 function mergeLessonsIntoBlueprint(
   slots: readonly BlueprintSlot[],
   cmsUnits: UnitSummaryViewModel[],
 ): LessonSummaryViewModel[] {
   const flatPool = cmsUnits.flatMap((unit) => unit.lessons);
-  let flatCursor = 0;
+  const usedLessonIds = new Set<string>();
+  const flatCursor = { current: 0 };
 
   return slots.map((slot) => {
     const branchLesson = resolveCmsLessonForSlot(slot, slots, cmsUnits);
-    if (branchLesson) {
+    if (branchLesson && !usedLessonIds.has(branchLesson.id)) {
+      usedLessonIds.add(branchLesson.id);
       return attachBlueprintMeta(branchLesson, slot);
     }
 
-    if (flatCursor < flatPool.length) {
-      const lesson = flatPool[flatCursor]!;
-      flatCursor += 1;
-      return attachBlueprintMeta(lesson, slot);
+    const fallbackLesson = takeNextUnusedLesson(flatPool, usedLessonIds, flatCursor);
+    if (fallbackLesson) {
+      usedLessonIds.add(fallbackLesson.id);
+      return attachBlueprintMeta(fallbackLesson, slot);
     }
 
     return lessonFromBlueprintSlot(slot, `blueprint-unit:${slot.branchId}`);
