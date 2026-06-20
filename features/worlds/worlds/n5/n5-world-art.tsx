@@ -30,12 +30,25 @@ export function N5WorldArt({ className }: N5WorldArtProps) {
           style={{
             top: `${gap.topPercent}%`,
             height: `${gap.heightPercent}%`,
-            background: `linear-gradient(to top, ${gap.tint}66, ${gap.tint}28 45%, transparent)`,
+            background: `linear-gradient(to top, ${gap.tint}88, ${gap.tint}33 50%, transparent)`,
             zIndex: 0,
           }}
           data-jlpt-gap={gap.id}
         />
       ))}
+
+      {/* Softens the hero / fill seam where the island meets the roots. */}
+      <div
+        className="absolute inset-x-0 z-[3]"
+        style={{
+          top: "26%",
+          height: "14%",
+          background:
+            "linear-gradient(to bottom, transparent, rgba(75, 45, 110, 0.35) 45%, rgba(45, 28, 68, 0.2) 70%, transparent)",
+        }}
+        aria-hidden
+        data-n5-seam-blend
+      />
 
       {art.fill.map((piece) => (
         <div

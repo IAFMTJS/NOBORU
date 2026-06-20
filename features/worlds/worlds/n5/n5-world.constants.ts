@@ -22,6 +22,6 @@ export const N5_WORLD: JlptWorldDefinition = {
     heroFileBase: "wt_jlpt_n5",
     heroAnchor: "bottom",
   },
-  canvasMinHeightVh: 200,
+  canvasMinHeightVh: 420,
   audioThemeId: "world_n5_roots",
 };

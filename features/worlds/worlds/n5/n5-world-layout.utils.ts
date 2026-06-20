@@ -4,78 +4,102 @@ import type {
 } from "@/features/journey/utils/world-tree-layout.utils";
 import type { JlptWorldPathViewModel } from "@/features/worlds/types/world.types";
 import {
+  interpolateN5Waypoints,
   N5_WORLD_LAYOUT,
-  resolveN5TrunkX,
+  resolveN5BranchReach,
+  resolveN5BranchSide,
 } from "@/features/worlds/worlds/n5/n5-world-layout.constants";
 
-const MAIN_SPINE_KINDS = new Set(["lesson", "checkpoint", "trial"]);
-
-function isMainSpineNode(entry: PlottedSkeletonNode): boolean {
-  return (
-    entry.spineRole === "main" &&
-    entry.node.kind !== "landmark" &&
-    MAIN_SPINE_KINDS.has(entry.node.kind)
-  );
-}
+const CLIMB_NODE_KINDS = new Set(["lesson", "checkpoint", "trial", "landmark"]);
 
 function clampPercent(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function enforceMinimumYSpacing(nodes: PlottedSkeletonNode[], minGap: number): void {
-  const spineNodes = nodes
-    .filter(isMainSpineNode)
-    .sort((a, b) => b.yPercent - a.yPercent);
+function isBranchPlaced(entry: PlottedSkeletonNode): boolean {
+  return (
+    entry.spineRole === "branch" ||
+    entry.segmentType === "branch" ||
+    entry.segmentType === "cave"
+  );
+}
 
-  for (let index = 1; index < spineNodes.length; index += 1) {
-    const prev = spineNodes[index - 1]!;
-    const current = spineNodes[index]!;
+function resolveClimbProgress(climbRank: number, total: number): number {
+  if (total <= 1) return 0.5;
+  return climbRank / (total - 1);
+}
+
+function enforceGlobalMinYSpacing(
+  nodes: PlottedSkeletonNode[],
+  minGap: number,
+): void {
+  const sorted = [...nodes].sort((a, b) => b.yPercent - a.yPercent);
+
+  for (let index = 1; index < sorted.length; index += 1) {
+    const prev = sorted[index - 1]!;
+    const current = sorted[index]!;
     if (prev.yPercent - current.yPercent < minGap) {
       current.yPercent = prev.yPercent - minGap;
     }
   }
 }
 
-/** Re-distribute N5 spine nodes across region bands aligned to hero art. */
+/**
+ * Evenly distributes every climb node along the island waypoint path (by rank, not globalIndex).
+ * Prevents hundreds of nodes collapsing into the same spine coordinate.
+ */
 export function tuneN5WorldLayout(
   layout: WorldTreeLayoutResult,
   _worldPath: JlptWorldPathViewModel,
 ): WorldTreeLayoutResult {
   const nodes = layout.nodes.map((entry) => ({ ...entry }));
-  const byRegion = new Map<string, PlottedSkeletonNode[]>();
+  const climbNodes = nodes
+    .filter((entry) => CLIMB_NODE_KINDS.has(entry.node.kind))
+    .sort((a, b) => a.node.globalIndex - b.node.globalIndex);
 
-  for (const entry of nodes) {
-    if (!isMainSpineNode(entry)) continue;
-    const bucket = byRegion.get(entry.regionSlug) ?? [];
-    bucket.push(entry);
-    byRegion.set(entry.regionSlug, bucket);
-  }
+  const total = climbNodes.length;
 
-  for (const [regionSlug, regionNodes] of byRegion) {
-    const range =
-      N5_WORLD_LAYOUT.regionSpineRanges[
-        regionSlug as keyof typeof N5_WORLD_LAYOUT.regionSpineRanges
-      ];
-    if (!range) continue;
+  climbNodes.forEach((entry, climbRank) => {
+    const progress = resolveClimbProgress(climbRank, total);
+    const spine = interpolateN5Waypoints(progress);
+    const alternating =
+      climbRank % 2 === 0
+        ? -N5_WORLD_LAYOUT.spineAlternatingNudge
+        : N5_WORLD_LAYOUT.spineAlternatingNudge;
 
-    regionNodes.sort((a, b) => a.node.globalIndex - b.node.globalIndex);
-    const count = regionNodes.length;
+    if (isBranchPlaced(entry)) {
+      const side = resolveN5BranchSide(entry.branchId, climbRank);
+      const reach = resolveN5BranchReach(climbRank);
 
-    for (let index = 0; index < count; index += 1) {
-      const progress = count > 1 ? index / (count - 1) : 0.5;
-      const yPercent = range.yMax - progress * (range.yMax - range.yMin);
-      const xPercent = resolveN5TrunkX(progress, regionNodes[index]!.node.globalIndex);
-
-      regionNodes[index]!.yPercent = yPercent;
-      regionNodes[index]!.xPercent = clampPercent(xPercent, 14, 86);
+      entry.xPercent = clampPercent(
+        spine.x + side * reach,
+        N5_WORLD_LAYOUT.branchXMin,
+        N5_WORLD_LAYOUT.branchXMax,
+      );
+      entry.yPercent = spine.y;
+      return;
     }
-  }
 
-  enforceMinimumYSpacing(nodes, N5_WORLD_LAYOUT.minNodeYGapPercent);
+    if (entry.node.kind === "landmark") {
+      entry.xPercent = clampPercent(spine.x + alternating * 1.6, 20, 80);
+      entry.yPercent = clampPercent(spine.y - 1.5, 8, 98);
+      return;
+    }
+
+    entry.xPercent = clampPercent(
+      spine.x + alternating,
+      N5_WORLD_LAYOUT.spineXMin,
+      N5_WORLD_LAYOUT.spineXMax,
+    );
+    entry.yPercent = spine.y;
+  });
+
+  enforceGlobalMinYSpacing(climbNodes, N5_WORLD_LAYOUT.minNodeYGapPercent);
 
   return {
     ...layout,
     nodes,
+    canvasMinHeightVh: N5_WORLD_LAYOUT.canvasMinHeightVh,
   };
 }
 
