@@ -1,5 +1,7 @@
+import { headers } from "next/headers";
+
 import { createClientUncached } from "@/lib/supabase/create-client-uncached";
-import { ensureContentAdminClaim } from "@/lib/auth/sync-content-admin-claim";
+import { ensureProfileJwtClaims } from "@/lib/auth/profile-jwt-claims";
 
 export type AuthSession = {
   userId: string;
@@ -7,6 +9,17 @@ export type AuthSession = {
 };
 
 export async function getAuthSessionUncached(): Promise<AuthSession | null> {
+  const headerStore = await headers();
+  const forwardedUserId = headerStore.get("x-noboru-user-id");
+
+  if (forwardedUserId) {
+    void ensureProfileJwtClaims(forwardedUserId);
+    return {
+      userId: forwardedUserId,
+      email: headerStore.get("x-noboru-user-email") ?? "",
+    };
+  }
+
   const supabase = await createClientUncached();
   const {
     data: { user },
@@ -17,7 +30,7 @@ export async function getAuthSessionUncached(): Promise<AuthSession | null> {
     return null;
   }
 
-  void ensureContentAdminClaim(user.id);
+  void ensureProfileJwtClaims(user.id);
 
   return {
     userId: user.id,

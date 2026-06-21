@@ -8,6 +8,7 @@ import { LessonPlayer } from "@/features/learning/components/lesson-player";
 import type { LessonSessionViewModel } from "@/features/learning/types/lesson.types";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
+import { useNextLessonPrefetch } from "@/features/learning/hooks/use-next-lesson-prefetch";
 import { getLessonAudioPrefetchPlan } from "@/lib/learning/lesson-audio-prefetch";
 
 type LessonSessionLoaderProps = {
@@ -28,6 +29,8 @@ export function LessonSessionLoader({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(!initialSession);
   const [retryCount, setRetryCount] = useState(0);
+
+  useNextLessonPrefetch(session?.nextLesson?.href);
 
   useEffect(() => {
     if (!initialSession) return;

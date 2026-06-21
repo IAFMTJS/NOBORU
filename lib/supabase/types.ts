@@ -7,4 +7,5 @@ export type {
   Json,
   ReviewItemDbRow,
   SubmitReviewRatingRpcResult,
+  SubmitReviewRatingsBatchRpcResult,
 } from "@/lib/supabase/database.types";

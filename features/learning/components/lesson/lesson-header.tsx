@@ -4,12 +4,14 @@ import Link from "next/link";
 
 import { UiIconImage } from "@/components/media/ui-icon-image";
 import { LessonHearts } from "@/features/learning/components/lesson/lesson-hearts";
-import { LessonProgressTrail } from "@/features/learning/components/lesson/lesson-progress-trail";
+import { LessonPhaseTrail } from "@/features/learning/components/lesson/lesson-phase-trail";
+import type { LessonPhaseSummary } from "@/features/learning/types/lesson.types";
 import {
   LESSON_MAX_HEARTS,
   LESSON_STREAK_GLOW_AT,
   LESSON_STREAK_PARTICLES_AT,
 } from "@/features/learning/constants/lesson-ui.constants";
+import type { LessonPhase } from "@/lib/learning/lesson-phase.constants";
 import { cn } from "@/lib/utils";
 
 type LessonHeaderProps = {
@@ -19,6 +21,8 @@ type LessonHeaderProps = {
   heartsRemaining: number;
   maxHearts?: number;
   streakCount?: number;
+  phaseSummary?: LessonPhaseSummary[];
+  currentPhase?: LessonPhase | null;
   className?: string;
 };
 
@@ -29,6 +33,8 @@ export function LessonHeader({
   heartsRemaining,
   maxHearts = LESSON_MAX_HEARTS,
   streakCount = 0,
+  phaseSummary,
+  currentPhase = null,
   className,
 }: LessonHeaderProps) {
   const streakGlow = streakCount >= LESSON_STREAK_GLOW_AT;
@@ -50,7 +56,20 @@ export function LessonHeader({
       </Link>
 
       <div className="min-w-0 flex-1 px-1">
-        <LessonProgressTrail currentIndex={stepIndex} totalSteps={totalSteps} />
+        {phaseSummary && phaseSummary.length > 0 ? (
+          <LessonPhaseTrail phaseSummary={phaseSummary} currentPhase={currentPhase} />
+        ) : (
+          <div
+            className="flex w-full max-w-[12rem] items-center gap-1 sm:max-w-[14rem]"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={totalSteps}
+            aria-valuenow={stepIndex + 1}
+            aria-label={`Lesson progress, step ${stepIndex + 1} of ${totalSteps}`}
+          >
+            <span className="h-1.5 flex-1 rounded-full bg-trail-glow trail-glow-warm" />
+          </div>
+        )}
       </div>
 
       <div

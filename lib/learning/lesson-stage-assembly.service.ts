@@ -1,5 +1,6 @@
 import type {
   LessonContent,
+  LessonPhaseSummary,
   LessonRecallStep,
   LessonStageSummary,
   LessonStep,
@@ -11,6 +12,7 @@ import {
   buildFillBlankStep,
   buildListeningRecallStep,
   buildMasteryChallengeStep,
+  buildMatchingStep,
   buildRecognitionChoiceStep,
   buildReverseRecognitionStep,
   buildSentenceTypedStep,
@@ -31,6 +33,13 @@ import {
   type LessonStage,
   type ScoredLessonStage,
 } from "@/lib/learning/lesson-stage.constants";
+import {
+  PHASE_LABELS,
+  SPIRAL_MAX_EXPOSURES_PER_CONCEPT,
+  SPIRAL_MIN_EXPOSURES_PER_CONCEPT,
+  type LessonPhase,
+} from "@/lib/learning/lesson-phase.constants";
+import { summarizeLessonPhases } from "@/lib/learning/lesson-phase.utils";
 
 export type StagedLessonAssemblyInput = {
   newContents: LessonContent[];
@@ -43,9 +52,19 @@ type StagePlan = {
   count: number;
 };
 
+type ConceptExposurePlan = {
+  content: LessonContent;
+  stage: ScoredLessonStage;
+  lessonPhase: LessonPhase;
+  build: () => ScoredLessonStep | null;
+};
+
 function isDrillContent(
   content: LessonContent,
-): content is Exclude<LessonContent, { type: "reading" | "story" | "dialogue" | "listening" | "listening_challenge" | "application" }> {
+): content is Exclude<
+  LessonContent,
+  { type: "reading" | "story" | "dialogue" | "listening" | "listening_challenge" | "application" }
+> {
   return (
     content.type === "vocabulary" ||
     content.type === "kanji" ||
@@ -162,212 +181,317 @@ export function computeStagePlans(
   ];
 }
 
-function pickContents(
-  pool: LessonContent[],
-  count: number,
-  offset: number,
-): LessonContent[] {
-  if (pool.length === 0 || count <= 0) return [];
-  const shuffled = shuffle(pool);
-  const picked: LessonContent[] = [];
-  for (let index = 0; index < count; index += 1) {
-    picked.push(shuffled[(offset + index) % shuffled.length]!);
-  }
-  return picked;
-}
-
-function buildStageSteps(
-  stage: ScoredLessonStage,
-  contents: LessonContent[],
+function buildConceptExposurePlans(
+  content: LessonContent,
   allAnswers: string[],
   allSurfaces: string[],
+): ConceptExposurePlan[] {
+  if (!isDrillContent(content)) return [];
+
+  const plans: ConceptExposurePlan[] = [
+    {
+      content,
+      stage: "recognition",
+      lessonPhase: "introduction",
+      build: () => buildRecognitionChoiceStep(content, allAnswers, 0, 0, "recognition"),
+    },
+    {
+      content,
+      stage: "recognition",
+      lessonPhase: "recognition",
+      build: () => buildReverseRecognitionStep(content, allSurfaces, 0, 0, "recognition"),
+    },
+    {
+      content,
+      stage: "guided_practice",
+      lessonPhase: "recognition",
+      build: () => {
+        if (content.type === "vocabulary" && content.audioUrl) {
+          return buildListeningRecallStep(content, allAnswers, 0, 0, "listening");
+        }
+        if (content.type === "grammar" || content.type === "vocabulary") {
+          const fillBlank = buildFillBlankStep(content, allAnswers, 0, 0);
+          if (fillBlank) return { ...fillBlank, stage: "guided_practice" as const };
+        }
+        return buildVarietyStep(content, allAnswers, 1, 0, 0);
+      },
+    },
+    {
+      content,
+      stage: "active_recall",
+      lessonPhase: "active_recall",
+      build: () => buildActiveRecallStep(content, allAnswers, 0, 0, "active_recall"),
+    },
+    {
+      content,
+      stage: "context_application",
+      lessonPhase: "context_mastery",
+      build: () => {
+        if (content.type === "grammar" || content.type === "vocabulary") {
+          const sentence = buildSentenceTypedStep(content, 0, 0);
+          if (sentence) {
+            return {
+              ...sentence,
+              stage: "context_application" as const,
+              prompt: "Translate into Japanese",
+            };
+          }
+          const wordBank = buildWordBankStep(content, 0, 0);
+          if (wordBank) {
+            return {
+              ...wordBank,
+              stage: "context_application" as const,
+              prompt: "Build the sentence",
+            };
+          }
+        }
+        return buildActiveRecallStep(content, allAnswers, 0, 0, "context_application");
+      },
+    },
+    {
+      content,
+      stage: "mastery_challenge",
+      lessonPhase: "context_mastery",
+      build: () => buildMasteryChallengeStep(content, allAnswers, 0, 0),
+    },
+  ];
+
+  return plans.slice(0, SPIRAL_MAX_EXPOSURES_PER_CONCEPT);
+}
+
+function interleaveSpiralExposures(
+  concepts: LessonContent[],
+  allAnswers: string[],
+  allSurfaces: string[],
+): ScoredLessonStep[] {
+  const plansByConcept = concepts.map((content) =>
+    buildConceptExposurePlans(content, allAnswers, allSurfaces),
+  );
+
+  const maxDepth = Math.max(
+    SPIRAL_MIN_EXPOSURES_PER_CONCEPT,
+    ...plansByConcept.map((plans) => plans.length),
+  );
+
+  const rawSteps: ScoredLessonStep[] = [];
+
+  for (let depth = 0; depth < maxDepth; depth += 1) {
+    for (const plans of plansByConcept) {
+      const plan = plans[depth];
+      if (!plan) continue;
+      const step = plan.build();
+      if (!step) continue;
+      rawSteps.push({
+        ...step,
+        stage: plan.stage,
+        lessonPhase: plan.lessonPhase,
+      } as ScoredLessonStep);
+    }
+  }
+
+  return rawSteps;
+}
+
+function buildReviewInjectionSteps(
+  reviewContents: LessonContent[],
+  allAnswers: string[],
+  count: number,
   startIndex: number,
   total: number,
 ): ScoredLessonStep[] {
+  const pool = shuffle(reviewContents.filter(isDrillContent));
+  if (pool.length === 0 || count <= 0) return [];
+
   const steps: ScoredLessonStep[] = [];
 
-  contents.forEach((content, contentIndex) => {
-    const drillIndex = startIndex + contentIndex + 1;
-
-    if (stage === "recognition") {
-      const forward =
-        contentIndex % 2 === 0
-          ? buildRecognitionChoiceStep(content, allAnswers, drillIndex, total, stage)
-          : buildReverseRecognitionStep(content, allSurfaces, drillIndex, total, stage);
-      if (forward) steps.push(forward);
-      return;
+  for (let index = 0; index < count; index += 1) {
+    const content = pool[index % pool.length]!;
+    const variety = buildVarietyStep(content, allAnswers, index + 3, startIndex + index + 1, total);
+    if (variety) {
+      steps.push({
+        ...variety,
+        stage: "review_injection",
+        lessonPhase: "context_mastery",
+      } as ScoredLessonStep);
+      continue;
     }
-
-    if (stage === "guided_practice") {
-      const variety = buildVarietyStep(content, allAnswers, contentIndex, drillIndex, total);
-      if (variety) {
-        steps.push({ ...variety, stage } as ScoredLessonStep);
-        return;
-      }
-      if (content.type === "grammar" || content.type === "vocabulary") {
-        const fillBlank = buildFillBlankStep(content, allAnswers, drillIndex, total);
-        if (fillBlank) {
-          steps.push({ ...fillBlank, stage });
-          return;
-        }
-      }
-      const choice = buildRecognitionChoiceStep(content, allAnswers, drillIndex, total, stage);
-      if (choice) steps.push(choice);
-      return;
-    }
-
-    if (stage === "active_recall") {
-      const recall = buildActiveRecallStep(content, allAnswers, drillIndex, total, stage);
-      if (recall) steps.push(recall);
-      return;
-    }
-
-    if (stage === "listening") {
-      if (content.type === "vocabulary") {
-        const listening = buildListeningRecallStep(
-          content,
-          allAnswers,
-          drillIndex,
-          total,
-          stage,
-        );
-        if (listening) {
-          steps.push(listening);
-          return;
-        }
-      }
-      const fallback = buildRecognitionChoiceStep(content, allAnswers, drillIndex, total, stage);
-      if (fallback) steps.push(fallback);
-      return;
-    }
-
-    if (stage === "context_application") {
-      if (content.type === "grammar" || content.type === "vocabulary") {
-        const variant = contentIndex % 2;
-        if (variant === 0) {
-          const sentence = buildSentenceTypedStep(content, drillIndex, total);
-          if (sentence) {
-            steps.push({ ...sentence, stage, prompt: "Translate into Japanese" });
-            return;
-          }
-        } else {
-          const wordBank = buildWordBankStep(content, drillIndex, total);
-          if (wordBank) {
-            steps.push({ ...wordBank, stage, prompt: "Build the sentence" });
-            return;
-          }
-        }
-        const fillBlank = buildFillBlankStep(content, allAnswers, drillIndex, total);
-        if (fillBlank) {
-          steps.push({ ...fillBlank, stage });
-          return;
-        }
-      }
-      const recall = buildActiveRecallStep(content, allAnswers, drillIndex, total, stage);
-      if (recall) steps.push(recall);
-      return;
-    }
-
-    if (stage === "review_injection") {
-      const variety = buildVarietyStep(
-        content,
-        allAnswers,
-        contentIndex + 3,
-        drillIndex,
-        total,
-      );
-      if (variety) {
-        steps.push({ ...variety, stage } as ScoredLessonStep);
-        return;
-      }
-      const recall = buildRecallReviewStep(content, allAnswers, drillIndex, total);
-      if (recall) steps.push(recall);
-      return;
-    }
-
-    if (stage === "mastery_challenge") {
-      const mastery = buildMasteryChallengeStep(content, allAnswers, drillIndex, total);
-      if (mastery) steps.push(mastery);
-    }
-  });
+    const recall = buildActiveRecallStep(
+      content,
+      allAnswers,
+      startIndex + index + 1,
+      total,
+      "review_injection",
+    );
+    if (recall) steps.push(recall);
+  }
 
   return steps;
 }
 
-function buildRecallReviewStep(
-  content: LessonContent,
+function buildCheckpointSteps(
+  reviewContents: LessonContent[],
   allAnswers: string[],
-  index: number,
-  total: number,
-): LessonRecallStep | null {
-  return buildActiveRecallStep(content, allAnswers, index, total, "review_injection");
+  allSurfaces: string[],
+): ScoredLessonStep[] {
+  const stagePlans = computeStagePlans(0, true);
+  const total = stagePlans.reduce((sum, plan) => sum + plan.count, 0);
+  const pool = shuffle(reviewContents.filter(isDrillContent));
+  const rawSteps: ScoredLessonStep[] = [];
+  let runningIndex = 0;
+
+  for (const plan of stagePlans) {
+    for (let index = 0; index < plan.count; index += 1) {
+      const content = pool[(runningIndex + index) % Math.max(pool.length, 1)];
+      if (!content) continue;
+
+      let step: ScoredLessonStep | null = null;
+
+      if (plan.stage === "recognition") {
+        step =
+          index % 2 === 0
+            ? buildRecognitionChoiceStep(
+                content,
+                allAnswers,
+                runningIndex + index + 1,
+                total,
+                plan.stage,
+              )
+            : buildReverseRecognitionStep(
+                content,
+                allSurfaces,
+                runningIndex + index + 1,
+                total,
+                plan.stage,
+              );
+      } else if (plan.stage === "guided_practice") {
+        const variety = buildVarietyStep(content, allAnswers, index, runningIndex + index + 1, total);
+        step = variety ? ({ ...variety, stage: plan.stage } as ScoredLessonStep) : null;
+      } else if (plan.stage === "active_recall") {
+        step = buildActiveRecallStep(content, allAnswers, runningIndex + index + 1, total, plan.stage);
+      } else if (plan.stage === "listening" && content.type === "vocabulary") {
+        step = buildListeningRecallStep(content, allAnswers, runningIndex + index + 1, total, plan.stage);
+      } else if (plan.stage === "context_application") {
+        const sentence = buildSentenceTypedStep(
+          content as VocabularyLessonContent,
+          runningIndex + index + 1,
+          total,
+        );
+        step = sentence ? { ...sentence, stage: plan.stage } : null;
+      } else if (plan.stage === "review_injection") {
+        step = buildActiveRecallStep(content, allAnswers, runningIndex + index + 1, total, plan.stage);
+      } else if (plan.stage === "mastery_challenge") {
+        step = buildMasteryChallengeStep(content, allAnswers, runningIndex + index + 1, total);
+      }
+
+      if (step) rawSteps.push(step);
+    }
+    runningIndex += plan.count;
+  }
+
+  return rawSteps;
+}
+
+function trimToExerciseBounds(steps: ScoredLessonStep[]): ScoredLessonStep[] {
+  if (steps.length <= LESSON_MAX_SCORED_EXERCISES) return steps;
+  return steps.slice(0, LESSON_MAX_SCORED_EXERCISES);
+}
+
+function reindexSteps(steps: ScoredLessonStep[]): ScoredLessonStep[] {
+  const total = steps.length;
+  return steps.map((step, index) => ({
+    ...step,
+    index: index + 1,
+    total,
+  }));
+}
+
+function buildStageSummary(steps: ScoredLessonStep[]): LessonStageSummary[] {
+  const counts = new Map<LessonStage, number>();
+  for (const step of steps) {
+    if (step.stage) {
+      counts.set(step.stage, (counts.get(step.stage) ?? 0) + 1);
+    }
+  }
+  return LESSON_STAGES.filter((stage) => (counts.get(stage) ?? 0) > 0).map((stage) => ({
+    stage,
+    label: STAGE_LABELS[stage],
+    exerciseCount: counts.get(stage) ?? 0,
+  }));
+}
+
+function buildPhaseSummary(steps: ScoredLessonStep[]): LessonPhaseSummary[] {
+  const counts = new Map<LessonPhase, number>();
+  for (const step of steps) {
+    if (step.lessonPhase) {
+      counts.set(step.lessonPhase, (counts.get(step.lessonPhase) ?? 0) + 1);
+    }
+  }
+  return (["introduction", "recognition", "active_recall", "context_mastery"] as LessonPhase[])
+    .filter((phase) => (counts.get(phase) ?? 0) > 0)
+    .map((phase) => ({
+      phase,
+      label: PHASE_LABELS[phase],
+      exerciseCount: counts.get(phase) ?? 0,
+    }));
 }
 
 export function assembleStagedExerciseSteps(
   input: StagedLessonAssemblyInput,
-): { steps: ScoredLessonStep[]; stageSummary: LessonStageSummary[] } {
+): { steps: ScoredLessonStep[]; stageSummary: LessonStageSummary[]; phaseSummary: LessonPhaseSummary[] } {
   const drillNew = input.newContents.filter(isDrillContent);
   const drillReview = input.reviewContents.filter(isDrillContent);
   const primaryPool =
     input.isCheckpoint || drillNew.length === 0 ? drillReview : drillNew;
 
-  const allPool = [...primaryPool, ...drillReview.filter((c) => !primaryPool.some((p) => p.id === c.id))];
+  const allPool = [
+    ...primaryPool,
+    ...drillReview.filter((c) => !primaryPool.some((p) => p.id === c.id)),
+  ];
   const allAnswers = allPool.map(getRecallAnswer);
   const allSurfaces = allPool.map(getJapaneseSurface);
 
-  const stagePlans = computeStagePlans(drillNew.length, input.isCheckpoint);
-  const totalScored = stagePlans.reduce((sum, plan) => sum + plan.count, 0);
+  let rawSteps: ScoredLessonStep[];
 
-  const minReview = Math.ceil(totalScored * LESSON_REVIEW_RATIO_MIN);
-  const reviewStagePlan = stagePlans.find((plan) => plan.stage === "review_injection");
-  if (reviewStagePlan && drillReview.length > 0) {
-    reviewStagePlan.count = Math.max(reviewStagePlan.count, minReview);
+  if (input.isCheckpoint) {
+    rawSteps = buildCheckpointSteps(drillReview, allAnswers, allSurfaces);
+  } else if (drillNew.length > 0) {
+    rawSteps = interleaveSpiralExposures(drillNew, allAnswers, allSurfaces);
+
+    const matching = buildMatchingStep(drillNew);
+    if (matching) {
+      rawSteps.unshift({
+        ...matching,
+        stage: "recognition",
+        lessonPhase: "introduction",
+        index: 0,
+        total: 0,
+      });
+    }
+
+    const minReview = Math.ceil(rawSteps.length * LESSON_REVIEW_RATIO_MIN);
+    if (drillReview.length > 0 && minReview > 0) {
+      const reviewSteps = buildReviewInjectionSteps(
+        drillReview,
+        allAnswers,
+        Math.max(2, minReview),
+        rawSteps.length,
+        rawSteps.length + minReview,
+      );
+      rawSteps.push(...reviewSteps);
+    }
+  } else {
+    rawSteps = buildCheckpointSteps(allPool, allAnswers, allSurfaces);
   }
 
-  const adjustedTotal = stagePlans.reduce((sum, plan) => sum + plan.count, 0);
-  const stageSummary: LessonStageSummary[] = [];
-  const rawSteps: ScoredLessonStep[] = [];
-  let runningIndex = 0;
+  const bounded = trimToExerciseBounds(rawSteps);
+  const varied = enforceExerciseVariety(bounded);
+  const indexed = reindexSteps(varied);
 
-  for (const plan of stagePlans) {
-    const contentPool =
-      plan.stage === "review_injection"
-        ? drillReview.length > 0
-          ? drillReview
-          : allPool
-        : primaryPool.length > 0
-          ? primaryPool
-          : allPool;
-
-    const stageContents = pickContents(contentPool, plan.count, runningIndex);
-    const stageSteps = buildStageSteps(
-      plan.stage,
-      stageContents,
-      allAnswers,
-      allSurfaces,
-      runningIndex,
-      adjustedTotal,
-    );
-
-    rawSteps.push(...stageSteps.slice(0, plan.count));
-    runningIndex += stageSteps.length;
-
-    stageSummary.push({
-      stage: plan.stage,
-      label: STAGE_LABELS[plan.stage],
-      exerciseCount: Math.min(plan.count, stageSteps.length),
-    });
-  }
-
-  const varied = enforceExerciseVariety(rawSteps);
-
-  const indexed = varied.map((step, index) => ({
-    ...step,
-    index: index + 1,
-    total: varied.length,
-  }));
-
-  return { steps: indexed, stageSummary };
+  return {
+    steps: indexed,
+    stageSummary: buildStageSummary(indexed),
+    phaseSummary: buildPhaseSummary(indexed),
+  };
 }
 
 export function summarizeLessonStages(steps: LessonStep[]): LessonStageSummary[] {
@@ -390,9 +514,20 @@ export function summarizeLessonStages(steps: LessonStep[]): LessonStageSummary[]
   }));
 }
 
+export { summarizeLessonPhases };
+
 export function hasListeningAudio(contents: LessonContent[]): boolean {
   return contents.some(
     (content): content is VocabularyLessonContent =>
       content.type === "vocabulary" && content.audioUrl != null,
   );
+}
+
+function buildRecallReviewStep(
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonRecallStep | null {
+  return buildActiveRecallStep(content, allAnswers, index, total, "review_injection");
 }

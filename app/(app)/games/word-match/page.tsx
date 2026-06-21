@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { WordMatchPlayer } from "@/features/games/components/word-match-player";
+import { WordMatchPlayer } from "@/features/games/components/game-player-loaders";
 import { GAME_SLUGS } from "@/features/games/constants/game.constants";
 import { getGameSession } from "@/lib/orchestration/games.orchestrator";
 

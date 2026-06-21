@@ -34,13 +34,11 @@ export async function POST(request: Request) {
 
     const data = await reviewServerService.submitReviewBatch(session.userId, items);
 
-    for (const job of data.gamificationJobs) {
+    if (data.gamificationJobs.length > 0) {
       void reviewServerService
-        .processReviewGamification({
+        .processReviewGamificationBatch({
           userId: session.userId,
-          reviewItemId: job.reviewItemId,
-          rating: job.rating,
-          clientEventId: job.clientEventId,
+          jobs: data.gamificationJobs,
         })
         .catch((caught) => {
           console.error("Deferred batch review gamification failed.", caught);

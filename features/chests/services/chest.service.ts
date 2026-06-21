@@ -34,25 +34,9 @@ function periodKeyForChest(chest: ChestTemplateRow): string {
 }
 
 class ChestService {
-  async getNextEligibleChest(userId: string): Promise<NextUnlockViewModel | null> {
-    const templates = await chestRepository.listTemplates();
-    const daily = templates.find((t) => t.kind === "daily");
-    if (!daily) return null;
-
-    const periodKey = periodKeyForChest(daily);
-    const claimed = await chestRepository.findClaim(userId, daily.id, periodKey);
-    if (claimed) return null;
-
-    return {
-      kind: "chest",
-      label: daily.title,
-      progressPercent: 100,
-      remainingLabel: "Ready to open",
-      href: "/camp",
-    };
-  }
-
-  async listEligible(userId: string): Promise<ChestEligibilityViewModel[]> {
+  private async loadEligibility(
+    userId: string,
+  ): Promise<ChestEligibilityViewModel[]> {
     const templates = await chestRepository.listTemplates();
     const results: ChestEligibilityViewModel[] = [];
 
@@ -71,6 +55,38 @@ class ChestService {
     }
 
     return results;
+  }
+
+  async getDashboardSnapshot(userId: string): Promise<{
+    eligible: ChestEligibilityViewModel[];
+    nextEligible: NextUnlockViewModel | null;
+  }> {
+    const eligible = await this.loadEligibility(userId);
+    const dailyEligible = eligible.find(
+      (entry) => entry.chest.kind === "daily" && entry.eligible,
+    );
+
+    return {
+      eligible,
+      nextEligible: dailyEligible
+        ? {
+            kind: "chest",
+            label: dailyEligible.chest.title,
+            progressPercent: 100,
+            remainingLabel: "Ready to open",
+            href: "/camp",
+          }
+        : null,
+    };
+  }
+
+  async getNextEligibleChest(userId: string): Promise<NextUnlockViewModel | null> {
+    const { nextEligible } = await this.getDashboardSnapshot(userId);
+    return nextEligible;
+  }
+
+  async listEligible(userId: string): Promise<ChestEligibilityViewModel[]> {
+    return this.loadEligibility(userId);
   }
 
   async claimChest(

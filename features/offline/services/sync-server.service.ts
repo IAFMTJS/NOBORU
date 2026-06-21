@@ -24,22 +24,72 @@ import type {
   OfflineTrialCompletePayload,
 } from "@/lib/offline/types";
 
+const MAX_SYNC_BATCH_SIZE = 50;
+const SYNC_CONCURRENCY = 5;
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  mapper: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await mapper(items[currentIndex]!, currentIndex);
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    () => worker(),
+  );
+  await Promise.all(workers);
+  return results;
+}
+
 class OfflineSyncServerService {
   async applyBatch(
     userId: string,
     request: OfflineSyncBatchRequest,
   ): Promise<OfflineSyncBatchResponse> {
+    if (request.mutations.length > MAX_SYNC_BATCH_SIZE) {
+      throw new Error(
+        `Sync batch exceeds maximum size of ${MAX_SYNC_BATCH_SIZE} mutations.`,
+      );
+    }
+
+    const settled = await mapWithConcurrency(
+      request.mutations,
+      SYNC_CONCURRENCY,
+      async (mutation) => {
+        try {
+          const result = await this.applyMutation(userId, mutation);
+          return { ok: true as const, result };
+        } catch (error) {
+          return {
+            ok: false as const,
+            mutationId: mutation.id,
+            error:
+              error instanceof Error ? error.message : "Sync mutation failed.",
+          };
+        }
+      },
+    );
+
     const applied: OfflineSyncResultItem[] = [];
     const failed: OfflineSyncBatchResponse["failed"] = [];
 
-    for (const mutation of request.mutations) {
-      try {
-        const result = await this.applyMutation(userId, mutation);
-        applied.push(result);
-      } catch (error) {
+    for (const entry of settled) {
+      if (entry.ok) {
+        applied.push(entry.result);
+      } else {
         failed.push({
-          mutationId: mutation.id,
-          error: error instanceof Error ? error.message : "Sync mutation failed.",
+          mutationId: entry.mutationId,
+          error: entry.error,
         });
       }
     }
@@ -113,6 +163,7 @@ class OfflineSyncServerService {
           payload.reviewItemId,
           payload.rating,
           clientEventId,
+          { deferSessionRefresh: true },
         );
 
         let gamification = null;

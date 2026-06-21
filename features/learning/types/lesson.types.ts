@@ -1,4 +1,5 @@
 import type { ContentStatus } from "@/lib/content/types";
+import type { LessonPhase } from "@/lib/learning/lesson-phase.constants";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import type { VocabularyLifecycleStage } from "@/lib/learning/learning-architecture.constants";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
@@ -140,6 +141,7 @@ export type LessonTeachStep = {
   index: number;
   total: number;
   stage?: "introduction";
+  lessonPhase?: "introduction";
 };
 
 export type LessonRecallMode = "choice" | "typed";
@@ -159,6 +161,8 @@ export type LessonRecallStep = {
   phase?: LessonRecallPhase;
   lifecycleStage?: VocabularyLifecycleStage;
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
   index: number;
   total: number;
 };
@@ -171,6 +175,8 @@ export type LessonListeningRecallStep = {
   options: string[];
   correctIndex: number;
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
   index: number;
   total: number;
 };
@@ -183,6 +189,8 @@ export type LessonFillBlankStep = {
   options: string[];
   correctIndex: number;
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
   index: number;
   total: number;
 };
@@ -194,6 +202,8 @@ export type LessonWordBankStep = {
   tokens: string[];
   correctOrder: string[];
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
   index: number;
   total: number;
 };
@@ -204,6 +214,8 @@ export type LessonSentenceTypedStep = {
   englishHint: string;
   acceptedAnswers: string[];
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
   index: number;
   total: number;
 };
@@ -219,6 +231,8 @@ export type LessonMatchingStep = {
   prompt: string;
   pairs: LessonMatchingPair[];
   stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentIds?: string[];
   index: number;
   total: number;
 };
@@ -226,6 +240,7 @@ export type LessonMatchingStep = {
 export type LessonReadingStep = {
   kind: "reading";
   content: ReadingLessonContent;
+  lessonPhase?: LessonPhase;
   index: number;
   total: number;
 };
@@ -233,21 +248,25 @@ export type LessonReadingStep = {
 export type LessonStoryStep = {
   kind: "story";
   content: StoryLessonContent;
+  lessonPhase?: LessonPhase;
 };
 
 export type LessonDialogueStep = {
   kind: "dialogue";
   content: DialogueLessonContent;
+  lessonPhase?: LessonPhase;
 };
 
 export type LessonListeningStep = {
   kind: "listening";
   content: ListeningLessonContent;
+  lessonPhase?: LessonPhase;
 };
 
 export type LessonListeningChallengeStep = {
   kind: "listening_challenge";
   content: ListeningChallengeLessonContent;
+  lessonPhase?: LessonPhase;
 };
 
 export type ApplicationDirection = "to_japanese" | "to_english" | "to_romaji";
@@ -259,6 +278,7 @@ export type LessonApplicationStep = {
   display: string;
   displayHint: string | null;
   acceptedAnswers: string[];
+  lessonPhase?: LessonPhase;
   index: number;
   total: number;
 };
@@ -308,6 +328,12 @@ export type LessonStageSummary = {
   exerciseCount: number;
 };
 
+export type LessonPhaseSummary = {
+  phase: LessonPhase;
+  label: string;
+  exerciseCount: number;
+};
+
 export type LessonSessionViewModel = {
   lessonId: string;
   /** Journey trail node id — matches lesson id for lesson nodes. */
@@ -325,6 +351,10 @@ export type LessonSessionViewModel = {
   steps: LessonStep[];
   /** Staged pipeline summary for UI progress (excludes intro/complete). */
   stageSummary?: LessonStageSummary[];
+  /** Four-phase learning loop summary for UI. */
+  phaseSummary?: LessonPhaseSummary[];
+  /** Content lookup for in-lesson remediation (keyed by content id). */
+  contentById?: Record<string, LessonContent>;
   nextLesson: {
     title: string;
     href: string;

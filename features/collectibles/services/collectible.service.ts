@@ -88,28 +88,13 @@ class CollectibleService {
   }
 
   async listAll(userId: string): Promise<CollectibleViewModel[]> {
-    const supabase = await import("@/lib/supabase/server").then((m) =>
-      m.createClient(),
-    );
-    const { data, error } = await supabase
-      .from("collectible_definitions")
-      .select("*")
-      .eq("status", "published")
-      .order("region_slug")
-      .order("sort_order");
-
-    if (error) throw new Error(error.message);
-
-    const owned = await collectibleRepository.listUserCollectibles(userId);
+    const [definitions, owned] = await Promise.all([
+      collectibleRepository.listAllPublished(),
+      collectibleRepository.listUserCollectibles(userId),
+    ]);
     const ownedMap = new Map(owned.map((o) => [o.collectible_id, o]));
 
-    return ((data ?? []) as Array<{
-      id: string;
-      slug: string;
-      name: string;
-      category: CollectibleViewModel["category"];
-      region_slug: string;
-    }>).map((def) => {
+    return definitions.map((def) => {
       const row = ownedMap.get(def.id);
       return {
         slug: def.slug,

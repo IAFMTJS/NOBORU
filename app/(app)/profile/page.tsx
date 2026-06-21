@@ -7,13 +7,15 @@ import { yamaService } from "@/features/yama/services/yama.service";
 import { getAchievementShowcase } from "@/lib/orchestration/achievements.orchestrator";
 
 export default async function ProfilePage() {
-  const profile = await profileServerService.getProfile();
+  const [profile, achievements] = await Promise.all([
+    profileServerService.getProfile(),
+    getAchievementShowcase(),
+  ]);
 
   if (!profile) {
     redirect(AUTH_ROUTES.login);
   }
 
-  const achievements = await getAchievementShowcase();
   const yama = yamaService.resolveProfilePresence();
 
   return <ProfileScreen profile={profile} achievements={achievements} yama={yama} />;

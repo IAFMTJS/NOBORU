@@ -46,8 +46,25 @@ jobs:
             --output=json \
             --output-path=./lighthouse-root.json \
             --quiet
+      - name: Prepare authenticated Lighthouse fixture
+        run: node scripts/lighthouse-auth-setup.mjs
+        env:
+          LIGHTHOUSE_TEST_EMAIL: ${{ secrets.LIGHTHOUSE_TEST_EMAIL }}
+          LIGHTHOUSE_TEST_PASSWORD: ${{ secrets.LIGHTHOUSE_TEST_PASSWORD }}
+          LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
+      - name: Run Lighthouse on authenticated learning routes
+        run: |
+          node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/camp ./lighthouse-camp.json
+          node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/tree ./lighthouse-tree.json
+          node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/review ./lighthouse-review.json
       - name: Enforce Lighthouse score floors
-        run: node scripts/check-lighthouse-scores.mjs lighthouse-login.json lighthouse-register.json lighthouse-root.json
+        run: |
+          node scripts/check-lighthouse-scores.mjs lighthouse-login.json lighthouse-register.json lighthouse-root.json
+          for report in lighthouse-camp.json lighthouse-tree.json lighthouse-review.json; do
+            if [ -f "$report" ]; then
+              node scripts/check-lighthouse-scores.mjs "$report"
+            fi
+          done
         env:
           LIGHTHOUSE_MIN_SCORE: "90"
       - name: Upload Lighthouse reports

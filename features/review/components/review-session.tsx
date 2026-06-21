@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -11,9 +12,7 @@ import { ReviewSessionHub } from "@/features/review/components/review-session-hu
 import { ReviewStatsPanel } from "@/features/review/components/review-stats-panel";
 import { analyticsService } from "@/features/analytics/services/analytics.service";
 import { formatReviewStateLabel } from "@/features/review/services/srs.service";
-import { AchievementUnlockFeedback } from "@/features/achievements/components/achievement-unlock-feedback";
 import type { AchievementUnlockViewModel } from "@/features/achievements/types/achievement.types";
-import { QuestCompleteFeedback } from "@/features/quests/components/quest-complete-feedback";
 import type { QuestCompletionViewModel } from "@/features/quests/types/quest.types";
 import type { OfflineReviewBundle } from "@/lib/offline/types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
@@ -23,6 +22,22 @@ import { yamaService } from "@/features/yama/services/yama.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type { ReviewSessionViewModel } from "@/features/review/types/review.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
+
+const AchievementUnlockFeedback = dynamic(
+  () =>
+    import("@/features/achievements/components/achievement-unlock-feedback").then(
+      (module) => module.AchievementUnlockFeedback,
+    ),
+  { loading: () => null },
+);
+
+const QuestCompleteFeedback = dynamic(
+  () =>
+    import("@/features/quests/components/quest-complete-feedback").then(
+      (module) => module.QuestCompleteFeedback,
+    ),
+  { loading: () => null },
+);
 
 type ReviewSessionProps = {
   initialSession: ReviewSessionViewModel;

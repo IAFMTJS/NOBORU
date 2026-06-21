@@ -10,6 +10,7 @@ import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
+import { WindowedList } from "@/components/ui/windowed-list";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { GrammarListViewModel } from "@/features/grammar/types/grammar.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
@@ -61,27 +62,31 @@ export function GrammarList({ list, jlptLevel = "n5" }: GrammarListProps) {
               description="Shrine panels will appear as grammar content unlocks on your trail."
             />
           ) : (
-            list.entries.map((entry) => (
-              <StudyShelfRow
-                key={entry.id}
-                href={`/learn/grammar/${entry.id}`}
-                variant="grammar"
-                glyph={entry.title[0] ?? "文"}
-                primary={
-                  <span lang="ja" className="font-japanese">
-                    {entry.title}
-                  </span>
-                }
-                secondary={entry.meaning}
-                trailing={
-                  entry.learned ? (
-                    <Badge variant="secondary">Learned</Badge>
-                  ) : (
-                    <Badge variant="outline">Awaiting</Badge>
-                  )
-                }
-              />
-            ))
+            <WindowedList
+              className="space-y-2"
+              items={list.entries}
+              getKey={(entry) => entry.id}
+              renderItem={(entry) => (
+                <StudyShelfRow
+                  href={`/learn/grammar/${entry.id}`}
+                  variant="grammar"
+                  glyph={entry.title[0] ?? "文"}
+                  primary={
+                    <span lang="ja" className="font-japanese">
+                      {entry.title}
+                    </span>
+                  }
+                  secondary={entry.meaning}
+                  trailing={
+                    entry.learned ? (
+                      <Badge variant="secondary">Learned</Badge>
+                    ) : (
+                      <Badge variant="outline">Awaiting</Badge>
+                    )
+                  }
+                />
+              )}
+            />
           )}
         </div>
       </GlassPanel>

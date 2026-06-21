@@ -1,5 +1,9 @@
 import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
 import type { ProfileViewModel } from "@/features/profile/types/profile.types";
+import type {
+  CampAboveFoldViewModel,
+  CampBelowFoldViewModel,
+} from "@/features/camp/types/camp.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
 import { streakService } from "@/features/achievements/services/streak.service";
 import { learningPathRepository } from "@/features/learning/repositories/learning-path.repository";
@@ -7,7 +11,11 @@ import { journeyService } from "@/features/journey/services/journey.service";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { yamaService } from "@/features/yama/services/yama.service";
 import { gameContentRepository } from "@/features/games/repositories/game-content.repository";
-import { reviewRepository } from "@/features/review/repositories/review.repository";
+import {
+  getCachedElevationSummary,
+  getCachedQuestDashboard,
+  getCachedReviewStats,
+} from "@/lib/cache/dashboard-cache";
 import { settingsServerService } from "@/features/settings/services/settings-server.service";
 import { trialService } from "@/features/trials/services/trial.service";
 import { companionService } from "@/features/companion/services/companion.service";
@@ -18,10 +26,6 @@ import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
 import { buildProgressionPreview } from "@/lib/progression/preview.service";
 import { getLessonPositionInRegion } from "@/features/learning/utils/region-lesson";
 import { getRegionVisuals } from "@/lib/design-system/region-tokens";
-import {
-  getCachedElevationSummary,
-  getCachedQuestDashboard,
-} from "@/lib/cache/dashboard-cache";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 
 function resolveDashboardRegion(
@@ -36,7 +40,86 @@ function resolveDashboardRegion(
   };
 }
 
+const EMPTY_SHRINE: CampBelowFoldViewModel["shrineProtection"] = {
+  tokensAvailable: 0,
+  tokensUsed: 0,
+};
+
 class DashboardServerService {
+  async getCampAboveFold(profile: ProfileViewModel): Promise<CampAboveFoldViewModel> {
+    const [elevation, quests, settings, currentStreak, chests] = await Promise.all([
+      getCachedElevationSummary(profile.userId),
+      getCachedQuestDashboard(profile.userId),
+      settingsServerService.getSettings(),
+      streakService.getCurrentStreak(profile.userId),
+      chestService.listEligible(profile.userId),
+    ]);
+
+    const yama = yamaService.resolveHomePresence(
+      {
+        dailyQuestsCompleted: quests.daily.completedCount,
+        dailyQuestsTotal: quests.daily.totalCount,
+        regionProgressPercent: 0,
+        hasInProgressTrailNode: false,
+      },
+      profile.userId.length,
+    );
+
+    return {
+      greeting: `Kon'nichiwa, ${profile.displayName}`,
+      level: {
+        label: profile.levelLabel,
+      },
+      stats: {
+        currentStreak,
+        totalXp: elevation.totalEp,
+      },
+      dailyGoal: {
+        targetMinutes: settings?.dailyGoalMinutes ?? 15,
+        progressPercent:
+          quests.daily.totalCount === 0
+            ? 0
+            : Math.round(
+                (quests.daily.completedCount / quests.daily.totalCount) * 100,
+              ),
+        label: `${quests.daily.completedCount}/${quests.daily.totalCount} daily quests`,
+      },
+      quests: {
+        daily: quests.daily,
+      },
+      yama,
+      chests,
+    };
+  }
+
+  async getCampBelowFold(userId: string): Promise<CampBelowFoldViewModel> {
+    const [shrineProtection, quests] = await Promise.all([
+      shrineProtectionService.getSummary(userId),
+      getCachedQuestDashboard(userId),
+    ]);
+
+    return {
+      shrineProtection,
+      quests: {
+        weekly: quests.weekly,
+      },
+    };
+  }
+
+  campBelowFoldDefaults(): CampBelowFoldViewModel {
+    return {
+      shrineProtection: EMPTY_SHRINE,
+      quests: {
+        weekly: {
+          weekStart: "",
+          completedCount: 0,
+          totalCount: 0,
+          quests: [],
+        },
+      },
+    };
+  }
+
   async getHomeDashboard(
     profile: ProfileViewModel,
   ): Promise<HomeDashboardViewModel> {
@@ -55,13 +138,12 @@ class DashboardServerService {
       companion,
       companionNext,
       collectibleNext,
-      chestNext,
-      chests,
+      chestSnapshot,
       shrineProtection,
     ] = await Promise.all([
       learningPathRepository.listPublishedRegionsWithCurriculum(),
       getCachedProgressRows(profile.userId),
-      reviewRepository.countDue(profile.userId),
+      getCachedReviewStats(profile.userId).then((stats) => stats.dueCount),
       getCachedElevationSummary(profile.userId),
       achievementService.listRecentUnlocked(profile.userId),
       getCachedQuestDashboard(profile.userId),
@@ -76,10 +158,11 @@ class DashboardServerService {
         profile.userId,
         profile.currentRegionSlug,
       ),
-      chestService.getNextEligibleChest(profile.userId),
-      chestService.listEligible(profile.userId),
+      chestService.getDashboardSnapshot(profile.userId),
       shrineProtectionService.getSummary(profile.userId),
     ]);
+    const chests = chestSnapshot.eligible;
+    const chestNext = chestSnapshot.nextEligible;
 
     const learningPath = learningPathService.buildLearningPath(
       regions,

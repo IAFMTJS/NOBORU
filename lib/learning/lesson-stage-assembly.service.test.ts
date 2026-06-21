@@ -59,8 +59,8 @@ describe("lesson stage assembly", () => {
     expect(total).toBeLessThanOrEqual(LESSON_MAX_SCORED_EXERCISES);
   });
 
-  it("assembles all eight scored stages for new vocabulary", () => {
-    const { steps, stageSummary } = assembleStagedExerciseSteps({
+  it("assembles spiral exposures across all four learning phases", () => {
+    const { steps, stageSummary, phaseSummary } = assembleStagedExerciseSteps({
       newContents: [vocab("taberu", true)],
       reviewContents: [vocab("neko"), vocab("inu")],
       isCheckpoint: false,
@@ -68,14 +68,21 @@ describe("lesson stage assembly", () => {
 
     expect(steps.length).toBeGreaterThanOrEqual(LESSON_MIN_SCORED_EXERCISES);
     expect(steps.length).toBeLessThanOrEqual(LESSON_MAX_SCORED_EXERCISES);
-    expect(steps.some((step) => step.stage === "recognition")).toBe(true);
-    expect(steps.some((step) => step.stage === "guided_practice")).toBe(true);
-    expect(steps.some((step) => step.stage === "active_recall")).toBe(true);
-    expect(steps.some((step) => step.stage === "context_application")).toBe(true);
-    expect(steps.some((step) => step.stage === "review_injection")).toBe(true);
+    expect(steps.some((step) => step.lessonPhase === "introduction")).toBe(true);
+    expect(steps.some((step) => step.lessonPhase === "recognition")).toBe(true);
+    expect(steps.some((step) => step.lessonPhase === "active_recall")).toBe(true);
+    expect(steps.some((step) => step.lessonPhase === "context_mastery")).toBe(true);
     expect(steps.some((step) => step.stage === "mastery_challenge")).toBe(true);
     expect(steps.some((step) => step.kind === "listening_recall")).toBe(true);
+    expect(
+      steps.every(
+        (step) =>
+          ("contentId" in step && step.contentId) ||
+          ("contentIds" in step && step.contentIds?.length),
+      ),
+    ).toBe(true);
     expect(stageSummary.length).toBeGreaterThan(0);
+    expect(phaseSummary.length).toBe(4);
   });
 
   it("builds checkpoint lessons from review pool only", () => {

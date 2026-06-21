@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { MemoryDungeonPlayer } from "@/features/games/components/memory-dungeon-player";
+import { MemoryDungeonPlayer } from "@/features/games/components/game-player-loaders";
 import { GAME_SLUGS } from "@/features/games/constants/game.constants";
 import { getGameSession } from "@/lib/orchestration/games.orchestrator";
 

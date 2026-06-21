@@ -21,6 +21,7 @@ type ArtLibraryImageProps = {
   height?: number;
   /** Fill parent with object-cover — no max-width cap. */
   cover?: boolean;
+  priority?: boolean;
 };
 
 function resolveSrc(
@@ -68,6 +69,7 @@ export function ArtLibraryImage({
   width,
   height,
   cover = false,
+  priority = false,
 }: ArtLibraryImageProps) {
   const { resolvedTheme } = useTheme();
   const theme = resolveTheme(themeProp, resolvedTheme);
@@ -80,6 +82,9 @@ export function ArtLibraryImage({
       alt={alt}
       width={width}
       height={height}
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
+      decoding="async"
       className={cn(
         cover ? "size-full min-h-full min-w-full object-cover object-center" : "max-w-full",
         className,

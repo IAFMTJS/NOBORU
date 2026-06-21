@@ -14,7 +14,8 @@ import {
 } from "@/components/visual/primitives/glass-surface";
 import { TabScene } from "@/components/visual/shells/viewport-background";
 import { DailyQuestBoard } from "@/features/gamification/components/daily-quest-board";
-import type { HomeDashboardViewModel } from "@/features/learning/types/dashboard.types";
+import type { CampScreenViewModel } from "@/features/camp/types/camp.types";
+import { useCampScreenData } from "@/features/camp/components/camp-below-fold-client";
 import { ChestOpenCeremony } from "@/features/chests/components/chest-open-ceremony";
 import type { ChestClaimResult } from "@/features/chests/types/chest.types";
 import {
@@ -29,7 +30,8 @@ import { YamaPresence } from "@/features/yama/components/yama-presence";
 import { cn } from "@/lib/utils";
 
 type CampScreenProps = {
-  data: HomeDashboardViewModel;
+  data: CampScreenViewModel;
+  belowFold?: React.ReactNode;
 };
 
 function CampHeading({
@@ -48,7 +50,8 @@ function CampHeading({
   );
 }
 
-export function CampScreen({ data }: CampScreenProps) {
+export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
+  const data = useCampScreenData(initialData);
   const [questBoardOpen, setQuestBoardOpen] = useState(false);
   const [shrineOpen, setShrineOpen] = useState(false);
   const [claiming, setClaiming] = useState(false);
@@ -90,6 +93,7 @@ export function CampScreen({ data }: CampScreenProps) {
 
   return (
     <TabScene className="flex min-h-full flex-col gap-4 p-4 pb-nav-clearance">
+      {belowFold}
       <GlassSurfacePanel variant="hud" className="flex items-center justify-between gap-2 px-3 py-2">
         <div>
           <CampHeading>Camp</CampHeading>

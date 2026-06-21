@@ -34,9 +34,8 @@ export function N3WorldArt({ className }: N3WorldArtProps) {
         style={{
           objectPosition: resolveHeroObjectPosition(N3_WORLD.art.heroAnchor),
         }}
-        sizes="100vw"
+        sizes="(max-width: 430px) 100vw, 430px"
         priority
-        unoptimized
       />
     </div>
   );

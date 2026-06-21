@@ -2,6 +2,7 @@ import { JlptLevelPills } from "@/components/ui/jlpt-level-pills";
 import { GlassPanel, StoryTitle } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
+import { WindowedList } from "@/components/ui/windowed-list";
 import { KanjiListRow } from "@/features/kanji/components/kanji-list-row";
 import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
@@ -55,13 +56,17 @@ export function KanjiList({ list, jlptLevel = "n5" }: KanjiListProps) {
               description="Characters will appear on the grounds shelf as content unlocks."
             />
           ) : (
-            list.entries.map((entry) => (
-              <KanjiListRow
-                key={entry.id}
-                entry={entry}
-                href={`/learn/kanji/${entry.id}`}
-              />
-            ))
+            <WindowedList
+              className="space-y-2"
+              items={list.entries}
+              getKey={(entry) => entry.id}
+              renderItem={(entry) => (
+                <KanjiListRow
+                  entry={entry}
+                  href={`/learn/kanji/${entry.id}`}
+                />
+              )}
+            />
           )}
         </div>
       </GlassPanel>

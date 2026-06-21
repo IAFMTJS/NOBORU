@@ -8,8 +8,8 @@ import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 describe("world tree route", () => {
   it("registers the /tree page", () => {
     const page = readFileSync(resolve(process.cwd(), "app/(app)/tree/page.tsx"), "utf8");
-    expect(page).toContain("redirect(");
-    expect(page).toContain("/worlds/");
+    expect(page).toContain("WorldScreen");
+    expect(page).not.toContain("redirect(");
   });
 
   it("includes Tree in primary navigation", () => {

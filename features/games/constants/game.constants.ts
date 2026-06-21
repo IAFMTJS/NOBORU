@@ -22,6 +22,7 @@ export function isPlayableGameSlug(value: string): value is PlayableGameSlug {
 }
 
 export const MIN_GAME_POOL_SIZE = 4;
+export const GAME_VOCABULARY_POOL_LIMIT = 100;
 
 export const WORD_MATCH_PAIR_COUNT = 6;
 export const KANA_MATCH_PAIR_COUNT = 8;

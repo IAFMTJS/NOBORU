@@ -12,6 +12,7 @@ import {
 import { achievementService } from "@/features/achievements/services/achievement.service";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import { questService } from "@/features/quests/services/quest.service";
+import { revalidateUserReviewStats } from "@/lib/cache/revalidate-user-data";
 import {
   formatNextReviewLabel,
   formatReviewStateLabel,
@@ -155,15 +156,29 @@ class ReviewServerService {
     userId: string,
     items: ReviewBatchSubmitItem[],
   ): Promise<ReviewBatchSubmitResult> {
+    const rated = await reviewRepository.submitRatingsBatch(
+      userId,
+      items.map((item) => ({
+        reviewItemId: item.reviewItemId,
+        rating: item.rating,
+        clientEventId: item.clientEventId,
+      })),
+    );
+
     const results: ReviewSubmitDeltaViewModel[] = [];
     const gamificationJobs: ReviewBatchSubmitItem[] = [];
 
-    for (const item of items) {
-      const delta = await this.submitReviewFast(
+    for (let index = 0; index < items.length; index += 1) {
+      const item = items[index]!;
+      const ratingResult = rated[index];
+      if (!ratingResult) {
+        throw new Error(`Missing batch rating result for review item ${index + 1}.`);
+      }
+
+      const delta = await this.buildBatchSubmitDelta(
         userId,
-        item.reviewItemId,
-        item.rating,
-        item.clientEventId,
+        item,
+        ratingResult,
       );
       results.push(delta);
 
@@ -172,7 +187,102 @@ class ReviewServerService {
       }
     }
 
-    const lastDelta = results[results.length - 1] ?? {
+    const [stats, dueItems] = await Promise.all([
+      this.getStats(userId),
+      reviewRepository.listDue(userId, 1),
+    ]);
+
+    const lastRatedItem = results[results.length - 1];
+    let currentCard = null as ReviewSubmitDeltaViewModel["currentCard"];
+
+    if (dueItems[0]) {
+      const contentLookup = await this.resolveContentBatch([
+        {
+          contentType: dueItems[0].content_type as ReviewContentType,
+          contentId: dueItems[0].content_id,
+        },
+      ]);
+      currentCard = this.buildCard(dueItems[0], contentLookup);
+    }
+
+    const lastDelta: ReviewSubmitDeltaViewModel = lastRatedItem
+      ? {
+          ...lastRatedItem,
+          dueCount: stats.dueCount,
+          stats,
+          currentCard,
+        }
+      : {
+          dueCount: stats.dueCount,
+          stats,
+          currentCard,
+          recentHistoryEntry: {
+            id: "empty",
+            contentType: "vocabulary",
+            term: "",
+            rating: "good",
+            state: "new",
+            reviewedAt: new Date().toISOString(),
+          },
+          elevation: null,
+          achievements: [],
+          quests: [],
+        };
+
+    revalidateUserReviewStats(userId);
+
+    return {
+      results,
+      lastDelta,
+      gamificationJobs,
+    };
+  }
+
+  private async buildBatchSubmitDelta(
+    userId: string,
+    item: ReviewBatchSubmitItem,
+    ratingResult: Awaited<ReturnType<typeof reviewRepository.submitRating>>,
+  ): Promise<ReviewSubmitDeltaViewModel> {
+    const { item: ratedItem, alreadyApplied } = ratingResult;
+
+    if (
+      !alreadyApplied &&
+      item.rating !== "again" &&
+      (ratedItem.content_type === "vocabulary" ||
+        ratedItem.content_type === "kanji" ||
+        ratedItem.content_type === "grammar")
+    ) {
+      void contentMasteryService
+        .recordCorrectAnswer({
+          userId,
+          contentType: ratedItem.content_type,
+          contentId: ratedItem.content_id,
+          exerciseType: "review",
+          sessionId: item.clientEventId,
+        })
+        .catch(() => undefined);
+    }
+
+    const contentLookup = await this.resolveContentBatch([
+      {
+        contentType: ratedItem.content_type as ReviewContentType,
+        contentId: ratedItem.content_id,
+      },
+    ]);
+
+    const historyEntry = this.buildHistoryEntry(
+      {
+        id: `${ratedItem.id}-${ratedItem.review_count}`,
+        content_type: ratedItem.content_type,
+        content_id: ratedItem.content_id,
+        rating: item.rating,
+        new_state: ratedItem.state,
+        created_at: new Date().toISOString(),
+      },
+      contentLookup,
+    );
+
+    return {
       dueCount: 0,
       stats: {
         dueCount: 0,
@@ -182,23 +292,13 @@ class ReviewServerService {
         weakAreas: [],
       },
       currentCard: null,
-      recentHistoryEntry: {
-        id: "empty",
-        contentType: "vocabulary",
-        term: "",
-        rating: "good",
-        state: "new",
-        reviewedAt: new Date().toISOString(),
-      },
+      recentHistoryEntry: historyEntry,
       elevation: null,
       achievements: [],
       quests: [],
-    };
-
-    return {
-      results,
-      lastDelta,
-      gamificationJobs,
+      clientEventId: item.clientEventId,
+      gamificationPending: Boolean(item.clientEventId) && !alreadyApplied,
+      alreadyApplied,
     };
   }
 
@@ -241,6 +341,7 @@ class ReviewServerService {
     reviewItemId: string,
     rating: ReviewRating,
     clientEventId?: string,
+    options?: { deferSessionRefresh?: boolean },
   ): Promise<ReviewSubmitDeltaViewModel> {
     const { item: ratedItem, alreadyApplied } = await reviewRepository.submitRating(
       userId,
@@ -267,24 +368,11 @@ class ReviewServerService {
         .catch(() => undefined);
     }
 
-    const [dueCount, dueItems] = await Promise.all([
-      reviewRepository.countDue(userId),
-      reviewRepository.listDue(userId, 1),
-    ]);
-
     const contentLookup = await this.resolveContentBatch([
       {
         contentType: ratedItem.content_type as ReviewContentType,
         contentId: ratedItem.content_id,
       },
-      ...(dueItems[0]
-        ? [
-            {
-              contentType: dueItems[0].content_type as ReviewContentType,
-              contentId: dueItems[0].content_id,
-            },
-          ]
-        : []),
     ]);
 
     const historyEntry = this.buildHistoryEntry(
@@ -299,19 +387,54 @@ class ReviewServerService {
       contentLookup,
     );
 
+    if (options?.deferSessionRefresh) {
+      return {
+        dueCount: 0,
+        stats: {
+          dueCount: 0,
+          learningCount: 0,
+          masteredCount: 0,
+          totalCount: 0,
+          weakAreas: [],
+        },
+        currentCard: null,
+        recentHistoryEntry: historyEntry,
+        elevation: null,
+        achievements: [],
+        quests: [],
+        clientEventId,
+        gamificationPending: Boolean(clientEventId) && !alreadyApplied,
+        alreadyApplied,
+      };
+    }
+
+    const [stats, dueItems] = await Promise.all([
+      this.getStats(userId),
+      reviewRepository.listDue(userId, 1),
+    ]);
+
+    const sessionContentLookup = await this.resolveContentBatch([
+      {
+        contentType: ratedItem.content_type as ReviewContentType,
+        contentId: ratedItem.content_id,
+      },
+      ...(dueItems[0]
+        ? [
+            {
+              contentType: dueItems[0].content_type as ReviewContentType,
+              contentId: dueItems[0].content_id,
+            },
+          ]
+        : []),
+    ]);
+
     const currentCard = dueItems[0]
-      ? this.buildCard(dueItems[0], contentLookup)
+      ? this.buildCard(dueItems[0], sessionContentLookup)
       : null;
 
     return {
-      dueCount,
-      stats: {
-        dueCount,
-        learningCount: 0,
-        masteredCount: 0,
-        totalCount: 0,
-        weakAreas: [],
-      },
+      dueCount: stats.dueCount,
+      stats,
       currentCard,
       recentHistoryEntry: historyEntry,
       elevation: null,
@@ -375,6 +498,89 @@ class ReviewServerService {
     );
 
     return payload;
+  }
+
+  async processReviewGamificationBatch(input: {
+    userId: string;
+    jobs: ReviewBatchSubmitItem[];
+  }): Promise<void> {
+    if (input.jobs.length === 0) return;
+
+    const pendingJobs: ReviewBatchSubmitItem[] = [];
+    for (const job of input.jobs) {
+      const existing = await reviewRepository.findHistoryByClientEventId(
+        input.userId,
+        job.clientEventId,
+      );
+      if (existing?.gamification_applied_at && existing.gamification_result) {
+        continue;
+      }
+      pendingJobs.push(job);
+    }
+
+    if (pendingJobs.length === 0) return;
+
+    const epAwards = pendingJobs
+      .map((job) => ({
+        sourceType: "review_rating" as const,
+        sourceId: job.clientEventId,
+        amount: elevationService.resolveReviewRatingEp(job.rating),
+        description: `Review rating: ${job.rating}`,
+      }))
+      .filter((award) => award.amount > 0);
+
+    const batchElevation =
+      epAwards.length > 0
+        ? await elevationService.awardEpBatch({
+            userId: input.userId,
+            awards: epAwards,
+          })
+        : null;
+
+    const [achievements, stats] = await Promise.all([
+      achievementService.afterStudyActivity(input.userId),
+      this.getStats(input.userId),
+    ]);
+
+    const quests = await questService.recordActivities(input.userId, [
+      { type: "review_item", amount: pendingJobs.length },
+      ...(batchElevation
+        ? [{ type: "ep_earned" as const, amount: batchElevation.epAwarded }]
+        : []),
+    ]);
+
+    await Promise.all(
+      pendingJobs.map(async (job, index) => {
+        const isLast = index === pendingJobs.length - 1;
+        const jobEp = elevationService.resolveReviewRatingEp(job.rating);
+        const elevation =
+          batchElevation && jobEp > 0
+            ? {
+                ...batchElevation,
+                epAwarded: jobEp,
+                leveledUp: isLast ? batchElevation.leveledUp : false,
+                rewardsUnlocked: isLast ? batchElevation.rewardsUnlocked : [],
+              }
+            : null;
+
+        const payload: ReviewGamificationViewModel = {
+          clientEventId: job.clientEventId,
+          ready: true,
+          elevation,
+          achievements: isLast ? achievements : [],
+          quests: isLast ? quests : [],
+          stats,
+        };
+
+        await reviewRepository.saveGamificationResult(
+          input.userId,
+          job.clientEventId,
+          payload as unknown as Record<string, unknown>,
+        );
+      }),
+    );
+
+    revalidateUserReviewStats(input.userId);
   }
 
   async getGamificationResult(

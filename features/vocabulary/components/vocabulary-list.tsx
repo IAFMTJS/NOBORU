@@ -7,6 +7,7 @@ import type { JlptLevel } from "@/lib/content/types";
 import { getJlptContentHub } from "@/lib/learning/jlpt-content.constants";
 import { CONTENT_HUB_TOKENS } from "@/lib/design-system/content-hub-tokens";
 import { cn } from "@/lib/utils";
+import { WindowedList } from "@/components/ui/windowed-list";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import type { VocabularyListViewModel } from "@/features/vocabulary/types/vocabulary.types";
 import { YamaTrainingPresence } from "@/features/yama/components/yama-training-presence";
@@ -59,13 +60,17 @@ export function VocabularyList({ list, jlptLevel = "n5" }: VocabularyListProps) 
               description="Vocabulary will appear here as lessons unlock along the trail."
             />
           ) : (
-            list.entries.map((entry) => (
-              <VocabularyListRow
-                key={entry.id}
-                entry={entry}
-                href={`/learn/vocabulary/${entry.id}`}
-              />
-            ))
+            <WindowedList
+              className="space-y-2"
+              items={list.entries}
+              getKey={(entry) => entry.id}
+              renderItem={(entry) => (
+                <VocabularyListRow
+                  entry={entry}
+                  href={`/learn/vocabulary/${entry.id}`}
+                />
+              )}
+            />
           )}
         </div>
       </GlassPanel>

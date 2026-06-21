@@ -1,0 +1,50 @@
+---
+description: Performance optimization workflow — use when executing docs/Performance Prompts or addressing performance-audit.md items.
+alwaysApply: false
+---
+
+# NOBORU PERFORMANCE WORKFLOW
+
+When doing performance work, follow this workflow.
+
+## Authority
+
+- Targets: `performance.mdc` (2s load, 300ms routes, 100ms actions, Lighthouse 90)
+- Baseline audit: `docs/performance-audit.md`
+- Prompt library: `docs/Performance Prompts/`
+- Architecture: `architecture.mdc` — UI → Service → Repository → Database
+
+## Before changing code
+
+1. Read the relevant prompt in `docs/Performance Prompts/`
+2. Check `docs/performance-audit.md` for priority (P1 first)
+3. Profile or measure the hot path if the finding is unverified
+4. State exit criteria (ms saved, calls reduced, Lighthouse delta)
+
+## Execution order
+
+Audit → DB queries → API batching → write queue/XP debounce → caching → virtualization → preloading → leaderboard/rate limits → assets
+
+## Constraints
+
+- No direct Supabase calls from UI
+- Cache invalidation on progress mutations
+- Offline buffers must flush safely on reconnect
+- Use Vercel KV / Upstash for distributed cache and rate limits (not self-hosted Redis unless deployed)
+- Batch endpoints exempt from tight per-action rate limits
+
+## Existing systems to extend (not replace)
+
+- `lib/cache/content-cache.ts` — curriculum cross-request cache
+- `lib/cache/dashboard-cache.ts` — request-scoped dashboard dedupe
+- `components/ui/windowed-list.tsx` — list virtualization
+- `app/api/review/submit/batch/route.ts` — review batch pattern
+- `features/offline/services/sync-server.service.ts` — offline batch sync
+
+## After implementation
+
+- Update `docs/performance-audit.md` if priority items are resolved
+- Add or extend Lighthouse coverage for affected routes
+- Verify no regression on offline learning paths
+
+END OF performance-workflow.mdc

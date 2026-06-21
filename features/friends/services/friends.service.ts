@@ -1,26 +1,6 @@
 import { friendsRepository } from "@/features/friends/repositories/friends.repository";
+import { profileServerRepository } from "@/features/profile/repositories/profile-server.repository";
 import type { FriendsDashboardViewModel } from "@/features/friends/types/friends.types";
-
-async function displayNamesForUsers(
-  userIds: string[],
-): Promise<Map<string, string>> {
-  if (userIds.length === 0) return new Map();
-
-  const supabase = await import("@/lib/supabase/server").then((m) =>
-    m.createClient(),
-  );
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, display_name")
-    .in("id", userIds);
-
-  const map = new Map<string, string>();
-  for (const row of data ?? []) {
-    const profile = row as { id: string; display_name: string | null };
-    map.set(profile.id, profile.display_name ?? "Climber");
-  }
-  return map;
-}
 
 class FriendsService {
   async getDashboard(userId: string): Promise<FriendsDashboardViewModel> {
@@ -30,7 +10,7 @@ class FriendsService {
     ]);
 
     const allIds = [...new Set([...followingIds, ...followerIds])];
-    const names = await displayNamesForUsers(allIds);
+    const names = await profileServerRepository.findDisplayNamesByUserIds(allIds);
 
     const activityRows = await friendsRepository.listActivityForUsers(
       followingIds.length > 0 ? followingIds : [userId],

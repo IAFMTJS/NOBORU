@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import {
-  ensureUserRecords,
-  resolveDisplayName,
-} from "@/lib/supabase/ensure-user-records";
+import { ensureUserRecords, resolveDisplayName } from "@/lib/supabase/ensure-user-records";
+import { ensureProfileJwtClaims } from "@/lib/auth/profile-jwt-claims";
 import { NextResponse } from "next/server";
 
 import { AUTH_ROUTES } from "@/lib/navigation/auth-routes";
@@ -27,6 +25,7 @@ export async function GET(request: Request) {
             userId: user.id,
             displayName: resolveDisplayName(user.user_metadata),
           });
+          void ensureProfileJwtClaims(user.id);
         } catch (bootstrapError) {
           console.error(
             "[auth/callback] Failed to ensure user records:",

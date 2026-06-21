@@ -26,6 +26,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Events array is required." }, { status: 400 });
   }
 
+  const MAX_ANALYTICS_BATCH_SIZE = 50;
+  if (candidate.events.length > MAX_ANALYTICS_BATCH_SIZE) {
+    return NextResponse.json(
+      { error: `Events batch exceeds maximum size of ${MAX_ANALYTICS_BATCH_SIZE}.` },
+      { status: 400 },
+    );
+  }
+
   const validated = candidate.events.map((event) => validateAnalyticsEvent(event));
   const invalid = validated.find((result) => !result.ok);
   if (invalid && !invalid.ok) {

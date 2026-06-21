@@ -12,6 +12,7 @@ import {
 } from "@/features/offline/services/offline-client.service";
 import {
   OFFLINE_BACKGROUND_SYNC_TAG,
+  REVIEW_BATCH_FLUSH_INTERVAL_MS,
   REVIEW_BATCH_FLUSH_SIZE,
 } from "@/lib/offline/constants";
 import type { OfflineReviewBundle } from "@/lib/offline/types";
@@ -30,6 +31,7 @@ function createClientEventId(): string {
 class ReviewBatchClientService {
   private buffer: PendingReviewRating[] = [];
   private flushInFlight: Promise<ReviewSubmitDeltaViewModel | null> | null = null;
+  private flushTimer: ReturnType<typeof setTimeout> | null = null;
 
   enqueue(input: {
     bundle: OfflineReviewBundle;
@@ -89,10 +91,22 @@ class ReviewBatchClientService {
   private flushSoon(): void {
     if (this.buffer.length >= REVIEW_BATCH_FLUSH_SIZE) {
       void this.flush();
+      return;
     }
+
+    if (this.flushTimer) return;
+    this.flushTimer = setTimeout(() => {
+      this.flushTimer = null;
+      void this.flush();
+    }, REVIEW_BATCH_FLUSH_INTERVAL_MS);
   }
 
   private async flushInternal(): Promise<ReviewSubmitDeltaViewModel | null> {
+    if (this.flushTimer) {
+      clearTimeout(this.flushTimer);
+      this.flushTimer = null;
+    }
+
     if (!isBrowserOnline() || this.buffer.length === 0) {
       return null;
     }

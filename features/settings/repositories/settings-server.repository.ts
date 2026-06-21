@@ -6,12 +6,15 @@ import type {
   UserSettingsRow,
 } from "@/features/settings/types/settings.types";
 
+const USER_SETTINGS_COLUMNS =
+  "id, user_id, notifications_enabled, sound_enabled, reduced_motion, high_contrast, daily_goal, preferred_theme, preferred_language, created_at, updated_at" as const;
+
 class SettingsServerRepository {
   async findByUserId(userId: string): Promise<UserSettingsRow | null> {
     const supabase = await createServerClient();
     const { data, error } = await supabase
       .from("user_settings")
-      .select("*")
+      .select(USER_SETTINGS_COLUMNS)
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -33,7 +36,7 @@ class SettingsServerRepository {
       .from("user_settings")
       .update({ preferred_theme: theme })
       .eq("user_id", userId)
-      .select("*")
+      .select(USER_SETTINGS_COLUMNS)
       .single();
 
     if (error) {
@@ -59,7 +62,7 @@ class SettingsServerRepository {
       .from("user_settings")
       .update(input)
       .eq("user_id", userId)
-      .select("*")
+      .select(USER_SETTINGS_COLUMNS)
       .single();
 
     if (error) {
@@ -67,6 +70,16 @@ class SettingsServerRepository {
     }
 
     return data as UserSettingsRow;
+  }
+
+  async getSoundEnabled(userId: string): Promise<boolean> {
+    const existing = await this.findByUserId(userId);
+    if (existing) {
+      return existing.sound_enabled;
+    }
+
+    const created = await this.ensureSettings(userId);
+    return created.sound_enabled;
   }
 
   async ensureSettings(userId: string): Promise<UserSettingsRow> {

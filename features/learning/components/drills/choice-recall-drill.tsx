@@ -20,6 +20,7 @@ import {
   shouldAutoFailOnRecognitionTimeout,
   shouldShowDrillHints,
 } from "@/lib/learning/drill-difficulty.utils";
+import { shouldDisableDrillHints } from "@/lib/learning/lesson-phase.constants";
 
 type ChoiceRecallDrillProps = DrillDifficultyProps & {
   step: LessonRecallStep;
@@ -68,7 +69,8 @@ export function ChoiceRecallDrill({
     reading: step.reading,
     profile,
   });
-  const showHints = shouldShowDrillHints(profile);
+  const showHints =
+    shouldShowDrillHints(profile) && !shouldDisableDrillHints(step.stage);
   const timerSeconds = recognitionTimerSeconds(profile);
   const enforceTimeout = shouldAutoFailOnRecognitionTimeout(profile);
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { KanjiHunterPlayer } from "@/features/games/components/kanji-hunter-player";
+import { KanjiHunterPlayer } from "@/features/games/components/game-player-loaders";
 import { GAME_SLUGS } from "@/features/games/constants/game.constants";
 import { getGameSession } from "@/lib/orchestration/games.orchestrator";
 

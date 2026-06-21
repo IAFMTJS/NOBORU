@@ -33,10 +33,41 @@ class LearningPathRepository {
       .from("regions")
       .select(
         `
-        *,
+        id,
+        slug,
+        name,
+        description,
+        order_index,
+        unlock_requirement,
+        theme_id,
+        status,
+        created_at,
+        updated_at,
         units (
-          *,
-          lessons (*)
+          id,
+          region_id,
+          name,
+          description,
+          order_index,
+          estimated_duration,
+          status,
+          created_at,
+          updated_at,
+          lessons (
+            id,
+            unit_id,
+            type,
+            title,
+            description,
+            order_index,
+            difficulty,
+            xp_reward,
+            estimated_duration,
+            checkpoint_activity_mix,
+            status,
+            created_at,
+            updated_at
+          )
         )
       `,
       )

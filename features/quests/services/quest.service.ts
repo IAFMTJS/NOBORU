@@ -18,6 +18,7 @@ import type {
   WeeklyQuestsViewModel,
 } from "@/features/quests/types/quest.types";
 import { elevationService } from "@/features/elevation/services/elevation.service";
+import { revalidateUserQuests } from "@/lib/cache/revalidate-user-data";
 import { buildLanguageQuestObjectives } from "@/lib/learning/quest-assembly.service";
 import { lessonService } from "@/features/learning/services/lesson.service";
 import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
@@ -243,6 +244,7 @@ class QuestService {
       }
     }
 
+    revalidateUserQuests(userId);
     return completions;
   }
 

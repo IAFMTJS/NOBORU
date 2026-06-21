@@ -1,12 +1,6 @@
 import { buildActiveVocabularyPool } from "@/lib/learning/active-vocabulary-pool.service";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
 import type { PlayerKnowledgeContext } from "@/lib/learning/learning-architecture.types";
-import {
-  getKnownIdsFromSnapshot,
-  getMasteredIdsFromSnapshot,
-  getScheduledReviewIdsFromSnapshot,
-  getWeakIdsFromSnapshot,
-} from "@/lib/learning/player-knowledge.utils";
 import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
 import {
   learningPathRepository,
@@ -97,14 +91,30 @@ async function listPreviousLessonVocabularyIds(
 
 class PlayerKnowledgeService {
   async getContext(scope: PlayerKnowledgeScope): Promise<PlayerKnowledgeContext> {
-    const [snapshot, regions, progressRows, currentChapterVocabularyIds, previousChapterVocabularyIds] =
-      await Promise.all([
-        learnedContentRepository.getSnapshot(scope.userId),
-        learningPathRepository.listPublishedRegionsWithCurriculum(),
-        progressRepository.listByUserId(scope.userId),
-        listLessonVocabularyIds(scope.lessonId),
-        listPreviousLessonVocabularyIds(scope.unitId, scope.lessonId),
-      ]);
+    const [
+      regions,
+      progressRows,
+      currentChapterVocabularyIds,
+      previousChapterVocabularyIds,
+      knownVocabularyIds,
+      knownGrammarIds,
+      masteredVocabularyIds,
+      weakVocabularyIds,
+      scheduledReviewVocabularyIds,
+    ] = await Promise.all([
+      learningPathRepository.listPublishedRegionsWithCurriculum(),
+      progressRepository.listByUserId(scope.userId),
+      listLessonVocabularyIds(scope.lessonId),
+      listPreviousLessonVocabularyIds(scope.unitId, scope.lessonId),
+      learnedContentRepository.getKnownIdsByContentType(scope.userId, "vocabulary"),
+      learnedContentRepository.getKnownIdsByContentType(scope.userId, "grammar"),
+      learnedContentRepository.getMasteredIdsByContentType(scope.userId, "vocabulary"),
+      learnedContentRepository.getWeakIdsByContentType(scope.userId, "vocabulary"),
+      learnedContentRepository.getScheduledReviewIdsByContentType(
+        scope.userId,
+        "vocabulary",
+      ),
+    ]);
 
     const completedLessonIds = new Set(
       progressRows
@@ -112,16 +122,13 @@ class PlayerKnowledgeService {
         .map((row) => row.lesson_id),
     );
 
-    const knownVocabularyIds = getKnownIdsFromSnapshot(snapshot, "vocabulary");
-    const knownGrammarIds = getKnownIdsFromSnapshot(snapshot, "grammar");
-    const masteredVocabularyIds = getMasteredIdsFromSnapshot(snapshot, "vocabulary");
-    const weakVocabularyIds = getWeakIdsFromSnapshot(snapshot, "vocabulary");
-    const scheduledReviewVocabularyIds = getScheduledReviewIdsFromSnapshot(
-      snapshot,
-      "vocabulary",
-    );
+    const knownVocabularyIdsResolved = knownVocabularyIds;
+    const knownGrammarIdsResolved = knownGrammarIds;
+    const masteredVocabularyIdsResolved = masteredVocabularyIds;
+    const weakVocabularyIdsResolved = weakVocabularyIds;
+    const scheduledReviewVocabularyIdsResolved = scheduledReviewVocabularyIds;
 
-    const recentlyLearnedVocabularyIds = knownVocabularyIds.filter(
+    const recentlyLearnedVocabularyIds = knownVocabularyIdsResolved.filter(
       (id) =>
         !previousChapterVocabularyIds.includes(id) &&
         !currentChapterVocabularyIds.includes(id),
@@ -131,7 +138,7 @@ class PlayerKnowledgeService {
       currentChapterVocabularyIds: currentChapterVocabularyIds,
       previousChapterVocabularyIds: previousChapterVocabularyIds,
       recentlyLearnedVocabularyIds,
-      scheduledReviewVocabularyIds,
+      scheduledReviewVocabularyIds: scheduledReviewVocabularyIdsResolved,
     });
 
     return {
@@ -147,10 +154,10 @@ class PlayerKnowledgeService {
         completedLessonIds,
         scope.lessonId,
       ),
-      knownVocabularyIds,
-      knownGrammarIds,
-      masteredVocabularyIds,
-      weakVocabularyIds,
+      knownVocabularyIds: knownVocabularyIdsResolved,
+      knownGrammarIds: knownGrammarIdsResolved,
+      masteredVocabularyIds: masteredVocabularyIdsResolved,
+      weakVocabularyIds: weakVocabularyIdsResolved,
       activeVocabularyPool: activePool.vocabularyIds,
     };
   }

@@ -77,8 +77,7 @@ export function N4WorldArt({ className }: N4WorldArtProps) {
             alt=""
             fill
             className="object-contain object-bottom"
-            sizes="50vw"
-            unoptimized
+            sizes="(max-width: 430px) 50vw, 215px"
           />
         </div>
       ))}
@@ -108,9 +107,8 @@ export function N4WorldArt({ className }: N4WorldArtProps) {
             fill
             className="object-contain"
             style={{ objectPosition: hero.objectPosition }}
-            sizes="100vw"
+            sizes="(max-width: 430px) 100vw, 430px"
             priority
-            unoptimized
           />
         </div>
       ))}

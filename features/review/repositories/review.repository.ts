@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Json, SubmitReviewRatingRpcResult } from "@/lib/supabase/database.types";
+import type { Json, SubmitReviewRatingRpcResult, SubmitReviewRatingsBatchRpcResult } from "@/lib/supabase/database.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
 
 export type ReviewState =
@@ -343,6 +343,37 @@ class ReviewRepository {
       alreadyApplied: payload.already_applied,
       historyId: payload.history_id,
     };
+  }
+
+  async submitRatingsBatch(
+    userId: string,
+    items: Array<{
+      reviewItemId: string;
+      rating: ReviewRating;
+      clientEventId?: string;
+    }>,
+  ): Promise<SubmitRatingResult[]> {
+    if (items.length === 0) return [];
+
+    const supabase = await createClient();
+    const { data, error } = await supabase.rpc("submit_review_ratings_batch", {
+      p_user_id: userId,
+      p_items: items.map((item) => ({
+        review_item_id: item.reviewItemId,
+        rating: item.rating,
+        client_event_id: item.clientEventId ?? null,
+      })) as Json,
+    });
+
+    if (error) throw new Error(error.message);
+
+    const payload = data as SubmitReviewRatingsBatchRpcResult;
+
+    return payload.results.map((result) => ({
+      item: result.item as ReviewItemRow,
+      alreadyApplied: result.already_applied,
+      historyId: result.history_id,
+    }));
   }
 }
 

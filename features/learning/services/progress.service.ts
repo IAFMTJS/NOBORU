@@ -23,6 +23,7 @@ import {
   learningPathRepository,
   progressRepository,
 } from "@/features/learning/repositories/learning-path.repository";
+import { revalidateUserProgress } from "@/lib/cache/revalidate-user-data";
 import type {
   CompleteProgressInput,
   StartProgressInput,
@@ -47,12 +48,14 @@ class ProgressService {
       return existing;
     }
 
-    return progressRepository.upsertInProgress({
+    const row = await progressRepository.upsertInProgress({
       userId: input.userId,
       lessonId: input.lessonId,
       regionId: lesson.unit.region.id,
       unitId: lesson.unit.id,
     });
+    revalidateUserProgress(input.userId);
+    return row;
   }
 
   async completeLesson(input: CompleteProgressInput): Promise<
@@ -151,6 +154,7 @@ class ProgressService {
     }
 
     void journeyService.syncCurrentRegionToProfile(input.userId);
+    revalidateUserProgress(input.userId);
 
     return { ...result, elevation, achievements, quests, reviewItemsEnqueued };
   }

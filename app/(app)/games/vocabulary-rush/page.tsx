@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { VocabularyRushPlayer } from "@/features/games/components/vocabulary-rush-player";
+import { VocabularyRushPlayer } from "@/features/games/components/game-player-loaders";
 import { GAME_SLUGS } from "@/features/games/constants/game.constants";
 import { getGameSession } from "@/lib/orchestration/games.orchestrator";
 

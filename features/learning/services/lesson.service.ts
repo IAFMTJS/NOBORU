@@ -17,13 +17,8 @@ import type {
   KatakanaLessonContent,
   KanjiLessonContent,
   LessonContent,
-  LessonReadingStep,
   LessonSessionViewModel,
   LessonStep,
-  LessonStoryStep,
-  LessonDialogueStep,
-  LessonListeningStep,
-  LessonListeningChallengeStep,
   LessonApplicationStep,
   LessonKnowledgeInventoryStep,
   LessonSummaryViewModel,
@@ -41,8 +36,18 @@ import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import {
   assembleStagedExerciseSteps,
+  summarizeLessonPhases,
   summarizeLessonStages,
 } from "@/lib/learning/lesson-stage-assembly.service";
+import {
+  buildContextStepsFromLessonContents,
+  buildEmbeddedContextSteps,
+  extractDrillableLessonContents,
+} from "@/lib/learning/embedded-lesson-assembly.service";
+import {
+  isEmbeddedLessonType,
+  usesStagedLessonPipeline,
+} from "@/lib/learning/embedded-lesson.constants";
 import {
   buildCheckpointExerciseCandidates,
   capNewVocabularyInLessonContents,
@@ -500,6 +505,14 @@ class LessonService {
     };
   }
 
+  private buildContentById(contents: LessonContent[]): Record<string, LessonContent> {
+    const map: Record<string, LessonContent> = {};
+    for (const content of contents) {
+      map[content.id] = content;
+    }
+    return map;
+  }
+
   private buildStagedExerciseBlock(
     newContents: LessonContent[],
     reviewContents: LessonContent[],
@@ -520,6 +533,7 @@ class LessonService {
       index: index + 1,
       total: contents.length,
       stage: "introduction",
+      lessonPhase: "introduction",
     }));
   }
 
@@ -623,7 +637,7 @@ class LessonService {
       "katakana",
       "practice",
     ]);
-    if (!architectureLessonTypes.has(lesson.type)) return null;
+    if (!usesStagedLessonPipeline(lesson.type)) return null;
 
     const playerContext = await playerKnowledgeService.getContext({
       userId,
@@ -632,35 +646,38 @@ class LessonService {
       lessonId: lesson.id,
     });
 
+    const [kanjiIds, hiraganaIds, katakanaIds] = await Promise.all([
+      learnedContentRepository.getKnownIdsByContentType(userId, "kanji"),
+      learnedContentRepository.getKnownIdsByContentType(userId, "hiragana"),
+      learnedContentRepository.getKnownIdsByContentType(userId, "katakana"),
+    ]);
+
     const knownIdsByType = new Map<string, Set<string>>([
       ["vocabulary", new Set(playerContext.knownVocabularyIds)],
       ["grammar", new Set(playerContext.knownGrammarIds)],
-      [
-        "kanji",
-        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "kanji")),
-      ],
-      [
-        "hiragana",
-        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "hiragana")),
-      ],
-      [
-        "katakana",
-        new Set(await learnedContentRepository.getKnownIdsByContentType(userId, "katakana")),
-      ],
+      ["kanji", new Set(kanjiIds)],
+      ["hiragana", new Set(hiraganaIds)],
+      ["katakana", new Set(katakanaIds)],
     ]);
+
+    const drillSourceContents = isEmbeddedLessonType(lesson.type)
+      ? extractDrillableLessonContents(contents)
+      : contents;
 
     const workingContents =
       lesson.type === "practice"
         ? contents
-        : capNewGrammarInLessonContents(
-            capNewVocabularyInLessonContents(
-              contents,
+        : isEmbeddedLessonType(lesson.type)
+          ? drillSourceContents
+          : capNewGrammarInLessonContents(
+              capNewVocabularyInLessonContents(
+                contents,
+                playerContext.jlptLevel,
+                knownIdsByType.get("vocabulary") ?? new Set<string>(),
+              ),
               playerContext.jlptLevel,
-              knownIdsByType.get("vocabulary") ?? new Set<string>(),
-            ),
-            playerContext.jlptLevel,
-            knownIdsByType.get("grammar") ?? new Set<string>(),
-          );
+              knownIdsByType.get("grammar") ?? new Set<string>(),
+            );
 
     const { newContents, knownContents } = partitionLessonContentsByKnown(
       workingContents,
@@ -674,11 +691,13 @@ class LessonService {
     const crossLessonReviewVocabulary = await this.loadReviewVocabularyContents(
       userId,
       new Set(workingContents.map((content) => content.id)),
-      Math.max(newContents.length * 3, 6),
+      isEmbeddedLessonType(lesson.type)
+        ? Math.max(newContents.length * 3, 8)
+        : Math.max(newContents.length * 3, 6),
     );
 
     const branchPriorContents =
-      lesson.type === "practice"
+      lesson.type === "practice" || isEmbeddedLessonType(lesson.type)
         ? await this.loadBranchPriorLessonContents(
             lesson.unit.id,
             lesson.id,
@@ -741,11 +760,58 @@ class LessonService {
       };
     }
 
+    if (isEmbeddedLessonType(lesson.type)) {
+      return {
+        newContents,
+        reviewContents,
+        isCheckpoint: false,
+      };
+    }
+
     return {
       newContents,
       reviewContents,
       isCheckpoint: false,
     };
+  }
+
+  private buildEmbeddedWrappedSteps(
+    lesson: { type: string; xp_reward: number; title: string; description: string | null },
+    contents: LessonContent[],
+    assembly?: LessonAssemblyPlan,
+  ): LessonStep[] {
+    const intro: LessonStep = {
+      kind: "intro",
+      title: lesson.title,
+      description: lesson.description,
+      lessonType: lesson.type,
+      xpReward: lesson.xp_reward,
+    };
+
+    const complete: LessonStep = {
+      kind: "complete",
+      xpReward: lesson.xp_reward,
+    };
+
+    if (!isEmbeddedLessonType(lesson.type)) {
+      return [intro, complete];
+    }
+
+    const newContents = assembly?.newContents ?? extractDrillableLessonContents(contents);
+    const reviewContents = assembly?.reviewContents ?? [];
+
+    const drillSteps: LessonStep[] = [
+      ...this.buildDiscoverTeachSteps(newContents),
+      ...this.buildStagedExerciseBlock(newContents, reviewContents, false),
+    ];
+
+    const contextSteps = buildEmbeddedContextSteps(
+      lesson.type,
+      contents,
+      (content, index, total) => this.buildApplicationStep(content, index, total),
+    );
+
+    return [intro, ...drillSteps, ...contextSteps, complete];
   }
 
   private buildSteps(
@@ -771,100 +837,24 @@ class LessonService {
       xpReward: lesson.xp_reward,
     };
 
-    if (lesson.type === "reading") {
-      const readingContents = contents.filter(
-        (content): content is ReadingLessonContent => content.type === "reading",
-      );
-      const readingSteps: LessonReadingStep[] = readingContents.map(
-        (content, index) => ({
-          kind: "reading",
-          content,
-          index: index + 1,
-          total: readingContents.length,
-        }),
-      );
-      return [intro, ...readingSteps, complete];
-    }
-
-    if (lesson.type === "story") {
-      const storyContent = contents.find((content) => content.type === "story");
-      if (!storyContent || storyContent.type !== "story") {
-        return [intro, complete];
-      }
-      const storyStep: LessonStoryStep = {
-        kind: "story",
-        content: storyContent,
-      };
-      return [intro, storyStep, complete];
-    }
-
-    if (lesson.type === "dialogue") {
-      const dialogueContent = contents.find((content) => content.type === "dialogue");
-      if (!dialogueContent || dialogueContent.type !== "dialogue") {
-        return [intro, complete];
-      }
-      const dialogueStep: LessonDialogueStep = {
-        kind: "dialogue",
-        content: dialogueContent,
-      };
-      return [intro, dialogueStep, complete];
-    }
-
-    if (lesson.type === "listening") {
-      const listeningContent = contents.find((content) => content.type === "listening");
-      if (!listeningContent || listeningContent.type !== "listening") {
-        return [intro, complete];
-      }
-      const listeningStep: LessonListeningStep = {
-        kind: "listening",
-        content: listeningContent,
-      };
-      return [intro, listeningStep, complete];
-    }
-
-    if (lesson.type === "listening_challenge") {
-      const challengeContent = contents.find(
-        (content) => content.type === "listening_challenge",
-      );
-      if (!challengeContent || challengeContent.type !== "listening_challenge") {
-        return [intro, complete];
-      }
-      const challengeStep: LessonListeningChallengeStep = {
-        kind: "listening_challenge",
-        content: challengeContent,
-      };
-      return [intro, challengeStep, complete];
-    }
-
-    if (lesson.type === "application") {
-      const applicationContents = contents.filter(
-        (content): content is ApplicationLessonContent =>
-          content.type === "application",
-      );
-      const applicationSteps = applicationContents.map((content, index) =>
-        this.buildApplicationStep(content, index + 1, applicationContents.length),
-      );
-      return [intro, ...applicationSteps, complete];
+    if (isEmbeddedLessonType(lesson.type)) {
+      return this.buildEmbeddedWrappedSteps(lesson, contents, assembly);
     }
 
     if (lesson.type === "practice") {
-      if (assembly) {
-        return [
-          intro,
-          ...this.buildStagedExerciseBlock(
+      const drillBlock = assembly
+        ? this.buildStagedExerciseBlock(
             assembly.newContents,
             assembly.reviewContents,
             assembly.isCheckpoint,
-          ),
-          complete,
-        ];
-      }
+          )
+        : this.buildStagedExerciseBlock([], contents, true);
+      const contextSteps = buildContextStepsFromLessonContents(
+        contents,
+        (content, index, total) => this.buildApplicationStep(content, index, total),
+      );
 
-      return [
-        intro,
-        ...this.buildStagedExerciseBlock([], contents, true),
-        complete,
-      ];
+      return [intro, ...drillBlock, ...contextSteps, complete];
     }
 
     if (assembly) {
@@ -927,6 +917,7 @@ class LessonService {
     );
     const assembly = await this.prepareLessonAssembly(userId, lesson, contents);
     let steps = this.buildSteps(lesson, contents, assembly ?? undefined);
+    const contentById = this.buildContentById(contents);
 
     if (lesson.type === "application") {
       const script =
@@ -964,6 +955,8 @@ class LessonService {
       passScore: getLessonPassScore(lesson.type),
       steps,
       stageSummary: summarizeLessonStages(steps),
+      phaseSummary: summarizeLessonPhases(steps),
+      contentById,
       nextLesson:
         nextLesson && nextLesson.id !== lesson.id
           ? {

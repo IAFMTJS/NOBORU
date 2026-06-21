@@ -13,12 +13,31 @@ import type {
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
+import type { LessonPhase } from "@/lib/learning/lesson-phase.constants";
+import { STAGE_TO_PHASE } from "@/lib/learning/lesson-phase.constants";
 import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
 } from "@/features/learning/constants/lesson.constants";
 import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
 import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
+
+function phaseForStage(stage: LessonStage): LessonPhase {
+  return STAGE_TO_PHASE[stage];
+}
+
+function withContentMeta<T extends object>(
+  step: T,
+  content: LessonContent,
+  stage: LessonStage,
+): T & { contentId: string; stage: LessonStage; lessonPhase: LessonPhase } {
+  return {
+    ...step,
+    contentId: content.id,
+    stage,
+    lessonPhase: phaseForStage(stage),
+  };
+}
 
 export function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -75,19 +94,22 @@ export function buildRecognitionChoiceStep(
   const meaning = getRecallAnswer(content);
   const options = buildRecallOptions(meaning, allAnswers);
 
-  return {
-    kind: "recall",
-    mode: "choice",
-    contentType: content.type,
-    prompt: "Choose the correct meaning",
-    display: getJapaneseSurface(content),
-    reading: getJapaneseReading(content),
-    options,
-    correctIndex: options.indexOf(meaning),
+  return withContentMeta(
+    {
+      kind: "recall",
+      mode: "choice",
+      contentType: content.type,
+      prompt: "Choose the correct meaning",
+      display: getJapaneseSurface(content),
+      reading: getJapaneseReading(content),
+      options,
+      correctIndex: options.indexOf(meaning),
+      index,
+      total,
+    },
+    content,
     stage,
-    index,
-    total,
-  };
+  ) as LessonRecallStep;
 }
 
 export function buildReverseRecognitionStep(
@@ -108,18 +130,21 @@ export function buildReverseRecognitionStep(
   const surface = getJapaneseSurface(content);
   const options = buildRecallOptions(surface, allJapaneseSurfaces);
 
-  return {
-    kind: "recall",
-    mode: "choice",
-    contentType: content.type,
-    prompt: "Choose the correct Japanese",
-    display: getRecallAnswer(content),
-    options,
-    correctIndex: options.indexOf(surface),
+  return withContentMeta(
+    {
+      kind: "recall",
+      mode: "choice",
+      contentType: content.type,
+      prompt: "Choose the correct Japanese",
+      display: getRecallAnswer(content),
+      options,
+      correctIndex: options.indexOf(surface),
+      index,
+      total,
+    },
+    content,
     stage,
-    index,
-    total,
-  };
+  ) as LessonRecallStep;
 }
 
 export function buildActiveRecallStep(
@@ -143,22 +168,35 @@ export function buildActiveRecallStep(
   const surface = getJapaneseSurface(content);
 
   if (content.type === "vocabulary" || content.type === "kanji") {
-    return {
-      kind: "recall",
-      mode: "typed",
-      contentType: content.type,
-      prompt: `Translate: "${meaning}"`,
-      display: meaning,
-      options: [],
-      correctIndex: 0,
-      acceptedAnswers: buildAcceptedAnswers(surface),
+    return withContentMeta(
+      {
+        kind: "recall",
+        mode: "typed",
+        contentType: content.type,
+        prompt: `Translate: "${meaning}"`,
+        display: meaning,
+        options: [],
+        correctIndex: 0,
+        acceptedAnswers: buildAcceptedAnswers(surface),
+        index,
+        total,
+      },
+      content,
       stage,
-      index,
-      total,
-    };
+    ) as LessonRecallStep;
   }
 
-  return buildRecallStep(content, allAnswers, index, total, "standard");
+  const recall = buildRecallStep(content, allAnswers, index, total, "standard");
+  return withContentMeta(
+    {
+      ...recall,
+      mode: "typed" as const,
+      options: [],
+      acceptedAnswers: buildAcceptedAnswers(getRecallAnswer(content)),
+    },
+    content,
+    stage,
+  ) as LessonRecallStep;
 }
 
 export function buildMasteryChallengeStep(
@@ -242,6 +280,9 @@ export function buildMatchingStep(contents: LessonContent[]): LessonMatchingStep
     kind: "matching",
     prompt: "Match each item to its meaning or reading",
     pairs,
+    stage: "recognition",
+    lessonPhase: "introduction",
+    contentIds: selected.map((item) => item.id),
     index: 1,
     total: 1,
   };
@@ -407,16 +448,20 @@ export function buildFillBlankStep(
 
   const options = buildRecallOptions(blankChar, [...distractors, blankToken.slice(1)]);
 
-  return {
-    kind: "fill_blank",
-    prompt: "Fill in the blank",
-    sentenceWithBlank,
-    englishHint: example.english,
-    options,
-    correctIndex: options.indexOf(blankChar),
-    index,
-    total,
-  };
+  return withContentMeta(
+    {
+      kind: "fill_blank",
+      prompt: "Fill in the blank",
+      sentenceWithBlank,
+      englishHint: example.english,
+      options,
+      correctIndex: options.indexOf(blankChar),
+      index,
+      total,
+    },
+    content,
+    "guided_practice",
+  ) as LessonFillBlankStep;
 }
 
 export function buildWordBankStep(
@@ -430,15 +475,19 @@ export function buildWordBankStep(
   const correctOrder = tokenizeJapaneseSentence(example.japaneseText);
   if (correctOrder.length < 2 || correctOrder.length > 8) return null;
 
-  return {
-    kind: "word_bank",
-    prompt: "Build the sentence",
-    englishHint: example.english,
-    tokens: shuffle(correctOrder),
-    correctOrder,
-    index,
-    total,
-  };
+  return withContentMeta(
+    {
+      kind: "word_bank",
+      prompt: "Build the sentence",
+      englishHint: example.english,
+      tokens: shuffle(correctOrder),
+      correctOrder,
+      index,
+      total,
+    },
+    content,
+    "context_application",
+  ) as LessonWordBankStep;
 }
 
 export function buildListeningRecallStep(
@@ -452,17 +501,20 @@ export function buildListeningRecallStep(
 
   const options = buildRecallOptions(content.meaning, allAnswers);
 
-  return {
-    kind: "listening_recall",
-    prompt: "Listen and choose the meaning",
-    audioUrl: content.audioUrl,
-    display: content.kanji ?? content.kana,
-    options,
-    correctIndex: options.indexOf(content.meaning),
+  return withContentMeta(
+    {
+      kind: "listening_recall",
+      prompt: "Listen and choose the meaning",
+      audioUrl: content.audioUrl,
+      display: content.kanji ?? content.kana,
+      options,
+      correctIndex: options.indexOf(content.meaning),
+      index,
+      total,
+    },
+    content,
     stage,
-    index,
-    total,
-  };
+  ) as LessonListeningRecallStep;
 }
 
 export function buildSentenceTypedStep(
@@ -473,16 +525,20 @@ export function buildSentenceTypedStep(
   const example = content.examples[0];
   if (!example) return null;
 
-  return {
-    kind: "sentence_typed",
-    prompt: "Type the Japanese sentence",
-    englishHint: example.english,
-    acceptedAnswers: buildAcceptedAnswers(
-      example.japaneseText.replace(/[。、！？]+$/g, ""),
-    ),
-    index,
-    total,
-  };
+  return withContentMeta(
+    {
+      kind: "sentence_typed",
+      prompt: "Type the Japanese sentence",
+      englishHint: example.english,
+      acceptedAnswers: buildAcceptedAnswers(
+        example.japaneseText.replace(/[。、！？]+$/g, ""),
+      ),
+      index,
+      total,
+    },
+    content,
+    "context_application",
+  ) as LessonSentenceTypedStep;
 }
 
 export function buildGrammarProductionStep(

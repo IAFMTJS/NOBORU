@@ -71,6 +71,13 @@ export type Database = {
         };
         Returns: Json;
       };
+      submit_review_ratings_batch: {
+        Args: {
+          p_user_id: string;
+          p_items: Json;
+        };
+        Returns: Json;
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
@@ -84,4 +91,8 @@ export type SubmitReviewRatingRpcResult = {
   already_applied: boolean;
   history_id: string | null;
   item: ReviewItemDbRow;
+};
+
+export type SubmitReviewRatingsBatchRpcResult = {
+  results: SubmitReviewRatingRpcResult[];
 };

@@ -1,6 +1,3 @@
-@import "@fontsource/noto-sans-jp/japanese-400.css";
-@import "@fontsource/noto-sans-jp/latin-400.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

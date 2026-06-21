@@ -31,6 +31,19 @@ class CollectibleRepository {
     return (data as CollectibleDefinitionRow | null) ?? null;
   }
 
+  async listAllPublished(): Promise<CollectibleDefinitionRow[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("collectible_definitions")
+      .select("*")
+      .eq("status", "published")
+      .order("region_slug")
+      .order("sort_order");
+
+    if (error) throw new Error(error.message);
+    return (data as CollectibleDefinitionRow[]) ?? [];
+  }
+
   async listUserCollectibles(userId: string): Promise<UserCollectibleRow[]> {
     const supabase = await createClient();
     const { data, error } = await supabase

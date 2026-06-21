@@ -37,6 +37,31 @@ export {
 } from "@/lib/learning/lesson-stage.constants";
 
 export {
+  LESSON_PHASES,
+  PHASE_LABELS,
+  SPIRAL_MAX_EXPOSURES_PER_CONCEPT,
+  SPIRAL_MIN_EXPOSURES_PER_CONCEPT,
+  STAGE_TO_PHASE,
+  resolvePhaseFromStage,
+  shouldDisableDrillHints,
+  type LessonPhase,
+} from "@/lib/learning/lesson-phase.constants";
+
+export {
+  getContentIdFromStep,
+  resolveStepPhase,
+  summarizeLessonPhases,
+} from "@/lib/learning/lesson-phase.utils";
+
+export {
+  buildFinalRemediationBatch,
+  buildRemediationStep,
+  getUnresolvedFailureIds,
+  insertRemediationStep,
+  type LessonFailureRecord,
+} from "@/lib/learning/lesson-remediation.service";
+
+export {
   assembleStagedExerciseSteps,
   computeStagePlans,
   enforceExerciseVariety,

@@ -21,15 +21,12 @@ import {
   LESSON_MAX_HEARTS,
   LESSON_WRONG_EXPLANATION_MS,
 } from "@/features/learning/constants/lesson-ui.constants";
-import { ApplicationDrill } from "@/features/learning/components/drills/application-drill";
+import {
+  LessonDrillStep,
+  LevelUpCeremony,
+} from "@/features/learning/components/lesson-drill-loaders";
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
-import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
-import { FillBlankDrill } from "@/features/learning/components/drills/fill-blank-drill";
-import { MatchingDrill } from "@/features/learning/components/drills/matching-drill";
-import { TypedRecallDrill } from "@/features/learning/components/drills/typed-recall-drill";
-import { TypedSentenceDrill } from "@/features/learning/components/drills/typed-sentence-drill";
-import { WordBankDrill } from "@/features/learning/components/drills/word-bank-drill";
 import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { LessonFailScreen } from "@/features/learning/components/lesson-fail-screen";
@@ -48,8 +45,19 @@ import type {
 } from "@/features/learning/types/lesson.types";
 import { LessonFeedbackPrompt } from "@/features/feedback/components/lesson-feedback-prompt";
 import { collectUpcomingLessonAudioUrls } from "@/lib/learning/lesson-audio-prefetch";
+import {
+  buildFinalRemediationBatch,
+  buildRemediationStep,
+  getUnresolvedFailureIds,
+  insertRemediationStep,
+  type LessonFailureRecord,
+} from "@/lib/learning/lesson-remediation.service";
+import {
+  getContentIdFromStep,
+  resolveStepPhase,
+} from "@/lib/learning/lesson-phase.utils";
+import { getRecallAnswer } from "@/features/learning/utils/exercise-steps";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
-import { LevelUpCeremony } from "@/components/visual/world/level-up-ceremony";
 import { fadeInUp } from "@/lib/motion/presets";
 
 import { lessonReturnJourneyHref } from "@/features/learning/utils/trail-navigation";
@@ -244,6 +252,10 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     [session, lessonCompleted],
   );
   const [stepIndex, setStepIndex] = useState(0);
+  const [lessonSteps, setLessonSteps] = useState<LessonStep[]>(session.steps);
+  const [failureTracker, setFailureTracker] = useState<Map<string, LessonFailureRecord>>(
+    () => new Map(),
+  );
   const [started, setStarted] = useState(session.progress === "completed");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -266,7 +278,32 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   const advanceTimerRef = useRef<number | null>(null);
 
   const isReviewSession = session.progress === "completed";
-  const currentStep: LessonStep | undefined = session.steps[stepIndex];
+  const currentStep: LessonStep | undefined = lessonSteps[stepIndex];
+  const currentPhase = currentStep ? resolveStepPhase(currentStep) : null;
+
+  const contentById = session.contentById ?? {};
+  const allAnswers = useMemo(
+    () => Object.values(contentById).map(getRecallAnswer).filter(Boolean),
+    [contentById],
+  );
+  const allSurfaces = useMemo(
+    () =>
+      Object.values(contentById).map((content) => {
+        switch (content.type) {
+          case "vocabulary":
+            return content.kanji ?? content.kana;
+          case "kanji":
+          case "hiragana":
+          case "katakana":
+            return content.character;
+          case "grammar":
+            return content.title;
+          default:
+            return "";
+        }
+      }),
+    [contentById],
+  );
 
   const clearAdvanceTimer = useCallback(() => {
     if (advanceTimerRef.current !== null) {
@@ -283,7 +320,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   useEffect(() => clearAdvanceTimer, [clearAdvanceTimer]);
 
   useEffect(() => {
-    const urls = collectUpcomingLessonAudioUrls(session.steps, stepIndex, 2);
+    const urls = collectUpcomingLessonAudioUrls(lessonSteps, stepIndex, 2);
     if (urls.length === 0) return;
 
     const timeoutId = window.setTimeout(() => {
@@ -291,7 +328,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     }, 250);
 
     return () => window.clearTimeout(timeoutId);
-  }, [session.steps, stepIndex]);
+  }, [lessonSteps, stepIndex]);
 
   const handleStart = useCallback(async () => {
     setSaving(true);
@@ -350,10 +387,31 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   const goNext = useCallback(() => {
     clearAdvanceTimer();
     const nextIndex = stepIndex + 1;
-    const nextStep = session.steps[nextIndex];
+    const nextStep = lessonSteps[nextIndex];
 
     if (nextStep?.kind === "complete") {
       const score = calculateLessonScore(recallCorrect, recallTotal);
+      const unresolved = getUnresolvedFailureIds(failureTracker);
+
+      if (!isReviewSession && unresolved.length > 0 && session.contentById) {
+        const remediationBatch = buildFinalRemediationBatch(
+          unresolved,
+          session.contentById,
+          recallTotal,
+        );
+        if (remediationBatch.length > 0) {
+          const completeIndex = lessonSteps.findIndex((step) => step.kind === "complete");
+          const insertAt = completeIndex >= 0 ? completeIndex : lessonSteps.length;
+          const updated = [
+            ...lessonSteps.slice(0, insertAt),
+            ...remediationBatch,
+            ...lessonSteps.slice(insertAt),
+          ];
+          setLessonSteps(updated);
+          setStepIndex(nextIndex);
+          return;
+        }
+      }
 
       if (!isReviewSession && score < session.passScore) {
         setFailedScore(score);
@@ -370,18 +428,26 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         return;
       }
 
+      if (!isReviewSession && unresolved.length > 0) {
+        setFailedScore(score);
+        setLessonFailed(true);
+        return;
+      }
+
       void handleComplete(score);
     }
 
     setStepIndex(nextIndex);
   }, [
     clearAdvanceTimer,
+    failureTracker,
     recallCorrect,
     recallTotal,
+    session.contentById,
     session.lessonId,
     session.passScore,
     session.regionSlug,
-    session.steps,
+    lessonSteps,
     stepIndex,
     handleComplete,
     isReviewSession,
@@ -398,11 +464,58 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   );
 
   const handleRecallAnswer = useCallback(
-    (correct: boolean) => {
+    (correct: boolean, answeredStep?: LessonStep) => {
+      const step = answeredStep ?? currentStep;
       const nextTotal = recallTotal + 1;
       const nextCorrect = recallCorrect + (correct ? 1 : 0);
 
       setRecallTotal(nextTotal);
+
+      if (step) {
+        const contentId = getContentIdFromStep(step);
+        if (contentId) {
+          if (correct) {
+            setFailureTracker((current) => {
+              const existing = current.get(contentId);
+              if (!existing || existing.remediated) return current;
+              const next = new Map(current);
+              next.set(contentId, { ...existing, remediated: true });
+              return next;
+            });
+          } else {
+            setFailureTracker((current) => {
+              const existing = current.get(contentId);
+              const failureCount = (existing?.failureCount ?? 0) + 1;
+              const next = new Map(current);
+              next.set(contentId, {
+                contentId,
+                failureCount,
+                remediated: false,
+              });
+              return next;
+            });
+
+            const content = contentById[contentId];
+            const failureCount =
+              (failureTracker.get(contentId)?.failureCount ?? 0) + 1;
+            if (content && allAnswers.length > 0) {
+              const remediation = buildRemediationStep(
+                content,
+                allAnswers,
+                allSurfaces,
+                failureCount,
+                nextTotal + 1,
+                lessonSteps.length + 1,
+              );
+              if (remediation) {
+                setLessonSteps((current) =>
+                  insertRemediationStep(current, stepIndex, remediation),
+                );
+              }
+            }
+          }
+        }
+      }
 
       if (correct) {
         setRecallCorrect(nextCorrect);
@@ -426,7 +539,18 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         return next;
       });
     },
-    [recallCorrect, recallTotal, scheduleAdvance],
+    [
+      allAnswers,
+      allSurfaces,
+      contentById,
+      currentStep,
+      failureTracker,
+      lessonSteps.length,
+      recallCorrect,
+      recallTotal,
+      scheduleAdvance,
+      stepIndex,
+    ],
   );
 
   const handleRetry = useCallback(() => {
@@ -437,12 +561,14 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     setEmbeddedComplete(false);
     setHeartsRemaining(LESSON_MAX_HEARTS);
     setStreakCount(0);
+    setFailureTracker(new Map());
+    setLessonSteps(session.steps);
     setError(null);
-    const firstDrillIndex = session.steps.findIndex(
+    const firstDrillIndex = lessonSteps.findIndex(
       (step, index) => index > 0 && step.kind !== "intro",
     );
     setStepIndex(firstDrillIndex >= 0 ? firstDrillIndex : 1);
-  }, [session.steps]);
+  }, [lessonSteps, session.steps]);
 
   const showLessonHeader =
     currentStep?.kind !== "complete" && !lessonFailed;
@@ -513,9 +639,11 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           <LessonHeader
             backHref={journeyTrailHref}
             stepIndex={stepIndex}
-            totalSteps={session.steps.length}
+            totalSteps={lessonSteps.length}
             heartsRemaining={heartsRemaining}
             streakCount={streakCount}
+            phaseSummary={session.phaseSummary}
+            currentPhase={currentPhase}
           />
         ) : null
       }
@@ -563,49 +691,31 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
           <KnowledgeInventoryCard step={currentStep} />
         ) : null}
 
-        {currentStep.kind === "application" ? (
-          <ApplicationDrill step={currentStep} onAnswer={handleRecallAnswer} />
-        ) : null}
-
-        {currentStep.kind === "recall" ? (
-          currentStep.mode === "typed" ? (
-            <TypedRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
-          ) : (
-            <ChoiceRecallDrill
-              step={currentStep}
-              onAnswer={handleRecallAnswer}
-              soundEnabled={soundEnabled}
-            />
-          )
-        ) : null}
-
-        {currentStep.kind === "listening_recall" ? (
-          <ListeningRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
-        ) : null}
-
-        {currentStep.kind === "fill_blank" ? (
-          <FillBlankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-        ) : null}
-
-        {currentStep.kind === "word_bank" ? (
-          <WordBankDrill step={currentStep} onAnswer={handleRecallAnswer} />
-        ) : null}
-
-        {currentStep.kind === "sentence_typed" ? (
-          <TypedSentenceDrill
-            prompt={currentStep.prompt}
-            display={currentStep.englishHint}
-            acceptedAnswers={currentStep.acceptedAnswers}
-            onAnswer={handleRecallAnswer}
+        {currentStep.kind === "application" ||
+        currentStep.kind === "recall" ||
+        currentStep.kind === "fill_blank" ||
+        currentStep.kind === "word_bank" ||
+        currentStep.kind === "sentence_typed" ||
+        currentStep.kind === "matching" ? (
+          <LessonDrillStep
+            step={currentStep}
+            onAnswer={(correct) => handleRecallAnswer(correct, currentStep)}
+            soundEnabled={soundEnabled}
           />
         ) : null}
 
-        {currentStep.kind === "matching" ? (
-          <MatchingDrill step={currentStep} onAnswer={handleRecallAnswer} />
+        {currentStep.kind === "listening_recall" ? (
+          <ListeningRecallDrill
+            step={currentStep}
+            onAnswer={(correct) => handleRecallAnswer(correct, currentStep)}
+          />
         ) : null}
 
         {currentStep.kind === "reading" ? (
-          <ReadingDrill step={currentStep} onAnswer={handleRecallAnswer} />
+          <ReadingDrill
+            step={currentStep}
+            onAnswer={(correct) => handleRecallAnswer(correct, currentStep)}
+          />
         ) : null}
 
         {currentStep.kind === "story" ? (

@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  validate:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,14 +18,58 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
       - run: npm run typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
       - run: npm run test
+
+  validate:
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
+      - run: npm ci
       - run: npm run assets:validate
       - run: npm run assets:audit-immersion
       - run: npm run build
       - name: Verify health route module
         run: node -e "require('fs').accessSync('app/api/health/route.ts')"
-      - name: Check lesson route bundle size
+      - name: Check core route bundle sizes
         run: |
           node -e "
           const fs = require('fs');
@@ -36,24 +80,30 @@ jobs:
           }
           const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
           const pages = manifest.pages ?? {};
-          const lessonKey = Object.keys(pages).find((key) => key.includes('/learn/lesson/[lessonId]/page'));
-          if (!lessonKey) {
-            console.warn('Lesson route not found in build manifest; skipping bundle check.');
-            process.exit(0);
-          }
-          const maxFirstLoadKb = 450;
-          const chunkFiles = pages[lessonKey] ?? [];
-          let totalBytes = 0;
-          for (const file of chunkFiles) {
-            const filePath = '.next/' + file;
-            if (fs.existsSync(filePath)) {
-              totalBytes += fs.statSync(filePath).size;
+          const budgets = [
+            { label: 'lesson', match: '/learn/lesson/[lessonId]/page', maxKb: 450 },
+            { label: 'review', match: '/review/page', maxKb: 400 },
+            { label: 'camp', match: '/camp/page', maxKb: 400 },
+          ];
+          for (const budget of budgets) {
+            const pageKey = Object.keys(pages).find((key) => key.includes(budget.match));
+            if (!pageKey) {
+              console.warn('Route not found for', budget.label, '- skipping.');
+              continue;
             }
-          }
-          const totalKb = Math.round(totalBytes / 1024);
-          console.log('Lesson route static chunks:', totalKb, 'KB');
-          if (totalKb > maxFirstLoadKb) {
-            console.error('Lesson route chunks exceed threshold:', totalKb, 'KB >', maxFirstLoadKb, 'KB');
-            process.exit(1);
+            const chunkFiles = pages[pageKey] ?? [];
+            let totalBytes = 0;
+            for (const file of chunkFiles) {
+              const filePath = '.next/' + file;
+              if (fs.existsSync(filePath)) {
+                totalBytes += fs.statSync(filePath).size;
+              }
+            }
+            const totalKb = Math.round(totalBytes / 1024);
+            console.log(budget.label, 'route static chunks:', totalKb, 'KB');
+            if (totalKb > budget.maxKb) {
+              console.error(budget.label, 'route chunks exceed threshold:', totalKb, 'KB >', budget.maxKb, 'KB');
+              process.exit(1);
+            }
           }
           "

@@ -6,7 +6,6 @@ import { OfflineStatusBanner } from "@/features/offline/components/offline-statu
 import { OfflineSyncRewardsFeedback } from "@/features/offline/components/offline-sync-rewards-feedback";
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
-import { preloadJapaneseSpeechVoices } from "@/lib/audio/japanese-speech";
 import type {
   OfflineStatusViewModel,
   OfflineSyncGamificationResult,
@@ -55,10 +54,19 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
   });
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/sw.js");
+    const registerServiceWorker = () => {
+      if ("serviceWorker" in navigator) {
+        void navigator.serviceWorker.register("/sw.js");
+      }
+    };
+
+    if (typeof requestIdleCallback === "function") {
+      const idleId = requestIdleCallback(registerServiceWorker);
+      return () => cancelIdleCallback(idleId);
     }
-    void preloadJapaneseSpeechVoices();
+
+    const timeoutId = setTimeout(registerServiceWorker, 1500);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (

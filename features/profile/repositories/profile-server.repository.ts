@@ -3,12 +3,15 @@ import { ensureProfile } from "@/lib/supabase/ensure-user-records";
 
 import type { ProfileRow } from "@/features/profile/types/profile.types";
 
+const PROFILE_ROW_COLUMNS =
+  "id, user_id, username, display_name, avatar_id, title_id, bio, country, timezone, language, theme, role, onboarding_completed, learning_goal, current_level, current_region_slug, created_at, updated_at" as const;
+
 class ProfileServerRepository {
   async findByUserId(userId: string): Promise<ProfileRow | null> {
     const supabase = await createServerClient();
     const { data, error } = await supabase
       .from("profiles")
-      .select("*")
+      .select(PROFILE_ROW_COLUMNS)
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -30,7 +33,7 @@ class ProfileServerRepository {
       .from("profiles")
       .update({ display_name: displayName })
       .eq("user_id", userId)
-      .select("*")
+      .select(PROFILE_ROW_COLUMNS)
       .single();
 
     if (error) {
@@ -53,6 +56,24 @@ class ProfileServerRepository {
     if (error) {
       throw new Error(error.message);
     }
+  }
+
+  async findDisplayNamesByUserIds(userIds: string[]): Promise<Map<string, string>> {
+    if (userIds.length === 0) return new Map();
+
+    const supabase = await createServerClient();
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("user_id, display_name")
+      .in("user_id", userIds);
+
+    if (error) throw new Error(error.message);
+
+    const map = new Map<string, string>();
+    for (const row of data ?? []) {
+      map.set(row.user_id as string, (row.display_name as string) ?? "Climber");
+    }
+    return map;
   }
 
   async ensureProfile(userId: string, displayName: string): Promise<ProfileRow> {

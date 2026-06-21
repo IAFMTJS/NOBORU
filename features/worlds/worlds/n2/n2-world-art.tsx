@@ -34,9 +34,8 @@ export function N2WorldArt({ className }: N2WorldArtProps) {
         style={{
           objectPosition: resolveHeroObjectPosition(N2_WORLD.art.heroAnchor),
         }}
-        sizes="100vw"
+        sizes="(max-width: 430px) 100vw, 430px"
         priority
-        unoptimized
       />
     </div>
   );

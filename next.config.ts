@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: [
+      "framer-motion",
       "lucide-react",
       "@radix-ui/react-checkbox",
       "@radix-ui/react-dialog",

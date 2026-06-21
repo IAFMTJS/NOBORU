@@ -6,6 +6,7 @@ import {
   type ElevationSourceType,
 } from "@/features/elevation/constants/elevation.constants";
 import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
+import { revalidateUserElevation } from "@/lib/cache/revalidate-user-data";
 import type {
   ElevationAwardViewModel,
   ElevationSummaryViewModel,
@@ -19,6 +20,33 @@ function mapReward(row: LevelRewardRow): LevelRewardViewModel {
     title: row.title,
     description: row.description,
     rewardType: row.reward_type,
+  };
+}
+
+export type EpAwardInput = {
+  sourceType: ElevationSourceType;
+  sourceId?: string | null;
+  amount: number;
+  description: string;
+};
+
+function buildElevationAwardViewModel(input: {
+  epAwarded: number;
+  oldLevel: number;
+  level: number;
+  currentEp: number;
+  totalEp: number;
+  rewardsUnlocked: LevelRewardViewModel[];
+}): ElevationAwardViewModel {
+  return {
+    epAwarded: input.epAwarded,
+    totalEp: input.totalEp,
+    currentLevel: input.level,
+    currentEp: input.currentEp,
+    epToNextLevel: epRequiredForNextLevel(input.level),
+    levelProgressPercent: levelProgressPercent(input.level, input.currentEp),
+    leveledUp: input.level > input.oldLevel,
+    rewardsUnlocked: input.rewardsUnlocked,
   };
 }
 
@@ -53,11 +81,32 @@ class ElevationService {
     amount: number;
     description: string;
   }): Promise<ElevationAwardViewModel | null> {
-    if (input.amount <= 0) return null;
+    const result = await this.awardEpBatch({
+      userId: input.userId,
+      awards: [
+        {
+          sourceType: input.sourceType,
+          sourceId: input.sourceId,
+          amount: input.amount,
+          description: input.description,
+        },
+      ],
+    });
 
+    return result;
+  }
+
+  async awardEpBatch(input: {
+    userId: string;
+    awards: EpAwardInput[];
+  }): Promise<ElevationAwardViewModel | null> {
+    const awards = input.awards.filter((award) => award.amount > 0);
+    if (awards.length === 0) return null;
+
+    const totalAwarded = awards.reduce((sum, award) => sum + award.amount, 0);
     const current = await elevationRepository.ensureElevation(input.userId);
     const oldLevel = current.current_level;
-    const newTotalEp = current.total_ep + input.amount;
+    const newTotalEp = current.total_ep + totalAwarded;
     const { level, currentEp } = calculateLevelFromTotalEp(newTotalEp);
 
     await elevationRepository.updateElevation({
@@ -67,32 +116,43 @@ class ElevationService {
       totalEp: newTotalEp,
     });
 
-    await elevationRepository.insertEvent({
-      userId: input.userId,
-      sourceType: input.sourceType,
-      sourceId: input.sourceId ?? null,
-      epAmount: input.amount,
-      description: input.description,
-    });
+    await elevationRepository.insertEvents(
+      awards.map((award) => ({
+        userId: input.userId,
+        sourceType: award.sourceType,
+        sourceId: award.sourceId ?? null,
+        epAmount: award.amount,
+        description: award.description,
+      })),
+    );
 
     const rewardsUnlocked: LevelRewardViewModel[] = [];
     if (level > oldLevel) {
-      for (let rewardLevel = oldLevel + 1; rewardLevel <= level; rewardLevel += 1) {
-        const reward = await elevationRepository.findRewardForLevel(rewardLevel);
-        if (reward) rewardsUnlocked.push(mapReward(reward));
-      }
+      const rewards = await elevationRepository.listRewardsForLevelRange(
+        oldLevel + 1,
+        level,
+      );
+      rewardsUnlocked.push(...rewards.map(mapReward));
     }
 
-    return {
-      epAwarded: input.amount,
-      totalEp: newTotalEp,
-      currentLevel: level,
+    revalidateUserElevation(input.userId);
+
+    return buildElevationAwardViewModel({
+      epAwarded: totalAwarded,
+      oldLevel,
+      level,
       currentEp,
-      epToNextLevel: epRequiredForNextLevel(level),
-      levelProgressPercent: levelProgressPercent(level, currentEp),
-      leveledUp: level > oldLevel,
+      totalEp: newTotalEp,
       rewardsUnlocked,
-    };
+    });
+  }
+
+  resolveReviewRatingEp(rating: ReviewRating): number {
+    const normalized = rating === "strong" || rating === "easy" ? "easy" : rating;
+    if (normalized === "easy") return 5;
+    if (normalized === "good") return 3;
+    if (normalized === "hard") return 2;
+    return 0;
   }
 
   async awardLessonCompletion(
@@ -119,9 +179,7 @@ class ElevationService {
     rating: ReviewRating,
     clientEventId?: string,
   ): Promise<ElevationAwardViewModel | null> {
-    const normalized = rating === "strong" || rating === "easy" ? "easy" : rating;
-    const amount =
-      normalized === "easy" ? 5 : normalized === "good" ? 3 : normalized === "hard" ? 2 : 0;
+    const amount = this.resolveReviewRatingEp(rating);
     if (amount === 0) return null;
 
     return this.awardEp({
