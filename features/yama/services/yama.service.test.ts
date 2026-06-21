@@ -155,12 +155,12 @@ describe("yama dialogue pools", () => {
 });
 
 describe("getYamaExpressionPath art-direction assets", () => {
-  it("resolves char-noboru art-direction paths", () => {
-    expect(getYamaExpressionPath("teaching", "dark")).toContain("char-noboru-reaction-teaching");
-    expect(getYamaExpressionPath("sleeping", "light")).toContain("char-noboru-sitting-campfire");
-    expect(getYamaExpressionPath("reward", "dark")).toContain("char-noboru-reaction-mastery");
-    expect(getYamaExpressionPath("adventure", "light")).toContain("char-noboru-walking-backpack");
-    expect(getYamaExpressionPath("determined", "dark")).toContain("char-noboru-running-ember");
-    expect(getYamaExpressionPath("concerned", "light")).toContain("char-noboru-reaction-worried");
+  it("resolves published kitsune art-library paths", () => {
+    expect(getYamaExpressionPath("teaching", "dark")).toContain("kitsune_teaching");
+    expect(getYamaExpressionPath("sleeping", "light")).toContain("kitsune_sitting_campfire");
+    expect(getYamaExpressionPath("reward", "dark")).toContain("kitsune_mastery");
+    expect(getYamaExpressionPath("adventure", "light")).toContain("kitsune_walking_backpack");
+    expect(getYamaExpressionPath("determined", "dark")).toContain("kitsune_running_ember");
+    expect(getYamaExpressionPath("concerned", "light")).toContain("kitsune_worried");
   });
 });
