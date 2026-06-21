@@ -25,7 +25,7 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
       title="Mountain World"
       subtitle="The full climb — from Hiragana foothills to the celestial summit"
       backHref="/tree"
-      backLabel="Journey"
+      backLabel="Tree"
       contentClassName="pb-2"
     >
       <div className="mx-auto max-w-md space-y-4">

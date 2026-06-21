@@ -21,6 +21,7 @@ type JourneyHudProps = {
   currentStreak?: number;
   totalXp?: number;
   treeOverviewHref?: string | null;
+  currentNodeLabel?: string | null;
   onRegionOverview: () => void;
   className?: string;
 };
@@ -36,6 +37,7 @@ export function JourneyHud({
   currentStreak = 0,
   totalXp = 0,
   treeOverviewHref = "/tree",
+  currentNodeLabel = null,
   onRegionOverview,
   className,
 }: JourneyHudProps) {
@@ -112,6 +114,12 @@ export function JourneyHud({
             aria-label="World tree climb progress"
           />
         </GlassSurfacePanel>
+      ) : null}
+
+      {currentNodeLabel ? (
+        <p className="truncate text-center font-sans text-[10px] font-medium text-trail-glow/95">
+          Next: {currentNodeLabel}
+        </p>
       ) : null}
     </header>
   );

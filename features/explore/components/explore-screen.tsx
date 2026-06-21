@@ -66,7 +66,7 @@ export function ExploreScreen({ yama }: ExploreScreenProps) {
       title="Discover Japan"
       subtitle="Culture, folklore, and lore between lessons on the trail"
       backHref="/tree"
-      backLabel="Journey"
+      backLabel="Tree"
       contentClassName="pb-2"
     >
       <div className="mx-auto max-w-md space-y-4">

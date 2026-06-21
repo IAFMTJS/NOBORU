@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { JOURNEY_SKELETON_MODE } from "@/features/journey/constants/journey.constants";
 import { SkeletonJourneyNode } from "@/features/journey/components/skeleton-journey-node";
+import { WorldTreeCurrentNodeBadge } from "@/features/journey/components/world-tree-current-node-badge";
 import { WorldBossNode } from "@/components/visual/world/world-boss-node";
 import { WorldLessonNode } from "@/components/visual/world/world-lesson-node";
 import { LessonNodeDetailSheet } from "@/features/learning/components/trail/lesson-node-detail-sheet";
@@ -16,6 +17,10 @@ import {
   type WorldTreeLayoutResult,
   type WorldTreeVisibleYBand,
 } from "@/features/journey/utils/world-tree-layout.utils";
+import {
+  resolveWorldTreeNodeAriaLabel,
+  resolveWorldTreeNodeOpacity,
+} from "@/features/journey/utils/world-tree-node-visual.utils";
 import { cn } from "@/lib/utils";
 
 type JourneyWorldNodeLayerProps = {
@@ -139,16 +144,19 @@ export function JourneyWorldNodeLayer({
               node.id === journey.position.currentNodeId || node.id === highlightNodeId;
             const size = nodeVisualSize(node, isCurrent);
             const isDraftNode = node.isDraft ?? node.contentStatus === "draft";
+            const nodeOpacity = resolveWorldTreeNodeOpacity(node.state, isCurrent);
 
             return (
               <div
                 key={node.globalIndex}
                 className={cn(
-                  "absolute z-30 -translate-x-1/2 -translate-y-1/2",
+                  "absolute z-30 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300",
                   isCurrent && "z-40",
                 )}
-                style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
+                style={{ left: `${xPercent}%`, top: `${yPercent}%`, opacity: nodeOpacity }}
                 data-segment-type={isDraftNode ? "draft" : undefined}
+                data-node-state={node.state}
+                data-node-current={isCurrent ? "true" : undefined}
               >
                 {showArtNodes ? (
                   node.kind === "trial" ? (
@@ -178,6 +186,7 @@ export function JourneyWorldNodeLayer({
                     onClick={() => openNode(node.id)}
                   />
                 )}
+                {isCurrent ? <WorldTreeCurrentNodeBadge label={node.label} /> : null}
               </div>
             );
           })}

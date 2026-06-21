@@ -48,7 +48,10 @@ export function WorldLessonNode({
   const content = (
     <span
       className={cn(
-        "relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white/10 bg-black/20 p-0.5",
+        "relative inline-flex items-center justify-center overflow-hidden rounded-full border bg-black/20 p-0.5 transition-opacity duration-300",
+        isCurrent
+          ? "border-trail-glow/70 ring-2 ring-trail-glow/45 ring-offset-2 ring-offset-transparent"
+          : "border-white/10",
         state === "locked" && "border-white/5 bg-black/40",
       )}
     >
@@ -61,7 +64,7 @@ export function WorldLessonNode({
           "rounded-full drop-shadow-md transition-all duration-300 motion-reduce:transition-none",
           GLOW[state],
           isCurrent &&
-            "animate-[journey-node-pulse_2s_ease-in-out_infinite] motion-reduce:animate-none",
+            "scale-105 animate-[journey-node-pulse_2s_ease-in-out_infinite] motion-reduce:animate-none",
           className,
         )}
       />

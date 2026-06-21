@@ -46,10 +46,14 @@ export function WorldScreen({
   variant = "journey",
   profileStats,
 }: WorldScreenProps) {
-  const { world, position, totalNodeCount } = worldPath;
+  const { world, position, totalNodeCount, journey } = worldPath;
   const zoneLabel =
     resolveZoneLabel(position.currentRegionSlug) ?? world.theme.subtitle;
-  const treeOverviewHref = `/worlds/${world.id}?mode=overview`;
+  const treeOverviewHref =
+    variant === "overview" ? null : `/worlds/${world.id}?mode=overview`;
+  const currentNode = journey.regions
+    .flatMap((region) => region.nodes)
+    .find((node) => node.id === position.currentNodeId);
 
   return (
     <WorldPortalTransitionProvider worldKey={world.id}>
@@ -87,6 +91,7 @@ export function WorldScreen({
             totalXp={profileStats.totalXp}
             onRegionOverview={() => undefined}
             treeOverviewHref={treeOverviewHref}
+            currentNodeLabel={currentNode?.label ?? null}
           />
         ) : null}
       </div>

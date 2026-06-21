@@ -77,11 +77,18 @@ export function resolveLessonNodeAsset({
   if (nodeKind === "event") return LESSON_NODE_ASSETS.event;
   if (nodeKind === "landmark") return LESSON_NODE_ASSETS.landmark;
   if (state === "completed") return LESSON_NODE_ASSETS.completed;
+  if (state === "in_progress") {
+    const type = lessonType?.toLowerCase() ?? "";
+    if (type.includes("kanji")) return LESSON_NODE_ASSETS.kanji;
+    if (type.includes("listen")) return LESSON_NODE_ASSETS.listening;
+    if (type.includes("vocab")) return LESSON_NODE_ASSETS.vocabulary;
+    return LESSON_NODE_ASSETS.in_progress;
+  }
 
   const type = lessonType?.toLowerCase() ?? "";
   if (type.includes("kanji")) return LESSON_NODE_ASSETS.kanji;
   if (type.includes("listen")) return LESSON_NODE_ASSETS.listening;
   if (type.includes("vocab")) return LESSON_NODE_ASSETS.vocabulary;
 
-  return LESSON_NODE_ASSETS[state === "in_progress" ? "in_progress" : "available"];
+  return LESSON_NODE_ASSETS.available;
 }
