@@ -178,7 +178,7 @@ class DashboardServerService {
         title: learningPath.nextLesson?.title ?? "Explore the learning path",
         href:
           journeyPath.nextLessonHref ??
-          (activeRegionSlug ? regionTrailHref(activeRegionSlug) : "/learn"),
+          (activeRegionSlug ? regionTrailHref(activeRegionSlug) : "/tree"),
         lessonNumber: lessonPosition?.index ?? null,
         lessonCount: regionForNextLesson?.lessonCount ?? 0,
         estimatedDuration: learningPath.nextLesson?.estimatedDuration ?? null,

@@ -106,7 +106,7 @@ export function SeasonalEventScreen({ event }: SeasonalEventScreenProps) {
         </section>
 
         <Link
-          href="/learn"
+          href="/tree"
           className="focus-ring mx-auto flex h-12 max-w-md items-center justify-center rounded-[var(--radius)] bg-primary text-base font-semibold text-primary-foreground shadow-elevation-2"
         >
           Continue festival climb

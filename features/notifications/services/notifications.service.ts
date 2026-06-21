@@ -20,7 +20,7 @@ const PLACEHOLDER_NOTIFICATIONS: NotificationViewModel[] = [
     body: "Forest Trail region unlocked. New lessons await ahead.",
     createdAt: new Date(Date.now() - 26 * 3600000).toISOString(),
     read: false,
-    href: "/learn",
+    href: "/tree",
   },
   {
     id: "n3",

@@ -15,8 +15,8 @@ export default async function EndgamePage() {
     <SecondaryScreenShell
       title="Mastery Mountains"
       subtitle="Post-N1 endgame — infinite challenges and seasonal climbs"
-      backHref="/learn"
-      backLabel="Journey"
+      backHref="/tree"
+      backLabel="Tree"
       contentClassName="flex flex-col justify-center pb-2"
     >
       <GlassPanel className="mx-auto flex max-w-md flex-col items-center gap-6 p-6 text-center">

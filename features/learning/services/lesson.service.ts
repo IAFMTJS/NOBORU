@@ -17,7 +17,6 @@ import type {
   KatakanaLessonContent,
   KanjiLessonContent,
   LessonContent,
-  LessonRecallStep,
   LessonReadingStep,
   LessonSessionViewModel,
   LessonStep,
@@ -37,22 +36,18 @@ import { listeningProgressService } from "@/features/listening/services/listenin
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
-import {
-  buildGrammarProductionStep,
-  buildMatchingStep,
-  buildMixedRecallSteps,
-  buildRecallStep,
-  getRecallAnswer,
-} from "@/features/learning/utils/exercise-steps";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
+import {
+  assembleStagedExerciseSteps,
+  summarizeLessonStages,
+} from "@/lib/learning/lesson-stage-assembly.service";
 import {
   buildCheckpointExerciseCandidates,
   capNewVocabularyInLessonContents,
   extractExerciseContents,
   partitionLessonContentsByKnown,
-  planLessonExerciseCandidates,
 } from "@/lib/learning/lesson-assembly.service";
 import { capNewGrammarInLessonContents } from "@/lib/learning/grammar-progression.service";
 import { planCheckpointActivities } from "@/lib/learning/checkpoint-assembly.service";
@@ -61,8 +56,8 @@ import { playerKnowledgeService } from "@/features/learning/services/player-know
 
 type LessonAssemblyPlan = {
   newContents: LessonContent[];
-  exerciseContents: LessonContent[];
-  exerciseIsReviewById: Map<string, boolean>;
+  reviewContents: LessonContent[];
+  isCheckpoint: boolean;
 };
 
 function isKnownLessonContent(
@@ -505,47 +500,17 @@ class LessonService {
     };
   }
 
-  private buildArchitectureExerciseBlock(
-    exerciseContents: LessonContent[],
-    exerciseIsReviewById: Map<string, boolean>,
-    includeGrammarProduction: boolean,
+  private buildStagedExerciseBlock(
+    newContents: LessonContent[],
+    reviewContents: LessonContent[],
+    isCheckpoint: boolean,
   ): LessonStep[] {
-    if (exerciseContents.length === 0) return [];
-
-    const answers = exerciseContents.map(getRecallAnswer);
-    const recallSteps: LessonRecallStep[] = exerciseContents.map((content, index) =>
-      buildRecallStep(
-        content,
-        answers,
-        index + 1,
-        exerciseContents.length,
-        exerciseIsReviewById.get(content.id) ? "consolidation" : "standard",
-      ),
-    );
-
-    const grammarProductionSteps: LessonStep[] = [];
-    if (includeGrammarProduction) {
-      for (const [index, content] of exerciseContents.entries()) {
-        if (content.type !== "grammar") continue;
-        const productionStep = buildGrammarProductionStep(
-          content,
-          answers,
-          index + 1,
-          exerciseContents.length,
-        );
-        if (productionStep) grammarProductionSteps.push(productionStep);
-      }
-    }
-
-    const matchingStep = buildMatchingStep(exerciseContents);
-    const mixedRecallSteps = buildMixedRecallSteps(exerciseContents);
-
-    return [
-      ...recallSteps,
-      ...grammarProductionSteps,
-      ...(matchingStep ? [matchingStep] : []),
-      ...mixedRecallSteps,
-    ];
+    const { steps } = assembleStagedExerciseSteps({
+      newContents,
+      reviewContents,
+      isCheckpoint,
+    });
+    return steps;
   }
 
   private buildDiscoverTeachSteps(contents: LessonContent[]): LessonTeachStep[] {
@@ -554,7 +519,48 @@ class LessonService {
       content,
       index: index + 1,
       total: contents.length,
+      stage: "introduction",
     }));
+  }
+
+  private async loadBranchPriorLessonContents(
+    unitId: string,
+    currentLessonId: string,
+    currentOrderIndex: number,
+  ): Promise<LessonContent[]> {
+    const regions = await learningPathRepository.listPublishedRegionsWithCurriculum();
+    const unit = regions
+      .flatMap((region) => region.units)
+      .find((candidate) => candidate.id === unitId);
+    if (!unit) return [];
+
+    const priorLessons = unit.lessons.filter(
+      (lesson) =>
+        lesson.id !== currentLessonId &&
+        lesson.order_index < currentOrderIndex &&
+        lesson.type !== "practice" &&
+        lesson.type !== "application",
+    );
+
+    if (priorLessons.length === 0) return [];
+
+    const itemGroups = await Promise.all(
+      priorLessons.map((lesson) => learningPathRepository.listLessonItems(lesson.id)),
+    );
+    const allItems = itemGroups.flat();
+    if (allItems.length === 0) return [];
+
+    const loaded = await this.loadContentsBatch(allItems);
+    const seen = new Set<string>();
+    const contents: LessonContent[] = [];
+
+    for (const content of loaded) {
+      if (!content || seen.has(content.id)) continue;
+      seen.add(content.id);
+      contents.push(content);
+    }
+
+    return contents;
   }
 
   private async loadReviewVocabularyContents(
@@ -603,6 +609,7 @@ class LessonService {
     lesson: {
       id: string;
       type: string;
+      order_index: number;
       checkpoint_activity_mix?: string[] | null;
       unit: { id: string; region: { slug: string } };
     },
@@ -670,17 +677,24 @@ class LessonService {
       Math.max(newContents.length * 3, 6),
     );
 
+    const branchPriorContents =
+      lesson.type === "practice"
+        ? await this.loadBranchPriorLessonContents(
+            lesson.unit.id,
+            lesson.id,
+            lesson.order_index,
+          )
+        : [];
+
     const reviewContents = [
       ...knownContents,
+      ...branchPriorContents.filter(
+        (content) => !workingContents.some((item) => item.id === content.id),
+      ),
       ...crossLessonReviewVocabulary.filter(
         (content) => !workingContents.some((item) => item.id === content.id),
       ),
     ];
-
-    let exerciseCandidates = planLessonExerciseCandidates(
-      lesson.type === "practice" ? [] : newContents,
-      reviewContents,
-    );
 
     if (lesson.type === "practice") {
       const reviewPool = [
@@ -712,54 +726,26 @@ class LessonService {
         contentsById,
         lesson.checkpoint_activity_mix,
       );
-      if (checkpointCandidates.length > 0) {
-        exerciseCandidates = checkpointCandidates;
-      }
+      const checkpointContents = extractExerciseContents(checkpointCandidates);
+      const mergedReview = [
+        ...checkpointContents,
+        ...reviewPool.filter(
+          (content) => !checkpointContents.some((item) => item.id === content.id),
+        ),
+      ];
+
+      return {
+        newContents: [],
+        reviewContents: mergedReview,
+        isCheckpoint: true,
+      };
     }
 
-    const exerciseIsReviewById = new Map(
-      exerciseCandidates.map((candidate) => [candidate.id, candidate.isReview]),
-    );
-
     return {
-      newContents: lesson.type === "practice" ? [] : newContents,
-      exerciseContents: extractExerciseContents(exerciseCandidates),
-      exerciseIsReviewById,
+      newContents,
+      reviewContents,
+      isCheckpoint: false,
     };
-  }
-
-  private buildTeachRecallSequence(
-    contents: LessonContent[],
-    answers: string[],
-    includeGrammarProduction: boolean,
-  ): LessonStep[] {
-    const teachSteps: LessonTeachStep[] = contents.map((content, index) => ({
-      kind: "teach",
-      content,
-      index: index + 1,
-      total: contents.length,
-    }));
-
-    const recallSteps: LessonRecallStep[] = contents.map((content, index) =>
-      buildRecallStep(content, answers, index + 1, contents.length),
-    );
-
-    return teachSteps.flatMap((teach, index) => {
-      const content = contents[index];
-      const steps: LessonStep[] = [teach, recallSteps[index]];
-
-      if (includeGrammarProduction && content.type === "grammar") {
-        const productionStep = buildGrammarProductionStep(
-          content,
-          answers,
-          index + 1,
-          contents.length,
-        );
-        if (productionStep) steps.push(productionStep);
-      }
-
-      return steps;
-    });
   }
 
   private buildSteps(
@@ -865,41 +851,18 @@ class LessonService {
       if (assembly) {
         return [
           intro,
-          ...this.buildArchitectureExerciseBlock(
-            assembly.exerciseContents,
-            assembly.exerciseIsReviewById,
-            false,
+          ...this.buildStagedExerciseBlock(
+            assembly.newContents,
+            assembly.reviewContents,
+            assembly.isCheckpoint,
           ),
           complete,
         ];
       }
 
-      const practiceContents = contents.filter(
-        (
-          content,
-        ): content is
-          | HiraganaLessonContent
-          | KatakanaLessonContent
-          | VocabularyLessonContent
-          | GrammarLessonContent
-          | KanjiLessonContent =>
-          content.type === "hiragana" ||
-          content.type === "katakana" ||
-          content.type === "vocabulary" ||
-          content.type === "grammar" ||
-          content.type === "kanji",
-      );
-      const answers = practiceContents.map(getRecallAnswer);
-      const recallSteps = practiceContents.map((content, index) =>
-        buildRecallStep(content, answers, index + 1, practiceContents.length),
-      );
-      const matchingStep = buildMatchingStep(practiceContents);
-      const mixedRecallSteps = buildMixedRecallSteps(practiceContents);
       return [
         intro,
-        ...recallSteps,
-        ...(matchingStep ? [matchingStep] : []),
-        ...mixedRecallSteps,
+        ...this.buildStagedExerciseBlock([], contents, true),
         complete,
       ];
     }
@@ -908,29 +871,19 @@ class LessonService {
       return [
         intro,
         ...this.buildDiscoverTeachSteps(assembly.newContents),
-        ...this.buildArchitectureExerciseBlock(
-          assembly.exerciseContents,
-          assembly.exerciseIsReviewById,
-          lesson.type === "grammar",
+        ...this.buildStagedExerciseBlock(
+          assembly.newContents,
+          assembly.reviewContents,
+          assembly.isCheckpoint,
         ),
         complete,
       ];
     }
 
-    const answers = contents.map(getRecallAnswer);
-    const teachRecallSteps = this.buildTeachRecallSequence(
-      contents,
-      answers,
-      lesson.type === "grammar",
-    );
-    const matchingStep = buildMatchingStep(contents);
-    const mixedRecallSteps = buildMixedRecallSteps(contents);
-
     return [
       intro,
-      ...teachRecallSteps,
-      ...(matchingStep ? [matchingStep] : []),
-      ...mixedRecallSteps,
+      ...this.buildDiscoverTeachSteps(contents),
+      ...this.buildStagedExerciseBlock(contents, [], false),
       complete,
     ];
   }
@@ -1010,6 +963,7 @@ class LessonService {
       score: progress?.score ?? 0,
       passScore: getLessonPassScore(lesson.type),
       steps,
+      stageSummary: summarizeLessonStages(steps),
       nextLesson:
         nextLesson && nextLesson.id !== lesson.id
           ? {

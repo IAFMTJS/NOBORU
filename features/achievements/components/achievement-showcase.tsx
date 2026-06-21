@@ -261,7 +261,7 @@ export function AchievementShowcase({
                 surface="achievements"
                 title="Plaques await discovery"
                 description="Hidden treasures remain along the trail. Continue climbing to reveal shrine milestones."
-                actionHref="/learn"
+                actionHref="/tree"
                 actionLabel="Continue your journey"
               />
             </div>

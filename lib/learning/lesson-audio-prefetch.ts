@@ -8,6 +8,10 @@ function collectAudioUrlFromStep(step: LessonStep): string | null {
     return step.content.audioUrl;
   }
 
+  if (step.kind === "listening_recall") {
+    return step.audioUrl;
+  }
+
   if (step.kind === "listening") {
     return step.content.audioUrl;
   }

@@ -160,7 +160,7 @@ export function CampScreen({ data }: CampScreenProps) {
           </GlassSurfaceButton>
         ) : null}
         <Link
-          href="/learn"
+          href="/tree"
           className={cn(
             "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",
             glassSurface.buttonSecondary,

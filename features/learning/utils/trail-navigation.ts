@@ -1,11 +1,14 @@
-/** Deep link to a region gate on the continuous Journey scroll (`/learn`). */
+/** Primary World Tree entry — bottom nav Tree tab. */
+export const TREE_TRAIL_ENTRY_HREF = "/tree";
+
+/** Deep link to a region gate on the World Tree scroll. */
 export function regionTrailHref(regionSlug: string): string {
-  return `/learn?region=${encodeURIComponent(regionSlug)}`;
+  return `/tree?region=${encodeURIComponent(regionSlug)}`;
 }
 
 /** Deep link to a specific trail node after lesson complete/fail. */
 export function journeyNodeHref(nodeId: string): string {
-  return `/learn?node=${encodeURIComponent(nodeId)}`;
+  return `/tree?node=${encodeURIComponent(nodeId)}`;
 }
 
 type LessonJourneyReturnInput = {
@@ -25,5 +28,5 @@ export function lessonReturnJourneyHref(
   if (options?.regionUnlocked && session.unlocksRegionSlug) {
     params.set("unlock", session.unlocksRegionSlug);
   }
-  return `/learn?${params.toString()}`;
+  return `/tree?${params.toString()}`;
 }

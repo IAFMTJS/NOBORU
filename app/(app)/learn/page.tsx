@@ -1,5 +1,4 @@
-import { redirectToCurrentWorld } from "@/lib/orchestration/world.orchestrator";
-import { requireAuthenticatedUserId } from "@/lib/orchestration/require-authenticated-user";
+import { redirect } from "next/navigation";
 
 type LearnPageProps = {
   searchParams: Promise<{
@@ -8,13 +7,14 @@ type LearnPageProps = {
   }>;
 };
 
-/** Journey tab — redirects to the user's current JLPT world. */
+/** Legacy Journey tab URL — forwards to the Tree tab. */
 export default async function LearnPage({ searchParams }: LearnPageProps) {
-  await requireAuthenticatedUserId();
   const params = await searchParams;
+  const query = new URLSearchParams();
 
-  return redirectToCurrentWorld({
-    region: params.region,
-    node: params.node,
-  });
+  if (params.region) query.set("region", params.region);
+  if (params.node) query.set("node", params.node);
+
+  const suffix = query.toString();
+  redirect(suffix ? `/tree?${suffix}` : "/tree");
 }

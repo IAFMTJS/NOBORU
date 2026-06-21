@@ -120,7 +120,7 @@ export function DailyChallengePlayer({ session }: DailyChallengePlayerProps) {
           surface="review"
           title="No retention challenge today"
           description="Learn a few more words on the trail, then return for memory maintenance."
-          actionHref="/learn"
+          actionHref="/tree"
           actionLabel="Continue climbing"
         />
       </StudyAtmosphere>

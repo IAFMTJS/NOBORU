@@ -22,6 +22,29 @@ export {
   type WorldTreeNodeType,
 } from "@/lib/learning/learning-architecture.constants";
 
+export {
+  LESSON_MAX_CONSECUTIVE_SAME_KIND,
+  LESSON_MAX_SCORED_EXERCISES,
+  LESSON_MIN_SCORED_EXERCISES,
+  LESSON_PASS_SCORE_UNIVERSAL,
+  LESSON_STAGES,
+  LESSON_TARGET_DURATION_MAX,
+  LESSON_TARGET_DURATION_MIN,
+  STAGE_EXERCISE_RANGES,
+  STAGE_LABELS,
+  type LessonStage,
+  type ScoredLessonStage,
+} from "@/lib/learning/lesson-stage.constants";
+
+export {
+  assembleStagedExerciseSteps,
+  computeStagePlans,
+  enforceExerciseVariety,
+  hasListeningAudio,
+  summarizeLessonStages,
+  type StagedLessonAssemblyInput,
+} from "@/lib/learning/lesson-stage-assembly.service";
+
 export type {
   ActiveVocabularyPool,
   ActiveVocabularyPoolInput,

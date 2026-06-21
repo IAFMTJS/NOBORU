@@ -188,7 +188,7 @@ export function IntakeWizard({ chartData }: IntakeWizardProps) {
                 </Button>
               ) : (
                 <Button variant="ghost" className="flex-1" asChild>
-                  <Link href="/learn">Skip for now</Link>
+                  <Link href="/tree">Skip for now</Link>
                 </Button>
               )}
               <Button className="flex-1" disabled={!canContinue} onClick={goNext}>

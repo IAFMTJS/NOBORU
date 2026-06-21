@@ -22,6 +22,8 @@ import {
   LESSON_WRONG_EXPLANATION_MS,
 } from "@/features/learning/constants/lesson-ui.constants";
 import { ApplicationDrill } from "@/features/learning/components/drills/application-drill";
+import { AudioPlayback } from "@/components/media/audio-playback";
+import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
 import { FillBlankDrill } from "@/features/learning/components/drills/fill-blank-drill";
 import { MatchingDrill } from "@/features/learning/components/drills/matching-drill";
@@ -39,6 +41,7 @@ import {
 import { LessonTeachCard } from "@/features/learning/components/lesson-teach-card";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import type {
+  LessonListeningRecallStep,
   LessonReadingStep,
   LessonSessionViewModel,
   LessonStep,
@@ -132,12 +135,62 @@ type LessonPlayerProps = {
 function isAutoAdvanceDrillStep(step: LessonStep): boolean {
   return (
     step.kind === "recall" ||
+    step.kind === "listening_recall" ||
     step.kind === "matching" ||
     step.kind === "reading" ||
     step.kind === "application" ||
     step.kind === "fill_blank" ||
     step.kind === "word_bank" ||
     step.kind === "sentence_typed"
+  );
+}
+
+function ListeningRecallDrill({
+  step,
+  onAnswer,
+  disabled = false,
+}: {
+  step: LessonListeningRecallStep;
+  onAnswer: (correct: boolean) => void;
+  disabled?: boolean;
+}) {
+  const [selected, setSelected] = useState<number | null>(null);
+
+  return (
+    <div className="flex flex-1 flex-col gap-6">
+      <p className="text-body text-muted-foreground">{step.prompt}</p>
+      <div className="flex justify-center">
+        <AudioPlayback
+          audioUrl={step.audioUrl}
+          japaneseText={step.display}
+          label="Listen"
+        />
+      </div>
+      <TrailAnswerPad
+        options={step.options.map((option, index) => {
+          const isSelected = selected === index;
+          const isCorrect = index === step.correctIndex;
+          const showResult = selected !== null;
+          let state: "default" | "selected" | "correct" | "incorrect" | "disabled" = "default";
+          if (showResult && isCorrect) state = "correct";
+          else if (showResult && isSelected && !isCorrect) state = "incorrect";
+          else if (disabled || selected !== null) state = "disabled";
+
+          return {
+            id: option,
+            label: option,
+            state,
+            onSelect:
+              disabled || selected !== null
+                ? undefined
+                : () => {
+                    setSelected(index);
+                    onAnswer(isCorrect);
+                  },
+          };
+        })}
+      />
+    </div>
   );
 }
 
@@ -524,6 +577,10 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
               soundEnabled={soundEnabled}
             />
           )
+        ) : null}
+
+        {currentStep.kind === "listening_recall" ? (
+          <ListeningRecallDrill step={currentStep} onAnswer={handleRecallAnswer} />
         ) : null}
 
         {currentStep.kind === "fill_blank" ? (

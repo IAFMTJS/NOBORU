@@ -262,7 +262,7 @@ export function ReviewSession({
             </Button>
           ) : null}
           <PrimaryClimbButton className="w-full" asChild>
-            <Link href="/learn">Continue Climbing</Link>
+            <Link href="/tree">Continue Climbing</Link>
           </PrimaryClimbButton>
           <Button variant="ghost" className="w-full" asChild>
             <Link href="/camp">Return to Camp</Link>

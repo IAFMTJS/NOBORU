@@ -56,7 +56,7 @@ export function MemoryBookScreen({ memoryBook }: MemoryBookScreenProps) {
                       surface="generic"
                       title="Blank pages await discovery"
                       description="Your first summit moments will inscribe themselves here as you climb."
-                      actionHref="/learn"
+                      actionHref="/tree"
                       actionLabel="Continue climbing"
                     />
                   </div>
@@ -75,7 +75,7 @@ export function MemoryBookScreen({ memoryBook }: MemoryBookScreenProps) {
         </MemoryBookSpread>
 
         <PrimaryClimbButton asChild className="mx-auto max-w-md">
-          <Link href="/learn">Continue climbing</Link>
+          <Link href="/tree">Continue climbing</Link>
         </PrimaryClimbButton>
       </div>
     </SecondaryScreenShell>

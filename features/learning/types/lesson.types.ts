@@ -1,4 +1,5 @@
 import type { ContentStatus } from "@/lib/content/types";
+import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import type { VocabularyLifecycleStage } from "@/lib/learning/learning-architecture.constants";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import type { RegionAvailability } from "@/lib/learning/region-unlock";
@@ -138,6 +139,7 @@ export type LessonTeachStep = {
   content: LessonContent;
   index: number;
   total: number;
+  stage?: "introduction";
 };
 
 export type LessonRecallMode = "choice" | "typed";
@@ -156,6 +158,19 @@ export type LessonRecallStep = {
   acceptedAnswers?: string[];
   phase?: LessonRecallPhase;
   lifecycleStage?: VocabularyLifecycleStage;
+  stage?: LessonStage;
+  index: number;
+  total: number;
+};
+
+export type LessonListeningRecallStep = {
+  kind: "listening_recall";
+  prompt: string;
+  audioUrl: string;
+  display: string;
+  options: string[];
+  correctIndex: number;
+  stage?: LessonStage;
   index: number;
   total: number;
 };
@@ -167,6 +182,7 @@ export type LessonFillBlankStep = {
   englishHint: string;
   options: string[];
   correctIndex: number;
+  stage?: LessonStage;
   index: number;
   total: number;
 };
@@ -177,6 +193,7 @@ export type LessonWordBankStep = {
   englishHint: string;
   tokens: string[];
   correctOrder: string[];
+  stage?: LessonStage;
   index: number;
   total: number;
 };
@@ -186,6 +203,7 @@ export type LessonSentenceTypedStep = {
   prompt: string;
   englishHint: string;
   acceptedAnswers: string[];
+  stage?: LessonStage;
   index: number;
   total: number;
 };
@@ -200,6 +218,7 @@ export type LessonMatchingStep = {
   kind: "matching";
   prompt: string;
   pairs: LessonMatchingPair[];
+  stage?: LessonStage;
   index: number;
   total: number;
 };
@@ -257,10 +276,19 @@ export type LessonCompleteStep = {
   xpReward: number;
 };
 
+export type ScoredLessonStep =
+  | LessonRecallStep
+  | LessonListeningRecallStep
+  | LessonFillBlankStep
+  | LessonWordBankStep
+  | LessonSentenceTypedStep
+  | LessonMatchingStep;
+
 export type LessonStep =
   | LessonIntroStep
   | LessonTeachStep
   | LessonRecallStep
+  | LessonListeningRecallStep
   | LessonFillBlankStep
   | LessonWordBankStep
   | LessonSentenceTypedStep
@@ -273,6 +301,12 @@ export type LessonStep =
   | LessonApplicationStep
   | LessonKnowledgeInventoryStep
   | LessonCompleteStep;
+
+export type LessonStageSummary = {
+  stage: LessonStage;
+  label: string;
+  exerciseCount: number;
+};
 
 export type LessonSessionViewModel = {
   lessonId: string;
@@ -289,6 +323,8 @@ export type LessonSessionViewModel = {
   score: number;
   passScore: number;
   steps: LessonStep[];
+  /** Staged pipeline summary for UI progress (excludes intro/complete). */
+  stageSummary?: LessonStageSummary[];
   nextLesson: {
     title: string;
     href: string;

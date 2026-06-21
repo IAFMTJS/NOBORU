@@ -9,6 +9,8 @@ import { loadingService } from "@/features/yama/services/loading.service";
 describe("loadingService", () => {
   it("maps pathnames to loading scene profiles", () => {
     expect(loadingService.resolveSceneProfile("/home")).toBe("home");
+    expect(loadingService.resolveSceneProfile("/tree")).toBe("learn");
+    expect(loadingService.resolveSceneProfile("/worlds/n5")).toBe("learn");
     expect(loadingService.resolveSceneProfile("/learn")).toBe("learn");
     expect(loadingService.resolveSceneProfile("/learn/lesson/abc")).toBe("lesson");
     expect(loadingService.resolveSceneProfile("/review")).toBe("review");

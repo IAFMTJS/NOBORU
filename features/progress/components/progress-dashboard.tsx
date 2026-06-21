@@ -90,7 +90,7 @@ export function ProgressDashboard({ dashboard }: ProgressDashboardProps) {
           </div>
         </GlassPanel>
         <p className="mt-4 text-center">
-          <Link href="/learn" className="text-body-sm text-primary underline-offset-2 hover:underline">
+          <Link href="/tree" className="text-body-sm text-primary underline-offset-2 hover:underline">
             Return to trail
           </Link>
         </p>

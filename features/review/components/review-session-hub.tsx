@@ -26,7 +26,7 @@ export function ReviewSessionHub({ stats }: ReviewSessionHubProps) {
           surface="review"
           title="Review queue is clear"
           description="The path ahead is open — explore a lesson or rest at camp until new cards ripen."
-          actionHref="/learn"
+          actionHref="/tree"
           actionLabel="Continue climbing"
         />
       </StudyAtmosphere>

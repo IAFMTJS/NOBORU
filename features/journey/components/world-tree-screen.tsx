@@ -67,8 +67,8 @@ export function WorldTreeScreen({
   const continueHref =
     journey.nextLessonHref ??
     (journey.position.currentNodeId
-      ? `/learn?node=${encodeURIComponent(journey.position.currentNodeId)}`
-      : "/learn");
+      ? `/tree?node=${encodeURIComponent(journey.position.currentNodeId)}`
+      : "/tree");
 
   const handleBandSelect = useCallback((_bandId: WorldTreeJlptBandId, centerYPercent: number) => {
     setActiveJlptBandId(_bandId);

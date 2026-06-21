@@ -11,6 +11,8 @@ export const AUTH_ROUTES = {
 export const AUTH_REQUIRED_PREFIXES = [
   "/camp",
   "/home",
+  "/tree",
+  "/worlds",
   "/learn",
   "/dojo",
   "/review",
@@ -31,6 +33,8 @@ export const ADMIN_ROUTE_PREFIXES = ["/admin"] as const;
 export const ONBOARDING_REQUIRED_PREFIXES = [
   "/camp",
   "/home",
+  "/tree",
+  "/worlds",
   "/learn",
   "/dojo",
   "/review",

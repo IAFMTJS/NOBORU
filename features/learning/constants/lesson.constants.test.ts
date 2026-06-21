@@ -7,20 +7,20 @@ import {
 } from "@/features/learning/constants/lesson.constants";
 
 describe("lesson pass constants", () => {
-  it("uses tiered pass scores by lesson type", () => {
-    expect(getLessonPassScore("vocabulary")).toBe(70);
+  it("uses universal 80% pass score for all lesson types", () => {
+    expect(getLessonPassScore("vocabulary")).toBe(80);
     expect(getLessonPassScore("practice")).toBe(80);
-    expect(getLessonPassScore("application")).toBe(75);
+    expect(getLessonPassScore("application")).toBe(80);
   });
 
   it("calculates lesson score from recall totals", () => {
-    expect(calculateLessonScore(7, 10)).toBe(70);
+    expect(calculateLessonScore(8, 10)).toBe(80);
     expect(calculateLessonScore(0, 0)).toBe(100);
   });
 
   it("blocks first completion below the pass threshold", () => {
-    expect(isLessonScorePassing("vocabulary", 69)).toBe(false);
-    expect(isLessonScorePassing("vocabulary", 70)).toBe(true);
+    expect(isLessonScorePassing("vocabulary", 79)).toBe(false);
+    expect(isLessonScorePassing("vocabulary", 80)).toBe(true);
     expect(isLessonScorePassing("practice", 79)).toBe(false);
     expect(isLessonScorePassing("practice", 80)).toBe(true);
   });

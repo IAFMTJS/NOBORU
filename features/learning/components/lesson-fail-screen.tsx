@@ -23,7 +23,7 @@ type LessonFailScreenProps = {
 export function LessonFailScreen({
   score,
   passScore,
-  trailHref = "/learn",
+  trailHref = "/tree",
   onRetry,
 }: LessonFailScreenProps) {
   return (

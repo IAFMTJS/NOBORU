@@ -114,7 +114,7 @@ export function CollectionsMuseumScreen({ museum }: CollectionsMuseumScreenProps
                 surface="generic"
                 title="Exhibit hall awaits discovery"
                 description="Artifacts will take their pedestals as you uncover treasures on the climb."
-                actionHref="/learn"
+                actionHref="/tree"
                 actionLabel="Continue climbing"
               />
             ) : (

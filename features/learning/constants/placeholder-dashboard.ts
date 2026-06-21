@@ -40,7 +40,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
           target: 10,
           completed: false,
           epReward: 50,
-          href: "/learn",
+          href: "/tree",
           progressPercent: 60,
         },
         {
@@ -52,7 +52,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
           target: 2,
           completed: true,
           epReward: 75,
-          href: "/learn",
+          href: "/tree",
           progressPercent: 100,
         },
         {
@@ -76,7 +76,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
           target: 100,
           completed: false,
           epReward: 100,
-          href: "/learn",
+          href: "/tree",
           progressPercent: 45,
         },
       ],
@@ -95,7 +95,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
           target: 5,
           completed: false,
           epReward: 150,
-          href: "/learn",
+          href: "/tree",
           progressPercent: 40,
         },
         {
@@ -125,7 +125,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       pathPosition: 0.17,
       regionIndex: 0,
       globalIndex: 0,
-      href: "/learn",
+      href: "/tree",
       xpReward: 25,
     },
     {
@@ -139,7 +139,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
       pathPosition: 0.5,
       regionIndex: 1,
       globalIndex: 1,
-      href: "/learn",
+      href: "/tree",
       xpReward: 10,
     },
     {
@@ -160,7 +160,7 @@ export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
   currentJourneyNodeId: "lesson-2",
   upcomingLesson: {
     title: "Lesson 23: ~て form",
-    href: "/learn",
+    href: "/tree",
     lessonNumber: 7,
     lessonCount: 20,
     estimatedDuration: 4,

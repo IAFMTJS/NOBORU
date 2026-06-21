@@ -24,7 +24,7 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
     <SecondaryScreenShell
       title="Mountain World"
       subtitle="The full climb — from Hiragana foothills to the celestial summit"
-      backHref="/learn"
+      backHref="/tree"
       backLabel="Journey"
       contentClassName="pb-2"
     >

@@ -5,29 +5,20 @@ import type {
   KatakanaLessonContent,
   LessonContent,
   LessonFillBlankStep,
+  LessonListeningRecallStep,
   LessonMatchingStep,
   LessonRecallStep,
   LessonSentenceTypedStep,
   LessonWordBankStep,
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
+import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
 } from "@/features/learning/constants/lesson.constants";
 import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
 import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
-
-type LessonListeningRecallStep = {
-  kind: "listening_recall";
-  prompt: string;
-  audioUrl: string;
-  display: string;
-  options: string[];
-  correctIndex: number;
-  index: number;
-  total: number;
-};
 
 export function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
@@ -36,6 +27,163 @@ export function shuffle<T>(items: T[]): T[] {
     [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
   }
   return copy;
+}
+
+export function getJapaneseSurface(content: LessonContent): string {
+  switch (content.type) {
+    case "vocabulary":
+      return content.kanji ?? content.kana;
+    case "hiragana":
+    case "katakana":
+    case "kanji":
+      return content.character;
+    case "grammar":
+      return content.title;
+    default:
+      return "";
+  }
+}
+
+export function getJapaneseReading(content: LessonContent): string | null {
+  switch (content.type) {
+    case "vocabulary":
+      return content.kanji ? content.kana : null;
+    case "kanji":
+      return content.kunyomi[0] ?? content.onyomi[0] ?? null;
+    default:
+      return null;
+  }
+}
+
+export function buildRecognitionChoiceStep(
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+  stage: LessonStage = "recognition",
+): LessonRecallStep | null {
+  if (
+    content.type !== "vocabulary" &&
+    content.type !== "kanji" &&
+    content.type !== "hiragana" &&
+    content.type !== "katakana" &&
+    content.type !== "grammar"
+  ) {
+    return null;
+  }
+
+  const meaning = getRecallAnswer(content);
+  const options = buildRecallOptions(meaning, allAnswers);
+
+  return {
+    kind: "recall",
+    mode: "choice",
+    contentType: content.type,
+    prompt: "Choose the correct meaning",
+    display: getJapaneseSurface(content),
+    reading: getJapaneseReading(content),
+    options,
+    correctIndex: options.indexOf(meaning),
+    stage,
+    index,
+    total,
+  };
+}
+
+export function buildReverseRecognitionStep(
+  content: LessonContent,
+  allJapaneseSurfaces: string[],
+  index: number,
+  total: number,
+  stage: LessonStage = "recognition",
+): LessonRecallStep | null {
+  if (
+    content.type !== "vocabulary" &&
+    content.type !== "kanji" &&
+    content.type !== "grammar"
+  ) {
+    return null;
+  }
+
+  const surface = getJapaneseSurface(content);
+  const options = buildRecallOptions(surface, allJapaneseSurfaces);
+
+  return {
+    kind: "recall",
+    mode: "choice",
+    contentType: content.type,
+    prompt: "Choose the correct Japanese",
+    display: getRecallAnswer(content),
+    options,
+    correctIndex: options.indexOf(surface),
+    stage,
+    index,
+    total,
+  };
+}
+
+export function buildActiveRecallStep(
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+  stage: LessonStage = "active_recall",
+): LessonRecallStep | null {
+  if (
+    content.type !== "vocabulary" &&
+    content.type !== "kanji" &&
+    content.type !== "hiragana" &&
+    content.type !== "katakana" &&
+    content.type !== "grammar"
+  ) {
+    return null;
+  }
+
+  const meaning = getRecallAnswer(content);
+  const surface = getJapaneseSurface(content);
+
+  if (content.type === "vocabulary" || content.type === "kanji") {
+    return {
+      kind: "recall",
+      mode: "typed",
+      contentType: content.type,
+      prompt: `Translate: "${meaning}"`,
+      display: meaning,
+      options: [],
+      correctIndex: 0,
+      acceptedAnswers: buildAcceptedAnswers(surface),
+      stage,
+      index,
+      total,
+    };
+  }
+
+  return buildRecallStep(content, allAnswers, index, total, "standard");
+}
+
+export function buildMasteryChallengeStep(
+  content: LessonContent,
+  allAnswers: string[],
+  index: number,
+  total: number,
+): LessonFillBlankStep | LessonWordBankStep | LessonSentenceTypedStep | LessonRecallStep | null {
+  if (content.type === "grammar" || content.type === "vocabulary") {
+    const sentenceStep = buildSentenceTypedStep(content, index, total);
+    if (sentenceStep) {
+      return { ...sentenceStep, stage: "mastery_challenge" as const, prompt: "Mastery challenge" };
+    }
+    const wordBank = buildWordBankStep(content, index, total);
+    if (wordBank) {
+      return { ...wordBank, stage: "mastery_challenge" as const, prompt: "Mastery challenge" };
+    }
+    const fillBlank = buildFillBlankStep(content, allAnswers, index, total);
+    if (fillBlank) {
+      return { ...fillBlank, stage: "mastery_challenge" as const, prompt: "Mastery challenge" };
+    }
+  }
+
+  const recall = buildRecallStep(content, allAnswers, index, total, "consolidation");
+  return { ...recall, stage: "mastery_challenge" as const, prompt: "Mastery challenge", mode: "typed" as const };
 }
 
 export function buildRecallOptions(correct: string, distractors: string[]): string[] {
@@ -298,6 +446,7 @@ export function buildListeningRecallStep(
   allAnswers: string[],
   index: number,
   total: number,
+  stage: LessonStage = "listening",
 ): LessonListeningRecallStep | null {
   if (!content.audioUrl) return null;
 
@@ -310,6 +459,7 @@ export function buildListeningRecallStep(
     display: content.kanji ?? content.kana,
     options,
     correctIndex: options.indexOf(content.meaning),
+    stage,
     index,
     total,
   };

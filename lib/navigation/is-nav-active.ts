@@ -26,9 +26,14 @@ const BAG_CHILD_PREFIXES = ["/world/inventory"] as const;
 
 const PROFILE_CHILD_PREFIXES = ["/settings", "/achievements", "/progress", "/profile/memory-book"] as const;
 
-const JOURNEY_CHILD_PREFIXES = ["/trials", "/learn/world", "/explore", "/endgame"] as const;
-
-const TREE_CHILD_PREFIXES = [] as const;
+const TREE_CHILD_PREFIXES = [
+  "/worlds",
+  "/trials",
+  "/learn/world",
+  "/learn/lesson",
+  "/explore",
+  "/endgame",
+] as const;
 
 function matchesPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
@@ -69,20 +74,8 @@ function isTreeRoute(pathname: string): boolean {
   return matchesPrefix(pathname, "/tree") || matchesAnyPrefix(pathname, TREE_CHILD_PREFIXES);
 }
 
-function isJourneyRoute(pathname: string): boolean {
-  if (!matchesPrefix(pathname, "/learn")) return false;
-  if (isStudyTrainingRoute(pathname)) return false;
-  return true;
-}
-
 export function isNavActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
-
-  if (href === "/learn") {
-    return (
-      isJourneyRoute(pathname) || matchesAnyPrefix(pathname, JOURNEY_CHILD_PREFIXES)
-    );
-  }
 
   if (href === "/tree") {
     return isTreeRoute(pathname);
@@ -109,5 +102,5 @@ export function isNavActive(pathname: string | null, href: string): boolean {
 
 export function resolveNavTabFromPath(pathname: string): ImmersiveNavTab {
   const match = PRIMARY_NAV_ITEMS.find((item) => isNavActive(pathname, item.href));
-  return match?.navTab ?? "journey";
+  return match?.navTab ?? "tree";
 }

@@ -116,7 +116,7 @@ class QuestService {
   private async getDeepLinks(userId: string): Promise<QuestDeepLinks> {
     const nextLesson = await lessonService.getNextIncompleteLesson(userId);
     return {
-      lessonHref: nextLesson ? `/learn/lesson/${nextLesson.id}` : "/learn",
+      lessonHref: nextLesson ? `/learn/lesson/${nextLesson.id}` : "/tree",
       reviewHref: "/review",
     };
   }

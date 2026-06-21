@@ -65,7 +65,7 @@ export function ExploreScreen({ yama }: ExploreScreenProps) {
     <SecondaryScreenShell
       title="Discover Japan"
       subtitle="Culture, folklore, and lore between lessons on the trail"
-      backHref="/learn"
+      backHref="/tree"
       backLabel="Journey"
       contentClassName="pb-2"
     >
@@ -102,7 +102,7 @@ export function ExploreScreen({ yama }: ExploreScreenProps) {
         </GlassPanel>
 
         <PrimaryClimbButton asChild className="mx-auto max-w-md">
-          <Link href="/learn">Return to trail</Link>
+          <Link href="/tree">Return to trail</Link>
         </PrimaryClimbButton>
       </div>
     </SecondaryScreenShell>

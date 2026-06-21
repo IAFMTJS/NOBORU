@@ -27,7 +27,13 @@ function resolveProfileFromPathname(pathname?: string): LoadingSceneProfile {
   if (!pathname) return "default";
 
   if (pathname.includes("/learn/lesson/")) return "lesson";
-  if (pathname.startsWith("/learn")) return "learn";
+  if (
+    pathname.startsWith("/tree") ||
+    pathname.startsWith("/worlds") ||
+    pathname.startsWith("/learn")
+  ) {
+    return "learn";
+  }
   if (pathname.startsWith("/review")) return "review";
   if (pathname.startsWith("/home") || pathname === "/") return "home";
   if (pathname.includes("region-transition")) return "region-transition";

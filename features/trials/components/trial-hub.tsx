@@ -95,7 +95,7 @@ export function TrialHub({ trials, performance }: TrialHubProps) {
           surface="trail"
           title="Trials await discovery"
           description="Summit challenges unlock as you advance along the mountain path."
-          actionHref="/learn"
+          actionHref="/tree"
           actionLabel="Return to trail"
         />
       </StudyHubLayout>

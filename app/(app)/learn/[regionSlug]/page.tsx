@@ -9,7 +9,7 @@ type RegionPageProps = {
 export default async function RegionPage({ params }: RegionPageProps) {
   const { regionSlug } = await params;
   const world = resolveWorldForRegionSlug(regionSlug);
-  const worldSegment = world ? `/worlds/${world.id}` : "/learn";
+  const worldSegment = world ? `/worlds/${world.id}` : "/tree";
 
   redirect(`${worldSegment}?region=${encodeURIComponent(regionSlug)}`);
 }

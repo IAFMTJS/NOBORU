@@ -6,10 +6,10 @@ import { isNavActive, resolveNavTabFromPath } from "@/lib/navigation/is-nav-acti
 import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 
 describe("world tree route", () => {
-  it("registers the /tree page and screen", () => {
+  it("registers the /tree page", () => {
     const page = readFileSync(resolve(process.cwd(), "app/(app)/tree/page.tsx"), "utf8");
-    expect(page).toContain("WorldTreeScreen");
-    expect(page).toContain('searchParams: Promise');
+    expect(page).toContain("redirect(");
+    expect(page).toContain("/worlds/");
   });
 
   it("includes Tree in primary navigation", () => {
@@ -18,19 +18,24 @@ describe("world tree route", () => {
     expect(treeItem?.navTab).toBe("tree");
   });
 
+  it("does not include a separate Journey tab", () => {
+    expect(PRIMARY_NAV_ITEMS.some((item) => item.href === "/learn")).toBe(false);
+  });
+
   it("highlights Tree tab on /tree routes", () => {
     expect(isNavActive("/tree", "/tree")).toBe(true);
-    expect(isNavActive("/tree", "/learn")).toBe(false);
+    expect(isNavActive("/worlds/n5", "/tree")).toBe(true);
+    expect(isNavActive("/learn/lesson/1", "/tree")).toBe(true);
     expect(resolveNavTabFromPath("/tree")).toBe("tree");
+    expect(resolveNavTabFromPath("/worlds/n5")).toBe("tree");
   });
 });
 
 describe("isNavActive", () => {
   it("highlights the exact tab route", () => {
-    expect(isNavActive("/learn", "/learn")).toBe(true);
     expect(isNavActive("/camp", "/camp")).toBe(true);
     expect(isNavActive("/home", "/camp")).toBe(true);
-    expect(isNavActive("/learn/lesson/1", "/learn")).toBe(true);
+    expect(isNavActive("/learn/lesson/1", "/tree")).toBe(true);
   });
 
   it("highlights Study for training routes", () => {
@@ -52,9 +57,10 @@ describe("isNavActive", () => {
     expect(isNavActive("/community", "/camp")).toBe(true);
   });
 
-  it("highlights Journey for trail routes", () => {
-    expect(isNavActive("/trials/foothills", "/learn")).toBe(true);
-    expect(isNavActive("/learn/world", "/learn")).toBe(true);
+  it("highlights Tree for trail routes", () => {
+    expect(isNavActive("/trials/foothills", "/tree")).toBe(true);
+    expect(isNavActive("/learn/world", "/tree")).toBe(true);
+    expect(isNavActive("/explore", "/tree")).toBe(true);
   });
 
   it("highlights Profile for identity routes", () => {
@@ -63,10 +69,10 @@ describe("isNavActive", () => {
   });
 
   it("does not highlight unrelated tabs", () => {
-    expect(isNavActive("/games", "/learn")).toBe(false);
+    expect(isNavActive("/games", "/tree")).toBe(false);
     expect(isNavActive("/profile", "/bag")).toBe(false);
-    expect(isNavActive("/review", "/learn")).toBe(false);
-    expect(isNavActive("/learn/hiragana", "/learn")).toBe(false);
+    expect(isNavActive("/review", "/tree")).toBe(false);
+    expect(isNavActive("/learn/hiragana", "/tree")).toBe(false);
     expect(isNavActive("/learn/hiragana", "/study")).toBe(true);
     expect(isNavActive("/learn/world", "/study")).toBe(false);
   });
@@ -76,7 +82,7 @@ describe("resolveNavTabFromPath", () => {
   it("resolves the primary tab for nested routes", () => {
     expect(resolveNavTabFromPath("/review")).toBe("study");
     expect(resolveNavTabFromPath("/bag")).toBe("bag");
-    expect(resolveNavTabFromPath("/learn/lesson/1")).toBe("journey");
+    expect(resolveNavTabFromPath("/learn/lesson/1")).toBe("tree");
     expect(resolveNavTabFromPath("/camp")).toBe("camp");
     expect(resolveNavTabFromPath("/tree")).toBe("tree");
   });

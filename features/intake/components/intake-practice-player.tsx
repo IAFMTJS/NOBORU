@@ -109,7 +109,7 @@ export function IntakePracticePlayer({ session }: IntakePracticePlayerProps) {
             </p>
           ) : null}
           <Button className="w-full" asChild>
-            <Link href="/learn">Continue on the trail</Link>
+            <Link href="/tree">Continue on the trail</Link>
           </Button>
           <Button variant="outline" className="w-full" asChild>
             <Link href="/learn/intake">Update what I know</Link>

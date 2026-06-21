@@ -110,7 +110,7 @@ export async function getRegionJourney(
   const region = await journeyService.getRegionJourney(userId, regionSlug);
 
   if (!region) {
-    redirect("/learn");
+    redirect("/tree");
   }
 
   return region;
@@ -123,7 +123,7 @@ export async function getLessonSession(
   const session = await lessonService.getLessonSession(lessonId, userId);
 
   if (!session) {
-    redirect("/learn");
+    redirect("/tree");
   }
 
   return session;
