@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useMemo } from "react";
 
+import { useCampLiveData } from "@/features/camp/hooks/use-camp-live-data";
 import type {
   CampBelowFoldViewModel,
   CampScreenViewModel,
@@ -27,9 +28,10 @@ export function useCampBelowFold(
   return useContext(CampBelowFoldContext) ?? defaults;
 }
 
-export function useCampScreenData(
-  initialData: CampScreenViewModel,
-): CampScreenViewModel {
+export function useCampScreenData(initialData: CampScreenViewModel): {
+  data: CampScreenViewModel;
+  refreshCampData: () => Promise<void>;
+} {
   const belowFold = useCampBelowFold({
     shrineProtection: initialData.shrineProtection,
     quests: {
@@ -37,8 +39,8 @@ export function useCampScreenData(
     },
   });
 
-  return useMemo(
-    () => ({
+  const mergedInitial = useMemo(
+    (): CampScreenViewModel => ({
       ...initialData,
       shrineProtection: belowFold.shrineProtection,
       quests: {
@@ -48,4 +50,6 @@ export function useCampScreenData(
     }),
     [belowFold, initialData],
   );
+
+  return useCampLiveData(mergedInitial);
 }

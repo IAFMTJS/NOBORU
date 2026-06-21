@@ -52,7 +52,7 @@ function CampHeading({
 }
 
 export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
-  const data = useCampScreenData(initialData);
+  const { data, refreshCampData } = useCampScreenData(initialData);
   const [questBoardOpen, setQuestBoardOpen] = useState(false);
   const [shrineOpen, setShrineOpen] = useState(false);
   const [claiming, setClaiming] = useState(false);
@@ -83,9 +83,8 @@ export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
       };
       if (payload.success && payload.data) {
         setChestReward(payload.data);
-        if (!payload.data.alreadyClaimed) {
-          setCollectedThisSession(true);
-        }
+        setCollectedThisSession(true);
+        await refreshCampData();
       }
     } finally {
       setClaiming(false);

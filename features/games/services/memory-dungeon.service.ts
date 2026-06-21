@@ -9,9 +9,12 @@ import type {
   MemoryDungeonPair,
   MemoryDungeonRoom,
 } from "@/features/games/types/game.types";
-import { shuffle } from "@/features/games/utils/shuffle";
+import type { HiraganaRow } from "@/features/hiragana/types/hiragana.types";
+import type { KatakanaRow } from "@/features/katakana/types/katakana.types";
 import type { KanjiRow } from "@/features/kanji/types/kanji.types";
 import type { VocabularyRow } from "@/features/vocabulary/types/vocabulary.types";
+import { shuffle } from "@/features/games/utils/shuffle";
+import { kanaPoolMeetsMinimum, resolveKanaPool } from "@/features/games/utils/kana-pool";
 
 function formatVocabularyPrompt(word: VocabularyRow): string {
   return word.kanji?.trim() || word.kana;
@@ -41,19 +44,38 @@ function buildKanjiPairs(kanji: KanjiRow[], count: number): MemoryDungeonPair[] 
     }));
 }
 
-export function canBuildMemoryDungeon(
-  vocabularyCount: number,
-  kanjiCount: number,
-): boolean {
+function buildKanaPairs(
+  items: Array<HiraganaRow | KatakanaRow>,
+  count: number,
+  prefix: string,
+): MemoryDungeonPair[] {
+  return shuffle(items)
+    .slice(0, count)
+    .map((item) => ({
+      pairId: `${prefix}-${item.id}`,
+      faceA: item.character,
+      faceB: item.romaji,
+    }));
+}
+
+export function canBuildMemoryDungeon(input: {
+  vocabularyCount: number;
+  kanjiCount: number;
+  hiraganaCount: number;
+  katakanaCount: number;
+}): boolean {
   return (
-    vocabularyCount >= MIN_GAME_POOL_SIZE ||
-    kanjiCount >= MIN_GAME_POOL_SIZE
+    input.vocabularyCount >= MIN_GAME_POOL_SIZE ||
+    input.kanjiCount >= MIN_GAME_POOL_SIZE ||
+    kanaPoolMeetsMinimum(input.hiraganaCount, input.katakanaCount, MIN_GAME_POOL_SIZE)
   );
 }
 
 export function buildMemoryDungeonSession(input: {
   vocabulary: VocabularyRow[];
   kanji: KanjiRow[];
+  hiragana: HiraganaRow[];
+  katakana: KatakanaRow[];
 }) {
   const rooms: MemoryDungeonRoom[] = [];
   const usedVocabIds = new Set<string>();
@@ -118,7 +140,20 @@ export function buildMemoryDungeonSession(input: {
   }
 
   if (rooms.length === 0) {
-    throw new Error("Learn more vocabulary or kanji to enter the Memory Dungeon.");
+    const kanaPool = resolveKanaPool(input.hiragana, input.katakana);
+    if (kanaPool && kanaPool.items.length >= MIN_GAME_POOL_SIZE) {
+      const pairCount = Math.min(MEMORY_DUNGEON_ROOM1_PAIRS, kanaPool.items.length);
+      rooms.push({
+        id: "kana-cavern",
+        title: "Kana Cavern",
+        description: `Match ${kanaPool.script} characters to romaji readings.`,
+        pairs: buildKanaPairs(kanaPool.items, pairCount, "kana"),
+      });
+    }
+  }
+
+  if (rooms.length === 0) {
+    throw new Error("Learn more on the trail to enter the Memory Dungeon.");
   }
 
   const totalPairs = rooms.reduce((sum, room) => sum + room.pairs.length, 0);

@@ -55,6 +55,7 @@ export const WORLD_TREE_JLPT_BANDS: readonly WorldTreeJlptBand[] = [
     accentColor: "#5EAA5A",
     accentGlow: "rgba(94, 170, 90, 0.55)",
     artFileBase: "wt_jlpt_n3",
+    artVersion: 2,
   },
   {
     id: "n2",
@@ -64,6 +65,7 @@ export const WORLD_TREE_JLPT_BANDS: readonly WorldTreeJlptBand[] = [
     accentColor: "#4A9FD4",
     accentGlow: "rgba(74, 159, 212, 0.55)",
     artFileBase: "wt_jlpt_n2",
+    artVersion: 2,
   },
   {
     id: "n1",
@@ -73,6 +75,7 @@ export const WORLD_TREE_JLPT_BANDS: readonly WorldTreeJlptBand[] = [
     accentColor: "#8B5CF6",
     accentGlow: "rgba(139, 92, 246, 0.55)",
     artFileBase: "wt_jlpt_n1",
+    artVersion: 2,
   },
 ] as const;
 

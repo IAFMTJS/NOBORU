@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +57,7 @@ export function ReviewSession({
   contentType = null,
   weakOnly = false,
 }: ReviewSessionProps) {
+  const router = useRouter();
   const [session, setSession] = useState(initialSession);
   const [error, setError] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
@@ -88,7 +90,8 @@ export function ReviewSession({
   useEffect(() => {
     if (!sessionComplete) return;
     void reviewBatchClient.flush().catch(() => undefined);
-  }, [sessionComplete]);
+    router.refresh();
+  }, [router, sessionComplete]);
 
   useEffect(() => {
     return () => {
@@ -190,6 +193,7 @@ export function ReviewSession({
                 (current) => current + gamification.elevation!.epAwarded,
               );
             }
+            router.refresh();
           });
         } else {
           setLastElevation(result.delta.elevation ?? null);

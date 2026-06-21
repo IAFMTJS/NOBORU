@@ -81,7 +81,7 @@ export function WorldTreeJlptFillLayer({ className }: WorldTreeJlptFillLayerProp
         bandFill.push({
           id: `${band.id}-transition`,
           src: artLibraryPath(worldTreeSegmentArtPath(spec.transitionTop, theme)),
-          topPercent: layout.yMax - transitionHeight * 0.55,
+          topPercent: layout.yMin - transitionHeight * 0.35,
           heightPercent: transitionHeight,
           widthPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 10,
           leftPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent,

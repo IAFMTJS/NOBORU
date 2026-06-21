@@ -11,12 +11,15 @@ import { gameContentRepository } from "@/features/games/repositories/game-conten
 import { reinforcementTargetIds } from "@/lib/learning/reinforcement.service";
 import { validateGoldenContentRule } from "@/lib/learning/golden-content.validator";
 import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
-import { buildKanjiHunterSession } from "@/features/games/services/kanji-hunter.service";
+import { buildKanjiHunterSession, resolveKanjiHunterMode } from "@/features/games/services/kanji-hunter.service";
 import {
   buildMemoryDungeonSession,
   canBuildMemoryDungeon,
 } from "@/features/games/services/memory-dungeon.service";
-import { buildVocabularyRushSession } from "@/features/games/services/vocabulary-rush.service";
+import {
+  buildVocabularyRushSession,
+  resolveVocabularyRushMode,
+} from "@/features/games/services/vocabulary-rush.service";
 import {
   buildWordMatchSession,
   resolveWordMatchMode,
@@ -41,8 +44,8 @@ class GameService {
     if (!unlocked) {
       return {
         wordMatch: { available: false, mode: null, poolSize: 0 },
-        vocabularyRush: { available: false, poolSize: 0 },
-        kanjiHunter: { available: false, poolSize: 0 },
+        vocabularyRush: { available: false, mode: null, poolSize: 0 },
+        kanjiHunter: { available: false, mode: null, poolSize: 0 },
         memoryDungeon: { available: false, poolSize: 0, roomCount: 0 },
       };
     }
@@ -64,6 +67,17 @@ class GameService {
         ? vocabulary.length
         : Math.max(hiragana.length, katakana.length);
 
+    const vocabularyRushMode = resolveVocabularyRushMode(
+      vocabulary.length,
+      hiragana.length,
+      katakana.length,
+    );
+    const kanjiHunterMode = resolveKanjiHunterMode(
+      kanji.length,
+      hiragana.length,
+      katakana.length,
+    );
+
     return {
       wordMatch: {
         available: wordMatchMode !== null,
@@ -71,19 +85,39 @@ class GameService {
         poolSize: wordMatchPool,
       },
       vocabularyRush: {
-        available: vocabulary.length >= MIN_GAME_POOL_SIZE,
-        poolSize: vocabulary.length,
+        available: vocabularyRushMode !== null,
+        mode: vocabularyRushMode,
+        poolSize:
+          vocabularyRushMode === "vocabulary"
+            ? vocabulary.length
+            : Math.max(hiragana.length, katakana.length),
       },
       kanjiHunter: {
-        available: kanji.length >= MIN_GAME_POOL_SIZE,
-        poolSize: kanji.length,
+        available: kanjiHunterMode !== null,
+        mode: kanjiHunterMode,
+        poolSize:
+          kanjiHunterMode === "vocabulary"
+            ? kanji.length
+            : Math.max(hiragana.length, katakana.length),
       },
       memoryDungeon: (() => {
-        if (!canBuildMemoryDungeon(vocabulary.length, kanji.length)) {
+        if (
+          !canBuildMemoryDungeon({
+            vocabularyCount: vocabulary.length,
+            kanjiCount: kanji.length,
+            hiraganaCount: hiragana.length,
+            katakanaCount: katakana.length,
+          })
+        ) {
           return { available: false, poolSize: 0, roomCount: 0 };
         }
         try {
-          const preview = buildMemoryDungeonSession({ vocabulary, kanji });
+          const preview = buildMemoryDungeonSession({
+            vocabulary,
+            kanji,
+            hiragana,
+            katakana,
+          });
           return {
             available: true,
             poolSize: preview.totalPairs,
@@ -147,17 +181,25 @@ class GameService {
     if (slug === GAME_SLUGS.vocabularyRush) {
       const pool =
         options.weakOnly && weakVocabulary.length >= MIN_GAME_POOL_SIZE
-          ? weakVocabulary
-          : vocabulary;
+          ? {
+              vocabulary: weakVocabulary,
+              hiragana: [],
+              katakana: [],
+            }
+          : {
+              vocabulary,
+              hiragana,
+              katakana,
+            };
       return buildVocabularyRushSession(pool);
     }
 
     if (slug === GAME_SLUGS.kanjiHunter) {
-      return buildKanjiHunterSession(kanji);
+      return buildKanjiHunterSession({ kanji, hiragana, katakana });
     }
 
     if (slug === GAME_SLUGS.memoryDungeon) {
-      return buildMemoryDungeonSession({ vocabulary, kanji });
+      return buildMemoryDungeonSession({ vocabulary, kanji, hiragana, katakana });
     }
 
     throw new Error("Unknown game.");
@@ -197,9 +239,9 @@ class GameService {
     const elevation = await elevationService.awardEp({
       userId,
       sourceType: "game",
-      sourceId: slug,
+      sourceId: null,
       amount: epAmount,
-      description,
+      description: `${description} (${slug})`,
     });
 
     const [, quests] = await Promise.all([

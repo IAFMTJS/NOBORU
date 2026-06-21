@@ -13,11 +13,22 @@ export type WorldTreeSegmentId =
   | "trunk_e"
   | "trunk_f"
   | "trunk_g"
-  | "trunk_h";
+  | "trunk_h"
+  | "canopy_a"
+  | "canopy_b"
+  | "canopy_c"
+  | "canopy_d"
+  | "canopy_e"
+  | "celestial_a"
+  | "celestial_b"
+  | "celestial_c"
+  | "celestial_d";
 
 export type WorldTreeTransitionId =
   | "transition_root_to_trunk"
-  | "transition_ancient_to_canopy";
+  | "transition_trunk_to_ancient"
+  | "transition_ancient_to_canopy"
+  | "transition_canopy_to_celestial";
 
 export type WorldTreeJlptHeroAnchor = "bottom" | "center" | "top";
 
@@ -38,22 +49,25 @@ export const WORLD_TREE_JLPT_BAND_ART: Record<WorldTreeJlptBandId, WorldTreeJlpt
   n5: {
     fillSegments: ["roots_a", "roots_b", "roots_c", "roots_d"],
     heroAnchor: "bottom",
+    transitionTop: "transition_root_to_trunk",
   },
   n4: {
     fillSegments: ["roots_e", "trunk_a", "trunk_b", "trunk_c"],
     heroAnchor: "bottom",
+    transitionTop: "transition_trunk_to_ancient",
   },
   n3: {
     fillSegments: ["trunk_c", "trunk_d", "trunk_e", "trunk_f"],
     heroAnchor: "center",
-  },
-  n2: {
-    fillSegments: ["trunk_g", "trunk_h"],
-    heroAnchor: "top",
     transitionTop: "transition_ancient_to_canopy",
   },
+  n2: {
+    fillSegments: ["canopy_a", "canopy_b", "canopy_c", "canopy_d"],
+    heroAnchor: "top",
+    transitionTop: "transition_canopy_to_celestial",
+  },
   n1: {
-    fillSegments: [],
+    fillSegments: ["celestial_a", "celestial_b", "celestial_c"],
     heroAnchor: "top",
   },
 };

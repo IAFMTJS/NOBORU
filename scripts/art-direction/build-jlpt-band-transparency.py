@@ -124,9 +124,13 @@ def process_file(source: Path, dest: Path) -> dict[str, object]:
     return stats
 
 
-def resolve_paths(band: str, theme: str) -> tuple[Path, Path]:
-    source = SOURCE_ROOT / band / f"wt_jlpt_{band}_{theme}_raw.png"
-    dest = BAND_ROOT / band / f"wt_jlpt_{band}_{theme}_v1.png"
+def resolve_paths(band: str, theme: str, version: int) -> tuple[Path, Path]:
+    if theme == "light":
+        source = SOURCE_ROOT / band / f"wt_jlpt_{band}_light_raw.png"
+    else:
+        prior = BAND_ROOT / band / f"wt_jlpt_{band}_dark_v{max(1, version - 1)}.png"
+        source = prior if prior.exists() else SOURCE_ROOT / band / f"wt_jlpt_{band}_light_raw.png"
+    dest = BAND_ROOT / band / f"wt_jlpt_{band}_{theme}_v{version}.png"
     return source, dest
 
 
@@ -134,20 +138,22 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--band", choices=BANDS)
     parser.add_argument("--theme", choices=THEMES)
+    parser.add_argument("--version", type=int, default=2, help="Output version suffix (default: 2)")
     args = parser.parse_args()
 
     bands = [args.band] if args.band else list(BANDS)
     themes = [args.theme] if args.theme else list(THEMES)
+    version = max(1, args.version)
 
     for band in bands:
         for theme in themes:
-            source, dest = resolve_paths(band, theme)
+            source, dest = resolve_paths(band, theme, version)
             if not source.exists():
                 print(f"SKIP missing source: {source.relative_to(ROOT)}")
                 continue
             stats = process_file(source, dest)
             print(
-                f"OK {band}/{theme}: opaque={stats['opaque_percent']}% "
+                f"OK {band}/{theme} v{version}: opaque={stats['opaque_percent']}% "
                 f"chroma={stats['chroma_removed']} border={stats['border_removed']}"
             )
 

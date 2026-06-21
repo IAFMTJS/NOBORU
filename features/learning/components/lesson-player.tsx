@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { MotionDiv } from "@/components/motion/motion-div";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
@@ -242,6 +243,7 @@ function ReadingDrill({
 }
 
 export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps) {
+  const router = useRouter();
   const regionJlpt = getJlptLevelForRegion(session.regionSlug);
   const [lessonCompleted, setLessonCompleted] = useState(session.progress === "completed");
   const journeyTrailHref = useMemo(
@@ -377,13 +379,15 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       });
       if (result.queuedOffline) {
         setError("Saved offline. Progress will sync when you reconnect.");
+      } else {
+        router.refresh();
       }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to save progress.");
     } finally {
       setSaving(false);
     }
-  }, [session.lessonId, session.regionSlug]);
+  }, [router, session.lessonId, session.regionSlug]);
 
   const goNext = useCallback(() => {
     clearAdvanceTimer();

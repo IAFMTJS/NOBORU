@@ -117,11 +117,32 @@ class ChestService {
       };
     }
 
-    await chestRepository.insertClaim({
-      userId,
-      chestTemplateId: template.id,
-      claimPeriodKey: periodKey,
-    });
+    try {
+      await chestRepository.insertClaim({
+        userId,
+        chestTemplateId: template.id,
+        claimPeriodKey: periodKey,
+      });
+    } catch (error) {
+      const racedClaim = await chestRepository.findClaim(
+        userId,
+        template.id,
+        periodKey,
+      );
+      if (racedClaim) {
+        return {
+          chestSlug: template.slug,
+          title: template.title,
+          epReward: template.ep_reward,
+          bondXpReward: template.bond_xp_reward,
+          collectibleSlug: template.collectible_slug,
+          shrineProtectionGrant: template.shrine_protection_grant,
+          alreadyClaimed: true,
+          unlockedAchievements: [],
+        };
+      }
+      throw error;
+    }
 
     if (template.ep_reward > 0) {
       await elevationService.awardEp({

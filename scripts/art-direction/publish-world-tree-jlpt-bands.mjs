@@ -18,9 +18,9 @@ const THEMES = ["light", "dark"];
 const BAND_VERSIONS = {
   n5: 1,
   n4: 2,
-  n3: 1,
-  n2: 1,
-  n1: 1,
+  n3: 2,
+  n2: 2,
+  n1: 2,
 };
 
 const WEBP_OPTIONS = { quality: 88, effort: 4, alphaQuality: 100 };

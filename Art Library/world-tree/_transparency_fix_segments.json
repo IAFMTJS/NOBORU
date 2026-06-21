@@ -1,7 +1,601 @@
 {
-  "processed": 47,
-  "passed": 42,
+  "processed": 75,
+  "passed": 69,
   "results": [
+    {
+      "file": "wt_canopy_a_dark_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_a/wt_canopy_a_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 65.8,
+        "partial_alpha": 179060,
+        "black_fringe_pct": 3.36,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1536,
+          749
+        ],
+        "transparent_pct": 56.2,
+        "partial_alpha": 154363,
+        "black_fringe_pct": 2.19,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 19737
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_a_light_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_a/wt_canopy_a_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 65.8,
+        "partial_alpha": 179060,
+        "black_fringe_pct": 0.51,
+        "checker_remaining": 445,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1535,
+          749
+        ],
+        "transparent_pct": 55.4,
+        "partial_alpha": 155960,
+        "black_fringe_pct": 0.17,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 17624
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_b_dark_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_b/wt_canopy_b_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 55.4,
+        "partial_alpha": 167975,
+        "black_fringe_pct": 2.43,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1533,
+          804
+        ],
+        "transparent_pct": 45.3,
+        "partial_alpha": 146016,
+        "black_fringe_pct": 1.7,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 18742
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_b_light_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_b/wt_canopy_b_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 55.4,
+        "partial_alpha": 167975,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1533,
+          804
+        ],
+        "transparent_pct": 46.7,
+        "partial_alpha": 147265,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 9475
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_c_dark_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_c/wt_canopy_c_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 63.6,
+        "partial_alpha": 115067,
+        "black_fringe_pct": 2.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1062,
+          1023
+        ],
+        "transparent_pct": 49.8,
+        "partial_alpha": 92993,
+        "black_fringe_pct": 1.54,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 19907
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_c_light_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_c/wt_canopy_c_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 63.6,
+        "partial_alpha": 115067,
+        "black_fringe_pct": 0.2,
+        "checker_remaining": 2110,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1062,
+          1023
+        ],
+        "transparent_pct": 49.6,
+        "partial_alpha": 91884,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 14629
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_d_dark_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_d/wt_canopy_d_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 68.7,
+        "partial_alpha": 266860,
+        "black_fringe_pct": 0.55,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          812,
+          1021
+        ],
+        "transparent_pct": 41.2,
+        "partial_alpha": 262659,
+        "black_fringe_pct": 0.59,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 2682
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_d_light_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_d/wt_canopy_d_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 68.7,
+        "partial_alpha": 266860,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 619,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          812,
+          1021
+        ],
+        "transparent_pct": 41.7,
+        "partial_alpha": 259648,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 1913
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_e_dark_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_e/wt_canopy_e_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 77.1,
+        "partial_alpha": 127235,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1491,
+          358
+        ],
+        "transparent_pct": 33.4,
+        "partial_alpha": 122565,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 4670
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_canopy_e_light_v2.png",
+      "path": "Art Library/world-tree/segments/canopy_e/wt_canopy_e_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 77.1,
+        "partial_alpha": 127235,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 5782,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1491,
+          358
+        ],
+        "transparent_pct": 34.9,
+        "partial_alpha": 114961,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 2625
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_a_dark_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_a/wt_celestial_a_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 71.7,
+        "partial_alpha": 128423,
+        "black_fringe_pct": 0.83,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          898,
+          1024
+        ],
+        "transparent_pct": 53.6,
+        "partial_alpha": 111572,
+        "black_fringe_pct": 0.55,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 16372
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_a_light_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_a/wt_celestial_a_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 71.7,
+        "partial_alpha": 128423,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          898,
+          1024
+        ],
+        "transparent_pct": 56.2,
+        "partial_alpha": 100082,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 8463
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_b_dark_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_b/wt_celestial_b_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 86.1,
+        "partial_alpha": 48367,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          408,
+          1023
+        ],
+        "transparent_pct": 47.9,
+        "partial_alpha": 47319,
+        "black_fringe_pct": 0.13,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 890
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_b_light_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_b/wt_celestial_b_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 86.1,
+        "partial_alpha": 48367,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          408,
+          1023
+        ],
+        "transparent_pct": 49.3,
+        "partial_alpha": 44865,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 268
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_c_dark_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_c/wt_celestial_c_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 75.2,
+        "partial_alpha": 180702,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1492,
+          507
+        ],
+        "transparent_pct": 49.2,
+        "partial_alpha": 175411,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 5291
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_c_light_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_c/wt_celestial_c_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 75.2,
+        "partial_alpha": 180702,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1492,
+          507
+        ],
+        "transparent_pct": 53.9,
+        "partial_alpha": 145115,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 4286
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_d_dark_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_d/wt_celestial_d_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 76.4,
+        "partial_alpha": 128452,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1493,
+          450
+        ],
+        "transparent_pct": 45.2,
+        "partial_alpha": 126085,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 2367
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_celestial_d_light_v2.png",
+      "path": "Art Library/world-tree/segments/celestial_d/wt_celestial_d_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 76.4,
+        "partial_alpha": 128452,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "after": {
+        "size": [
+          1493,
+          450
+        ],
+        "transparent_pct": 49.1,
+        "partial_alpha": 103071,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 2067
+      },
+      "fixed": true
+    },
     {
       "file": "wt_roots_a_dark_v2.png",
       "path": "Art Library/world-tree/segments/roots_a/wt_roots_a_dark_v2.png",
@@ -40,15 +634,15 @@
       "path": "Art Library/world-tree/segments/roots_a/wt_roots_a_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          1145,
+          967
         ],
-        "transparent_pct": 73.3,
+        "transparent_pct": 63.6,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.55,
-        "checker_remaining": 619,
+        "black_fringe_pct": 0.08,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -73,12 +667,12 @@
       "path": "Art Library/world-tree/segments/roots_b/wt_roots_b_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          694,
+          921
         ],
-        "transparent_pct": 76.5,
-        "partial_alpha": 181533,
-        "black_fringe_pct": 0.41,
+        "transparent_pct": 49.7,
+        "partial_alpha": 134181,
+        "black_fringe_pct": 0.83,
         "checker_remaining": 0,
         "corner_black": 0,
         "pass": true
@@ -97,7 +691,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 47349
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -106,15 +700,15 @@
       "path": "Art Library/world-tree/segments/roots_b/wt_roots_b_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          657,
+          865
         ],
-        "transparent_pct": 76.5,
-        "partial_alpha": 181533,
-        "black_fringe_pct": 0.16,
-        "checker_remaining": 27497,
+        "transparent_pct": 46.0,
+        "partial_alpha": 127402,
+        "black_fringe_pct": 0.04,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -130,7 +724,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 2097
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -139,11 +733,11 @@
       "path": "Art Library/world-tree/segments/roots_c/wt_roots_c_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          715,
+          957
         ],
-        "transparent_pct": 78.6,
-        "partial_alpha": 154668,
+        "transparent_pct": 58.8,
+        "partial_alpha": 101026,
         "black_fringe_pct": 0.01,
         "checker_remaining": 0,
         "corner_black": 0,
@@ -163,7 +757,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 52584
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -172,15 +766,15 @@
       "path": "Art Library/world-tree/segments/roots_c/wt_roots_c_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          715,
+          889
         ],
-        "transparent_pct": 78.6,
-        "partial_alpha": 154668,
+        "transparent_pct": 52.7,
+        "partial_alpha": 124140,
         "black_fringe_pct": 0.0,
-        "checker_remaining": 13783,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -196,7 +790,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 241
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -205,12 +799,12 @@
       "path": "Art Library/world-tree/segments/roots_d/wt_roots_d_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          715,
+          959
         ],
-        "transparent_pct": 75.1,
-        "partial_alpha": 205809,
-        "black_fringe_pct": 0.1,
+        "transparent_pct": 56.9,
+        "partial_alpha": 109405,
+        "black_fringe_pct": 0.18,
         "checker_remaining": 0,
         "corner_black": 0,
         "pass": true
@@ -229,7 +823,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 95350
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -238,15 +832,15 @@
       "path": "Art Library/world-tree/segments/roots_d/wt_roots_d_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          715,
+          959
         ],
-        "transparent_pct": 75.1,
-        "partial_alpha": 205809,
-        "black_fringe_pct": 0.02,
-        "checker_remaining": 7088,
+        "transparent_pct": 45.9,
+        "partial_alpha": 186764,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -262,7 +856,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 1118
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -304,15 +898,15 @@
       "path": "Art Library/world-tree/segments/roots_e/wt_roots_e_light_v2.png",
       "before": {
         "size": [
-          1536,
+          719,
           1024
         ],
-        "transparent_pct": 68.4,
+        "transparent_pct": 42.0,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.02,
-        "checker_remaining": 26244,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -337,15 +931,15 @@
       "path": "Art Library/world-tree/segments/trunk_a/wt_trunk_a_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          611,
+          956
         ],
-        "transparent_pct": 70.2,
+        "transparent_pct": 29.8,
         "partial_alpha": 0,
-        "black_fringe_pct": 1.62,
-        "checker_remaining": 26670,
+        "black_fringe_pct": 1.79,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -361,7 +955,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 32183
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -370,15 +964,15 @@
       "path": "Art Library/world-tree/segments/trunk_a/wt_trunk_a_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          1376,
+          1010
         ],
-        "transparent_pct": 50.2,
+        "transparent_pct": 53.7,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.01,
-        "checker_remaining": 4,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -403,15 +997,15 @@
       "path": "Art Library/world-tree/segments/trunk_b/wt_trunk_b_dark_v2.png",
       "before": {
         "size": [
-          1536,
+          681,
           1024
         ],
-        "transparent_pct": 66.0,
+        "transparent_pct": 33.0,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.19,
-        "checker_remaining": 12516,
+        "black_fringe_pct": 0.26,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -427,7 +1021,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 25273
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -439,12 +1033,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 59.4,
+        "transparent_pct": 66.7,
         "partial_alpha": 0,
         "black_fringe_pct": 0.0,
-        "checker_remaining": 1772,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -469,11 +1063,11 @@
       "path": "Art Library/world-tree/segments/trunk_c/wt_trunk_c_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          648,
+          994
         ],
-        "transparent_pct": 71.6,
-        "partial_alpha": 259304,
+        "transparent_pct": 45.1,
+        "partial_alpha": 165649,
         "black_fringe_pct": 0.0,
         "checker_remaining": 0,
         "corner_black": 0,
@@ -493,7 +1087,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 93655
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -502,15 +1096,15 @@
       "path": "Art Library/world-tree/segments/trunk_c/wt_trunk_c_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          649,
+          957
         ],
-        "transparent_pct": 71.6,
-        "partial_alpha": 259304,
+        "transparent_pct": 34.1,
+        "partial_alpha": 236666,
         "black_fringe_pct": 0.0,
-        "checker_remaining": 6,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -526,7 +1120,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 189
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -601,11 +1195,11 @@
       "path": "Art Library/world-tree/segments/trunk_e/wt_trunk_e_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          553,
+          973
         ],
-        "transparent_pct": 73.9,
-        "partial_alpha": 223339,
+        "transparent_pct": 30.8,
+        "partial_alpha": 184656,
         "black_fringe_pct": 0.0,
         "checker_remaining": 0,
         "corner_black": 0,
@@ -625,7 +1219,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 38683
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -634,15 +1228,15 @@
       "path": "Art Library/world-tree/segments/trunk_e/wt_trunk_e_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          551,
+          943
         ],
-        "transparent_pct": 73.9,
-        "partial_alpha": 223339,
+        "transparent_pct": 25.8,
+        "partial_alpha": 201207,
         "black_fringe_pct": 0.0,
-        "checker_remaining": 182,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -658,7 +1252,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 1
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -667,12 +1261,12 @@
       "path": "Art Library/world-tree/segments/trunk_f/wt_trunk_f_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          648,
+          997
         ],
-        "transparent_pct": 72.2,
-        "partial_alpha": 256655,
-        "black_fringe_pct": 0.03,
+        "transparent_pct": 42.5,
+        "partial_alpha": 190693,
+        "black_fringe_pct": 0.02,
         "checker_remaining": 0,
         "corner_black": 0,
         "pass": true
@@ -691,7 +1285,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 65806
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -700,15 +1294,15 @@
       "path": "Art Library/world-tree/segments/trunk_f/wt_trunk_f_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          649,
+          980
         ],
-        "transparent_pct": 72.2,
-        "partial_alpha": 256655,
-        "black_fringe_pct": 0.02,
-        "checker_remaining": 16,
+        "transparent_pct": 39.9,
+        "partial_alpha": 228061,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -724,7 +1318,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 1602
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -733,11 +1327,11 @@
       "path": "Art Library/world-tree/segments/trunk_g/wt_trunk_g_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          632,
+          987
         ],
-        "transparent_pct": 72.0,
-        "partial_alpha": 252615,
+        "transparent_pct": 38.7,
+        "partial_alpha": 194427,
         "black_fringe_pct": 0.0,
         "checker_remaining": 0,
         "corner_black": 0,
@@ -757,7 +1351,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 58188
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -766,15 +1360,15 @@
       "path": "Art Library/world-tree/segments/trunk_g/wt_trunk_g_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          632,
+          962
         ],
-        "transparent_pct": 72.0,
-        "partial_alpha": 252615,
+        "transparent_pct": 31.9,
+        "partial_alpha": 237915,
         "black_fringe_pct": 0.0,
-        "checker_remaining": 209,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -790,7 +1384,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 1
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -832,15 +1426,15 @@
       "path": "Art Library/world-tree/segments/trunk_h/wt_trunk_h_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          601,
+          905
         ],
-        "transparent_pct": 71.6,
+        "transparent_pct": 22.1,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.09,
-        "checker_remaining": 1640,
+        "black_fringe_pct": 0.05,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -868,12 +1462,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 2.5,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.04,
-        "checker_remaining": 23731,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -901,12 +1495,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 3.8,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.04,
-        "checker_remaining": 29006,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -921,7 +1515,7 @@
         "pass": true
       },
       "clean_stats": {
-        "border_removed": 5,
+        "border_removed": 0,
         "defringe_removed": 0
       },
       "fixed": true
@@ -934,12 +1528,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 3.5,
         "partial_alpha": 0,
-        "black_fringe_pct": 2.99,
-        "checker_remaining": 1552,
+        "black_fringe_pct": 0.18,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -967,12 +1561,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 6.1,
         "partial_alpha": 0,
-        "black_fringe_pct": 4.06,
-        "checker_remaining": 10293,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1000,12 +1594,12 @@
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 1.6,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.92,
-        "checker_remaining": 7071,
+        "black_fringe_pct": 0.31,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1030,15 +1624,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n1/wt_jlpt_n1_dark_v1.png",
       "before": {
         "size": [
-          1536,
-          2048
+          1453,
+          1984
         ],
-        "transparent_pct": 39.3,
+        "transparent_pct": 34.7,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.28,
-        "checker_remaining": 12242,
+        "black_fringe_pct": 0.29,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1054,7 +1648,40 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 22269
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n1_dark_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n1/wt_jlpt_n1_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 32.9,
+        "partial_alpha": 140275,
+        "black_fringe_pct": 0.3,
+        "checker_remaining": 4091,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 33.4,
+        "partial_alpha": 128177,
+        "black_fringe_pct": 0.27,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 2,
+        "defringe_removed": 12750
       },
       "fixed": true
     },
@@ -1063,15 +1690,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n1/wt_jlpt_n1_light_v1.png",
       "before": {
         "size": [
-          1536,
-          2048
+          1453,
+          1984
         ],
-        "transparent_pct": 39.3,
+        "transparent_pct": 36.4,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.05,
-        "checker_remaining": 47241,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1092,19 +1719,52 @@
       "fixed": true
     },
     {
-      "file": "wt_jlpt_n2_dark_v1.png",
-      "path": "Art Library/world-tree/jlpt-bands/n2/wt_jlpt_n2_dark_v1.png",
+      "file": "wt_jlpt_n1_light_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n1/wt_jlpt_n1_light_v2.png",
       "before": {
         "size": [
           1536,
           2048
         ],
-        "transparent_pct": 49.6,
-        "partial_alpha": 0,
-        "black_fringe_pct": 0.14,
-        "checker_remaining": 61716,
+        "transparent_pct": 41.1,
+        "partial_alpha": 63149,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 7187,
         "corner_black": 0,
         "pass": false
+      },
+      "after": {
+        "size": [
+          1453,
+          1984
+        ],
+        "transparent_pct": 36.4,
+        "partial_alpha": 50314,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 7129
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n2_dark_v1.png",
+      "path": "Art Library/world-tree/jlpt-bands/n2/wt_jlpt_n2_dark_v1.png",
+      "before": {
+        "size": [
+          1303,
+          1996
+        ],
+        "transparent_pct": 44.5,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.12,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
       },
       "after": {
         "size": [
@@ -1119,8 +1779,41 @@
         "pass": true
       },
       "clean_stats": {
-        "border_removed": 54623,
-        "defringe_removed": 72555
+        "border_removed": 0,
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n2_dark_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n2/wt_jlpt_n2_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 40.6,
+        "partial_alpha": 289511,
+        "black_fringe_pct": 0.14,
+        "checker_remaining": 10622,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1532,
+          2048
+        ],
+        "transparent_pct": 41.5,
+        "partial_alpha": 257632,
+        "black_fringe_pct": 0.1,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 37,
+        "defringe_removed": 31764
       },
       "fixed": true
     },
@@ -1129,15 +1822,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n2/wt_jlpt_n2_light_v1.png",
       "before": {
         "size": [
-          1536,
-          2048
+          1303,
+          1996
         ],
-        "transparent_pct": 49.6,
+        "transparent_pct": 43.2,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.05,
-        "checker_remaining": 53416,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1152,8 +1845,41 @@
         "pass": true
       },
       "clean_stats": {
-        "border_removed": 16,
+        "border_removed": 0,
         "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n2_light_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n2/wt_jlpt_n2_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 52.0,
+        "partial_alpha": 100635,
+        "black_fringe_pct": 0.06,
+        "checker_remaining": 10050,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1303,
+          1996
+        ],
+        "transparent_pct": 42.8,
+        "partial_alpha": 88323,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 4026
       },
       "fixed": true
     },
@@ -1162,13 +1888,13 @@
       "path": "Art Library/world-tree/jlpt-bands/n3/wt_jlpt_n3_dark_v1.png",
       "before": {
         "size": [
-          1536,
+          1423,
           2048
         ],
-        "transparent_pct": 48.4,
+        "transparent_pct": 47.0,
         "partial_alpha": 0,
-        "black_fringe_pct": 4.32,
-        "checker_remaining": 718,
+        "black_fringe_pct": 2.03,
+        "checker_remaining": 0,
         "corner_black": 0,
         "pass": false
       },
@@ -1186,7 +1912,40 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 1304
+        "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n3_dark_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n3/wt_jlpt_n3_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 45.0,
+        "partial_alpha": 162353,
+        "black_fringe_pct": 2.31,
+        "checker_remaining": 374,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1536,
+          2048
+        ],
+        "transparent_pct": 47.0,
+        "partial_alpha": 101922,
+        "black_fringe_pct": 1.34,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 58335
       },
       "fixed": true
     },
@@ -1195,15 +1954,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n3/wt_jlpt_n3_light_v1.png",
       "before": {
         "size": [
-          1536,
+          1423,
           2048
         ],
-        "transparent_pct": 48.4,
+        "transparent_pct": 48.1,
         "partial_alpha": 0,
-        "black_fringe_pct": 3.0,
-        "checker_remaining": 3046,
+        "black_fringe_pct": 0.2,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1224,17 +1983,50 @@
       "fixed": true
     },
     {
-      "file": "wt_jlpt_n4_dark_v1.png",
-      "path": "Art Library/world-tree/jlpt-bands/n4/wt_jlpt_n4_dark_v1.png",
+      "file": "wt_jlpt_n3_light_v2.png",
+      "path": "Art Library/world-tree/jlpt-bands/n3/wt_jlpt_n3_light_v2.png",
       "before": {
         "size": [
           1536,
           2048
         ],
-        "transparent_pct": 40.7,
+        "transparent_pct": 50.4,
+        "partial_alpha": 127588,
+        "black_fringe_pct": 0.5,
+        "checker_remaining": 1040,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1423,
+          2048
+        ],
+        "transparent_pct": 48.4,
+        "partial_alpha": 72968,
+        "black_fringe_pct": 0.09,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 53293
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_jlpt_n4_dark_v1.png",
+      "path": "Art Library/world-tree/jlpt-bands/n4/wt_jlpt_n4_dark_v1.png",
+      "before": {
+        "size": [
+          1404,
+          2048
+        ],
+        "transparent_pct": 39.3,
         "partial_alpha": 0,
-        "black_fringe_pct": 5.5,
-        "checker_remaining": 12714,
+        "black_fringe_pct": 2.45,
+        "checker_remaining": 0,
         "corner_black": 0,
         "pass": false
       },
@@ -1252,7 +2044,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 17460
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -1262,30 +2054,30 @@
       "before": {
         "size": [
           1536,
-          1024
+          2048
         ],
-        "transparent_pct": 0.0,
-        "partial_alpha": 0,
-        "black_fringe_pct": 68.61,
-        "checker_remaining": 251,
-        "corner_black": 4,
+        "transparent_pct": 36.5,
+        "partial_alpha": 215102,
+        "black_fringe_pct": 2.77,
+        "checker_remaining": 1262,
+        "corner_black": 0,
         "pass": false
       },
       "after": {
         "size": [
-          998,
-          1024
+          1534,
+          2048
         ],
-        "transparent_pct": 67.1,
-        "partial_alpha": 0,
-        "black_fringe_pct": 0.3,
+        "transparent_pct": 39.0,
+        "partial_alpha": 136800,
+        "black_fringe_pct": 1.57,
         "checker_remaining": 0,
         "corner_black": 0,
         "pass": true
       },
       "clean_stats": {
-        "border_removed": 1223974,
-        "defringe_removed": 429
+        "border_removed": 5,
+        "defringe_removed": 76616
       },
       "fixed": true
     },
@@ -1294,15 +2086,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n4/wt_jlpt_n4_light_v1.png",
       "before": {
         "size": [
-          1536,
+          1404,
           2048
         ],
-        "transparent_pct": 40.7,
+        "transparent_pct": 41.7,
         "partial_alpha": 0,
-        "black_fringe_pct": 4.08,
-        "checker_remaining": 20100,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1328,30 +2120,30 @@
       "before": {
         "size": [
           1536,
-          1024
+          2048
         ],
-        "transparent_pct": 0.0,
-        "partial_alpha": 0,
-        "black_fringe_pct": 0.66,
-        "checker_remaining": 12029,
+        "transparent_pct": 44.3,
+        "partial_alpha": 192310,
+        "black_fringe_pct": 0.39,
+        "checker_remaining": 4589,
         "corner_black": 0,
         "pass": false
       },
       "after": {
         "size": [
-          1058,
-          1024
+          1404,
+          2048
         ],
-        "transparent_pct": 26.1,
-        "partial_alpha": 0,
-        "black_fringe_pct": 0.02,
+        "transparent_pct": 42.0,
+        "partial_alpha": 116019,
+        "black_fringe_pct": 0.01,
         "checker_remaining": 0,
         "corner_black": 0,
         "pass": true
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 0
+        "defringe_removed": 71675
       },
       "fixed": true
     },
@@ -1360,15 +2152,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n5/wt_jlpt_n5_dark_v1.png",
       "before": {
         "size": [
-          1536,
-          2048
+          1415,
+          1741
         ],
-        "transparent_pct": 54.3,
+        "transparent_pct": 43.6,
         "partial_alpha": 0,
-        "black_fringe_pct": 1.61,
-        "checker_remaining": 18043,
+        "black_fringe_pct": 1.23,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1384,7 +2176,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 24117
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -1393,15 +2185,15 @@
       "path": "Art Library/world-tree/jlpt-bands/n5/wt_jlpt_n5_light_v1.png",
       "before": {
         "size": [
-          1536,
-          2048
+          1415,
+          1741
         ],
-        "transparent_pct": 54.3,
+        "transparent_pct": 43.5,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.93,
-        "checker_remaining": 13396,
+        "black_fringe_pct": 0.39,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1426,15 +2218,15 @@
       "path": "Art Library/world-tree/transitions/ancient_to_canopy/wt_transition_ancient_to_canopy_dark_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          426,
+          884
         ],
-        "transparent_pct": 89.5,
+        "transparent_pct": 76.6,
         "partial_alpha": 0,
-        "black_fringe_pct": 1.41,
-        "checker_remaining": 26766,
+        "black_fringe_pct": 1.37,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1450,7 +2242,7 @@
       },
       "clean_stats": {
         "border_removed": 0,
-        "defringe_removed": 35369
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -1459,15 +2251,15 @@
       "path": "Art Library/world-tree/transitions/ancient_to_canopy/wt_transition_ancient_to_canopy_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          544,
+          874
         ],
-        "transparent_pct": 90.0,
+        "transparent_pct": 71.1,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.1,
-        "checker_remaining": 3987,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1488,19 +2280,85 @@
       "fixed": true
     },
     {
-      "file": "wt_transition_root_to_trunk_dark_v2.png",
-      "path": "Art Library/world-tree/transitions/root_to_trunk/wt_transition_root_to_trunk_dark_v2.png",
+      "file": "wt_transition_canopy_to_celestial_dark_v2.png",
+      "path": "Art Library/world-tree/transitions/canopy_to_celestial/wt_transition_canopy_to_celestial_dark_v2.png",
       "before": {
         "size": [
           1536,
           1024
         ],
-        "transparent_pct": 0.0,
-        "partial_alpha": 0,
-        "black_fringe_pct": 68.61,
-        "checker_remaining": 251,
-        "corner_black": 4,
+        "transparent_pct": 89.2,
+        "partial_alpha": 55985,
+        "black_fringe_pct": 0.59,
+        "checker_remaining": 120,
+        "corner_black": 0,
         "pass": false
+      },
+      "after": {
+        "size": [
+          491,
+          618
+        ],
+        "transparent_pct": 52.0,
+        "partial_alpha": 35417,
+        "black_fringe_pct": 0.65,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 390,
+        "defringe_removed": 19146
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_transition_canopy_to_celestial_light_v2.png",
+      "path": "Art Library/world-tree/transitions/canopy_to_celestial/wt_transition_canopy_to_celestial_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 78.3,
+        "partial_alpha": 11542,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 160,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          677,
+          618
+        ],
+        "transparent_pct": 19.7,
+        "partial_alpha": 8876,
+        "black_fringe_pct": 0.02,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 941
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_transition_root_to_trunk_dark_v2.png",
+      "path": "Art Library/world-tree/transitions/root_to_trunk/wt_transition_root_to_trunk_dark_v2.png",
+      "before": {
+        "size": [
+          998,
+          1024
+        ],
+        "transparent_pct": 67.1,
+        "partial_alpha": 0,
+        "black_fringe_pct": 0.3,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
       },
       "after": {
         "size": [
@@ -1515,8 +2373,8 @@
         "pass": true
       },
       "clean_stats": {
-        "border_removed": 1223974,
-        "defringe_removed": 429
+        "border_removed": 0,
+        "defringe_removed": 0
       },
       "fixed": true
     },
@@ -1525,15 +2383,15 @@
       "path": "Art Library/world-tree/transitions/root_to_trunk/wt_transition_root_to_trunk_light_v2.png",
       "before": {
         "size": [
-          1536,
-          1024
+          638,
+          955
         ],
-        "transparent_pct": 0.0,
+        "transparent_pct": 35.3,
         "partial_alpha": 0,
-        "black_fringe_pct": 0.93,
-        "checker_remaining": 15433,
+        "black_fringe_pct": 0.25,
+        "checker_remaining": 0,
         "corner_black": 0,
-        "pass": false
+        "pass": true
       },
       "after": {
         "size": [
@@ -1550,6 +2408,72 @@
       "clean_stats": {
         "border_removed": 0,
         "defringe_removed": 0
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_transition_trunk_to_ancient_dark_v2.png",
+      "path": "Art Library/world-tree/transitions/trunk_to_ancient/wt_transition_trunk_to_ancient_dark_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 81.4,
+        "partial_alpha": 30673,
+        "black_fringe_pct": 0.01,
+        "checker_remaining": 219,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          676,
+          618
+        ],
+        "transparent_pct": 30.7,
+        "partial_alpha": 28581,
+        "black_fringe_pct": 0.03,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 10,
+        "defringe_removed": 2406
+      },
+      "fixed": true
+    },
+    {
+      "file": "wt_transition_trunk_to_ancient_light_v2.png",
+      "path": "Art Library/world-tree/transitions/trunk_to_ancient/wt_transition_trunk_to_ancient_light_v2.png",
+      "before": {
+        "size": [
+          1536,
+          1024
+        ],
+        "transparent_pct": 79.2,
+        "partial_alpha": 22454,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 170,
+        "corner_black": 0,
+        "pass": false
+      },
+      "after": {
+        "size": [
+          1478,
+          618
+        ],
+        "transparent_pct": 64.6,
+        "partial_alpha": 21734,
+        "black_fringe_pct": 0.0,
+        "checker_remaining": 0,
+        "corner_black": 0,
+        "pass": true
+      },
+      "clean_stats": {
+        "border_removed": 0,
+        "defringe_removed": 17
       },
       "fixed": true
     }

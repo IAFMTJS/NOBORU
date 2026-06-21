@@ -34,6 +34,19 @@ function hasPlayableGame(availability: GameAvailabilityViewModel): boolean {
   );
 }
 
+function kanaModeBadge(catalogId: GameCatalogId): string | undefined {
+  switch (catalogId) {
+    case "wordMatch":
+      return "Kana Match";
+    case "vocabularyRush":
+      return "Kana Rush";
+    case "kanjiHunter":
+      return "Kana Hunter";
+    default:
+      return undefined;
+  }
+}
+
 export function GamesScreen({ availability }: GamesScreenProps) {
   if (!hasPlayableGame(availability)) {
     return (
@@ -66,12 +79,18 @@ export function GamesScreen({ availability }: GamesScreenProps) {
           let description: string = entry.description;
 
           if (
-            entry.id === "wordMatch" &&
             available &&
-            availability.wordMatch.mode === "kana"
+            "mode" in entryAvailability &&
+            entryAvailability.mode === "kana"
           ) {
-            badge = "Kana Match";
-            description = "Match hiragana or katakana to romaji.";
+            badge = kanaModeBadge(entry.id);
+            if (entry.id === "wordMatch") {
+              description = "Match hiragana or katakana to romaji.";
+            } else if (entry.id === "vocabularyRush") {
+              description = "Pick the romaji reading before time runs out.";
+            } else if (entry.id === "kanjiHunter") {
+              description = "Recognize kana readings under pressure.";
+            }
           }
 
           return (
@@ -95,6 +114,7 @@ export function GamesScreen({ availability }: GamesScreenProps) {
             description={entry.description}
             gameSlug={entry.slug}
             disabled
+            upcoming
           />
         ))}
       </div>

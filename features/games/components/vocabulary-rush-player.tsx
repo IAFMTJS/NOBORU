@@ -158,12 +158,12 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
     return (
       <StudyHubLayout
         scene="study_atmosphere"
-        title="Vocabulary Rush"
+        title={session.modeLabel}
         subtitle="Mini-game"
         backHref="/games"
         backLabel="Games"
       >
-        <GameCompleteCard result={result} title="Vocabulary Rush Complete" />
+        <GameCompleteCard result={result} title={`${session.modeLabel} Complete`} />
       </StudyHubLayout>
     );
   }
@@ -171,8 +171,12 @@ export function VocabularyRushPlayer({ session }: VocabularyRushPlayerProps) {
   return (
     <StudyHubLayout
       scene="study_atmosphere"
-      title="Vocabulary Rush"
-      subtitle="Fast recall from your learned vocabulary"
+      title={session.modeLabel}
+      subtitle={
+        session.modeLabel === "Vocabulary Rush"
+          ? "Fast recall from your learned vocabulary"
+          : "Fast kana recall from your learned characters"
+      }
       backHref="/games"
       backLabel="Games"
       action={headerAction}

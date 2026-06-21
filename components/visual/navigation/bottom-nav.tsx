@@ -38,6 +38,7 @@ export function BottomNav() {
             <Link
               key={href}
               href={href}
+              prefetch={false}
               aria-current={active ? "page" : undefined}
               aria-label={label}
               className={cn(

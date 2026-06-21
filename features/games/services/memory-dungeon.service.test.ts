@@ -4,6 +4,7 @@ import {
   buildMemoryDungeonSession,
   canBuildMemoryDungeon,
 } from "@/features/games/services/memory-dungeon.service";
+import type { HiraganaRow } from "@/features/hiragana/types/hiragana.types";
 import type { KanjiRow } from "@/features/kanji/types/kanji.types";
 import type { VocabularyRow } from "@/features/vocabulary/types/vocabulary.types";
 
@@ -35,15 +36,62 @@ const kanji: KanjiRow[] = Array.from({ length: 6 }, (_, index) => ({
   updated_at: "2026-01-01T00:00:00.000Z",
 }));
 
+const hiragana: HiraganaRow[] = Array.from({ length: 8 }, (_, index) => ({
+  id: `h-${index}`,
+  character: "あ",
+  romaji: `a${index}`,
+  row_name: "a",
+  row_label: "A row",
+  order_index: index,
+  variant_type: "base",
+  status: "published",
+  created_at: "2026-01-01T00:00:00.000Z",
+  updated_at: "2026-01-01T00:00:00.000Z",
+}));
+
 describe("memory-dungeon.service", () => {
-  it("allows entry when vocabulary or kanji pools are large enough", () => {
-    expect(canBuildMemoryDungeon(4, 0)).toBe(true);
-    expect(canBuildMemoryDungeon(0, 4)).toBe(true);
-    expect(canBuildMemoryDungeon(2, 2)).toBe(false);
+  it("allows entry when vocabulary, kanji, or kana pools are large enough", () => {
+    expect(
+      canBuildMemoryDungeon({
+        vocabularyCount: 4,
+        kanjiCount: 0,
+        hiraganaCount: 0,
+        katakanaCount: 0,
+      }),
+    ).toBe(true);
+    expect(
+      canBuildMemoryDungeon({
+        vocabularyCount: 0,
+        kanjiCount: 4,
+        hiraganaCount: 0,
+        katakanaCount: 0,
+      }),
+    ).toBe(true);
+    expect(
+      canBuildMemoryDungeon({
+        vocabularyCount: 0,
+        kanjiCount: 0,
+        hiraganaCount: 8,
+        katakanaCount: 0,
+      }),
+    ).toBe(true);
+    expect(
+      canBuildMemoryDungeon({
+        vocabularyCount: 2,
+        kanjiCount: 2,
+        hiraganaCount: 2,
+        katakanaCount: 2,
+      }),
+    ).toBe(false);
   });
 
   it("builds multiple rooms when vocabulary and kanji are available", () => {
-    const session = buildMemoryDungeonSession({ vocabulary, kanji });
+    const session = buildMemoryDungeonSession({
+      vocabulary,
+      kanji,
+      hiragana: [],
+      katakana: [],
+    });
 
     expect(session.slug).toBe("memory-dungeon");
     expect(session.rooms.length).toBeGreaterThanOrEqual(2);
@@ -51,10 +99,25 @@ describe("memory-dungeon.service", () => {
     expect(session.roomCount).toBe(session.rooms.length);
   });
 
+  it("builds a kana room when only kana has been learned", () => {
+    const session = buildMemoryDungeonSession({
+      vocabulary: [],
+      kanji: [],
+      hiragana,
+      katakana: [],
+    });
+
+    expect(session.rooms).toHaveLength(1);
+    expect(session.rooms[0]?.id).toBe("kana-cavern");
+    expect(session.rooms[0]?.pairs.length).toBe(6);
+  });
+
   it("builds a single vocabulary room when kanji is thin", () => {
     const session = buildMemoryDungeonSession({
       vocabulary: vocabulary.slice(0, 6),
       kanji: [],
+      hiragana: [],
+      katakana: [],
     });
 
     expect(session.rooms).toHaveLength(1);

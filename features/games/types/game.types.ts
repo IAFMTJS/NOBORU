@@ -14,6 +14,7 @@ export type WordMatchSessionViewModel = {
 
 export type VocabularyRushSessionViewModel = {
   slug: typeof GAME_SLUGS.vocabularyRush;
+  modeLabel: string;
   questions: LessonRecallStep[];
   questionCount: number;
   lives: number;
@@ -22,6 +23,7 @@ export type VocabularyRushSessionViewModel = {
 
 export type KanjiHunterSessionViewModel = {
   slug: typeof GAME_SLUGS.kanjiHunter;
+  modeLabel: string;
   questions: LessonRecallStep[];
   questionCount: number;
   lives: number;
@@ -72,7 +74,11 @@ export type GameCompleteViewModel = {
 
 export type GameAvailabilityViewModel = {
   wordMatch: { available: boolean; mode: GameMode | null; poolSize: number };
-  vocabularyRush: { available: boolean; poolSize: number };
-  kanjiHunter: { available: boolean; poolSize: number };
+  vocabularyRush: {
+    available: boolean;
+    mode: GameMode | null;
+    poolSize: number;
+  };
+  kanjiHunter: { available: boolean; mode: GameMode | null; poolSize: number };
   memoryDungeon: { available: boolean; poolSize: number; roomCount: number };
 };

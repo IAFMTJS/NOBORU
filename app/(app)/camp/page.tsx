@@ -7,6 +7,8 @@ import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants"
 import { dashboardServerService } from "@/features/learning/services/dashboard-server.service";
 import { profileServerService } from "@/features/profile/services/profile-server.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function CampPage() {
   const profile = await profileServerService.getProfileCore();
 

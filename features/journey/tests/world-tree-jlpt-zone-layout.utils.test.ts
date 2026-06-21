@@ -53,6 +53,33 @@ describe("buildJlptZoneArtLayout", () => {
     }
   });
 
+  it("places all four JLPT biome transition seams", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const transitions = layout.fill.filter((piece) => piece.kind === "transition");
+
+    expect(transitions).toHaveLength(4);
+    expect(transitions.map((piece) => piece.id).sort()).toEqual([
+      "n2-transition",
+      "n3-transition",
+      "n4-transition",
+      "n5-transition",
+    ]);
+    expect(transitions.every((piece) => piece.src.includes("/transitions/"))).toBe(true);
+  });
+
+  it("uses canopy and celestial fill art in N2 and N1 bands", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const n2Fill = layout.fill.filter(
+      (piece) => piece.kind === "fill" && piece.id.startsWith("n2-"),
+    );
+    const n1Fill = layout.fill.filter(
+      (piece) => piece.kind === "fill" && piece.id.startsWith("n1-"),
+    );
+
+    expect(n2Fill.some((piece) => piece.src.includes("canopy_a"))).toBe(true);
+    expect(n1Fill.some((piece) => piece.src.includes("celestial_a"))).toBe(true);
+  });
+
   it("maps five equal JLPT bands bottom to top", () => {
     const bands = buildWorldTreeJlptBandLayout();
     expect(bands[0]?.id).toBe("n5");

@@ -13,6 +13,7 @@ type GameCardProps = {
   icon?: ReactNode;
   badge?: string;
   disabled?: boolean;
+  upcoming?: boolean;
   className?: string;
 };
 
@@ -53,6 +54,7 @@ export function GameCard({
   icon,
   badge,
   disabled,
+  upcoming,
   className,
 }: GameCardProps) {
   if (disabled) {
@@ -68,7 +70,7 @@ export function GameCard({
           <div className="flex items-center gap-2">
             <p className="text-body-sm font-medium">{title}</p>
             <Badge variant="outline" className="text-[10px]">
-              Soon
+              {upcoming ? "Soon" : "Locked"}
             </Badge>
           </div>
           <p className="text-caption text-muted-foreground">{description}</p>

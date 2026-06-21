@@ -158,12 +158,12 @@ export function KanjiHunterPlayer({ session }: KanjiHunterPlayerProps) {
     return (
       <StudyHubLayout
         scene="study_atmosphere"
-        title="Kanji Hunter"
+        title={session.modeLabel}
         subtitle="Mini-game"
         backHref="/games"
         backLabel="Games"
       >
-        <GameCompleteCard result={result} title="Kanji Hunter Complete" />
+        <GameCompleteCard result={result} title={`${session.modeLabel} Complete`} />
       </StudyHubLayout>
     );
   }
@@ -171,8 +171,12 @@ export function KanjiHunterPlayer({ session }: KanjiHunterPlayerProps) {
   return (
     <StudyHubLayout
       scene="study_atmosphere"
-      title="Kanji Hunter"
-      subtitle="Fast recognition from your learned kanji"
+      title={session.modeLabel}
+      subtitle={
+        session.modeLabel === "Kanji Hunter"
+          ? "Fast recognition from your learned kanji"
+          : "Fast kana recognition from your learned characters"
+      }
       backHref="/games"
       backLabel="Games"
       action={headerAction}
