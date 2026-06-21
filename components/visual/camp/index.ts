@@ -7,6 +7,7 @@ export {
 } from "./camp-reward-chest";
 export {
   CampShrineHotspot,
+  CampShrineIcon,
   resolveShrineLanternAsset,
 } from "./camp-shrine-hotspot";
 export { CampWeatherOverlay } from "./camp-weather-overlay";

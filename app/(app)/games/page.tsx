@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
+import { GamesScreen } from "@/features/games/components/games-screen";
+import { getGameAvailability } from "@/lib/orchestration/games.orchestrator";
 
-export default function GamesPage() {
-  redirect("/study");
+export default async function GamesPage() {
+  const availability = await getGameAvailability();
+  return <GamesScreen availability={availability} />;
 }

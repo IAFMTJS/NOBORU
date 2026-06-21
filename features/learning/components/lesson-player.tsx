@@ -354,6 +354,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   const handleComplete = useCallback(async (score: number) => {
     setSaving(true);
     setError(null);
+    setCompletedScore(score);
     try {
       const result = await offlineClient.completeLesson(session.lessonId, score);
       setCompletedScore(result.score);
@@ -393,7 +394,12 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       const score = calculateLessonScore(recallCorrect, recallTotal);
       const unresolved = getUnresolvedFailureIds(failureTracker);
 
-      if (!isReviewSession && unresolved.length > 0 && session.contentById) {
+      if (
+        !isReviewSession &&
+        score < session.passScore &&
+        unresolved.length > 0 &&
+        session.contentById
+      ) {
         const remediationBatch = buildFinalRemediationBatch(
           unresolved,
           session.contentById,
@@ -425,12 +431,6 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
             passScore: session.passScore,
           },
         });
-        return;
-      }
-
-      if (!isReviewSession && unresolved.length > 0) {
-        setFailedScore(score);
-        setLessonFailed(true);
         return;
       }
 
@@ -528,11 +528,16 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       setHeartsRemaining((current) => {
         const next = current - 1;
         if (next <= 0) {
+          const scoreAfterWrong = calculateLessonScore(nextCorrect, nextTotal);
+          const scoreMeetsPassThreshold =
+            isReviewSession || scoreAfterWrong >= session.passScore;
           scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
-          window.setTimeout(() => {
-            setFailedScore(calculateLessonScore(nextCorrect, nextTotal));
-            setLessonFailed(true);
-          }, LESSON_WRONG_EXPLANATION_MS);
+          if (!scoreMeetsPassThreshold) {
+            window.setTimeout(() => {
+              setFailedScore(scoreAfterWrong);
+              setLessonFailed(true);
+            }, LESSON_WRONG_EXPLANATION_MS);
+          }
           return 0;
         }
         scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
@@ -545,10 +550,12 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       contentById,
       currentStep,
       failureTracker,
+      isReviewSession,
       lessonSteps.length,
       recallCorrect,
       recallTotal,
       scheduleAdvance,
+      session.passScore,
       stepIndex,
     ],
   );

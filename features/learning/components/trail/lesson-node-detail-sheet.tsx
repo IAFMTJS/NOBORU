@@ -15,7 +15,6 @@ import {
   SheetPortal,
 } from "@/components/ui/sheet";
 import {
-  GlassPanel,
   PrimaryClimbButton,
   StoryTitle,
 } from "@/components/visual";
@@ -56,7 +55,7 @@ function LessonPreviewRow({ labels }: { labels: string[] }) {
         <span
           key={label}
           lang="ja"
-          className="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-white/15 bg-black/35 px-2 font-japanese text-heading-6"
+          className="inline-flex h-10 min-w-10 items-center justify-center rounded-lg border border-border bg-background px-2 font-japanese text-heading-6 text-foreground shadow-elevation-1"
         >
           {label}
         </span>
@@ -65,11 +64,14 @@ function LessonPreviewRow({ labels }: { labels: string[] }) {
   );
 }
 
+const detailSectionClass =
+  "rounded-2xl border border-border bg-muted/80 p-4 shadow-elevation-1";
+
 function UnlockChecklist({ items }: { items: UnlockRequirement[] }) {
   if (items.length === 0) return null;
 
   return (
-    <GlassPanel className="space-y-2 p-4 text-left">
+    <div className={cn(detailSectionClass, "space-y-2 text-left")}>
       <p className="text-caption font-medium uppercase tracking-wide text-muted-foreground">
         Way to unlock
       </p>
@@ -87,7 +89,7 @@ function UnlockChecklist({ items }: { items: UnlockRequirement[] }) {
           </li>
         ))}
       </ul>
-    </GlassPanel>
+    </div>
   );
 }
 
@@ -144,19 +146,19 @@ export function LessonNodeDetailSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetPortal>
-        <SheetOverlay className="bg-black/50 backdrop-blur-[3px]" />
+        <SheetOverlay className="overlay-scrim backdrop-blur-sm" />
         <SheetPrimitive.Content
           className={cn(
-            "fixed inset-x-0 bottom-0 z-50 max-h-[min(92dvh,40rem)] overflow-hidden rounded-t-3xl border border-white/10 bg-transparent p-0 shadow-elevation-2",
+            "fixed inset-x-0 bottom-0 z-50 max-h-[min(92dvh,40rem)] overflow-hidden rounded-t-3xl border border-border bg-card p-0 shadow-elevation-3",
             "motion-reduce:animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
           )}
         >
-          <SheetPrimitive.Close className="focus-ring absolute right-4 top-4 z-20 rounded-full border border-white/55 bg-white/58 p-1.5 text-foreground/80 transition-opacity hover:text-foreground">
+          <SheetPrimitive.Close className="focus-ring absolute right-4 top-4 z-20 rounded-full border border-border bg-background p-1.5 text-muted-foreground shadow-elevation-1 transition-colors hover:text-foreground">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
 
-          <div className={cn("min-h-[20rem] rounded-t-3xl", glassSurface.sheet, "rounded-b-none border-x-0")}>
+          <div className="min-h-[20rem]">
             <div className="space-y-4 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
               <div className="flex flex-col items-center gap-3 text-center">
                 {skeletonMode ? (
@@ -218,32 +220,37 @@ export function LessonNodeDetailSheet({
               </div>
 
               {(previewLabels.length > 0 || lesson?.description) && !locked && (
-                <GlassPanel className="space-y-3 p-4 text-center">
+                <div className={cn(detailSectionClass, "space-y-3 text-center")}>
                   {previewLabels.length > 0 ? (
                     <LessonPreviewRow labels={previewLabels} />
                   ) : null}
                   {lesson?.description ? (
-                    <p className="text-body-sm text-muted-foreground">{lesson.description}</p>
+                    <p className="text-body-sm text-foreground/90">{lesson.description}</p>
                   ) : null}
-                </GlassPanel>
+                </div>
               )}
 
               {locked ? (
                 <>
-                  <GlassPanel className="p-4 text-center">
+                  <div className={cn(detailSectionClass, "text-center")}>
                     <div className="mb-2 flex justify-center">
                       <UiIconImage name="lock" size={24} className="opacity-80" />
                     </div>
-                    <p className="text-body-sm text-muted-foreground">
+                    <p className="text-body-sm text-foreground/90">
                       {showComingSoon
                         ? "This lesson is planned for a future update. Keep climbing the main path — new content will appear here when it is ready."
                         : "This lesson is locked. Complete the lessons below to continue your climb."}
                     </p>
-                  </GlassPanel>
+                  </div>
                   <UnlockChecklist items={unlockRequirements} />
                 </>
               ) : (
-                <GlassPanel className="flex flex-wrap items-center justify-center gap-4 p-3 text-body-sm">
+                <div
+                  className={cn(
+                    detailSectionClass,
+                    "flex flex-wrap items-center justify-center gap-4 p-3 text-body-sm",
+                  )}
+                >
                   <span className="inline-flex items-center gap-1 text-muted-foreground">
                     <UiIconImage name="trophy" size={14} />
                     <span className="font-medium text-trail-glow">+{node.xpReward} XP</span>
@@ -258,7 +265,7 @@ export function LessonNodeDetailSheet({
                     <UiIconImage name="gem" size={14} />
                     <span>Rewards on complete</span>
                   </span>
-                </GlassPanel>
+                </div>
               )}
 
               {locked ? (
@@ -287,7 +294,10 @@ export function LessonNodeDetailSheet({
                   </PrimaryClimbButton>
                   <Link
                     href="/review"
-                    className="flex h-11 w-full items-center justify-center gap-2 rounded-[var(--radius)] border border-white/15 text-body-sm font-medium text-muted-foreground transition-colors hover:border-trail-glow/40 hover:text-foreground"
+                    className={cn(
+                      "focus-ring flex h-11 w-full items-center justify-center gap-2 font-sans text-body-sm font-medium",
+                      glassSurface.buttonSecondary,
+                    )}
                   >
                     <UiIconImage name="zap" size={16} />
                     Practice instead
@@ -296,7 +306,7 @@ export function LessonNodeDetailSheet({
               )}
 
               {nextLessonLabel && !locked ? (
-                <GlassPanel className="flex items-center justify-between gap-2 p-3 text-left">
+                <div className={cn(detailSectionClass, "flex items-center justify-between gap-2 p-3 text-left")}>
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                       Next up
@@ -304,7 +314,7 @@ export function LessonNodeDetailSheet({
                     <p className="text-body-sm font-medium">{nextLessonLabel}</p>
                   </div>
                   <UiIconImage name="chevron_down" size={14} className="rotate-[-90deg] opacity-60" />
-                </GlassPanel>
+                </div>
               ) : null}
             </div>
           </div>

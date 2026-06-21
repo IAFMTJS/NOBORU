@@ -23,7 +23,7 @@ export const LESSON_MIN_SCORED_EXERCISES = 8;
 export const LESSON_MAX_SCORED_EXERCISES = 15;
 
 /** Universal first-completion threshold for mini-chapter lessons. */
-export const LESSON_PASS_SCORE_UNIVERSAL = 80;
+export const LESSON_PASS_SCORE_UNIVERSAL = 90;
 
 /** Review content should occupy 20–30% of scored exercises. */
 export const LESSON_REVIEW_RATIO_MIN = 0.2;

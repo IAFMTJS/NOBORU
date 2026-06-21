@@ -83,3 +83,40 @@ export function calculateMemoryDungeonEp(wrongAttempts: number): number {
   if (wrongAttempts <= 3) return MEMORY_DUNGEON_EP.good;
   return MEMORY_DUNGEON_EP.pass;
 }
+
+export const GAME_CATALOG_ENTRIES = [
+  {
+    id: "wordMatch",
+    slug: GAME_SLUGS.wordMatch,
+    title: "Word Match",
+    description: "Match Japanese words to their English meanings.",
+  },
+  {
+    id: "vocabularyRush",
+    slug: GAME_SLUGS.vocabularyRush,
+    title: "Vocabulary Rush",
+    description: "Fast recall — pick the right meaning before time runs out.",
+  },
+  {
+    id: "kanjiHunter",
+    slug: GAME_SLUGS.kanjiHunter,
+    title: "Kanji Hunter",
+    description: "Recognize kanji meanings and readings under pressure.",
+  },
+  {
+    id: "memoryDungeon",
+    slug: GAME_SLUGS.memoryDungeon,
+    title: "Memory Dungeon",
+    description: "Clear rooms of memory pairs to strengthen long-term retention.",
+  },
+] as const;
+
+export type GameCatalogId = (typeof GAME_CATALOG_ENTRIES)[number]["id"];
+
+export const UPCOMING_GAME_ENTRIES = [
+  {
+    slug: GAME_SLUGS.readingChallenge,
+    title: "Reading Challenge",
+    description: "Graded reading passages with comprehension checks.",
+  },
+] as const;

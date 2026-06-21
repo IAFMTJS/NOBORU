@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 
 import { ArtLibraryImage } from "@/components/media/art-library-image";
+import { CampShrineIcon } from "@/components/visual/camp";
 import {
   GlassSurfaceButton,
   GlassSurfaceCard,
@@ -118,12 +119,27 @@ export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
       <GlassSurfacePanel variant="card">
         <p className="mb-3 font-japanese text-body text-foreground/90">{data.yama.message}</p>
         <div className="grid grid-cols-2 gap-2">
-          <GlassSurfaceCardButton padding="md" onClick={() => setQuestBoardOpen(true)}>
-            <ArtLibraryImage themedBase="icons/icon_quest_board_pin" src="" alt="" width={40} height={40} />
+          <GlassSurfaceCardButton
+            padding="md"
+            className="flex flex-col items-center gap-2 text-center"
+            onClick={() => setQuestBoardOpen(true)}
+          >
+            <ArtLibraryImage
+              themedBase="icons/icon_quest_board_pin"
+              src=""
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 shrink-0 object-contain"
+            />
             <span className="text-caption font-semibold">Quest board</span>
           </GlassSurfaceCardButton>
-          <GlassSurfaceCardButton padding="md" onClick={() => setShrineOpen(true)}>
-            <ArtLibraryImage themedBase="props/item_stone_lantern" src="" alt="" width={40} height={40} />
+          <GlassSurfaceCardButton
+            padding="md"
+            className="flex flex-col items-center gap-2 text-center"
+            onClick={() => setShrineOpen(true)}
+          >
+            <CampShrineIcon streakDays={data.stats.currentStreak} size={40} />
             <span className="text-caption font-semibold">Shrine</span>
           </GlassSurfaceCardButton>
         </div>
@@ -210,11 +226,16 @@ export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
       <Dialog open={shrineOpen} onOpenChange={setShrineOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Streak shrine</DialogTitle>
-            <DialogDescription>
-              {data.stats.currentStreak} day streak — {data.shrineProtection.tokensAvailable}{" "}
-              protection token{data.shrineProtection.tokensAvailable === 1 ? "" : "s"}
-            </DialogDescription>
+            <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+              <CampShrineIcon streakDays={data.stats.currentStreak} size={48} />
+              <div className="space-y-1">
+                <DialogTitle>Streak shrine</DialogTitle>
+                <DialogDescription>
+                  {data.stats.currentStreak} day streak — {data.shrineProtection.tokensAvailable}{" "}
+                  protection token{data.shrineProtection.tokensAvailable === 1 ? "" : "s"}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           <div className="flex flex-wrap gap-2">
             {([7, 14, 30, 50] as const).map((milestone) => (

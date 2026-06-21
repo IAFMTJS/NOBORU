@@ -39,6 +39,7 @@ import {
   summarizeLessonPhases,
   summarizeLessonStages,
 } from "@/lib/learning/lesson-stage-assembly.service";
+import { shuffle } from "@/features/learning/utils/exercise-steps";
 import {
   buildContextStepsFromLessonContents,
   buildEmbeddedContextSteps,
@@ -527,7 +528,7 @@ class LessonService {
   }
 
   private buildDiscoverTeachSteps(contents: LessonContent[]): LessonTeachStep[] {
-    return contents.map((content, index) => ({
+    return shuffle([...contents]).map((content, index) => ({
       kind: "teach",
       content,
       index: index + 1,

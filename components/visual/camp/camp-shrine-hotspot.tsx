@@ -29,6 +29,30 @@ export function resolveShrineLanternAsset(
     : CAMP_WORLD_ASSETS.shrine_lantern_paper;
 }
 
+type CampShrineIconProps = {
+  streakDays?: number;
+  size?: number;
+  className?: string;
+};
+
+/** Shrine lantern icon for camp cards and dialogs. */
+export function CampShrineIcon({
+  streakDays = 0,
+  size = 40,
+  className,
+}: CampShrineIconProps) {
+  return (
+    <WorldArtImage
+      asset={resolveShrineLanternAsset(streakDays)}
+      alt=""
+      width={size}
+      height={size}
+      presentation="icon"
+      className={cn("shrink-0 object-contain", className)}
+    />
+  );
+}
+
 /** Doc 11 Component 012 — streak shrine hotspot with visual growth. */
 export function CampShrineHotspot({ onClick, streakDays, className }: CampShrineHotspotProps) {
   const lanternCount = resolveLanternCount(streakDays);

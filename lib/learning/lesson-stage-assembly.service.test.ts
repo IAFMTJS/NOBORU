@@ -8,6 +8,7 @@ import {
   assembleStagedExerciseSteps,
   computeStagePlans,
   enforceExerciseVariety,
+  shuffleStepsWithinLessonPhase,
 } from "@/lib/learning/lesson-stage-assembly.service";
 import {
   LESSON_MAX_SCORED_EXERCISES,
@@ -146,5 +147,71 @@ describe("lesson stage assembly", () => {
 
     const varied = enforceExerciseVariety(repetitive);
     expect(varied[2]?.kind).not.toBe("recall");
+  });
+
+  it("keeps lesson phase progression when shuffling scored steps", () => {
+    const { steps } = assembleStagedExerciseSteps({
+      newContents: [vocab("a"), vocab("b"), vocab("c")],
+      reviewContents: [vocab("d"), vocab("e")],
+      isCheckpoint: false,
+    });
+
+    const phaseOrder = ["introduction", "recognition", "active_recall", "context_mastery"];
+    let lastPhaseIndex = -1;
+    for (const step of steps) {
+      const phaseIndex = phaseOrder.indexOf(step.lessonPhase ?? "context_mastery");
+      expect(phaseIndex).toBeGreaterThanOrEqual(lastPhaseIndex);
+      lastPhaseIndex = phaseIndex;
+    }
+  });
+
+  it("shuffles steps within a phase bucket", () => {
+    const steps: ScoredLessonStep[] = [
+      {
+        kind: "recall",
+        mode: "choice",
+        contentType: "vocabulary",
+        prompt: "a",
+        display: "a",
+        options: ["a"],
+        correctIndex: 0,
+        index: 1,
+        total: 3,
+        lessonPhase: "recognition",
+      },
+      {
+        kind: "fill_blank",
+        prompt: "b",
+        sentenceWithBlank: "___",
+        englishHint: "b",
+        options: ["b"],
+        correctIndex: 0,
+        index: 2,
+        total: 3,
+        lessonPhase: "recognition",
+      },
+      {
+        kind: "recall",
+        mode: "choice",
+        contentType: "vocabulary",
+        prompt: "c",
+        display: "c",
+        options: ["c"],
+        correctIndex: 0,
+        index: 3,
+        total: 3,
+        lessonPhase: "recognition",
+      },
+    ];
+
+    const orders = new Set(
+      Array.from({ length: 12 }, () =>
+        shuffleStepsWithinLessonPhase(steps)
+          .map((step) => step.prompt)
+          .join("|"),
+      ),
+    );
+
+    expect(orders.size).toBeGreaterThan(1);
   });
 });

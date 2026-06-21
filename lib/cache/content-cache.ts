@@ -112,35 +112,43 @@ async function fetchRegionsWithCurriculumFromAdmin(
 }
 
 async function fetchPublishedRegionsUncached(): Promise<RegionWithUnits[]> {
-  if (isAdminClientConfigured()) {
-    return fetchRegionsWithCurriculumFromAdmin(false);
-  }
-  return fetchRegionsWithCurriculumFromUserClient(false);
+  return fetchRegionsWithCurriculumFromAdmin(false);
 }
 
 async function fetchJourneyRegionsUncached(): Promise<RegionWithUnits[]> {
-  if (isAdminClientConfigured()) {
-    return fetchRegionsWithCurriculumFromAdmin(true);
-  }
-  return fetchRegionsWithCurriculumFromUserClient(true);
+  return fetchRegionsWithCurriculumFromAdmin(true);
 }
 
+/** Admin-only — safe inside unstable_cache (no cookie-backed Supabase client). */
 const getPublishedRegionsCrossRequest = unstable_cache(
   fetchPublishedRegionsUncached,
   ["published-regions-curriculum"],
   { tags: ["published-curriculum"], revalidate: 3600 },
 );
 
+/** Admin-only — safe inside unstable_cache (no cookie-backed Supabase client). */
 const getJourneyRegionsCrossRequest = unstable_cache(
   fetchJourneyRegionsUncached,
   ["journey-regions-curriculum"],
   { tags: ["published-curriculum"], revalidate: 3600 },
 );
 
-async function fetchPublishedHiragana(): Promise<HiraganaRow[]> {
-  const supabase = isAdminClientConfigured()
-    ? createAdminClient()
-    : await createClient();
+async function resolvePublishedRegions(): Promise<RegionWithUnits[]> {
+  if (isAdminClientConfigured()) {
+    return getPublishedRegionsCrossRequest();
+  }
+  return fetchRegionsWithCurriculumFromUserClient(false);
+}
+
+async function resolveJourneyRegions(): Promise<RegionWithUnits[]> {
+  if (isAdminClientConfigured()) {
+    return getJourneyRegionsCrossRequest();
+  }
+  return fetchRegionsWithCurriculumFromUserClient(true);
+}
+
+async function fetchPublishedHiraganaFromAdmin(): Promise<HiraganaRow[]> {
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("hiragana")
     .select(
@@ -153,10 +161,36 @@ async function fetchPublishedHiragana(): Promise<HiraganaRow[]> {
   return (data ?? []) as HiraganaRow[];
 }
 
-async function fetchPublishedKatakana(): Promise<KatakanaRow[]> {
-  const supabase = isAdminClientConfigured()
-    ? createAdminClient()
-    : await createClient();
+async function fetchPublishedHiraganaFromUserClient(): Promise<HiraganaRow[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("hiragana")
+    .select(
+      "id, character, romaji, row_name, row_label, order_index, variant_type, status, created_at, updated_at",
+    )
+    .eq("status", "published")
+    .order("order_index", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []) as HiraganaRow[];
+}
+
+async function fetchPublishedKatakanaFromAdmin(): Promise<KatakanaRow[]> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from("katakana")
+    .select(
+      "id, character, romaji, row_name, row_label, order_index, variant_type, status, created_at, updated_at",
+    )
+    .eq("status", "published")
+    .order("order_index", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []) as KatakanaRow[];
+}
+
+async function fetchPublishedKatakanaFromUserClient(): Promise<KatakanaRow[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("katakana")
     .select(
@@ -170,33 +204,39 @@ async function fetchPublishedKatakana(): Promise<KatakanaRow[]> {
 }
 
 const getPublishedHiraganaCrossRequest = unstable_cache(
-  fetchPublishedHiragana,
+  fetchPublishedHiraganaFromAdmin,
   ["published-hiragana-chart"],
   { tags: ["published-hiragana"], revalidate: 3600 },
 );
 
 const getPublishedKatakanaCrossRequest = unstable_cache(
-  fetchPublishedKatakana,
+  fetchPublishedKatakanaFromAdmin,
   ["published-katakana-chart"],
   { tags: ["published-katakana"], revalidate: 3600 },
 );
 
+async function resolvePublishedHiragana(): Promise<HiraganaRow[]> {
+  if (isAdminClientConfigured()) {
+    return getPublishedHiraganaCrossRequest();
+  }
+  return fetchPublishedHiraganaFromUserClient();
+}
+
+async function resolvePublishedKatakana(): Promise<KatakanaRow[]> {
+  if (isAdminClientConfigured()) {
+    return getPublishedKatakanaCrossRequest();
+  }
+  return fetchPublishedKatakanaFromUserClient();
+}
+
 /** Journey tree includes draft placeholder lessons for upcoming content. */
-export const getJourneyRegionsWithCurriculum = cache(async () =>
-  getJourneyRegionsCrossRequest(),
-);
+export const getJourneyRegionsWithCurriculum = cache(resolveJourneyRegions);
 
 /** Request-scoped dedupe layered on cross-request published curriculum cache. */
-export const getPublishedRegionsWithCurriculum = cache(async () =>
-  getPublishedRegionsCrossRequest(),
-);
+export const getPublishedRegionsWithCurriculum = cache(resolvePublishedRegions);
 
-export const getPublishedHiraganaChart = cache(async () =>
-  getPublishedHiraganaCrossRequest(),
-);
+export const getPublishedHiraganaChart = cache(resolvePublishedHiragana);
 
-export const getPublishedKatakanaChart = cache(async () =>
-  getPublishedKatakanaCrossRequest(),
-);
+export const getPublishedKatakanaChart = cache(resolvePublishedKatakana);
 
 export type { RegionWithUnits };

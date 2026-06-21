@@ -72,6 +72,22 @@ const NOBORU_COSMETIC_MAP: Record<string, string> = {
   "char-noboru-cosmetic-scarf-crimson": "characters/kitsune/personalization/kitsune_cosmetic_scarf",
 };
 
+/** Camp world props — legacy IDs mapped to published Art Library paths. */
+const CAMP_PROP_MAP: Record<string, string> = {
+  "panel-wood-daily-quest-board": "icons/icon_quest_board_pin",
+  "prop-camp-shrine-lantern-stone": "props/item_stone_lantern",
+  "prop-camp-shrine-lantern-paper": "props/item_lantern",
+  "prop-camp-shrine-lantern-glow": "props/item_lantern",
+  "prop-camp-chest-closed": "icons/icon_chest_closed",
+  "prop-camp-chest-available": "icons/icon_chest_available",
+  "prop-camp-chest-opening": "icons/icon_chest_available",
+  "prop-camp-chest-collected": "icons/icon_chest_closed",
+  "prop-camp-merchant-stand": "props/item_daruma",
+  "prop-camp-tent-canvas": "props/item_backpack_bamboo",
+  "prop-camp-memory-book-closed": "props/item_scroll",
+  "particle-ember": "props/item_sakura_petals_trail",
+};
+
 function mapNoboruCharacter(id: string): string | null {
   return (
     NOBORU_BASE_MAP[id] ??
@@ -125,6 +141,16 @@ export function mapLegacyAssetToArtLibrary(
 
   if (category.startsWith("props/inventory")) {
     return withTheme(mapInventoryItem(id), theme);
+  }
+
+  if (category.startsWith("props/camp") || category.startsWith("ui/panels")) {
+    const base = CAMP_PROP_MAP[id];
+    if (base) return withTheme(base, theme);
+  }
+
+  if (category.startsWith("props/particles")) {
+    const base = CAMP_PROP_MAP[id];
+    if (base) return withTheme(base, theme);
   }
 
   if (category.startsWith("props/")) {

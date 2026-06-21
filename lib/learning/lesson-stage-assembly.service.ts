@@ -74,11 +74,47 @@ function isDrillContent(
   );
 }
 
+const LESSON_PHASE_ORDER: LessonPhase[] = [
+  "introduction",
+  "recognition",
+  "active_recall",
+  "context_mastery",
+];
+
+/** Randomize drill order within each learning phase while keeping phase progression. */
+export function shuffleStepsWithinLessonPhase(steps: ScoredLessonStep[]): ScoredLessonStep[] {
+  const buckets = new Map<LessonPhase, ScoredLessonStep[]>();
+  for (const phase of LESSON_PHASE_ORDER) {
+    buckets.set(phase, []);
+  }
+
+  for (const step of steps) {
+    const phase = step.lessonPhase ?? "context_mastery";
+    const bucket = buckets.get(phase);
+    if (bucket) {
+      bucket.push(step);
+    } else {
+      buckets.get("context_mastery")!.push(step);
+    }
+  }
+
+  const result: ScoredLessonStep[] = [];
+  for (const phase of LESSON_PHASE_ORDER) {
+    result.push(...shuffle(buckets.get(phase) ?? []));
+  }
+  return result;
+}
+
 function getStepKind(step: ScoredLessonStep): string {
   return step.kind;
 }
 
-/** Never show the same exercise type more than twice consecutively. */
+function trimToExerciseBounds(steps: ScoredLessonStep[]): ScoredLessonStep[] {
+  if (steps.length <= LESSON_MAX_SCORED_EXERCISES) return steps;
+  return steps.slice(0, LESSON_MAX_SCORED_EXERCISES);
+}
+
+/** Never show the same exercise type more than twice consecutively within a phase. */
 export function enforceExerciseVariety(steps: ScoredLessonStep[]): ScoredLessonStep[] {
   if (steps.length <= LESSON_MAX_CONSECUTIVE_SAME_KIND + 1) return steps;
 
@@ -86,6 +122,7 @@ export function enforceExerciseVariety(steps: ScoredLessonStep[]): ScoredLessonS
 
   for (let index = LESSON_MAX_CONSECUTIVE_SAME_KIND; index < result.length; index += 1) {
     const kind = getStepKind(result[index]!);
+    const phase = result[index]?.lessonPhase;
     let consecutive = 1;
     for (let back = index - 1; back >= 0; back -= 1) {
       if (getStepKind(result[back]!) !== kind) break;
@@ -96,7 +133,9 @@ export function enforceExerciseVariety(steps: ScoredLessonStep[]): ScoredLessonS
 
     const swapIndex = result.findIndex(
       (step, candidateIndex) =>
-        candidateIndex > index && getStepKind(step) !== kind,
+        candidateIndex > index &&
+        getStepKind(step) !== kind &&
+        step.lessonPhase === phase,
     );
     if (swapIndex === -1) continue;
 
@@ -264,7 +303,8 @@ function interleaveSpiralExposures(
   allAnswers: string[],
   allSurfaces: string[],
 ): ScoredLessonStep[] {
-  const plansByConcept = concepts.map((content) =>
+  const orderedConcepts = shuffle(concepts);
+  const plansByConcept = orderedConcepts.map((content) =>
     buildConceptExposurePlans(content, allAnswers, allSurfaces),
   );
 
@@ -276,7 +316,7 @@ function interleaveSpiralExposures(
   const rawSteps: ScoredLessonStep[] = [];
 
   for (let depth = 0; depth < maxDepth; depth += 1) {
-    for (const plans of plansByConcept) {
+    for (const plans of shuffle(plansByConcept)) {
       const plan = plans[depth];
       if (!plan) continue;
       const step = plan.build();
@@ -306,7 +346,13 @@ function buildReviewInjectionSteps(
 
   for (let index = 0; index < count; index += 1) {
     const content = pool[index % pool.length]!;
-    const variety = buildVarietyStep(content, allAnswers, index + 3, startIndex + index + 1, total);
+    const variety = buildVarietyStep(
+      content,
+      allAnswers,
+      Math.floor(Math.random() * 4),
+      startIndex + index + 1,
+      total,
+    );
     if (variety) {
       steps.push({
         ...variety,
@@ -348,7 +394,7 @@ function buildCheckpointSteps(
 
       if (plan.stage === "recognition") {
         step =
-          index % 2 === 0
+          Math.random() < 0.5
             ? buildRecognitionChoiceStep(
                 content,
                 allAnswers,
@@ -388,12 +434,7 @@ function buildCheckpointSteps(
     runningIndex += plan.count;
   }
 
-  return rawSteps;
-}
-
-function trimToExerciseBounds(steps: ScoredLessonStep[]): ScoredLessonStep[] {
-  if (steps.length <= LESSON_MAX_SCORED_EXERCISES) return steps;
-  return steps.slice(0, LESSON_MAX_SCORED_EXERCISES);
+  return shuffleStepsWithinLessonPhase(rawSteps);
 }
 
 function reindexSteps(steps: ScoredLessonStep[]): ScoredLessonStep[] {
@@ -438,8 +479,8 @@ function buildPhaseSummary(steps: ScoredLessonStep[]): LessonPhaseSummary[] {
 export function assembleStagedExerciseSteps(
   input: StagedLessonAssemblyInput,
 ): { steps: ScoredLessonStep[]; stageSummary: LessonStageSummary[]; phaseSummary: LessonPhaseSummary[] } {
-  const drillNew = input.newContents.filter(isDrillContent);
-  const drillReview = input.reviewContents.filter(isDrillContent);
+  const drillNew = shuffle(input.newContents.filter(isDrillContent));
+  const drillReview = shuffle(input.reviewContents.filter(isDrillContent));
   const primaryPool =
     input.isCheckpoint || drillNew.length === 0 ? drillReview : drillNew;
 
@@ -459,7 +500,7 @@ export function assembleStagedExerciseSteps(
 
     const matching = buildMatchingStep(drillNew);
     if (matching) {
-      rawSteps.unshift({
+      rawSteps.push({
         ...matching,
         stage: "recognition",
         lessonPhase: "introduction",
@@ -484,7 +525,8 @@ export function assembleStagedExerciseSteps(
   }
 
   const bounded = trimToExerciseBounds(rawSteps);
-  const varied = enforceExerciseVariety(bounded);
+  const shuffled = shuffleStepsWithinLessonPhase(bounded);
+  const varied = enforceExerciseVariety(shuffled);
   const indexed = reindexSteps(varied);
 
   return {
