@@ -22,6 +22,8 @@ export type WorldTreeJlptBand = {
   accentColor: string;
   accentGlow: string;
   artFileBase: string;
+  /** Art Library version suffix (v1, v2, …). */
+  artVersion?: number;
 };
 
 /** Bottom → top. y=100 is N5 base, y=0 is N1 crown. */
@@ -43,6 +45,7 @@ export const WORLD_TREE_JLPT_BANDS: readonly WorldTreeJlptBand[] = [
     accentColor: "#E8A317",
     accentGlow: "rgba(232, 163, 23, 0.55)",
     artFileBase: "wt_jlpt_n4",
+    artVersion: 2,
   },
   {
     id: "n3",
@@ -78,11 +81,12 @@ export const WORLD_TREE_JLPT_BAND_ART_ROOT = "world-tree/jlpt-bands";
 export function worldTreeJlptBandArtPath(
   bandId: WorldTreeJlptBandId,
   theme: "light" | "dark",
-  version = 1,
+  version?: number,
 ): string {
   const band = WORLD_TREE_JLPT_BANDS.find((entry) => entry.id === bandId);
   const base = band?.artFileBase ?? `wt_jlpt_${bandId}`;
-  return `${WORLD_TREE_JLPT_BAND_ART_ROOT}/${bandId}/${base}_${theme}_v${version}.png`;
+  const resolvedVersion = version ?? band?.artVersion ?? 1;
+  return `${WORLD_TREE_JLPT_BAND_ART_ROOT}/${bandId}/${base}_${theme}_v${resolvedVersion}.png`;
 }
 
 export type WorldTreeJlptBandLayout = {

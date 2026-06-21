@@ -11,13 +11,13 @@ import { TabScene } from "@/components/visual/shells/viewport-background";
 import { cn } from "@/lib/utils";
 
 const STUDY_LINKS = [
-  { label: "Review", href: "/review", icon: "icons/icon_node_review" },
+  { label: "Review", href: "/review", icon: "icons/icon_hub_review" },
   { label: "Vocabulary", href: "/learn/vocabulary", icon: "icons/icon_node_vocabulary" },
   { label: "Kanji", href: "/learn/kanji", icon: "icons/icon_node_kanji" },
-  { label: "Grammar", href: "/learn/grammar", icon: "icons/icon_node_grammar" },
+  { label: "Grammar", href: "/learn/grammar", icon: "icons/icon_hub_grammar" },
   { label: "Listening", href: "/learn/listening", icon: "icons/icon_node_listening" },
-  { label: "Games", href: "/games", icon: "icons/icon_node_game" },
-  { label: "Trials", href: "/trials", icon: "icons/icon_node_trial" },
+  { label: "Games", href: "/games", icon: "icons/icon_game_word_match" },
+  { label: "Trials", href: "/trials", icon: "icons/icon_node_boss_mask" },
 ] as const;
 
 function StudyHeading({ children, className }: { children: React.ReactNode; className?: string }) {

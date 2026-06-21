@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { useTheme } from "next-themes";
 
+import { WorldTreeDepthLayer } from "@/features/journey/components/world-tree-depth-layer";
 import {
   WORLD_TREE_JLPT_BANDS,
   buildWorldTreeJlptBandLayout,
@@ -76,6 +77,8 @@ export function WorldTreeJlptArtStack({
       data-world-tree-jlpt-band-art
       aria-hidden
     >
+      <WorldTreeDepthLayer />
+
       {art.gaps.map((gap) => (
         <div
           key={gap.id}

@@ -1,16 +1,16 @@
 "use client";
 
+import { ArtLibraryImage } from "@/components/media/art-library-image";
 import { ChevronDown } from "lucide-react";
 
-import { WorldArtImage } from "@/components/visual/art/world-art-image";
 import { InventorySlotCard } from "@/features/inventory/components/inventory-slot-card";
 import type { InventoryItemViewModel } from "@/features/inventory/types/inventory.types";
-import { INVENTORY_ITEM_ASSETS } from "@/lib/assets/lesson-node-assets";
 import { cn } from "@/lib/utils";
 
 type PouchAccordionSectionProps = {
   title: string;
   subtitle: string;
+  iconBase: string;
   items: InventoryItemViewModel[];
   selectedId: string | null;
   expanded: boolean;
@@ -21,6 +21,7 @@ type PouchAccordionSectionProps = {
 export function PouchAccordionSection({
   title,
   subtitle,
+  iconBase,
   items,
   selectedId,
   expanded,
@@ -36,8 +37,9 @@ export function PouchAccordionSection({
         aria-expanded={expanded}
       >
         <div className="flex items-center gap-2">
-          <WorldArtImage
-            asset={INVENTORY_ITEM_ASSETS.scroll}
+          <ArtLibraryImage
+            themedBase={iconBase}
+            src=""
             alt=""
             width={22}
             height={22}

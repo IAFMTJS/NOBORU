@@ -24,6 +24,7 @@ type PouchSection = {
   id: "items" | "cosmetics" | "trails";
   label: string;
   subtitle: string;
+  iconBase: string;
   filter: (item: InventoryItemViewModel) => boolean;
 };
 
@@ -32,18 +33,21 @@ const POUCH_SECTIONS: PouchSection[] = [
     id: "items",
     label: "Items Pouch",
     subtitle: "Trail rations and key items",
+    iconBase: "icons/icon_shop_items",
     filter: (item) => item.category === "consumable",
   },
   {
     id: "cosmetics",
     label: "Cosmetics Pouch",
     subtitle: "Travel charms and keepsakes",
+    iconBase: "icons/icon_shop_cosmetics",
     filter: (item) => item.category === "cosmetic",
   },
   {
     id: "trails",
     label: "Trails Pouch",
     subtitle: "Path effects and milestones",
+    iconBase: "icons/icon_shop_trails",
     filter: (item) => item.category === "trail" || item.category === "seasonal",
   },
 ];
@@ -166,6 +170,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
                 key={section.id}
                 title={section.label}
                 subtitle={section.subtitle}
+                iconBase={section.iconBase}
                 items={items}
                 selectedId={selectedItem?.id ?? null}
                 expanded={expandedSections[section.id]}
