@@ -149,7 +149,7 @@ export function LessonNodeDetailSheet({
         <SheetOverlay className="overlay-scrim backdrop-blur-sm" />
         <SheetPrimitive.Content
           className={cn(
-            "fixed inset-x-0 bottom-0 z-50 max-h-[min(92dvh,40rem)] overflow-hidden rounded-t-3xl border border-border bg-card p-0 shadow-elevation-3",
+            "fixed inset-x-0 bottom-0 z-50 max-h-[min(92dvh,40rem)] overflow-hidden rounded-t-3xl border border-white/12 bg-black/40 p-0 shadow-elevation-3 backdrop-blur-md",
             "motion-reduce:animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
           )}
         >
