@@ -1,4 +1,4 @@
-const CACHE_VERSION = "noboru-v3";
+const CACHE_VERSION = "noboru-v4";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-app-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -7,21 +7,17 @@ const OFFLINE_DB_VERSION = 1;
 const OFFLINE_SYNC_QUEUE = "sync_queue";
 const OFFLINE_BACKGROUND_SYNC_TAG = "noboru-offline-sync";
 
-const APP_SHELL_URLS = [
-  "/",
-  "/home",
-  "/learn",
-  "/review",
+/** Static assets only — navigation routes need auth and must not fail install. */
+const STATIC_PRECACHE_URLS = [
   "/manifest.json",
-  "/icons/icon_app_light_v1.webp",
-  "/icons/icon_app_dark_v1.webp",
-  "/mascots/yama_main_light_v1.webp",
-  "/mascots/yama_main_dark_v1.webp",
+  "/offline",
+  "/art-library/characters/kitsune/base/kitsune_sitting_campfire_light_v1.webp",
+  "/art-library/characters/kitsune/base/kitsune_sitting_campfire_dark_v1.webp",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(APP_SHELL_CACHE).then((cache) => cache.addAll(APP_SHELL_URLS)),
+    caches.open(STATIC_CACHE).then((cache) => precacheUrls(cache, STATIC_PRECACHE_URLS)),
   );
   self.skipWaiting();
 });
@@ -69,8 +65,7 @@ self.addEventListener("fetch", (event) => {
 
   if (
     url.pathname.startsWith("/_next/static/") ||
-    url.pathname.startsWith("/icons/") ||
-    url.pathname.startsWith("/mascots/")
+    url.pathname.startsWith("/art-library/")
   ) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
@@ -85,6 +80,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 });
+
+async function precacheUrls(cache, urls) {
+  await Promise.all(
+    urls.map(async (url) => {
+      try {
+        const response = await fetch(url, { cache: "reload" });
+        if (response.ok) {
+          await cache.put(url, response);
+        }
+      } catch {
+        // Skip failed precache entries; runtime fetch still works online.
+      }
+    }),
+  );
+}
 
 async function cacheFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
@@ -109,8 +119,8 @@ async function networkFirst(request, cacheName) {
   } catch {
     const cached = await cache.match(request);
     if (cached) return cached;
-    const homeFallback = await cache.match("/home");
-    if (homeFallback) return homeFallback;
+    const offlineFallback = await cache.match("/offline");
+    if (offlineFallback) return offlineFallback;
     return Response.error();
   }
 }
