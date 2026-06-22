@@ -16,6 +16,7 @@ import {
 } from "@/features/journey/constants/world-tree-jlpt-band.constants";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { buildWorldTreeLayout } from "@/features/journey/utils/world-tree-layout.utils";
+import { resolveCurrentWorldIdFromPath } from "@/features/worlds/utils/world-path-filter.utils";
 import { cn } from "@/lib/utils";
 
 type WorldTreeScreenProps = {
@@ -64,11 +65,13 @@ export function WorldTreeScreen({
   );
 
   const totalNodes = countTotalNodes(journey);
+  const currentWorldId = resolveCurrentWorldIdFromPath(journey);
+  const currentWorldHref = `/worlds/${currentWorldId}`;
   const continueHref =
     journey.nextLessonHref ??
     (journey.position.currentNodeId
-      ? `/tree?node=${encodeURIComponent(journey.position.currentNodeId)}`
-      : "/tree");
+      ? `${currentWorldHref}?node=${encodeURIComponent(journey.position.currentNodeId)}`
+      : currentWorldHref);
 
   const handleBandSelect = useCallback((_bandId: WorldTreeJlptBandId, centerYPercent: number) => {
     setActiveJlptBandId(_bandId);

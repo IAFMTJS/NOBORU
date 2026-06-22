@@ -49,8 +49,7 @@ export function WorldScreen({
   const { world, position, totalNodeCount, journey } = worldPath;
   const zoneLabel =
     resolveZoneLabel(position.currentRegionSlug) ?? world.theme.subtitle;
-  const treeOverviewHref =
-    variant === "overview" ? null : `/worlds/${world.id}?mode=overview`;
+  const treeOverviewHref = variant === "overview" ? null : "/tree";
   const currentNode = journey.regions
     .flatMap((region) => region.nodes)
     .find((node) => node.id === position.currentNodeId);

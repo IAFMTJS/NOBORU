@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { WorldScreen } from "@/features/worlds/components/world-screen";
 import { resolveWorldScrollFocus } from "@/features/worlds/utils/world-scroll-focus.utils";
@@ -27,12 +27,19 @@ export default async function WorldPage({ params, searchParams }: WorldPageProps
   const { worldPath, portal, regionName, profileStats } =
     await getWorldPageContext(jlptLevel);
 
+  if (query.mode === "overview") {
+    const params = new URLSearchParams();
+    if (query.region) params.set("region", query.region);
+    if (query.node) params.set("node", query.node);
+    params.set("jlpt", jlptLevel);
+    const suffix = params.toString();
+    redirect(suffix ? `/tree?${suffix}` : `/tree`);
+  }
+
   const scrollFocus = resolveWorldScrollFocus(worldPath, {
     highlightNodeId: query.node ?? null,
     regionSlug: query.region ?? null,
   });
-
-  const variant = query.mode === "overview" ? "overview" : "journey";
 
   return (
     <WorldScreen
@@ -42,7 +49,7 @@ export default async function WorldPage({ params, searchParams }: WorldPageProps
       focusYPercent={scrollFocus.focusYPercent}
       anchorScrollToBottom={scrollFocus.anchorScrollToBottom}
       highlightNodeId={scrollFocus.highlightNodeId}
-      variant={variant}
+      variant="journey"
       profileStats={profileStats}
     />
   );

@@ -1,14 +1,33 @@
+import {
+  getWorldHref,
+  resolveWorldForRegionSlug,
+} from "@/features/worlds/constants/world-registry.constants";
+
 /** Primary World Tree entry — bottom nav Tree tab. */
 export const TREE_TRAIL_ENTRY_HREF = "/tree";
 
-/** Deep link to a region gate on the World Tree scroll. */
+function worldTrailHref(
+  regionSlug: string,
+  params?: Record<string, string>,
+): string {
+  const world = resolveWorldForRegionSlug(regionSlug);
+  const base = world ? getWorldHref(world.id) : TREE_TRAIL_ENTRY_HREF;
+  if (!params || Object.keys(params).length === 0) return base;
+  const search = new URLSearchParams(params);
+  return `${base}?${search.toString()}`;
+}
+
+/** Deep link to a region gate on the focused world climb. */
 export function regionTrailHref(regionSlug: string): string {
-  return `/tree?region=${encodeURIComponent(regionSlug)}`;
+  return worldTrailHref(regionSlug, { region: regionSlug });
 }
 
 /** Deep link to a specific trail node after lesson complete/fail. */
-export function journeyNodeHref(nodeId: string): string {
-  return `/tree?node=${encodeURIComponent(nodeId)}`;
+export function journeyNodeHref(nodeId: string, regionSlug?: string): string {
+  if (regionSlug) {
+    return worldTrailHref(regionSlug, { node: nodeId });
+  }
+  return `${TREE_TRAIL_ENTRY_HREF}?node=${encodeURIComponent(nodeId)}`;
 }
 
 type LessonJourneyReturnInput = {
@@ -18,15 +37,16 @@ type LessonJourneyReturnInput = {
   unlocksRegionSlug?: string | null;
 };
 
-/** Post-lesson return — scrolls to the completed node; optional unlock ceremony. */
+/** Post-lesson return — scrolls to the completed node on the focused world climb. */
 export function lessonReturnJourneyHref(
   session: LessonJourneyReturnInput,
   options?: { regionUnlocked?: boolean },
 ): string {
-  const params = new URLSearchParams();
-  params.set("node", session.trailNodeId ?? session.lessonId);
+  const params: Record<string, string> = {
+    node: session.trailNodeId ?? session.lessonId,
+  };
   if (options?.regionUnlocked && session.unlocksRegionSlug) {
-    params.set("unlock", session.unlocksRegionSlug);
+    params.unlock = session.unlocksRegionSlug;
   }
-  return `/tree?${params.toString()}`;
+  return worldTrailHref(session.regionSlug, params);
 }
