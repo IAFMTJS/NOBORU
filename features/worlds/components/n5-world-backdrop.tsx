@@ -16,8 +16,8 @@ import {
 } from "@/features/worlds/constants/n5-world-art.constants";
 
 /**
- * Full-bleed scroll environment — learner walks through painted act bands.
- * Set pieces (hamlet, torii, grotto) live in the slices; nodes sit on the UI layer.
+ * Full-bleed scroll environment — one viewport of painted art per act while scrolling.
+ * Node spacing can grow the canvas to thousands of vh; sticky bands keep art at readable scale.
  * @see docs/JWorld/12-n5-art-and-node-placement.md
  */
 export function N5WorldBackdrop({ className }: { className?: string }) {
@@ -31,43 +31,40 @@ export function N5WorldBackdrop({ className }: { className?: string }) {
         alt=""
         cover
         priority
-        className="absolute inset-0 opacity-40"
+        className="fixed inset-0 z-0 h-dvh w-full opacity-30"
       />
 
       {N5_ACT_BANDS.map((band) => (
         <div
           key={band.actIndex}
-          className="absolute inset-x-0 overflow-hidden"
+          className="absolute inset-x-0 z-[1]"
           style={{
             top: `${band.yStart}%`,
             bottom: `${100 - band.yEnd}%`,
           }}
         >
-          <ArtLibraryImage
-            src={N5_ACT_SLICE_ART[band.actIndex][theme]}
-            alt=""
-            cover
-            priority
-            className={cn(
-              "absolute inset-0 scale-[1.03]",
-              N5_ACT_SLICE_OBJECT_POSITION[band.actIndex],
-            )}
-          />
-          <div
-            className={cn(
-              "absolute inset-0 bg-gradient-to-b opacity-80",
-              N5_ACT_BACKDROP_GRADIENTS[band.actIndex],
-            )}
-          />
+          <div className="sticky top-0 h-dvh w-full overflow-hidden">
+            <ArtLibraryImage
+              src={N5_ACT_SLICE_ART[band.actIndex][theme]}
+              alt=""
+              cover
+              priority
+              className={cn(
+                "absolute inset-0 size-full",
+                N5_ACT_SLICE_OBJECT_POSITION[band.actIndex],
+              )}
+            />
+            <div
+              className={cn(
+                "absolute inset-0 bg-gradient-to-b",
+                N5_ACT_BACKDROP_GRADIENTS[band.actIndex],
+              )}
+            />
+            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background/45 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background/40 to-transparent" />
+          </div>
         </div>
       ))}
-
-      {/* Edge scrims only — keep the corridor readable without washing out the environment */}
-      <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background/55 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background/50 to-transparent" />
-      <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background/25 to-transparent" />
-      <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background/25 to-transparent" />
-      <div className="absolute inset-x-[12%] inset-y-0 bg-gradient-to-b from-trail-glow/4 via-transparent to-trail-glow/6 blur-3xl" />
     </div>
   );
 }
