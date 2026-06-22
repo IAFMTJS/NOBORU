@@ -287,6 +287,25 @@ function assignNodePathPositions(
   }
 }
 
+function collectPlayableLessonIds(regions: RegionJourneyInput[]): Set<string> {
+  const ids = new Set<string>();
+
+  for (const region of regions) {
+    for (const unit of region.units) {
+      for (const lesson of unit.lessons) {
+        if (
+          lesson.contentStatus === "published" &&
+          !isBlueprintLessonId(lesson.id)
+        ) {
+          ids.add(lesson.id);
+        }
+      }
+    }
+  }
+
+  return ids;
+}
+
 export function buildRegionJourney(
   region: RegionJourneyInput,
   progressRows: ReadonlyArray<UserProgressRow>,
@@ -294,6 +313,7 @@ export function buildRegionJourney(
   options?: {
     globalStartIndex?: number;
     cmsLandmarks?: JourneyLandmarkContent[];
+    playableLessonIds?: ReadonlySet<string>;
   },
 ): JourneyRegionViewModel {
   const progressByLesson = buildProgressMap(progressRows);
@@ -313,6 +333,7 @@ export function buildRegionJourney(
   let gateOpen = !regionLocked;
   let currentNodeIndex: number | null = null;
   const globalStartIndex = options?.globalStartIndex ?? 0;
+  const playableLessonIds = options?.playableLessonIds;
 
   const nodes: JourneyNode[] = drafts.map((draft, regionIndex) => {
     if (draft.kind === "landmark") {
@@ -356,6 +377,7 @@ export function buildRegionJourney(
     const href =
       isBlueprintLessonId(draft.lesson.id) ||
       draft.lesson.contentStatus === "draft" ||
+      (playableLessonIds != null && !playableLessonIds.has(draft.lesson.id)) ||
       state === "locked" ||
       regionLocked
         ? null
@@ -579,6 +601,7 @@ export function buildJourneyPathFromData(
   landmarksByRegionId: Map<string, JourneyLandmarkContent[]> = new Map(),
 ): JourneyPathViewModel {
   let globalStartIndex = 0;
+  const playableLessonIds = collectPlayableLessonIds(regions);
   const journeyRegions = regions.map((region) => {
     const regionJourney = buildRegionJourney(
       region,
@@ -587,6 +610,7 @@ export function buildJourneyPathFromData(
       {
         globalStartIndex,
         cmsLandmarks: landmarksByRegionId.get(region.id) ?? [],
+        playableLessonIds,
       },
     );
     globalStartIndex += regionJourney.nodes.length;

@@ -2,6 +2,7 @@ import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-
 import { getPublishedRegionsWithCurriculum, getJourneyRegionsWithCurriculum } from "@/lib/cache/content-cache";
 import { createAdminClient, isAdminClientConfigured } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
 
 import type { LessonItemRow } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
@@ -25,6 +26,10 @@ type RegionWithUnits = RegionRow & {
       lessons: LessonRow[];
     }
   >;
+};
+
+type ResolvedPublishedLesson = LessonRow & {
+  unit: UnitRow & { region: RegionRow };
 };
 
 class LearningPathRepository {
@@ -103,35 +108,129 @@ class LearningPathRepository {
     };
   }
 
-  private async queryPublishedLessonRow(
+  private async queryPublishedLessonOnly(
     client: DbClient,
     lessonId: string,
-  ): Promise<LessonWithUnitRow | null> {
+  ): Promise<LessonRow | null> {
     const { data, error } = await client
       .from("lessons")
-      .select(
-        `
-        *,
-        unit:units (
-          *,
-          region:regions (*)
-        )
-      `,
-      )
+      .select("*")
       .eq("id", lessonId)
       .eq("status", "published")
       .maybeSingle();
 
     if (error) throw new Error(error.message);
-    return (data as LessonWithUnitRow | null) ?? null;
+    return (data as LessonRow | null) ?? null;
+  }
+
+  private async queryPublishedLessonRow(
+    client: DbClient,
+    lessonId: string,
+  ): Promise<LessonWithUnitRow | null> {
+    const lesson = await this.queryPublishedLessonOnly(client, lessonId);
+    if (!lesson) return null;
+
+    const { data: unit, error: unitError } = await client
+      .from("units")
+      .select("*")
+      .eq("id", lesson.unit_id)
+      .maybeSingle();
+
+    if (unitError) throw new Error(unitError.message);
+    if (!unit) {
+      return { ...lesson, unit: null };
+    }
+
+    const { data: region, error: regionError } = await client
+      .from("regions")
+      .select("*")
+      .eq("id", unit.region_id)
+      .maybeSingle();
+
+    if (regionError) throw new Error(regionError.message);
+
+    return {
+      ...lesson,
+      unit: {
+        ...(unit as UnitRow),
+        region: (region as RegionRow | null) ?? null,
+      },
+    };
+  }
+
+  private normalizeResolvedRegion(region: RegionRow): RegionRow {
+    const worldSlug = normalizeRegionSlug(region.slug);
+    if (worldSlug === region.slug) return region;
+
+    return {
+      ...region,
+      slug: worldSlug,
+    };
+  }
+
+  private resolvePublishedLessonShape(
+    lesson: LessonRow,
+    unit: UnitRow,
+    region: RegionRow,
+  ): ResolvedPublishedLesson {
+    return {
+      ...lesson,
+      unit: {
+        ...unit,
+        region: this.normalizeResolvedRegion(region),
+      },
+    };
+  }
+
+  private findPublishedLessonInCurriculum(
+    regions: RegionWithUnits[],
+    lessonId: string,
+  ): ResolvedPublishedLesson | null {
+    for (const region of regions) {
+      for (const unit of region.units) {
+        const lesson = unit.lessons.find(
+          (entry) => entry.id === lessonId && entry.status === "published",
+        );
+        if (!lesson) continue;
+
+        return this.resolvePublishedLessonShape(lesson, unit, region);
+      }
+    }
+
+    return null;
+  }
+
+  private async findPublishedLessonFromCurriculumCache(
+    lessonId: string,
+  ): Promise<ResolvedPublishedLesson | null> {
+    const journeyMatch = this.findPublishedLessonInCurriculum(
+      await getJourneyRegionsWithCurriculum(),
+      lessonId,
+    );
+    if (journeyMatch) return journeyMatch;
+
+    return this.findPublishedLessonInCurriculum(
+      await getPublishedRegionsWithCurriculum(),
+      lessonId,
+    );
   }
 
   private async resolveLessonRegion(
     client: DbClient,
     lesson: LessonWithUnitRow,
-  ): Promise<(LessonRow & { unit: UnitRow & { region: RegionRow } }) | null> {
-    const unit = lesson.unit;
-    if (!unit) return null;
+  ): Promise<ResolvedPublishedLesson | null> {
+    let unit = lesson.unit;
+    if (!unit) {
+      const { data, error } = await client
+        .from("units")
+        .select("*")
+        .eq("id", lesson.unit_id)
+        .maybeSingle();
+
+      if (error) throw new Error(error.message);
+      if (!data) return null;
+      unit = { ...(data as UnitRow), region: null };
+    }
 
     let region = unit.region;
     if (!region?.slug) {
@@ -147,21 +246,10 @@ class LearningPathRepository {
 
     if (!region?.slug) return null;
 
-    return {
-      ...lesson,
-      unit: {
-        ...unit,
-        region,
-      },
-    };
+    return this.resolvePublishedLessonShape(lesson, unit, region);
   }
 
-  async findPublishedLessonById(lessonId: string): Promise<
-    | (LessonRow & {
-        unit: UnitRow & { region: RegionRow };
-      })
-    | null
-  > {
+  async findPublishedLessonById(lessonId: string): Promise<ResolvedPublishedLesson | null> {
     if (isBlueprintLessonId(lessonId)) return null;
 
     const clients: DbClient[] = [];
@@ -178,7 +266,7 @@ class LearningPathRepository {
       if (resolved) return resolved;
     }
 
-    return null;
+    return this.findPublishedLessonFromCurriculumCache(lessonId);
   }
 
   async countPublishedLessons(): Promise<number> {
