@@ -6,8 +6,12 @@ export const N5_WORLD_TITLE = "Realm of First Light";
 
 export const N5_WORLD_SUBTITLE = "N5 · 始まりの境";
 
-/** Minimum vertical scroll for the N5 canvas (~480vh). */
-export const N5_SCROLL_MIN_HEIGHT_VH = 480;
+/** Minimum vertical scroll for the N5 canvas (~640vh — room for ~40 evenly spaced nodes). */
+export const N5_SCROLL_MIN_HEIGHT_VH = 640;
+
+/** Path range used when spreading nodes evenly along the N5 spine. */
+export const N5_NODE_PATH_START = 0.02;
+export const N5_NODE_PATH_END = 0.98;
 
 export const N5_ACT_BANDS = [
   { actIndex: 1 as const, pathStart: 0, pathEnd: 0.28, yStart: 72, yEnd: 94 },

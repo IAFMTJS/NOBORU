@@ -3,7 +3,7 @@
   "world": "n5",
   "description": "Greybox layout — Realm of First Light. Spine + act bands for art authoring.",
   "canvas": { "width": 1536, "height": 5120 },
-  "scrollMinHeightVh": 480,
+  "scrollMinHeightVh": 640,
   "acts": [
     {
       "actIndex": 1,
