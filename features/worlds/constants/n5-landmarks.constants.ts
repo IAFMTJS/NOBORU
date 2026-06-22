@@ -82,6 +82,11 @@ export const N5_LANDMARK_FALLBACKS: readonly Omit<
   },
 ] as const;
 
+/** Resolve N5 landmark slug from journey node label (CMS or fallback). */
+export function resolveN5LandmarkSlugByLabel(label: string): string | null {
+  return N5_LANDMARK_FALLBACKS.find((landmark) => landmark.label === label)?.slug ?? null;
+}
+
 export function materializeN5LandmarkFallbacks(
   regionId: string,
 ): JourneyLandmarkContent[] {

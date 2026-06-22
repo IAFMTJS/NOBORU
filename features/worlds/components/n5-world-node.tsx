@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
+import { ArtLibraryImage } from "@/components/media/art-library-image";
 import { GlassPanel } from "@/components/visual";
 import { WorldBossNode, WorldLessonNode } from "@/components/visual/world";
 import type { JourneyNode } from "@/features/journey/types/journey.types";
 import type { TrailNodeState } from "@/features/learning/types/trail.types";
 import { cn } from "@/lib/utils";
 
+import { resolveN5LandmarkSlugByLabel } from "@/features/worlds/constants/n5-landmarks.constants";
+import { N5_LANDMARK_ICON_BASES } from "@/features/worlds/constants/n5-world-art.constants";
 import type { N5NodeCanvasPosition } from "@/features/worlds/utils/n5-world-layout.utils";
 
 type N5WorldNodeProps = {
@@ -30,10 +34,15 @@ export function N5WorldNode({
   selected,
   onSelect,
 }: N5WorldNodeProps) {
+  const { resolvedTheme } = useTheme();
+  const theme = resolvedTheme === "light" ? "light" : "dark";
   const state = toTrailState(node.state);
   const size = isCurrent ? "lg" : node.kind === "landmark" ? "md" : "md";
 
   if (node.kind === "landmark") {
+    const landmarkSlug = resolveN5LandmarkSlugByLabel(node.label);
+    const landmarkIconBase = landmarkSlug ? N5_LANDMARK_ICON_BASES[landmarkSlug] : null;
+
     return (
       <div
         className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
@@ -43,15 +52,27 @@ export function N5WorldNode({
           type="button"
           onClick={onSelect}
           className={cn(
-            "focus-ring max-w-[11rem] rounded-full border border-trail-glow/35 bg-black/45 px-3 py-1.5 text-center backdrop-blur-md",
-            selected && "ring-2 ring-trail-glow/50",
+            "focus-ring flex max-w-[11rem] flex-col items-center gap-1.5 text-center",
+            selected && "ring-2 ring-trail-glow/50 ring-offset-2 ring-offset-transparent",
             state === "locked" && "opacity-55",
           )}
         >
-          <p className="text-caption font-semibold text-foreground">{node.label}</p>
-          {node.subtitle ? (
-            <p className="truncate text-[10px] text-muted-foreground">{node.subtitle}</p>
+          {landmarkIconBase ? (
+            <ArtLibraryImage
+              themedBase={landmarkIconBase}
+              src=""
+              alt=""
+              width={56}
+              height={56}
+              className="drop-shadow-[0_8px_16px_rgba(0,0,0,0.45)]"
+            />
           ) : null}
+          <span className="rounded-full border border-trail-glow/35 bg-black/45 px-3 py-1.5 backdrop-blur-md">
+            <p className="text-caption font-semibold text-foreground">{node.label}</p>
+            {node.subtitle ? (
+              <p className="truncate text-[10px] text-muted-foreground">{node.subtitle}</p>
+            ) : null}
+          </span>
         </button>
       </div>
     );

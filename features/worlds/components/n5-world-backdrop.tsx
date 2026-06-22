@@ -27,21 +27,22 @@ export function N5WorldBackdrop({ className }: { className?: string }) {
             bottom: `${100 - band.yEnd}%`,
           }}
         >
-          <div
-            className={cn(
-              "absolute inset-0 bg-gradient-to-b opacity-90",
-              N5_ACT_BACKDROP_GRADIENTS[band.actIndex],
-            )}
-          />
           <ArtLibraryImage
             src={N5_ACT_SLICE_ART[band.actIndex][theme]}
             alt=""
             cover
-            className="absolute inset-0 opacity-70 mix-blend-soft-light"
+            priority
+            className="absolute inset-0"
+          />
+          <div
+            className={cn(
+              "absolute inset-0 bg-gradient-to-b opacity-50",
+              N5_ACT_BACKDROP_GRADIENTS[band.actIndex],
+            )}
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/20 to-background/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/45 via-background/5 to-background/15" />
       <div className="absolute inset-x-[15%] inset-y-0 bg-gradient-to-b from-trail-glow/5 via-transparent to-trail-glow/8 blur-3xl" />
     </div>
   );
