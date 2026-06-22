@@ -101,7 +101,15 @@ function takeNextUnusedLesson(
   flatPool: readonly LessonSummaryViewModel[],
   usedLessonIds: ReadonlySet<string>,
   flatCursor: { current: number },
+  preferredType?: string,
 ): LessonSummaryViewModel | null {
+  if (preferredType) {
+    const typedMatch = flatPool.find(
+      (lesson) => !usedLessonIds.has(lesson.id) && lesson.type === preferredType,
+    );
+    if (typedMatch) return typedMatch;
+  }
+
   while (flatCursor.current < flatPool.length) {
     const lesson = flatPool[flatCursor.current]!;
     flatCursor.current += 1;
@@ -111,6 +119,12 @@ function takeNextUnusedLesson(
   }
 
   return null;
+}
+
+function resolveSlotLessonType(slot: BlueprintSlot): string {
+  if (slot.kind === "checkpoint") return "practice";
+  if (slot.kind === "trial") return "application";
+  return slot.lessonType;
 }
 
 /**
@@ -133,7 +147,12 @@ function mergeLessonsIntoBlueprint(
       return attachBlueprintMeta(branchLesson, slot);
     }
 
-    const fallbackLesson = takeNextUnusedLesson(flatPool, usedLessonIds, flatCursor);
+    const fallbackLesson = takeNextUnusedLesson(
+      flatPool,
+      usedLessonIds,
+      flatCursor,
+      resolveSlotLessonType(slot),
+    );
     if (fallbackLesson) {
       usedLessonIds.add(fallbackLesson.id);
       return attachBlueprintMeta(fallbackLesson, slot);

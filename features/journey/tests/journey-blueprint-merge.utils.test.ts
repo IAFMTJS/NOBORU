@@ -115,6 +115,60 @@ describe("augmentRegionsWithBlueprint", () => {
 
     expect(new Set(cmsLessonIds).size).toBe(cmsLessonIds.length);
   });
+
+  it("prefers listening CMS lessons for listening blueprint slots", () => {
+    const listeningUnit = {
+      id: "unit-listening",
+      name: "Listening Practice",
+      description: null,
+      orderIndex: 99,
+      lessonCount: 2,
+      completedCount: 0,
+      lessons: [
+        {
+          id: "listening-lesson-1",
+          unitId: "unit-listening",
+          type: "listening",
+          title: "Greeting a Friend",
+          description: null,
+          xpReward: 12,
+          estimatedDuration: 2,
+          progress: "not_started" as const,
+          score: 0,
+          contentStatus: "published" as const,
+        },
+        {
+          id: "listening-lesson-2",
+          unitId: "unit-listening",
+          type: "listening",
+          title: "Self Introduction",
+          description: null,
+          xpReward: 12,
+          estimatedDuration: 2,
+          progress: "not_started" as const,
+          score: 0,
+          contentStatus: "published" as const,
+        },
+      ],
+    };
+
+    const cms: RegionPathViewModel = {
+      ...makeCmsRegion("n5", 4, 1),
+      units: [...makeCmsRegion("n5", 4, 1).units, listeningUnit],
+      lessonCount: 6,
+    };
+
+    const augmented = augmentRegionsWithBlueprint([cms], new Set());
+    const n5 = augmented.find((region) => region.slug === "n5")!;
+    const listeningNodes = n5.units
+      .flatMap((unit) => unit.lessons)
+      .filter(
+        (lesson) =>
+          lesson.type === "listening" && !lesson.id.startsWith("blueprint:"),
+      );
+
+    expect(listeningNodes.length).toBeGreaterThanOrEqual(2);
+  });
 });
 
 describe("blueprint-driven journey path", () => {
