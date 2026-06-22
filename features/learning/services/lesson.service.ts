@@ -31,7 +31,8 @@ import { listeningProgressService } from "@/features/listening/services/listenin
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
-import { LessonAccessDeniedError } from "@/features/learning/errors/lesson.errors";
+import { LessonAccessDeniedError, LessonNotFoundError } from "@/features/learning/errors/lesson.errors";
+import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
@@ -887,14 +888,24 @@ class LessonService {
     lessonId: string,
     userId: string,
   ): Promise<LessonSessionViewModel | null> {
+    if (isBlueprintLessonId(lessonId)) {
+      throw new LessonNotFoundError(
+        "This lesson is still being prepared. Continue on the trail to the next available step.",
+      );
+    }
+
     const lesson = await learningPathRepository.findPublishedLessonById(lessonId);
-    if (!lesson) return null;
+    if (!lesson) {
+      throw new LessonNotFoundError();
+    }
 
     const regionAccessible = await learningPathService.isRegionAccessible(
       userId,
       lesson.unit.region.slug,
     );
-    if (!regionAccessible) return null;
+    if (!regionAccessible) {
+      throw new LessonAccessDeniedError();
+    }
 
     const lessonAccessible = await journeyService.canAccessLesson(userId, lessonId);
     if (!lessonAccessible) {

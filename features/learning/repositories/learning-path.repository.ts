@@ -1,5 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import { getPublishedRegionsWithCurriculum, getJourneyRegionsWithCurriculum } from "@/lib/cache/content-cache";
+import { createAdminClient, isAdminClientConfigured } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 import type { LessonItemRow } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
@@ -8,6 +10,14 @@ import type {
   RegionRow,
   UnitRow,
 } from "@/features/learning/types/curriculum.types";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/supabase/database.types";
+
+type LessonWithUnitRow = LessonRow & {
+  unit: (UnitRow & { region: RegionRow | null }) | null;
+};
+
+type DbClient = SupabaseClient<Database>;
 
 type RegionWithUnits = RegionRow & {
   units: Array<
@@ -93,14 +103,11 @@ class LearningPathRepository {
     };
   }
 
-  async findPublishedLessonById(lessonId: string): Promise<
-    | (LessonRow & {
-        unit: UnitRow & { region: RegionRow };
-      })
-    | null
-  > {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+  private async queryPublishedLessonRow(
+    client: DbClient,
+    lessonId: string,
+  ): Promise<LessonWithUnitRow | null> {
+    const { data, error } = await client
       .from("lessons")
       .select(
         `
@@ -116,11 +123,62 @@ class LearningPathRepository {
       .maybeSingle();
 
     if (error) throw new Error(error.message);
-    if (!data) return null;
+    return (data as LessonWithUnitRow | null) ?? null;
+  }
 
-    return data as LessonRow & {
-      unit: UnitRow & { region: RegionRow };
+  private async resolveLessonRegion(
+    client: DbClient,
+    lesson: LessonWithUnitRow,
+  ): Promise<(LessonRow & { unit: UnitRow & { region: RegionRow } }) | null> {
+    const unit = lesson.unit;
+    if (!unit) return null;
+
+    let region = unit.region;
+    if (!region?.slug) {
+      const { data, error } = await client
+        .from("regions")
+        .select("*")
+        .eq("id", unit.region_id)
+        .maybeSingle();
+
+      if (error) throw new Error(error.message);
+      region = (data as RegionRow | null) ?? null;
+    }
+
+    if (!region?.slug) return null;
+
+    return {
+      ...lesson,
+      unit: {
+        ...unit,
+        region,
+      },
     };
+  }
+
+  async findPublishedLessonById(lessonId: string): Promise<
+    | (LessonRow & {
+        unit: UnitRow & { region: RegionRow };
+      })
+    | null
+  > {
+    if (isBlueprintLessonId(lessonId)) return null;
+
+    const clients: DbClient[] = [];
+    if (isAdminClientConfigured()) {
+      clients.push(createAdminClient());
+    }
+    clients.push(await createClient());
+
+    for (const client of clients) {
+      const lesson = await this.queryPublishedLessonRow(client, lessonId);
+      if (!lesson) continue;
+
+      const resolved = await this.resolveLessonRegion(client, lesson);
+      if (resolved) return resolved;
+    }
+
+    return null;
   }
 
   async countPublishedLessons(): Promise<number> {

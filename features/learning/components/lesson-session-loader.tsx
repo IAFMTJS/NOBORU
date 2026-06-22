@@ -14,20 +14,22 @@ import { getLessonAudioPrefetchPlan } from "@/lib/learning/lesson-audio-prefetch
 type LessonSessionLoaderProps = {
   lessonId: string;
   initialSession: LessonSessionViewModel | null;
+  initialError?: string | null;
   soundEnabled: boolean;
 };
 
 export function LessonSessionLoader({
   lessonId,
   initialSession,
+  initialError = null,
   soundEnabled,
 }: LessonSessionLoaderProps) {
   const online = useOnlineStatus();
   const [session, setSession] = useState<LessonSessionViewModel | null>(
     initialSession,
   );
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(!initialSession);
+  const [error, setError] = useState<string | null>(initialError);
+  const [loading, setLoading] = useState(!initialSession && !initialError);
   const [retryCount, setRetryCount] = useState(0);
 
   useNextLessonPrefetch(session?.nextLesson?.href);
@@ -42,6 +44,7 @@ export function LessonSessionLoader({
   }, [initialSession]);
 
   useEffect(() => {
+    if (initialError) return;
     if (initialSession && online) {
       setLoading(false);
       return;
@@ -77,7 +80,7 @@ export function LessonSessionLoader({
     return () => {
       cancelled = true;
     };
-  }, [initialSession, lessonId, online, retryCount]);
+  }, [initialError, initialSession, lessonId, online, retryCount]);
 
   if (loading && !session) {
     return (
@@ -91,9 +94,11 @@ export function LessonSessionLoader({
   }
 
   if (error && !session) {
+    const isLocked = error.includes("earlier lessons");
+    const isNotReady = error.includes("still being prepared");
     return (
       <YamaErrorState
-        title={error.includes("earlier lessons") ? "Lesson locked" : "Path blocked"}
+        title={isLocked ? "Lesson locked" : isNotReady ? "Lesson not ready" : "Path blocked"}
         message={error}
         onRetry={() => {
           setError(null);

@@ -1,6 +1,6 @@
-import { jsonError, jsonOk, notFound } from "@/lib/api/responses";
+import { jsonError, jsonOk } from "@/lib/api/responses";
 import { requireAuthSession } from "@/lib/auth/require-session";
-import { LessonAccessDeniedError } from "@/features/learning/errors/lesson.errors";
+import { LessonAccessDeniedError, LessonNotFoundError } from "@/features/learning/errors/lesson.errors";
 import { lessonService } from "@/features/learning/services/lesson.service";
 import { progressService } from "@/features/learning/services/progress.service";
 
@@ -14,11 +14,13 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
   try {
     const data = await lessonService.getLessonSession(lessonId, session.userId);
-    if (!data) return notFound("Lesson not found.");
     return jsonOk(data);
   } catch (caught) {
     if (caught instanceof LessonAccessDeniedError) {
       return jsonError(caught.message, 403);
+    }
+    if (caught instanceof LessonNotFoundError) {
+      return jsonError(caught.message, 404);
     }
     return jsonError(
       caught instanceof Error ? caught.message : "Failed to load lesson.",

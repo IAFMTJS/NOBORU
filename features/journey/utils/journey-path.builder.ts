@@ -25,6 +25,7 @@ import {
 } from "@/lib/design-system/journey-path-contracts";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import { resolveN5TrialDisplayTitle } from "@/features/worlds/constants/n5-trial-display.constants";
+import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-merge.utils";
 
 type FlatLesson = {
   id: string;
@@ -61,7 +62,7 @@ function flattenRegionLessons(region: RegionJourneyInput): FlatLesson[] {
       title: lesson.title,
       xpReward: lesson.xpReward,
       progress: lesson.progress,
-      contentStatus: lesson.contentStatus ?? "published",
+      contentStatus: lesson.contentStatus ?? "draft",
       blueprint: lesson.blueprint,
     })),
   );
@@ -353,6 +354,7 @@ export function buildRegionJourney(
     }
 
     const href =
+      isBlueprintLessonId(draft.lesson.id) ||
       draft.lesson.contentStatus === "draft" ||
       state === "locked" ||
       regionLocked
@@ -477,6 +479,8 @@ export function canAccessLessonOnJourney(
   journey: JourneyPathViewModel,
   lessonId: string,
 ): boolean {
+  if (isBlueprintLessonId(lessonId)) return false;
+
   for (const region of journey.regions) {
     const node = region.nodes.find((entry) => entry.lessonId === lessonId);
     if (!node) continue;

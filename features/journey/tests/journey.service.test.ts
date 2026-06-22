@@ -5,6 +5,7 @@ import {
   buildRegionJourney,
   canAccessLessonInPath,
   canAccessLessonInRegion,
+  canAccessLessonOnJourney,
   resolveNodeKind,
 } from "@/features/journey/services/journey.service";
 import type { RegionJourneyInput } from "@/features/journey/types/journey.types";
@@ -376,6 +377,64 @@ describe("draft CMS lessons", () => {
     });
 
     expect(canAccessLessonInRegion(region, "published-3", [], new Set())).toBe(true);
+  });
+
+  it("does not link blueprint placeholder lessons on the trail", () => {
+    const region = makeRegion({
+      slug: "n5",
+      units: [
+        {
+          lessons: [
+            {
+              id: "blueprint:n5-branch-0-ch-1",
+              unitId: "blueprint-unit:n5-branch-0",
+              type: "listening",
+              title: "Listening · Chapter 1",
+              description: "Planned",
+              xpReward: 10,
+              estimatedDuration: 5,
+              progress: "not_started",
+              score: 0,
+              contentStatus: "draft",
+            },
+          ],
+        },
+      ],
+      lessonCount: 0,
+    });
+
+    const journey = buildRegionJourney(region, [], new Set());
+    const node = journey.nodes[0];
+
+    expect(node?.href).toBeNull();
+    expect(node?.state).toBe("locked");
+  });
+
+  it("rejects blueprint lesson ids for server access checks", () => {
+    const region = makeRegion({
+      slug: "n5",
+      units: [
+        {
+          lessons: [makeLesson("published-1", "listening", "not_started", "published")],
+        },
+      ],
+      lessonCount: 1,
+    });
+
+    const journey = buildRegionJourney(region, [], new Set());
+
+    expect(
+      canAccessLessonOnJourney(
+        { regions: [journey], position: journey.position },
+        "blueprint:n5-branch-0-ch-1",
+      ),
+    ).toBe(false);
+    expect(
+      canAccessLessonOnJourney(
+        { regions: [journey], position: journey.position },
+        "published-1",
+      ),
+    ).toBe(true);
   });
 
   it("prefers the next lesson node over an available landmark for current position", () => {
