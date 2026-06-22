@@ -42,12 +42,46 @@ export const N5_ACT_BANDS = [
   { actIndex: 3 as const, pathStart: 0.63, pathEnd: 1, yStart: 4, yEnd: 38 },
 ] as const;
 
-/** object-position per act — path corridor stays centered on the spine. */
-export const N5_ACT_SLICE_OBJECT_POSITION: Record<1 | 2 | 3, string> = {
-  1: "object-[center_88%]",
-  2: "object-center",
-  3: "object-[center_14%]",
+/** Scroll-pan ranges per act slice (journey start → act exit). */
+export const N5_ACT_BACKDROP_PAN: Record<
+  1 | 2 | 3,
+  {
+    yStart: number;
+    yEnd: number;
+    xStart: number;
+    xEnd: number;
+    scaleStart: number;
+    scaleEnd: number;
+    scaleWave: number;
+  }
+> = {
+  1: { yStart: 92, yEnd: 24, xStart: 49, xEnd: 51, scaleStart: 1.1, scaleEnd: 1.18, scaleWave: 0.02 },
+  2: { yStart: 86, yEnd: 18, xStart: 47, xEnd: 53, scaleStart: 1.08, scaleEnd: 1.16, scaleWave: 0.025 },
+  3: { yStart: 80, yEnd: 8, xStart: 51, xEnd: 47, scaleStart: 1.1, scaleEnd: 1.2, scaleWave: 0.02 },
 };
+
+/** Crossfade + pan windows in canvas y% (94 = journey start, 6 = summit). */
+export const N5_ACT_BLEND_ZONES = [
+  {
+    actIndex: 1 as const,
+    panStart: 96,
+    panEnd: 70,
+    fadeOutAbove: { start: 62, end: 72 },
+  },
+  {
+    actIndex: 2 as const,
+    panStart: 72,
+    panEnd: 36,
+    fadeInBelow: { start: 62, end: 72 },
+    fadeOutAbove: { start: 30, end: 40 },
+  },
+  {
+    actIndex: 3 as const,
+    panStart: 40,
+    panEnd: 4,
+    fadeInBelow: { start: 30, end: 40 },
+  },
+] as const;
 
 export const N5_ACT_BACKDROP_GRADIENTS: Record<1 | 2 | 3, string> = {
   1: "from-black/25 via-transparent to-black/15",

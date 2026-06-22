@@ -321,13 +321,6 @@ export function buildRegionJourney(
         regionLocked,
       );
 
-      if (
-        currentNodeIndex === null &&
-        (state === "available" || state === "in_progress")
-      ) {
-        currentNodeIndex = regionIndex;
-      }
-
       return {
         id: draft.id,
         lessonId: null,
@@ -456,22 +449,40 @@ export function canAccessLessonInRegion(
       break;
     }
 
-    if (lesson.progress !== "completed") {
+    if (
+      lesson.contentStatus !== "draft" &&
+      lesson.progress !== "completed"
+    ) {
       priorIncompleteExists = true;
     }
   }
 
   if (!targetLesson) return false;
+  if (targetLesson.contentStatus === "draft") return false;
   if (targetLesson.progress === "completed") return true;
   if (priorIncompleteExists) return false;
 
   if (targetLesson.type === "practice") {
     return lessons
       .slice(0, lessons.findIndex((lesson) => lesson.id === lessonId))
+      .filter((lesson) => lesson.contentStatus !== "draft")
       .every((lesson) => lesson.progress === "completed");
   }
 
   return true;
+}
+
+/** Matches journey canvas node state — tree availability and server access stay aligned. */
+export function canAccessLessonOnJourney(
+  journey: JourneyPathViewModel,
+  lessonId: string,
+): boolean {
+  for (const region of journey.regions) {
+    const node = region.nodes.find((entry) => entry.lessonId === lessonId);
+    if (!node) continue;
+    return node.state !== "locked" && node.href !== null;
+  }
+  return false;
 }
 
 export function canAccessLessonInPath(

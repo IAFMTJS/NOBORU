@@ -31,6 +31,7 @@ import { listeningProgressService } from "@/features/listening/services/listenin
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
+import { LessonAccessDeniedError } from "@/features/learning/errors/lesson.errors";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
 import { journeyService } from "@/features/journey/services/journey.service";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
@@ -131,6 +132,7 @@ class LessonService {
         id: row.id,
         kana: row.kana,
         kanji: row.kanji,
+        romaji: row.romaji,
         meaning: row.meaning,
         partOfSpeech: row.part_of_speech,
         audioUrl: row.audio_url,
@@ -358,6 +360,7 @@ class LessonService {
           id: row.id,
           kana: row.kana,
           kanji: row.kanji,
+          romaji: row.romaji,
           meaning: row.meaning,
           partOfSpeech: row.part_of_speech,
           audioUrl: row.audio_url,
@@ -607,6 +610,7 @@ class LessonService {
             id: row.id,
             kana: row.kana,
             kanji: row.kanji,
+            romaji: row.romaji,
             meaning: row.meaning,
             partOfSpeech: row.part_of_speech,
             audioUrl: row.audio_url,
@@ -893,7 +897,9 @@ class LessonService {
     if (!regionAccessible) return null;
 
     const lessonAccessible = await journeyService.canAccessLesson(userId, lessonId);
-    if (!lessonAccessible) return null;
+    if (!lessonAccessible) {
+      throw new LessonAccessDeniedError();
+    }
 
     const items = await learningPathRepository.listLessonItems(lessonId);
     const loaded = await this.loadContentsBatch(items);

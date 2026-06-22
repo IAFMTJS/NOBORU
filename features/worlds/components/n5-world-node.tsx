@@ -106,6 +106,11 @@ export function N5WorldNode({
       )}
       style={{ left: `${position.x}%`, top: `${position.y}%` }}
     >
+      {isCurrent && node.href ? (
+        <span className="pointer-events-none absolute -top-9 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border border-trail-glow/55 bg-black/75 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-trail-glow shadow-sm">
+          Continue
+        </span>
+      ) : null}
       {nodeVisual}
     </div>
   );
@@ -113,10 +118,11 @@ export function N5WorldNode({
 
 type N5WorldNodeCardProps = {
   node: JourneyNode;
+  isCurrent?: boolean;
   onClose: () => void;
 };
 
-export function N5WorldNodeCard({ node, onClose }: N5WorldNodeCardProps) {
+export function N5WorldNodeCard({ node, isCurrent = false, onClose }: N5WorldNodeCardProps) {
   const locked = node.state === "locked";
 
   return (
@@ -157,7 +163,7 @@ export function N5WorldNodeCard({ node, onClose }: N5WorldNodeCardProps) {
           href={node.href}
           className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-button bg-primary text-body font-semibold text-primary-foreground"
         >
-          {node.kind === "trial" ? "Enter trial" : "Start lesson"}
+          {node.kind === "trial" ? "Enter trial" : isCurrent ? "Continue lesson" : "Start lesson"}
         </Link>
       ) : null}
     </GlassPanel>

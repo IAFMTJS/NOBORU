@@ -9,6 +9,7 @@ import { LearningFailurePanel } from "@/features/learning/components/learning-fa
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { LessonApplicationStep } from "@/features/learning/types/lesson.types";
 import {
+  isJapaneseTextAnswerCorrect,
   isRecallAnswerCorrect,
   normalizeRecallAnswer,
 } from "@/features/learning/utils/recall-answers";
@@ -19,26 +20,10 @@ type ApplicationDrillProps = {
   disabled?: boolean;
 };
 
-function normalizeJapaneseAnswer(value: string): string {
-  return value.trim().replace(/\s+/g, "");
-}
-
-function isJapaneseAnswerCorrect(
-  input: string,
-  acceptedAnswers: string[],
-): boolean {
-  const normalized = normalizeJapaneseAnswer(input);
-  if (!normalized) return false;
-
-  return acceptedAnswers.some(
-    (answer) => normalizeJapaneseAnswer(answer) === normalized,
-  );
-}
-
 function resolvePlaceholder(direction: LessonApplicationStep["direction"]): string {
   switch (direction) {
     case "to_japanese":
-      return "Type in Japanese";
+      return "Type in Japanese or romaji";
     case "to_romaji":
       return "Type the romaji reading";
     default:
@@ -57,7 +42,7 @@ export function ApplicationDrill({
   function handleSubmit() {
     const correct =
       step.direction === "to_japanese"
-        ? isJapaneseAnswerCorrect(value, step.acceptedAnswers)
+        ? isJapaneseTextAnswerCorrect(value, step.acceptedAnswers)
         : isRecallAnswerCorrect(value, step.acceptedAnswers);
     setResult(correct ? "correct" : "incorrect");
     onAnswer(correct);

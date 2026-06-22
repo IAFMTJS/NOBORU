@@ -17,6 +17,7 @@ type N5WorldHudProps = {
   displayName?: string | null;
   levelLabel?: string | null;
   currentStreak?: number;
+  continueLabel?: string | null;
   worldMapHref?: string;
 };
 
@@ -27,6 +28,7 @@ export function N5WorldHud({
   displayName,
   levelLabel,
   currentStreak,
+  continueLabel,
   worldMapHref = "/learn/world",
 }: N5WorldHudProps) {
   return (
@@ -71,6 +73,11 @@ export function N5WorldHud({
           </p>
         ) : null}
       </div>
+      {continueLabel ? (
+        <p className="truncate text-center text-caption font-medium text-trail-glow">
+          Continue · {continueLabel}
+        </p>
+      ) : null}
     </GlassPanel>
   );
 }

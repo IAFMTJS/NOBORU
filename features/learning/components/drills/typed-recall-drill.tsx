@@ -7,7 +7,11 @@ import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
-import { isRecallAnswerCorrect } from "@/features/learning/utils/recall-answers";
+import {
+  isJapaneseTextAnswerCorrect,
+  isMostlyLatinAnswer,
+  isRecallAnswerCorrect,
+} from "@/features/learning/utils/recall-answers";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
 
 type TypedRecallDrillProps = {
@@ -15,6 +19,20 @@ type TypedRecallDrillProps = {
   onAnswer: (correct: boolean) => void;
   disabled?: boolean;
 };
+
+function resolvePlaceholder(acceptedAnswers: string[]): string {
+  const expectsJapanese = acceptedAnswers.some((answer) => !isMostlyLatinAnswer(answer));
+  if (!expectsJapanese) return "Type your answer";
+  const allowsRomaji = acceptedAnswers.some((answer) => isMostlyLatinAnswer(answer));
+  return allowsRomaji ? "Type in Japanese or romaji" : "Type in Japanese";
+}
+
+function isTypedRecallCorrect(input: string, acceptedAnswers: string[]): boolean {
+  return (
+    isJapaneseTextAnswerCorrect(input, acceptedAnswers) ||
+    isRecallAnswerCorrect(input, acceptedAnswers)
+  );
+}
 
 export function TypedRecallDrill({
   step,
@@ -26,7 +44,7 @@ export function TypedRecallDrill({
   const acceptedAnswers = step.acceptedAnswers ?? [];
 
   function submit() {
-    const correct = isRecallAnswerCorrect(input, acceptedAnswers);
+    const correct = isTypedRecallCorrect(input, acceptedAnswers);
     setResult(correct ? "correct" : "incorrect");
     onAnswer(correct);
   }
@@ -41,7 +59,7 @@ export function TypedRecallDrill({
           <Input
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="Type your answer"
+            placeholder={resolvePlaceholder(acceptedAnswers)}
             disabled={disabled || result !== null}
             autoComplete="off"
             className="border-white/15 bg-black/30"

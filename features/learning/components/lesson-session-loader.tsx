@@ -93,12 +93,15 @@ export function LessonSessionLoader({
   if (error && !session) {
     return (
       <YamaErrorState
+        title={error.includes("earlier lessons") ? "Lesson locked" : "Path blocked"}
         message={error}
         onRetry={() => {
           setError(null);
           setLoading(true);
           setRetryCount((count) => count + 1);
         }}
+        actionHref="/tree"
+        actionLabel="Return to trail"
       />
     );
   }

@@ -48,6 +48,7 @@ export type VocabularyLessonContent = {
   id: string;
   kana: string;
   kanji: string | null;
+  romaji: string | null;
   meaning: string;
   partOfSpeech: string | null;
   audioUrl: string | null;

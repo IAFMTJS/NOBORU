@@ -20,6 +20,7 @@ import {
   buildJourneyPathFromData,
   buildRegionJourney,
   canAccessLessonInPath,
+  canAccessLessonOnJourney,
   groupLandmarksByRegionId,
   resolveJourneyPositionFromPath,
 } from "@/features/journey/utils/journey-path.builder";
@@ -29,6 +30,7 @@ export {
   buildRegionJourney,
   canAccessLessonInPath,
   canAccessLessonInRegion,
+  canAccessLessonOnJourney,
   resolveJourneyPositionFromPath,
   resolveNodeKind,
 } from "@/features/journey/utils/journey-path.builder";
@@ -51,19 +53,8 @@ class JourneyService {
   }
 
   async canAccessLesson(userId: string, lessonId: string): Promise<boolean> {
-    const [regions, progressRows, passedTrialSlugs] = await Promise.all([
-      learningPathRepository.listPublishedRegionsWithCurriculum(),
-      getCachedProgressRows(userId),
-      learningPathService.getPassedTrialSlugs(userId),
-    ]);
-
-    const path = learningPathService.buildLearningPath(
-      regions,
-      progressRows,
-      passedTrialSlugs,
-    );
-
-    return canAccessLessonInPath(path.regions, lessonId, progressRows, passedTrialSlugs);
+    const journey = await this.getJourneyPath(userId);
+    return canAccessLessonOnJourney(journey, lessonId);
   }
 
   buildRegionJourney(

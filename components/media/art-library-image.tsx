@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import type { CSSProperties } from "react";
 
 import {
   artLibraryPath,
@@ -17,6 +18,7 @@ type ArtLibraryImageProps = {
   theme?: ArtLibraryTheme;
   alt?: string;
   className?: string;
+  style?: CSSProperties;
   width?: number;
   height?: number;
   /** Fill parent with object-cover — no max-width cap. */
@@ -66,6 +68,7 @@ export function ArtLibraryImage({
   theme: themeProp,
   alt = "",
   className,
+  style,
   width,
   height,
   cover = false,
@@ -89,6 +92,7 @@ export function ArtLibraryImage({
         cover ? "size-full min-h-full min-w-full object-cover object-center" : "max-w-full",
         className,
       )}
+      style={style}
       draggable={false}
     />
   );

@@ -359,4 +359,61 @@ describe("draft CMS lessons", () => {
 
     expect(publishedNode?.state).toBe("available");
   });
+
+  it("allows access to published listening lessons after draft placeholders", () => {
+    const region = makeRegion({
+      slug: "n5",
+      units: [
+        {
+          lessons: [
+            makeLesson("published-1", "vocabulary", "completed", "published"),
+            makeLesson("draft-2", "listening", "not_started", "draft"),
+            makeLesson("published-3", "listening", "not_started", "published"),
+          ],
+        },
+      ],
+      lessonCount: 2,
+    });
+
+    expect(canAccessLessonInRegion(region, "published-3", [], new Set())).toBe(true);
+  });
+
+  it("prefers the next lesson node over an available landmark for current position", () => {
+    const region = makeRegion({
+      slug: "n5",
+      lessonCount: 2,
+      units: [
+        {
+          lessons: [
+            makeLesson("lesson-1", "vocabulary", "completed", "published"),
+            makeLesson("lesson-2", "listening", "not_started", "published"),
+          ],
+        },
+      ],
+    });
+
+    const journey = buildRegionJourney(
+      region,
+      [],
+      new Set(),
+      {
+        cmsLandmarks: [
+          {
+            id: "landmark-1",
+            regionId: "region-1",
+            label: "Lantern Hamlet",
+            subtitle: "灯里",
+            kind: "village",
+            triggerAfterLessonCount: 1,
+            pathPosition: 0.38,
+            status: "published",
+          },
+        ],
+      },
+    );
+
+    const current = journey.currentNodeIndex != null ? journey.nodes[journey.currentNodeIndex] : null;
+    expect(current?.lessonId).toBe("lesson-2");
+    expect(current?.lessonType).toBe("listening");
+  });
 });

@@ -19,7 +19,7 @@ import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
 } from "@/features/learning/constants/lesson.constants";
-import { buildAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { buildAcceptedAnswers, buildJapaneseSurfaceAcceptedAnswers } from "@/features/learning/utils/recall-answers";
 import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
 
 function phaseForStage(stage: LessonStage): LessonPhase {
@@ -173,11 +173,11 @@ export function buildActiveRecallStep(
         kind: "recall",
         mode: "typed",
         contentType: content.type,
-        prompt: `Translate: "${meaning}"`,
+        prompt: `Translate: "${meaning}" (Japanese or romaji)`,
         display: meaning,
         options: [],
         correctIndex: 0,
-        acceptedAnswers: buildAcceptedAnswers(surface),
+        acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
         index,
         total,
       },
@@ -192,7 +192,7 @@ export function buildActiveRecallStep(
       ...recall,
       mode: "typed" as const,
       options: [],
-      acceptedAnswers: buildAcceptedAnswers(getRecallAnswer(content)),
+      acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
     },
     content,
     stage,
@@ -350,7 +350,7 @@ export function buildRecallStep(
       display: content.character,
       options,
       correctIndex: options.indexOf(content.romaji),
-      acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
       phase,
       index,
       total,
@@ -370,7 +370,7 @@ export function buildRecallStep(
       display: content.character,
       options,
       correctIndex: options.indexOf(content.romaji),
-      acceptedAnswers: buildAcceptedAnswers(content.romaji),
+      acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
       phase,
       index,
       total,
@@ -528,10 +528,11 @@ export function buildSentenceTypedStep(
   return withContentMeta(
     {
       kind: "sentence_typed",
-      prompt: "Type the Japanese sentence",
+      prompt: "Type the sentence in Japanese or romaji",
       englishHint: example.english,
       acceptedAnswers: buildAcceptedAnswers(
         example.japaneseText.replace(/[。、！？]+$/g, ""),
+        example.romaji ? [example.romaji] : [],
       ),
       index,
       total,

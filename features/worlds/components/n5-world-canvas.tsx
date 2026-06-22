@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { resolveN5LayoutScrollMinHeightVh } from "@/features/worlds/utils/n5-world-layout.utils";
 import { N5WorldBackdrop } from "@/features/worlds/components/n5-world-backdrop";
+import { useN5BackdropScroll } from "@/features/worlds/hooks/use-n5-backdrop-scroll";
 import { N5WorldHud } from "@/features/worlds/components/n5-world-hud";
 import { N5WorldNode, N5WorldNodeCard } from "@/features/worlds/components/n5-world-node";
 import { N5WorldSpinePath } from "@/features/worlds/components/n5-world-spine-path";
@@ -47,6 +48,7 @@ export function N5WorldCanvas({
   onNodeFocus,
 }: N5WorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const autoOpenedCurrentRef = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
   const theme = resolvedTheme === "light" ? "light" : "dark";
@@ -64,6 +66,8 @@ export function N5WorldCanvas({
     () => resolveN5LayoutScrollMinHeightVh(region.nodes.length, { theme }),
     [region.nodes.length, theme],
   );
+
+  const backdropScrollState = useN5BackdropScroll(scrollRef);
 
   const selectedNode =
     region.nodes.find((node) => node.id === selectedId) ??
@@ -91,6 +95,14 @@ export function N5WorldCanvas({
     return () => cancelAnimationFrame(frame);
   }, [focusNodeId, currentNodeId, scrollToNode]);
 
+  useEffect(() => {
+    if (autoOpenedCurrentRef.current) return;
+    if (!currentNode?.href || currentNode.state === "locked") return;
+    if (currentNode.kind === "landmark") return;
+    autoOpenedCurrentRef.current = true;
+    setSelectedId(currentNode.id);
+  }, [currentNode]);
+
   return (
     <div className="relative h-content w-full overflow-hidden">
       <N5WorldHud
@@ -100,18 +112,24 @@ export function N5WorldCanvas({
         displayName={hud.displayName}
         levelLabel={hud.levelLabel}
         currentStreak={hud.currentStreak}
+        continueLabel={
+          currentNode?.href && currentNode.state !== "locked"
+            ? currentNode.label
+            : null
+        }
       />
+
+      <N5WorldBackdrop scrollState={backdropScrollState} />
 
       <div
         ref={scrollRef}
-        className="h-full w-full snap-y snap-mandatory overflow-y-auto overscroll-contain"
+        className="relative z-10 h-full w-full snap-y snap-mandatory overflow-y-auto overscroll-contain"
         style={{ scrollBehavior: "smooth" }}
       >
         <div
           className="relative w-full"
           style={{ minHeight: `${scrollMinHeightVh}vh` }}
         >
-          <N5WorldBackdrop />
           <N5WorldSpinePath theme={theme} />
 
           {region.nodes.map((node) => {
@@ -139,6 +157,7 @@ export function N5WorldCanvas({
       {selectedNode && selectedId ? (
         <N5WorldNodeCard
           node={selectedNode}
+          isCurrent={currentNode?.id === selectedNode.id}
           onClose={() => setSelectedId(null)}
         />
       ) : null}

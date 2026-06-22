@@ -9,3 +9,10 @@ export class LessonPassThresholdError extends Error {
     this.passScore = passScore;
   }
 }
+
+export class LessonAccessDeniedError extends Error {
+  constructor() {
+    super("Complete earlier lessons on the trail before opening this one.");
+    this.name = "LessonAccessDeniedError";
+  }
+}

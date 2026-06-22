@@ -6,6 +6,7 @@ import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import { isJapaneseTextAnswerCorrect } from "@/features/learning/utils/recall-answers";
 
 type TypedSentenceDrillProps = {
   prompt: string;
@@ -14,10 +15,6 @@ type TypedSentenceDrillProps = {
   onAnswer: (correct: boolean) => void;
   disabled?: boolean;
 };
-
-function normalizeAnswer(value: string): string {
-  return value.trim().replace(/\s+/g, "");
-}
 
 export function TypedSentenceDrill({
   prompt,
@@ -30,10 +27,7 @@ export function TypedSentenceDrill({
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
 
   function handleSubmit() {
-    const normalized = normalizeAnswer(value);
-    const correct = acceptedAnswers.some(
-      (answer) => normalizeAnswer(answer) === normalized,
-    );
+    const correct = isJapaneseTextAnswerCorrect(value, acceptedAnswers);
     setResult(correct ? "correct" : "incorrect");
     onAnswer(correct);
   }
@@ -50,7 +44,7 @@ export function TypedSentenceDrill({
           <Input
             value={value}
             onChange={(event) => setValue(event.target.value)}
-            placeholder="Type the Japanese sentence"
+            placeholder="Type the sentence in Japanese or romaji"
             disabled={disabled || result !== null}
             className="border-white/15 bg-black/30"
             onKeyDown={(event) => {
