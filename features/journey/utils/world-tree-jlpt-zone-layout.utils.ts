@@ -41,10 +41,22 @@ export type PlacedGap = {
   tint: string;
 };
 
+export type PlacedOverlay = {
+  id: string;
+  bandId: WorldTreeJlptBandId;
+  topPercent: number;
+  heightPercent: number;
+  zIndex: number;
+  /** Inline CSS background (usually a gradient). */
+  background: string;
+  kind: "crown" | "seam" | "fringe";
+};
+
 export type JlptZoneArtLayout = {
   fill: PlacedArtPiece[];
   heroes: PlacedHero[];
   gaps: PlacedGap[];
+  overlays: PlacedOverlay[];
 };
 
 function bandLocalToCanvas(
@@ -67,7 +79,7 @@ function placeFillSlot(
   const yBottom = bandLocalToCanvas(band, slot.yStart);
   const heightPercent = Math.max(0.5, yBottom - yTop);
   const width =
-    slot.widthPercent ?? WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 8;
+    slot.widthPercent ?? WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 12;
   const xOffset = slot.xOffset ?? 0;
 
   return {
@@ -121,6 +133,8 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
   const fill: PlacedArtPiece[] = [];
   const heroes: PlacedHero[] = [];
   const gaps: PlacedGap[] = [];
+  const overlays: PlacedOverlay[] = [];
+  const canvasBg = theme === "light" ? "#E9E1D0" : "#0D1320";
 
   for (const band of WORLD_TREE_JLPT_BANDS) {
     const layout = jlptBands.find((entry) => entry.id === band.id)!;
@@ -132,13 +146,13 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
     });
 
     if (spec.transitionTop) {
-      const transitionHeight = span * 0.18;
+      const transitionHeight = span * 0.24;
       fill.push({
         id: `${band.id}-transition`,
         src: artLibraryPath(worldTreeSegmentArtPath(spec.transitionTop, theme)),
-        topPercent: layout.yMin - transitionHeight * 0.35,
+        topPercent: layout.yMin - transitionHeight * 0.5,
         heightPercent: transitionHeight,
-        widthPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 12,
+        widthPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 18,
         leftPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent,
         zIndex: 35,
         kind: "transition",
@@ -162,9 +176,47 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
     });
 
     gaps.push(...computeGapSlots(band.id, layout, spec));
+
+    // Seam masking overlays — hides harsh underhang fringes and blends hero edges
+    // into the canvas background between JLPT bands.
+    // NOTE: Each JLPT band is only ~20% of the canvas, so these need to be
+    // large enough in absolute canvas-percent to actually cover real fringe pixels.
+    const seamH = Math.max(2.4, span * 0.14);
+    const fringeH = Math.max(2.0, span * 0.11);
+    const crownH = Math.max(2.0, span * 0.12);
+
+    overlays.push({
+      id: `${band.id}-crown-mask`,
+      bandId: band.id,
+      topPercent: heroTop - crownH * 0.3,
+      heightPercent: crownH,
+      zIndex: 28,
+      kind: "crown",
+      background: `linear-gradient(to top, transparent 0%, ${spec.gapTint}55 28%, ${canvasBg}EE 80%, ${canvasBg} 100%)`,
+    });
+
+    overlays.push({
+      id: `${band.id}-seam-mask`,
+      bandId: band.id,
+      topPercent: heroBottom - seamH * 0.75,
+      heightPercent: seamH,
+      zIndex: 30,
+      kind: "seam",
+      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}77 20%, ${canvasBg}EE 78%, ${canvasBg} 100%)`,
+    });
+
+    overlays.push({
+      id: `${band.id}-fringe-mask`,
+      bandId: band.id,
+      topPercent: heroBottom - fringeH * 0.45,
+      heightPercent: fringeH,
+      zIndex: 31,
+      kind: "fringe",
+      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}44 18%, ${canvasBg}F8 62%, ${canvasBg} 100%)`,
+    });
   }
 
-  return { fill, heroes, gaps };
+  return { fill, heroes, gaps, overlays };
 }
 
 /** Count spine nodes per JLPT band for Y redistribution. */

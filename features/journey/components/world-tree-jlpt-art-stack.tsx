@@ -150,6 +150,21 @@ export function WorldTreeJlptArtStack({
         </div>
       ))}
 
+      {art.overlays.map((overlay) => (
+        <div
+          key={overlay.id}
+          className="absolute inset-x-0"
+          style={{
+            top: `${overlay.topPercent}%`,
+            height: `${overlay.heightPercent}%`,
+            background: overlay.background,
+            zIndex: overlay.zIndex,
+          }}
+          data-jlpt-overlay={overlay.kind}
+          data-jlpt-overlay-band={overlay.bandId}
+        />
+      ))}
+
       {showJlptChrome
         ? WORLD_TREE_JLPT_BANDS.map((band) => {
             const layout = jlptBands.find((entry) => entry.id === band.id)!;

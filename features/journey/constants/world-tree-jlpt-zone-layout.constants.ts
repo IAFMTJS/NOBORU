@@ -49,12 +49,13 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n5: {
     trunkCenterX: 50,
     pathSway: 1.2,
-    hero: { anchor: "bottom", yStart: 0.28, yEnd: 1, scale: 1.08 },
+    hero: { anchor: "bottom", yStart: 0.18, yEnd: 1, scale: 1.08 },
     fillSlots: [
       { segmentId: "roots_a", yStart: 0, yEnd: 0.42, zIndex: 1 },
       { segmentId: "roots_b", yStart: 0.12, yEnd: 0.52, xOffset: -8, zIndex: 2 },
       { segmentId: "roots_c", yStart: 0.18, yEnd: 0.58, xOffset: 8, zIndex: 2 },
       { segmentId: "roots_d", yStart: 0.05, yEnd: 0.35, widthPercent: 38, zIndex: 0 },
+      { segmentId: "roots_e", yStart: 0.34, yEnd: 0.74, widthPercent: 40, zIndex: 1 },
     ],
     gapTint: "#8B4A42",
     transitionTop: "transition_root_to_trunk",
@@ -62,12 +63,13 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n4: {
     trunkCenterX: 50,
     pathSway: 1.4,
-    hero: { anchor: "center", yStart: 0.18, yEnd: 0.88, scale: 1.05 },
+    hero: { anchor: "center", yStart: 0.12, yEnd: 0.9, scale: 1.05 },
     fillSlots: [
       { segmentId: "roots_e", yStart: 0, yEnd: 0.38, zIndex: 1 },
       { segmentId: "trunk_a", yStart: 0.08, yEnd: 0.55, zIndex: 2 },
       { segmentId: "trunk_b", yStart: 0.42, yEnd: 0.92, xOffset: -4, zIndex: 3 },
       { segmentId: "trunk_a", yStart: 0.55, yEnd: 1, xOffset: 5, zIndex: 1 },
+      { segmentId: "trunk_c", yStart: 0.66, yEnd: 1, widthPercent: 40, zIndex: 2 },
     ],
     gapTint: "#8B6B2E",
     transitionTop: "transition_trunk_to_ancient",
@@ -75,12 +77,13 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n3: {
     trunkCenterX: 50,
     pathSway: 1.6,
-    hero: { anchor: "center", yStart: 0.12, yEnd: 0.9, scale: 1.04 },
+    hero: { anchor: "center", yStart: 0.1, yEnd: 0.92, scale: 1.04 },
     fillSlots: [
       { segmentId: "trunk_c", yStart: 0, yEnd: 0.45, zIndex: 1 },
       { segmentId: "trunk_d", yStart: 0.15, yEnd: 0.58, zIndex: 2 },
       { segmentId: "trunk_e", yStart: 0.38, yEnd: 0.78, xOffset: -3, zIndex: 3 },
       { segmentId: "trunk_f", yStart: 0.55, yEnd: 1, zIndex: 2 },
+      { segmentId: "trunk_g", yStart: 0.62, yEnd: 1, xOffset: 4, zIndex: 1 },
     ],
     gapTint: "#3D6B3A",
     transitionTop: "transition_ancient_to_canopy",
@@ -88,13 +91,14 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n2: {
     trunkCenterX: 50,
     pathSway: 1.5,
-    hero: { anchor: "top", yStart: 0, yEnd: 0.72, scale: 1.06 },
+    hero: { anchor: "top", yStart: 0, yEnd: 0.78, scale: 1.06 },
     fillSlots: [
       { segmentId: "canopy_a", yStart: 0.18, yEnd: 0.62, zIndex: 2 },
       { segmentId: "canopy_b", yStart: 0.08, yEnd: 0.52, xOffset: -6, zIndex: 3 },
       { segmentId: "canopy_c", yStart: 0.35, yEnd: 0.82, xOffset: 5, zIndex: 2 },
       { segmentId: "canopy_d", yStart: 0.55, yEnd: 0.98, zIndex: 1 },
       { segmentId: "canopy_e", yStart: 0.72, yEnd: 1, xOffset: 4, zIndex: 0 },
+      { segmentId: "canopy_c", yStart: 0.78, yEnd: 1, widthPercent: 42, zIndex: 1 },
     ],
     transitionTop: "transition_canopy_to_celestial",
     gapTint: "#3A6B8B",
@@ -102,12 +106,13 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n1: {
     trunkCenterX: 50,
     pathSway: 1.1,
-    hero: { anchor: "top", yStart: 0, yEnd: 0.85, scale: 1.1 },
+    hero: { anchor: "top", yStart: 0, yEnd: 0.9, scale: 1.1 },
     fillSlots: [
       { segmentId: "celestial_a", yStart: 0.42, yEnd: 0.88, zIndex: 2 },
       { segmentId: "celestial_b", yStart: 0.22, yEnd: 0.68, xOffset: -5, zIndex: 3 },
       { segmentId: "celestial_c", yStart: 0.08, yEnd: 0.55, zIndex: 2 },
       { segmentId: "celestial_d", yStart: 0, yEnd: 0.38, xOffset: 6, zIndex: 1 },
+      { segmentId: "celestial_b", yStart: 0.62, yEnd: 0.98, widthPercent: 44, zIndex: 1 },
     ],
     gapTint: "#5A4A8B",
   },
