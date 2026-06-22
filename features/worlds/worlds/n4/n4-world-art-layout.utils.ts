@@ -118,5 +118,6 @@ export function buildN4WorldArtLayout(theme: "light" | "dark"): JlptZoneArtLayou
     fill,
     heroes,
     gaps: buildGapSlots(),
+    overlays: [],
   };
 }
