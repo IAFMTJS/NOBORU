@@ -52,26 +52,28 @@ export function N5WorldNode({
           type="button"
           onClick={onSelect}
           className={cn(
-            "focus-ring flex max-w-[11rem] flex-col items-center gap-1.5 text-center",
+            "focus-ring max-w-[12rem] text-center",
             selected && "ring-2 ring-trail-glow/50 ring-offset-2 ring-offset-transparent",
             state === "locked" && "opacity-55",
           )}
         >
-          {landmarkIconBase ? (
-            <ArtLibraryImage
-              themedBase={landmarkIconBase}
-              src=""
-              alt=""
-              width={56}
-              height={56}
-              className="drop-shadow-[0_8px_16px_rgba(0,0,0,0.45)]"
-            />
-          ) : null}
-          <span className="rounded-full border border-trail-glow/35 bg-black/45 px-3 py-1.5 backdrop-blur-md">
-            <p className="text-caption font-semibold text-foreground">{node.label}</p>
-            {node.subtitle ? (
-              <p className="truncate text-[10px] text-muted-foreground">{node.subtitle}</p>
+          <span className="flex items-center gap-2 rounded-full border border-trail-glow/40 bg-black/50 px-3 py-2 text-left backdrop-blur-md">
+            {landmarkIconBase ? (
+              <ArtLibraryImage
+                themedBase={landmarkIconBase}
+                src=""
+                alt=""
+                width={28}
+                height={28}
+                className="shrink-0 drop-shadow-sm"
+              />
             ) : null}
+            <span className="min-w-0">
+              <p className="text-caption font-semibold text-foreground">{node.label}</p>
+              {node.subtitle ? (
+                <p className="truncate text-[10px] text-muted-foreground">{node.subtitle}</p>
+              ) : null}
+            </span>
           </span>
         </button>
       </div>

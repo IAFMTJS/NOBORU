@@ -37,13 +37,20 @@ export function resolveN5ScrollMinHeightVh(visibleNodeCount: number): number {
 }
 
 export const N5_ACT_BANDS = [
-  { actIndex: 1 as const, pathStart: 0, pathEnd: 0.28, yStart: 72, yEnd: 94 },
-  { actIndex: 2 as const, pathStart: 0.28, pathEnd: 0.63, yStart: 37, yEnd: 72 },
-  { actIndex: 3 as const, pathStart: 0.63, pathEnd: 1, yStart: 6, yEnd: 37 },
+  { actIndex: 1 as const, pathStart: 0, pathEnd: 0.28, yStart: 71, yEnd: 96 },
+  { actIndex: 2 as const, pathStart: 0.28, pathEnd: 0.63, yStart: 36, yEnd: 73 },
+  { actIndex: 3 as const, pathStart: 0.63, pathEnd: 1, yStart: 4, yEnd: 38 },
 ] as const;
 
+/** object-position per act — path corridor stays centered on the spine. */
+export const N5_ACT_SLICE_OBJECT_POSITION: Record<1 | 2 | 3, string> = {
+  1: "object-[center_88%]",
+  2: "object-center",
+  3: "object-[center_14%]",
+};
+
 export const N5_ACT_BACKDROP_GRADIENTS: Record<1 | 2 | 3, string> = {
-  1: "from-[#1a1528] via-[#2a2238] to-[#1e2830]",
-  2: "from-[#1e2830] via-[#243828] to-[#2a3040]",
-  3: "from-[#2a3040] via-[#354858] to-[#4a6080]",
+  1: "from-black/25 via-transparent to-black/15",
+  2: "from-black/15 via-transparent to-black/15",
+  3: "from-black/10 via-transparent to-black/20",
 };
