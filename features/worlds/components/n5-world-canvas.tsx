@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import type { JourneyNode, JourneyRegionViewModel } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
 
-import { N5_SCROLL_MIN_HEIGHT_VH } from "@/features/worlds/constants/n5-world.constants";
+import { resolveN5LayoutScrollMinHeightVh } from "@/features/worlds/utils/n5-world-layout.utils";
 import { N5WorldBackdrop } from "@/features/worlds/components/n5-world-backdrop";
 import { N5WorldHud } from "@/features/worlds/components/n5-world-hud";
 import { N5WorldNode, N5WorldNodeCard } from "@/features/worlds/components/n5-world-node";
@@ -60,6 +60,11 @@ export function N5WorldCanvas({
     [region.nodes, theme],
   );
 
+  const scrollMinHeightVh = useMemo(
+    () => resolveN5LayoutScrollMinHeightVh(region.nodes.length, { theme }),
+    [region.nodes.length, theme],
+  );
+
   const selectedNode =
     region.nodes.find((node) => node.id === selectedId) ??
     currentNode ??
@@ -104,7 +109,7 @@ export function N5WorldCanvas({
       >
         <div
           className="relative w-full"
-          style={{ minHeight: `${N5_SCROLL_MIN_HEIGHT_VH}vh` }}
+          style={{ minHeight: `${scrollMinHeightVh}vh` }}
         >
           <N5WorldBackdrop />
           <N5WorldSpinePath theme={theme} />

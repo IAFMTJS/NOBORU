@@ -1,9 +1,10 @@
 {
   "version": 1,
   "world": "n5",
-  "description": "Greybox layout — Realm of First Light. Spine + act bands for art authoring.",
+  "description": "Greybox layout — Realm of First Light. Scroll height is dynamic: resolveN5ScrollMinHeightVh(visibleNodeCount) with 28vh gap between visible nodes.",
   "canvas": { "width": 1536, "height": 5120 },
-  "scrollMinHeightVh": 640,
+  "scrollMinHeightVhExample": 1867,
+  "targetNodeGapVh": 28,
   "acts": [
     {
       "actIndex": 1,
@@ -43,6 +44,77 @@
     { "id": "kanji-grove", "pathPosition": 0.72, "anchor": { "x": 54, "y": 28 } },
     { "id": "first-slope-shrine", "pathPosition": 0.84, "anchor": { "x": 48, "y": 18 } },
     { "id": "gate-of-ascent", "pathPosition": 0.98, "anchor": { "x": 50, "y": 8 } }
+  ],
+  "reservedSlots": [
+    {
+      "id": "n5-reserved-act1-expansion",
+      "label": "Act I expansion slot",
+      "purpose": "expansion",
+      "pathPositionHint": 0.22,
+      "anchor": { "type": "before_landmark", "landmarkSlug": "kana-bridge" }
+    },
+    {
+      "id": "n5-reserved-greeting-quarter",
+      "label": "Greeting Quarter",
+      "purpose": "side_path",
+      "pathPositionHint": 0.392,
+      "anchor": { "type": "after_landmark", "landmarkSlug": "lantern-hamlet" },
+      "branchId": "hamlet-greeting"
+    },
+    {
+      "id": "n5-reserved-food-stall-row",
+      "label": "Food Stall Row",
+      "purpose": "side_path",
+      "pathPositionHint": 0.404,
+      "anchor": { "type": "after_landmark", "landmarkSlug": "lantern-hamlet" },
+      "branchId": "hamlet-food"
+    },
+    {
+      "id": "n5-reserved-home-hearth-lane",
+      "label": "Home Hearth Lane",
+      "purpose": "side_path",
+      "pathPositionHint": 0.518,
+      "anchor": { "type": "after_landmark", "landmarkSlug": "market-bend" },
+      "branchId": "hamlet-home"
+    },
+    {
+      "id": "n5-reserved-seasonal-act2",
+      "label": "Act II seasonal event",
+      "purpose": "seasonal",
+      "pathPositionHint": 0.602,
+      "anchor": { "type": "before_landmark", "landmarkSlug": "forest-torii" },
+      "branchId": "seasonal"
+    },
+    {
+      "id": "n5-reserved-hamlet-return",
+      "label": "Hamlet return junction",
+      "purpose": "junction",
+      "pathPositionHint": 0.614,
+      "anchor": { "type": "before_landmark", "landmarkSlug": "forest-torii" },
+      "branchId": "hamlet-return"
+    },
+    {
+      "id": "n5-reserved-expansion-act3",
+      "label": "Act III expansion slot",
+      "purpose": "expansion",
+      "pathPositionHint": 0.742,
+      "anchor": { "type": "after_landmark", "landmarkSlug": "kanji-grove" }
+    },
+    {
+      "id": "n5-reserved-seasonal-act3",
+      "label": "Act III seasonal event",
+      "purpose": "seasonal",
+      "pathPositionHint": 0.822,
+      "anchor": { "type": "before_landmark", "landmarkSlug": "first-slope-shrine" },
+      "branchId": "seasonal"
+    },
+    {
+      "id": "n5-reserved-pre-gate-buffer",
+      "label": "Pre-gate expansion slot",
+      "purpose": "expansion",
+      "pathPositionHint": 0.872,
+      "anchor": { "type": "after_landmark", "landmarkSlug": "first-slope-shrine" }
+    }
   ],
   "contractKey": "n5"
 }

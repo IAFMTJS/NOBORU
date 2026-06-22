@@ -18,10 +18,11 @@ import {
   N5_REALM_SILHOUETTE,
 } from "@/features/worlds/constants/n5-world-art.constants";
 import {
-  N5_SCROLL_MIN_HEIGHT_VH,
   N5_WORLD_SUBTITLE,
   N5_WORLD_TITLE,
+  resolveN5ScrollMinHeightVh,
 } from "@/features/worlds/constants/n5-world.constants";
+import { N5_RESERVED_NODE_SLOTS } from "@/features/worlds/constants/n5-reserved-nodes.constants";
 
 const ROOT = join(process.cwd());
 
@@ -81,8 +82,8 @@ function auditResults(): AuditItem[] {
   push(
     "scroll-height",
     "Layout",
-    "480vh minimum scroll",
-    N5_SCROLL_MIN_HEIGHT_VH >= 480,
+    "Dynamic scroll height for node spacing",
+    resolveN5ScrollMinHeightVh(40) >= 800,
   );
 
   push(
@@ -99,6 +100,20 @@ function auditResults(): AuditItem[] {
     "Layout",
     "n5-world-layout.json exists",
     existsSync(join(ROOT, "scripts/art-direction/n5-world-layout.json")),
+  );
+
+  push(
+    "reserved-spine-slots",
+    "Layout",
+    "N5 reserved invisible spine slots for art anchors",
+    N5_RESERVED_NODE_SLOTS.length >= 8,
+  );
+
+  push(
+    "greybox-export",
+    "Art",
+    "N5 greybox export script",
+    existsSync(join(ROOT, "scripts/art-direction/export-n5-greybox.ts")),
   );
 
   push(

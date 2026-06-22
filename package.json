@@ -22,7 +22,8 @@
     "assets:audit-immersion": "node scripts/art-direction/audit-immersion.mjs",
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
-    "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs"
+    "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs",
+    "assets:export-n5-greybox": "npx tsx scripts/art-direction/export-n5-greybox.ts"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

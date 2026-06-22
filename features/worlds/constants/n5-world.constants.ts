@@ -6,12 +6,35 @@ export const N5_WORLD_TITLE = "Realm of First Light";
 
 export const N5_WORLD_SUBTITLE = "N5 · 始まりの境";
 
-/** Minimum vertical scroll for the N5 canvas (~640vh — room for ~40 evenly spaced nodes). */
-export const N5_SCROLL_MIN_HEIGHT_VH = 640;
+/** Target vertical gap between adjacent visible nodes (~28vh ≈ generous touch spacing). */
+export const N5_TARGET_NODE_GAP_VH = 28;
 
-/** Path range used when spreading nodes evenly along the N5 spine. */
+/** Floor scroll height when the path is short. */
+export const N5_SCROLL_MIN_HEIGHT_VH_BASE = 800;
+
+/** @deprecated Use resolveN5ScrollMinHeightVh(nodeCount) — kept for audits as minimum floor. */
+export const N5_SCROLL_MIN_HEIGHT_VH = N5_SCROLL_MIN_HEIGHT_VH_BASE;
+
+/** Path range used when spreading visible nodes along the N5 spine. */
 export const N5_NODE_PATH_START = 0.02;
 export const N5_NODE_PATH_END = 0.98;
+
+export const N5_PATH_USABLE_FRACTION = N5_NODE_PATH_END - N5_NODE_PATH_START;
+
+/** Approximate y% span from journey start to summit on the N5 spine. */
+export const N5_SPINE_Y_SPAN_PERCENT = 87;
+
+/** Scales canvas height so each visible node has N5_TARGET_NODE_GAP_VH between neighbors. */
+export function resolveN5ScrollMinHeightVh(visibleNodeCount: number): number {
+  if (visibleNodeCount <= 1) {
+    return N5_SCROLL_MIN_HEIGHT_VH_BASE;
+  }
+  const gapCount = visibleNodeCount - 1;
+  const required = Math.ceil(
+    (gapCount * N5_TARGET_NODE_GAP_VH * 100) / N5_SPINE_Y_SPAN_PERCENT,
+  );
+  return Math.max(N5_SCROLL_MIN_HEIGHT_VH_BASE, required);
+}
 
 export const N5_ACT_BANDS = [
   { actIndex: 1 as const, pathStart: 0, pathEnd: 0.28, yStart: 72, yEnd: 94 },
