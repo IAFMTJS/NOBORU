@@ -48,12 +48,7 @@ export function RegionSelectSheet({
       ? "A painted map of discovered landmarks — explore, never select."
       : "Follow the torii to another stretch of the continuous climb.";
 
-  const arcOrder: NarrativeArcId[] = [
-    "foot-hills",
-    "forest-trail",
-    "temple-peak",
-    "summit",
-  ];
+  const arcOrder: NarrativeArcId[] = ["n5", "n4", "n3", "n2", "n1"];
 
   const regionsByArc = useMemo(() => {
     const groups = new Map<NarrativeArcId, RegionPathViewModel[]>();

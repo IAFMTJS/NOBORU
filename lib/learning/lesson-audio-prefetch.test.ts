@@ -10,7 +10,7 @@ const baseSession: LessonSessionViewModel = {
   lessonId: "lesson-1",
   trailNodeId: "lesson-1",
   unitId: "unit-1",
-  regionSlug: "mount-n5",
+  regionSlug: "n5",
   title: "Sample",
   description: null,
   type: "vocabulary",

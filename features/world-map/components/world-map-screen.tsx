@@ -22,10 +22,10 @@ function resolveMapMinHeight(regionCount: number): string {
 export function WorldMapScreen({ data }: WorldMapScreenProps) {
   return (
     <SecondaryScreenShell
-      title="Mountain World"
-      subtitle="The full climb — from Hiragana foothills to the celestial summit"
+      title="Five Realms"
+      subtitle="The JLPT climb — from Realm of First Light to the celestial summit"
       backHref="/tree"
-      backLabel="Tree"
+      backLabel="Trail"
       contentClassName="pb-2"
     >
       <div className="mx-auto max-w-md space-y-4">
@@ -44,6 +44,14 @@ export function WorldMapScreen({ data }: WorldMapScreenProps) {
           />
           <div
             className="pointer-events-none absolute inset-x-[8%] bottom-[4%] top-[4%] rounded-full bg-gradient-to-t from-trail-glow/10 via-transparent to-primary/5 blur-2xl"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_85%,hsl(var(--trail-glow)/0.18),transparent_55%)]"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-muted/30 via-transparent to-muted/20"
             aria-hidden
           />
 

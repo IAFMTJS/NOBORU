@@ -40,8 +40,8 @@ do $$
 declare
   region_rec record;
   unit_rec record;
-  region_id uuid;
-  unit_id uuid;
+  v_region_id uuid;
+  v_unit_id uuid;
   lesson_idx int;
   branch_names text[];
   target_lessons int;
@@ -63,8 +63,8 @@ begin
         ('mount-n4', array['Daily Life', 'Actions', 'Grammar Core', 'Kanji Trail', 'Reading', 'Listening', 'Work', 'Travel'], 85)
     ) as t(slug, branches, target)
   loop
-    select id into region_id from public.regions where slug = region_rec.slug;
-    if region_id is null then
+    select id into v_region_id from public.regions where slug = region_rec.slug;
+    if v_region_id is null then
       continue;
     end if;
 
@@ -75,7 +75,7 @@ begin
     select count(*) into existing_count
     from public.lessons l
     inner join public.units u on u.id = l.unit_id
-    where u.region_id = region_id;
+    where u.region_id = v_region_id;
 
     if existing_count >= target_lessons then
       continue;
@@ -86,7 +86,7 @@ begin
     for unit_idx in 1..branch_count loop
       insert into public.units (region_id, name, description, order_index, status)
       select
-        region_id,
+        v_region_id,
         branch_names[unit_idx],
         'World Tree branch — planned content.',
         unit_idx - 1,
@@ -94,18 +94,18 @@ begin
       where not exists (
         select 1
         from public.units u
-        where u.region_id = region_id
+        where u.region_id = v_region_id
           and u.name = branch_names[unit_idx]
       );
 
-      select id into unit_id
+      select id into v_unit_id
       from public.units
-      where region_id = region_id
+      where region_id = v_region_id
         and name = branch_names[unit_idx]
       order by order_index
       limit 1;
 
-      if unit_id is null then
+      if v_unit_id is null then
         continue;
       end if;
 
@@ -114,7 +114,7 @@ begin
           select count(*)
           from public.lessons l
           inner join public.units u on u.id = l.unit_id
-          where u.region_id = region_id
+          where u.region_id = v_region_id
         ) >= target_lessons - 1;
 
         lesson_type := lesson_types[1 + ((unit_idx + lesson_idx - 2) % array_length(lesson_types, 1))];
@@ -131,7 +131,7 @@ begin
           status
         )
         select
-          unit_id,
+          v_unit_id,
           case
             when lesson_idx = lessons_per_branch then 'practice'
             else lesson_type
@@ -146,7 +146,7 @@ begin
         where not exists (
           select 1
           from public.lessons l
-          where l.unit_id = unit_id
+          where l.unit_id = v_unit_id
             and l.order_index = lesson_idx - 1
             and l.title = branch_names[unit_idx] || ' · Chapter ' || lesson_idx
         );
@@ -154,18 +154,18 @@ begin
     end loop;
 
     -- Regional final trial placeholder
-    select id into unit_id
+    select id into v_unit_id
     from public.units
-    where region_id = region_id
+    where region_id = v_region_id
     order by order_index desc
     limit 1;
 
-    if unit_id is not null then
+    if v_unit_id is not null then
       insert into public.lessons (
         unit_id, type, title, description, order_index, difficulty, xp_reward, estimated_duration, status
       )
       select
-        unit_id,
+        v_unit_id,
         'application',
         region_rec.slug || ' · Final Trial',
         'Planned — boss examination in development.',
@@ -177,7 +177,7 @@ begin
       where not exists (
         select 1
         from public.lessons l
-        where l.unit_id = unit_id
+        where l.unit_id = v_unit_id
           and l.type = 'application'
           and l.title = region_rec.slug || ' · Final Trial'
       );

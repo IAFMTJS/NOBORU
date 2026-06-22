@@ -8,7 +8,7 @@ import { yamaService } from "@/features/yama/services/yama.service";
 export const PLACEHOLDER_HOME_DASHBOARD: HomeDashboardViewModel = {
   greeting: "Konnichiwa, Climber",
   region: {
-    slug: "mount-n4",
+    slug: "n4",
     name: "Mount N4",
     trail: "Forest Trail",
   },

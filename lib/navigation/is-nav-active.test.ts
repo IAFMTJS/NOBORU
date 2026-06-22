@@ -6,11 +6,11 @@ import { isNavActive, resolveNavTabFromPath } from "@/lib/navigation/is-nav-acti
 import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 
 describe("world tree route", () => {
-  it("registers the /tree page", () => {
+  it("registers the /tree placeholder page", () => {
     const page = readFileSync(resolve(process.cwd(), "app/(app)/tree/page.tsx"), "utf8");
-    expect(page).toContain("WorldTreeScreen");
-    expect(page).not.toContain("WorldScreen");
-    expect(page).not.toContain("redirect(");
+    expect(page).toContain("Trail map");
+    expect(page).toContain("getJourneyPathWithContext");
+    expect(page).not.toContain("WorldTreeScreen");
   });
 
   it("includes Tree in primary navigation", () => {

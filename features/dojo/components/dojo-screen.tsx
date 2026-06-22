@@ -52,7 +52,7 @@ export function DojoScreen() {
 
       <GlassSurfacePanel variant="card">
         <p className="text-body-sm text-muted-foreground">
-          Pick a discipline to train — each path reinforces your climb on the world tree.
+          Pick a discipline to train — each path reinforces your climb through the five realms.
         </p>
       </GlassSurfacePanel>
     </TabScene>

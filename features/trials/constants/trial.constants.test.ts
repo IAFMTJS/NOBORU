@@ -24,7 +24,7 @@ describe("trial.constants", () => {
   });
 
   it("includes mount-n4 review recommendations", () => {
-    const recommendations = buildReviewRecommendations(65, "mount-n4");
+    const recommendations = buildReviewRecommendations(65, "n4");
 
     expect(recommendations.some((entry) => entry.includes("N4 vocabulary"))).toBe(
       true,

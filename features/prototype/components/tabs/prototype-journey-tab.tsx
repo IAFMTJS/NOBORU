@@ -10,14 +10,14 @@ import {
   PrototypeGlassPanel,
   prototypeGlass,
 } from "@/features/prototype/components/prototype-glass-panel";
-import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-skeleton-art-layer";
-import { WORLD_TREE_SKELETON_MIN_HEIGHT_VH } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
   MOCK_JOURNEY_NODES,
   MOCK_PLAYER,
   type MockLessonNode,
 } from "@/features/prototype/constants/mock-data";
 import { cn } from "@/lib/utils";
+
+const PROTOTYPE_MAP_MIN_HEIGHT_VH = 240;
 
 const NODE_SIZE: Record<MockLessonNode["state"], number> = {
   completed: 52,
@@ -134,9 +134,12 @@ export function PrototypeJourneyTab() {
       >
         <div
           className="relative mx-auto w-full min-w-full max-w-phone"
-          style={{ minHeight: `${WORLD_TREE_SKELETON_MIN_HEIGHT_VH}vh` }}
+          style={{ minHeight: `${PROTOTYPE_MAP_MIN_HEIGHT_VH}vh` }}
         >
-          <JourneySkeletonArtLayer className="min-h-full" />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-b from-[#E9E1D0] via-[#D8CEBC] to-[#C4B8A4]"
+          />
 
           <div className="pointer-events-none absolute inset-0">
             <div className="pointer-events-auto relative h-full w-full min-h-full">

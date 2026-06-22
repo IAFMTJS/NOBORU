@@ -7,7 +7,6 @@ export type ArtCategory =
   | "backgrounds/core"
   | "backgrounds/study"
   | "backgrounds/shrine"
-  | "world-tree"
   | "backgrounds/events"
   | "backgrounds/weather"
   | "backgrounds/utility"

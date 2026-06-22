@@ -32,16 +32,13 @@ export const SCENE_BACKGROUND_ASSETS: Record<SceneId, ArtAssetRef> = {
   profile_lantern_path: { category: "backgrounds/utility", id: "bg-settings-dark-panel" },
 };
 
-/** Region thumbnails in the trail atlas — world-tree art TBD. */
+/** Region thumbnails in the trail atlas — JWorld five-world placeholders. */
 export const REGION_THUMBNAIL_ASSETS: Record<RegionSlug, ArtAssetRef> = {
-  foothills: { category: "backgrounds/camp", id: "bg-camp-home-night" },
-  "mount-n5": { category: "backgrounds/camp", id: "bg-camp-lantern" },
-  "forest-trail": { category: "backgrounds/study", id: "bg-study-bamboo" },
-  "mount-n4": { category: "backgrounds/study", id: "bg-study-default" },
-  "mount-n3": { category: "backgrounds/shrine", id: "bg-shrine-checkpoint" },
-  "mount-n2": { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
-  "mount-n1": { category: "backgrounds/shrine", id: "bg-shrine-lesson-complete-path" },
-  "master-summit": { category: "backgrounds/shrine", id: "bg-shrine-region-transition-torii" },
+  n5: { category: "backgrounds/camp", id: "bg-camp-home-night" },
+  n4: { category: "backgrounds/study", id: "bg-study-bamboo" },
+  n3: { category: "backgrounds/shrine", id: "bg-shrine-checkpoint" },
+  n2: { category: "backgrounds/shrine", id: "bg-shrine-achievements" },
+  n1: { category: "backgrounds/shrine", id: "bg-shrine-region-transition-torii" },
 };
 
 export const YAMA_EXPRESSION_ASSETS: Record<YamaExpression, ArtAssetRef> = {

@@ -1,8 +1,6 @@
 import contract from "@/lib/design-system/journey-path-contracts.json";
-import {
-  isRegionSlug,
-  type RegionSlug,
-} from "@/lib/design-system/regions";
+import { type RegionSlug } from "@/lib/design-system/regions";
+import { normalizeRegionSlug, isWorldSlug } from "@/lib/design-system/worlds";
 
 export type JourneyPathPoint = { x: number; y: number };
 
@@ -20,11 +18,21 @@ export const JOURNEY_SCROLL_ART_HEIGHT = contract.scrollArtHeight;
 export const JOURNEY_SCROLL_ART_ASPECT =
   JOURNEY_SCROLL_ART_WIDTH / JOURNEY_SCROLL_ART_HEIGHT;
 
-const DEFAULT_REGION: RegionSlug = "foothills";
+const DEFAULT_REGION: RegionSlug = "n5";
+
+const PATH_CONTRACT_JSON_KEYS: Record<RegionSlug, keyof typeof contract.regions> = {
+  n5: "n5",
+  n4: "mount-n4",
+  n3: "mount-n3",
+  n2: "mount-n2",
+  n1: "mount-n1",
+};
 
 export function getJourneyPathContract(regionSlug: string): JourneyPathContract | null {
-  if (!isRegionSlug(regionSlug)) return null;
-  return contract.regions[regionSlug] as JourneyPathContract;
+  const world = normalizeRegionSlug(regionSlug);
+  if (!isWorldSlug(world)) return null;
+  const key = PATH_CONTRACT_JSON_KEYS[world];
+  return contract.regions[key] as JourneyPathContract;
 }
 
 export function getJourneyPathSpine(

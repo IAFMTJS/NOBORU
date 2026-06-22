@@ -193,7 +193,7 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
             <Link href="/learn/reading">Back to Reading</Link>
           </Button>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/learn/mount-n5">Back to Mount N5</Link>
+            <Link href="/tree">Back to Realm of First Light</Link>
           </Button>
         </GlassPanel>
       ) : null}

@@ -1,7 +1,10 @@
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { regionTrailHref } from "@/features/learning/utils/trail-navigation";
-import type { RegionSlug } from "@/lib/design-system/regions";
+import { REGION_SLUGS, type RegionSlug } from "@/lib/design-system/regions";
+import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { getWorldJourneySpine } from "@/lib/design-system/journey-path-contracts";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
+import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 import type {
   WorldMapRegionAvailability,
   WorldMapRegionViewModel,
@@ -9,37 +12,47 @@ import type {
 } from "@/features/world-map/types/world-map.types";
 
 function resolveRegionAvailability(
-  availability: "available" | "locked",
-  progressPercent: number,
+  slug: RegionSlug,
+  journeyRegion: { availability: "available" | "locked"; progressPercent: number } | null,
 ): WorldMapRegionAvailability {
-  if (availability === "locked") return "locked";
-  if (progressPercent >= 100) return "completed";
+  if (!journeyRegion || journeyRegion.availability === "locked") return "locked";
+  if (journeyRegion.progressPercent >= 100) return "completed";
   return "available";
 }
 
 export function buildWorldMapViewModel(
   journey: JourneyPathViewModel,
+  passedTrialSlugs: ReadonlySet<string> = new Set(),
 ): WorldMapViewModel {
-  const currentRegionSlug = journey.position.currentRegionSlug;
+  const currentRegionSlug = normalizeRegionSlug(journey.position.currentRegionSlug);
   const worldSpine = getWorldJourneySpine("dark");
+  const journeyBySlug = new Map(
+    journey.regions.map((region) => [normalizeRegionSlug(region.slug), region]),
+  );
 
-  const regions: WorldMapRegionViewModel[] = journey.regions.map((region, index, all) => {
+  const regions: WorldMapRegionViewModel[] = REGION_SLUGS.map((slug, index) => {
+    const journeyRegion = journeyBySlug.get(slug);
+    const access = resolveRegionAccess(slug, passedTrialSlugs);
+    const visuals = getRegionVisuals(slug);
     const spineIndex =
-      all.length <= 1
+      REGION_SLUGS.length <= 1
         ? 0
-        : Math.round((index / (all.length - 1)) * (worldSpine.length - 1));
+        : Math.round((index / (REGION_SLUGS.length - 1)) * (worldSpine.length - 1));
     const spatial = worldSpine[spineIndex] ?? { x: 50, y: 50 };
 
+    const progressPercent = journeyRegion?.progressPercent ?? 0;
+    const availability =
+      access.availability === "locked"
+        ? "locked"
+        : resolveRegionAvailability(slug, journeyRegion ?? null);
+
     return {
-      slug: region.slug as RegionSlug,
-      name: region.name,
-      progressPercent: region.progressPercent,
-      availability: resolveRegionAvailability(
-        region.availability,
-        region.progressPercent,
-      ),
-      isCurrent: region.slug === currentRegionSlug,
-      href: regionTrailHref(region.slug),
+      slug,
+      name: journeyRegion?.name ?? visuals.label,
+      progressPercent,
+      availability,
+      isCurrent: slug === currentRegionSlug,
+      href: slug === "n5" || availability !== "locked" ? regionTrailHref(slug) : "/tree",
       position: {
         x: spatial.x,
         y: spatial.y,

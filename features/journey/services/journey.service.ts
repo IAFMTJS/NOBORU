@@ -14,6 +14,7 @@ import type { UserProgressRow } from "@/features/learning/types/progress.types";
 import { getCachedProgressRows } from "@/lib/cache/user-progress-cache";
 import { journeyLandmarkRepository } from "@/features/journey/repositories/journey-landmark.repository";
 import { augmentRegionsWithBlueprint } from "@/features/journey/utils/journey-blueprint-merge.utils";
+import { resolveWorldLandmarks } from "@/features/worlds/utils/world-landmarks.utils";
 import type { JourneyLandmarkContent } from "@/features/journey/types/journey-content.types";
 import {
   buildJourneyPathFromData,
@@ -106,11 +107,19 @@ class JourneyService {
         .map((region) => region.id),
     );
 
+    const grouped = groupLandmarksByRegionId(landmarks);
+    const landmarksByRegionId = new Map(
+      augmentedRegions.map((region) => [
+        region.id,
+        resolveWorldLandmarks(region.slug, region.id, grouped.get(region.id) ?? []),
+      ]),
+    );
+
     return buildJourneyPathFromData(
       augmentedRegions,
       progressRows,
       passedTrialSlugs,
-      groupLandmarksByRegionId(landmarks),
+      landmarksByRegionId,
     );
   }
 
@@ -149,7 +158,7 @@ class JourneyService {
     ]);
 
     return buildRegionJourney(regionPath, progressRows, passedTrialSlugs, {
-      cmsLandmarks: landmarks,
+      cmsLandmarks: resolveWorldLandmarks(region.slug, region.id, landmarks),
     });
   }
 }

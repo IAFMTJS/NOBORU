@@ -1,5 +1,15 @@
-import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
 import type { RegionSlug } from "@/lib/design-system/regions";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
+
+/** Curriculum placement zone — JWorld world / act ids for blueprint slots. */
+export type CurriculumZoneId =
+  | "n5_act_1"
+  | "n5_act_2"
+  | "n5_act_3"
+  | "n4_world"
+  | "n3_world"
+  | "n2_world"
+  | "n1_world";
 
 export type BlueprintNodeKind = "lesson" | "checkpoint" | "trial" | "landmark";
 export type BlueprintSpineRole = "main" | "branch";
@@ -8,7 +18,7 @@ export type BlueprintSegmentType = "main_spine" | "branch" | "cave";
 export type BlueprintSlot = {
   slotId: string;
   regionSlug: RegionSlug;
-  zoneId: WorldTreeZoneId;
+  zoneId: CurriculumZoneId;
   branchId: string;
   branchIndex: number;
   slotIndex: number;
@@ -22,7 +32,7 @@ export type BlueprintSlot = {
 
 type RegionGeneratorConfig = {
   regionSlug: RegionSlug;
-  zoneId: WorldTreeZoneId;
+  zoneId: CurriculumZoneId;
   targetSlots: number;
   branchNames: readonly string[];
 };
@@ -35,36 +45,27 @@ const LESSON_TYPES = [
   "listening",
 ] as const;
 
-/** Target lesson + checkpoint + trial slots per region (landmarks added at runtime). */
+/** Target lesson + checkpoint + trial slots per world (landmarks added at runtime). */
 export const REGION_SLOT_TARGETS: Record<RegionSlug, number> = {
-  foothills: 20,
-  "forest-trail": 17,
-  "mount-n5": 95,
-  "mount-n4": 85,
-  "mount-n3": 180,
-  "mount-n2": 160,
-  "mount-n1": 110,
-  "master-summit": 20,
+  n5: 132,
+  n4: 85,
+  n3: 180,
+  n2: 160,
+  n1: 130,
 };
 
 const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
   {
-    regionSlug: "foothills",
-    zoneId: "deep_roots",
-    targetSlots: REGION_SLOT_TARGETS.foothills,
-    branchNames: ["Hiragana I", "Hiragana II", "Hiragana III", "Reading", "Base Camp"],
-  },
-  {
-    regionSlug: "forest-trail",
-    zoneId: "n5_roots",
-    targetSlots: REGION_SLOT_TARGETS["forest-trail"],
-    branchNames: ["Katakana I", "Katakana II", "Katakana III", "Reading"],
-  },
-  {
-    regionSlug: "mount-n5",
-    zoneId: "n5_roots",
-    targetSlots: REGION_SLOT_TARGETS["mount-n5"],
+    regionSlug: "n5",
+    zoneId: "n5_act_1",
+    targetSlots: REGION_SLOT_TARGETS.n5,
     branchNames: [
+      "Hiragana I",
+      "Hiragana II",
+      "Hiragana III",
+      "Katakana I",
+      "Katakana II",
+      "Katakana III",
       "Greetings",
       "Numbers",
       "Family",
@@ -72,13 +73,14 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
       "Places",
       "Time",
       "Verbs",
+      "Reading",
       "Review",
     ],
   },
   {
-    regionSlug: "mount-n4",
-    zoneId: "n4_foothills",
-    targetSlots: REGION_SLOT_TARGETS["mount-n4"],
+    regionSlug: "n4",
+    zoneId: "n4_world",
+    targetSlots: REGION_SLOT_TARGETS.n4,
     branchNames: [
       "Daily Life",
       "Actions",
@@ -91,9 +93,9 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
     ],
   },
   {
-    regionSlug: "mount-n3",
-    zoneId: "n3_trunk_1",
-    targetSlots: REGION_SLOT_TARGETS["mount-n3"],
+    regionSlug: "n3",
+    zoneId: "n3_world",
+    targetSlots: REGION_SLOT_TARGETS.n3,
     branchNames: [
       "Grammar I",
       "Grammar II",
@@ -110,14 +112,14 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
     ],
   },
   {
-    regionSlug: "mount-n2",
-    zoneId: "n2_canopy",
-    targetSlots: REGION_SLOT_TARGETS["mount-n2"],
+    regionSlug: "n2",
+    zoneId: "n2_world",
+    targetSlots: REGION_SLOT_TARGETS.n2,
     branchNames: [
-      "Canopy Hub A",
-      "Canopy Hub B",
-      "Canopy Hub C",
-      "Canopy Hub D",
+      "Sky Hub A",
+      "Sky Hub B",
+      "Sky Hub C",
+      "Sky Hub D",
       "Grammar",
       "Vocabulary",
       "Kanji",
@@ -127,9 +129,9 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
     ],
   },
   {
-    regionSlug: "mount-n1",
-    zoneId: "n1_celestial",
-    targetSlots: REGION_SLOT_TARGETS["mount-n1"],
+    regionSlug: "n1",
+    zoneId: "n1_world",
+    targetSlots: REGION_SLOT_TARGETS.n1,
     branchNames: [
       "Crown Arm α",
       "Crown Arm β",
@@ -139,13 +141,9 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
       "Advanced Grammar",
       "Advanced Reading",
       "Advanced Listening",
+      "Summit Mastery",
+      "Infinite Review",
     ],
-  },
-  {
-    regionSlug: "master-summit",
-    zoneId: "n1_celestial",
-    targetSlots: REGION_SLOT_TARGETS["master-summit"],
-    branchNames: ["Summit Mastery", "Infinite Review"],
   },
 ];
 
@@ -261,8 +259,9 @@ export function resolveBlueprintSlot(
   regionSlug: string,
   lessonIndexInRegion: number,
 ): BlueprintSlot | null {
+  const world = normalizeRegionSlug(regionSlug);
   const regionSlots = WORLD_TREE_CURRICULUM_BLUEPRINT.filter(
-    (slot) => slot.regionSlug === regionSlug,
+    (slot) => slot.regionSlug === world,
   );
   return regionSlots[lessonIndexInRegion] ?? null;
 }

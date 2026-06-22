@@ -36,6 +36,9 @@ export const ACHIEVEMENT_RARITY_LABELS: Record<AchievementRarity, string> = {
   mythic: "Mythic",
 };
 
-export const MOUNT_N5_REGION_SLUG = "mount-n5";
+export const N5_REGION_SLUG = "n5";
+
+/** @deprecated Use N5_REGION_SLUG */
+export const MOUNT_N5_REGION_SLUG = N5_REGION_SLUG;
 
 export const RECENT_ACHIEVEMENTS_LIMIT = 3;

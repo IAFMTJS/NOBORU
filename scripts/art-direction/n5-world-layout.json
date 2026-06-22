@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "world": "n5",
+  "description": "Greybox layout — Realm of First Light. Spine + act bands for art authoring.",
+  "canvas": { "width": 1536, "height": 5120 },
+  "scrollMinHeightVh": 480,
+  "acts": [
+    {
+      "actIndex": 1,
+      "label": "Act I · Awakening",
+      "pathStart": 0,
+      "pathEnd": 0.28,
+      "yStartPercent": 72,
+      "yEndPercent": 94,
+      "sliceAsset": "bg-n5-act1"
+    },
+    {
+      "actIndex": 2,
+      "label": "Act II · First steps",
+      "pathStart": 0.28,
+      "pathEnd": 0.63,
+      "yStartPercent": 37,
+      "yEndPercent": 72,
+      "sliceAsset": "bg-n5-act2"
+    },
+    {
+      "actIndex": 3,
+      "label": "Act III · The climb begins",
+      "pathStart": 0.63,
+      "pathEnd": 1,
+      "yStartPercent": 6,
+      "yEndPercent": 37,
+      "sliceAsset": "bg-n5-act3"
+    }
+  ],
+  "heroZones": [
+    { "id": "ember-threshold", "pathPosition": 0.02, "anchor": { "x": 50, "y": 93 } },
+    { "id": "script-sanctum", "pathPosition": 0.12, "anchor": { "x": 48, "y": 82 } },
+    { "id": "kana-bridge", "pathPosition": 0.26, "anchor": { "x": 52, "y": 70 } },
+    { "id": "lantern-hamlet", "pathPosition": 0.38, "anchor": { "x": 44, "y": 58 } },
+    { "id": "market-bend", "pathPosition": 0.5, "anchor": { "x": 56, "y": 48 } },
+    { "id": "forest-torii", "pathPosition": 0.62, "anchor": { "x": 42, "y": 38 } },
+    { "id": "kanji-grove", "pathPosition": 0.72, "anchor": { "x": 54, "y": 28 } },
+    { "id": "first-slope-shrine", "pathPosition": 0.84, "anchor": { "x": 48, "y": 18 } },
+    { "id": "gate-of-ascent", "pathPosition": 0.98, "anchor": { "x": 50, "y": 8 } }
+  ],
+  "contractKey": "n5"
+}

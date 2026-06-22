@@ -24,6 +24,7 @@ import {
   resolveLandmarkPathPosition,
 } from "@/lib/design-system/journey-path-contracts";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
+import { resolveN5TrialDisplayTitle } from "@/features/worlds/constants/n5-trial-display.constants";
 
 type FlatLesson = {
   id: string;
@@ -369,7 +370,10 @@ export function buildRegionJourney(
       id: draft.lesson.id,
       lessonId: draft.lesson.id,
       kind: resolveNodeKind(draft.lesson.type),
-      label: draft.lesson.title,
+      label:
+        draft.lesson.type === "application"
+          ? resolveN5TrialDisplayTitle(draft.lesson.title, region.slug)
+          : draft.lesson.title,
       subtitle: resolveNodeSubtitle(draft.lesson.type, draft.lesson.xpReward),
       lessonType: draft.lesson.type,
       state,
@@ -528,7 +532,7 @@ export function resolveJourneyPositionFromPath(
   const lastNode = lastRegionJourney?.nodes.at(-1);
 
   return {
-    currentRegionSlug: fallbackRegion?.slug ?? "foothills",
+    currentRegionSlug: fallbackRegion?.slug ?? "n5",
     currentRegionIndex: Math.max(regions.length - 1, 0),
     currentLessonId: null,
     currentNodeId: lastNode?.id ?? null,

@@ -240,8 +240,11 @@ export const KATAKANA_CATALOG: KatakanaRow[] = [
   ),
 ];
 
-export const FOREST_TRAIL_REGION = {
-  slug: "forest-trail",
-  name: "Forest Trail",
-  trail: "Canopy Path",
+export const N5_KATAKANA_TRAIL = {
+  slug: "n5",
+  name: "Realm of First Light",
+  trail: "Kana Bridge",
 } as const;
+
+/** @deprecated Use N5_KATAKANA_TRAIL */
+export const FOREST_TRAIL_REGION = N5_KATAKANA_TRAIL;

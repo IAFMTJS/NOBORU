@@ -1,0 +1,17 @@
+---
+description: JLPT Five Worlds (JWorld) — update docs/JWorld when brainstorming realm design, world tree replacement, or JLPT world concepts
+alwaysApply: true
+---
+
+# JWorld brainstorm maintenance
+
+When the user is **brainstorming, sparring, or mindmapping** Noboru's JLPT worlds (five realms, world tree replacement, realm identity, portals, landmarks, guardians, or progression metaphor):
+
+1. **Read** `docs/JWorld/README.md` and relevant numbered files before adding new ideas.
+2. **Append** a dated entry to `docs/JWorld/CHANGELOG.md` (top of file) for every brainstorm session.
+3. **Update** the appropriate concept file (`01-direction.md` … `05-sensory-guardians.md`, `legacy-context.md`) — do not leave decisions only in chat.
+4. **Resolve tracking:** move settled items from open decisions in `04-sparring-and-decisions.md` into concept files; mark superseded ideas explicitly instead of deleting history.
+5. **Vocabulary:** Use five-world JWorld language (`n5`, acts, zones, landmarks). Do **not** use legacy region slugs (`foothills`, `forest-trail`, `mount-n5`) in concept docs — those belong only in `legacy-slugs.md` for migration.
+6. **No code** unless the user explicitly asks for implementation — JWorld is concept-only until promoted.
+
+**Promotion:** When a concept is approved for build, note it in CHANGELOG and link to the target implementation doc. Do not silently overwrite `jlpt-content-architecture.md` or code from JWorld alone.

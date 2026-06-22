@@ -36,15 +36,6 @@ export function artLibraryThemedPath(
   return pathWithTheme;
 }
 
-/** World Tree tile canvas — see scripts/art-direction/world-tree-manifest.json */
-export const WORLD_TREE_TILE_CANVAS = {
-  width: 1536,
-  height: 1024,
-  aspectRatio: 1536 / 1024,
-} as const;
-
-export const WORLD_TREE_SEAM_OVERLAP_PERCENT = 9.375; // 96px seam @ 1024px tile height (manifest v2)
-
 export const PROTOTYPE_BACKGROUNDS = {
   journey: {
     light: "backgrounds/camp/bg_camp_light_v1.png",

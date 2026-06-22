@@ -1,19 +1,11 @@
 import type { RegionSlug } from "@/lib/design-system/regions";
 import type { ArtAssetRef } from "@/lib/assets/art-mappings";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
 
 /**
- * Doc 02 narrative arcs — four major journey chapters.
- *
- * DUAL REGION MODEL (decision documented):
- * - Doc 02 defines 4 narrative arcs (Foot Hills → Forest → Temple Peak → Summit).
- * - The app also uses 8 JLPT mount slugs for progression granularity.
- * - `REGION_NARRATIVE_ARC` maps every JLPT slug to an arc; torii gates render at
- *   `NARRATIVE_ARC_ENTRY_REGION` boundaries. Both models coexist by design.
- *
- * @see docs/route-map.md
- * @see VISUAL MD FILES Document 02 Journey World System
+ * Journey narrative bands — one per JLPT world (JWorld five-world model).
  */
-export type NarrativeArcId = "foot-hills" | "forest-trail" | "temple-peak" | "summit";
+export type NarrativeArcId = "n5" | "n4" | "n3" | "n2" | "n1";
 
 export type NarrativeArc = {
   id: NarrativeArcId;
@@ -24,77 +16,83 @@ export type NarrativeArc = {
 };
 
 export const NARRATIVE_ARCS: Record<NarrativeArcId, NarrativeArc> = {
-  "foot-hills": {
-    id: "foot-hills",
-    name: "Foot Hills",
-    description: "Warm beginner slopes and village lanterns.",
+  n5: {
+    id: "n5",
+    name: "Realm of First Light",
+    description: "Warm dawn, script sanctum, and the first true climb.",
     gateIcon: { category: "ui/icons/nodes", id: "icon-node-region-foot-hills" },
     fogLevel: "low",
   },
-  "forest-trail": {
-    id: "forest-trail",
-    name: "Forest Trail",
-    description: "Denser woods and winding paths.",
+  n4: {
+    id: "n4",
+    name: "Realm of the Green Ascent",
+    description: "Bamboo valleys and deeper forest paths.",
     gateIcon: { category: "ui/icons/nodes", id: "icon-node-region-forest" },
     fogLevel: "heavy",
   },
-  "temple-peak": {
-    id: "temple-peak",
-    name: "Temple Peak",
-    description: "Sacred stairs and temple architecture.",
+  n3: {
+    id: "n3",
+    name: "Realm of the Cloudline",
+    description: "Stone ridges above the cloud sea.",
     gateIcon: { category: "ui/icons/nodes", id: "icon-node-region-temple-peak" },
     fogLevel: "sacred",
   },
-  summit: {
-    id: "summit",
-    name: "The Summit",
+  n2: {
+    id: "n2",
+    name: "Realm of the Sky Temple",
+    description: "Pagodas and wind above the veil.",
+    gateIcon: { category: "ui/icons/nodes", id: "icon-node-region-temple-peak" },
+    fogLevel: "sacred",
+  },
+  n1: {
+    id: "n1",
+    name: "Realm of the Celestial Summit",
     description: "The highest and most prestigious climb.",
     gateIcon: { category: "ui/icons/nodes", id: "icon-node-region-summit" },
     fogLevel: "none",
   },
 };
 
-/** JLPT mount regions mapped to narrative arcs (both models coexist). */
+/** World slug maps to itself for narrative purposes. */
 export const REGION_NARRATIVE_ARC: Record<RegionSlug, NarrativeArcId> = {
-  foothills: "foot-hills",
-  "forest-trail": "forest-trail",
-  "mount-n5": "foot-hills",
-  "mount-n4": "forest-trail",
-  "mount-n3": "temple-peak",
-  "mount-n2": "temple-peak",
-  "mount-n1": "temple-peak",
-  "master-summit": "summit",
+  n5: "n5",
+  n4: "n4",
+  n3: "n3",
+  n2: "n2",
+  n1: "n1",
 };
 
-/** First region slug in each arc — major torii gate placement. */
 export const NARRATIVE_ARC_ENTRY_REGION: Record<NarrativeArcId, RegionSlug> = {
-  "foot-hills": "foothills",
-  "forest-trail": "forest-trail",
-  "temple-peak": "mount-n3",
-  summit: "master-summit",
+  n5: "n5",
+  n4: "n4",
+  n3: "n3",
+  n2: "n2",
+  n1: "n1",
 };
 
-export function getNarrativeArcForRegion(slug: RegionSlug): NarrativeArc {
-  return NARRATIVE_ARCS[REGION_NARRATIVE_ARC[slug]];
+export function getNarrativeArcForRegion(slug: string): NarrativeArc {
+  const world = normalizeRegionSlug(slug);
+  return NARRATIVE_ARCS[world];
 }
 
-export function isNarrativeArcEntryRegion(slug: RegionSlug): boolean {
-  const arcId = REGION_NARRATIVE_ARC[slug];
-  return NARRATIVE_ARC_ENTRY_REGION[arcId] === slug;
+export function isNarrativeArcEntryRegion(slug: string): boolean {
+  const world = normalizeRegionSlug(slug);
+  return NARRATIVE_ARC_ENTRY_REGION[world] === world;
 }
 
-/** Weather band per narrative arc — Doc 02 atmospheric progression. */
 export function getNarrativeArcWeatherZone(
   arcId: NarrativeArcId,
 ): "base" | "mid" | "upper" | "summit" {
   switch (arcId) {
-    case "foot-hills":
+    case "n5":
       return "base";
-    case "forest-trail":
+    case "n4":
       return "mid";
-    case "temple-peak":
+    case "n3":
+      return "mid";
+    case "n2":
       return "upper";
-    case "summit":
+    case "n1":
       return "summit";
     default:
       return "mid";

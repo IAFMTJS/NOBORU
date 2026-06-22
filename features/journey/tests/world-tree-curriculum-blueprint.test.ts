@@ -29,8 +29,8 @@ describe("world-tree-curriculum-blueprint", () => {
   });
 
   it("resolves slots by region index", () => {
-    const slot = resolveBlueprintSlot("mount-n5", 0);
-    expect(slot?.regionSlug).toBe("mount-n5");
+    const slot = resolveBlueprintSlot("n5", 0);
+    expect(slot?.regionSlug).toBe("n5");
     expect(slot?.kind).toBe("lesson");
   });
 });

@@ -11,8 +11,8 @@ const journeyFixture: JourneyPathViewModel = {
   regions: [
     {
       id: "r1",
-      slug: "foothills",
-      name: "Foothills",
+      slug: "n5",
+      name: "Realm of First Light",
       description: null,
       availability: "available",
       lockReason: null,
@@ -53,11 +53,11 @@ const journeyFixture: JourneyPathViewModel = {
     },
     {
       id: "r2",
-      slug: "forest-trail",
-      name: "Forest Trail",
+      slug: "n4",
+      name: "Realm of the Green Ascent",
       description: null,
       availability: "locked",
-      lockReason: "Complete Foothills",
+      lockReason: "Complete Final N5 Trial",
       lessonCount: 1,
       completedCount: 0,
       progressPercent: 0,
@@ -66,7 +66,7 @@ const journeyFixture: JourneyPathViewModel = {
     },
   ],
   position: {
-    currentRegionSlug: "foothills",
+    currentRegionSlug: "n5",
     currentRegionIndex: 0,
     currentLessonId: "l2",
     currentNodeId: "n2",
@@ -82,6 +82,6 @@ describe("journey-world.utils", () => {
   it("finds nodes and regions across the full path", () => {
     expect(findJourneyNodeById(journeyFixture, "n2")?.label).toBe("Lesson 2");
     expect(resolveGlobalCurrentNode(journeyFixture)?.id).toBe("n2");
-    expect(resolveGlobalCurrentRegion(journeyFixture)?.slug).toBe("foothills");
+    expect(resolveGlobalCurrentRegion(journeyFixture)?.slug).toBe("n5");
   });
 });

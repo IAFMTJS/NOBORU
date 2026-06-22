@@ -68,16 +68,6 @@ function shouldSkipPublish() {
   if (!existsSync(SRC)) return false;
   const destMarker = join(DEST, "icons");
   if (!existsSync(destMarker)) return false;
-  const jlptBandMarker = join(
-    DEST,
-    "world-tree/jlpt-bands/n5/wt_jlpt_n5_light_v1.webp",
-  );
-  const segmentMarker = join(
-    DEST,
-    "world-tree/segments/roots_a/wt_roots_a_light_v2.webp",
-  );
-  if (!existsSync(jlptBandMarker)) return false;
-  if (!existsSync(segmentMarker)) return false;
   return newestMtime(DEST) >= newestMtime(SRC);
 }
 

@@ -1,46 +1,61 @@
-import { WorldTreeScreen } from "@/features/journey/components/world-tree-screen";
-import { isWorldTreeJlptBandId } from "@/features/journey/constants/world-tree-jlpt-band.constants";
-import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
-import { buildWorldTreeLayout } from "@/features/journey/utils/world-tree-layout.utils";
-import { resolveWorldTreeScrollFocus } from "@/features/journey/utils/world-tree-scroll-focus.utils";
-import { getJourneyPathWithContext } from "@/lib/orchestration/learn.orchestrator";
-
-type TreePageProps = {
-  searchParams: Promise<{
-    region?: string;
-    node?: string;
-    zone?: string;
-    jlpt?: string;
-  }>;
-};
-
-/** Tree tab — full N5→N1 World Tree overview with art stack and every major region. */
-export default async function TreePage({ searchParams }: TreePageProps) {
-  const params = await searchParams;
-  const { journey, currentRegionSlug, profileStats } = await getJourneyPathWithContext();
-  const layout = buildWorldTreeLayout(journey);
-
-  const scrollFocus = resolveWorldTreeScrollFocus(journey, layout, {
-    highlightNodeId: params.node ?? null,
-    regionSlug: params.region ?? null,
-    zoneId: (params.zone as WorldTreeZoneId | undefined) ?? null,
-    jlptBandId:
-      params.jlpt && isWorldTreeJlptBandId(params.jlpt) ? params.jlpt : null,
-  });
-
-  const currentRegion =
-    journey.regions.find((region) => region.slug === currentRegionSlug) ??
-    journey.regions[0];
-
-  return (
-    <WorldTreeScreen
-      journey={journey}
-      regionName={currentRegion?.name ?? "World Tree"}
-      focusYPercent={scrollFocus.focusYPercent}
-      anchorScrollToBottom={scrollFocus.anchorScrollToBottom}
-      highlightNodeId={scrollFocus.highlightNodeId}
-      focusJlptBandId={scrollFocus.focusJlptBandId}
-      profileStats={profileStats}
-    />
-  );
-}
+import { N5WorldScreen } from "@/features/worlds/components/n5-world-screen";
+import { getJourneyPathWithContext } from "@/lib/orchestration/learn.orchestrator";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
+
+type TreePageProps = {
+  searchParams: Promise<{
+    node?: string;
+    region?: string;
+    unlock?: string;
+  }>;
+};
+
+/** N5 journey canvas — Realm of First Light (JWorld v1). */
+export default async function TreePage({ searchParams }: TreePageProps) {
+  const params = await searchParams;
+  const { journey, profileStats } = await getJourneyPathWithContext();
+
+  const targetWorld = normalizeRegionSlug(params.region ?? "n5");
+  const region =
+    journey.regions.find((entry) => normalizeRegionSlug(entry.slug) === targetWorld) ??
+    journey.regions.find((entry) => normalizeRegionSlug(entry.slug) === "n5") ??
+    journey.regions[0];
+
+  if (!region) {
+    return (
+      <div className="mx-auto flex h-content max-w-phone flex-col items-center justify-center gap-4 px-4">
+        <p className="text-body text-muted-foreground">No journey regions are published yet.</p>
+      </div>
+    );
+  }
+
+  if (targetWorld !== "n5") {
+    return (
+      <div className="mx-auto flex h-content max-w-phone flex-col gap-6 px-4 py-8">
+        <header className="space-y-2">
+          <h1 className="text-title font-semibold text-foreground">{region.name}</h1>
+          <p className="text-body-sm text-muted-foreground">
+            This world unlocks after you complete the Realm of First Light. Continue on the N5
+            trail for now.
+          </p>
+        </header>
+        <a
+          href="/tree"
+          className="inline-flex h-12 items-center justify-center rounded-button bg-primary px-4 text-body font-semibold text-primary-foreground"
+        >
+          Return to Realm of First Light
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <N5WorldScreen
+      region={region}
+      currentNodeId={journey.position.currentNodeId}
+      focusNodeId={params.node ?? journey.position.currentNodeId}
+      showPortal={params.unlock === "n4"}
+      profileStats={profileStats}
+    />
+  );
+}

@@ -8,22 +8,18 @@ import type {
   RegionPathViewModel,
   UnitSummaryViewModel,
 } from "@/features/learning/types/lesson.types";
+import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { REGION_SLUGS, type RegionSlug } from "@/lib/design-system/regions";
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
 
-const REGION_META: Record<
-  RegionSlug,
-  { name: string; description: string }
-> = {
-  foothills: { name: "Foothills", description: "Hiragana foundations" },
-  "forest-trail": { name: "Forest Trail", description: "Katakana trail" },
-  "mount-n5": { name: "Mount N5", description: "JLPT N5 ascent" },
-  "mount-n4": { name: "Mount N4", description: "JLPT N4 ascent" },
-  "mount-n3": { name: "Mount N3", description: "JLPT N3 trunk rings" },
-  "mount-n2": { name: "Mount N2", description: "JLPT N2 canopy" },
-  "mount-n1": { name: "Mount N1", description: "JLPT N1 celestial crown" },
-  "master-summit": { name: "Master Summit", description: "Post-N1 mastery" },
-};
+const REGION_META: Record<RegionSlug, { name: string; description: string }> =
+  Object.fromEntries(
+    REGION_SLUGS.map((slug) => {
+      const visuals = getRegionVisuals(slug);
+      return [slug, { name: visuals.label, description: visuals.label }];
+    }),
+  ) as Record<RegionSlug, { name: string; description: string }>;
 
 function blueprintKindToLessonType(slot: BlueprintSlot): string {
   if (slot.kind === "checkpoint") return "practice";
@@ -214,17 +210,38 @@ function buildRegionFromBlueprint(
 }
 
 /**
- * Ensures every canonical region exists and matches the curriculum blueprint slot count.
+ * Ensures every canonical world exists and matches the curriculum blueprint slot count.
  * Virtual draft lessons fill gaps when CMS content or migrations are not yet applied.
+ * Legacy region slugs (foothills, mount-n5, …) merge into their JLPT world.
  */
 export function augmentRegionsWithBlueprint(
   regions: RegionPathViewModel[],
   passedTrialSlugs: ReadonlySet<string>,
 ): RegionPathViewModel[] {
-  const bySlug = new Map(regions.map((region) => [region.slug, region]));
+  const byWorld = new Map<RegionSlug, RegionPathViewModel>();
+
+  for (const region of regions) {
+    const world = normalizeRegionSlug(region.slug);
+    const existing = byWorld.get(world);
+    if (!existing) {
+      byWorld.set(
+        world,
+        world === region.slug ? region : { ...region, slug: world },
+      );
+      continue;
+    }
+
+    byWorld.set(world, {
+      ...existing,
+      slug: world,
+      lessonCount: existing.lessonCount + region.lessonCount,
+      completedCount: existing.completedCount + region.completedCount,
+      units: [...existing.units, ...region.units],
+    });
+  }
 
   return REGION_SLUGS.map((slug) => {
-    const existing = bySlug.get(slug);
+    const existing = byWorld.get(slug);
     return buildRegionFromBlueprint(slug, passedTrialSlugs, existing);
   });
 }

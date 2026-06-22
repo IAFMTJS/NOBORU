@@ -1,9 +1,7 @@
 import { RELEASE } from "@/lib/release/release.constants";
 
 export type LaunchCriterionId =
-  | "foothills"
-  | "forest_trail"
-  | "n5"
+  | "n5_world"
   | "review_engine"
   | "offline"
   | "pwa"
@@ -22,19 +20,10 @@ export type LaunchCriterionDefinition = {
 
 export const LAUNCH_CRITERIA: LaunchCriterionDefinition[] = [
   {
-    id: "foothills",
-    label: "Foothills Complete",
-    description: "Hiragana region published with trail lessons.",
-  },
-  {
-    id: "forest_trail",
-    label: "Forest Trail Complete",
-    description: "Katakana region published with trail lessons.",
-  },
-  {
-    id: "n5",
-    label: "N5 Complete",
-    description: "Mount N5 vocabulary, grammar, kanji, reading, listening, and trials.",
+    id: "n5_world",
+    label: "N5 World Complete",
+    description:
+      "Realm of First Light published — hiragana, katakana, N5 curriculum, and trials.",
   },
   {
     id: "review_engine",
@@ -83,7 +72,8 @@ export const LAUNCH_CRITERIA: LaunchCriterionDefinition[] = [
   },
 ];
 
-export const REQUIRED_LAUNCH_REGIONS = ["foothills", "forest-trail", "mount-n5"] as const;
+/** Published JLPT worlds required for MVP launch. */
+export const REQUIRED_LAUNCH_REGIONS = ["n5"] as const;
 
 export function getReleaseChannel(): "beta" | "official" {
   return RELEASE.isBeta ? "beta" : "official";

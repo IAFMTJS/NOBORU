@@ -20,7 +20,6 @@ Authoritative project documentation. All implementation must reference these doc
 | [user-flows.md](./user-flows.md) | Key user journeys |
 | [information-architecture.md](./information-architecture.md) | Routes, nav, content hierarchy |
 | [immersive-navigation-system.md](./immersive-navigation-system.md) | Bottom nav as in-world destinations |
-| [world-map-learning-journey-system.md](./world-map-learning-journey-system.md) | Journey map and learning path rebuild |
 | [training-grounds-system.md](./training-grounds-system.md) | Mastery practice separate from journey |
 
 ## Design
@@ -47,13 +46,12 @@ Authoritative project documentation. All implementation must reference these doc
 
 | Document | Purpose |
 |----------|---------|
+| [JWorld/](./JWorld/README.md) | **Living brainstorm** — five JLPT worlds (replaces World Tree concept) |
 | [jlpt-content-architecture.md](./jlpt-content-architecture.md) | JLPT curriculum structure |
 | [NOBORU LEARNING ARCHITECTURE BIBLE.md](./NOBORU%20LEARNING%20ARCHITECTURE%20BIBLE.md) | Learning progression, pools, mastery, golden content rule |
 | [features/daily-challenges/docs/README.md](../features/daily-challenges/docs/README.md) | Bible retention daily challenges (distinct from gamification quests) |
 
 Route: `/daily-challenge` — retention UI (memory maintenance, not progression).
-| [World tree bible.md](./World%20tree%20bible.md) | World Tree art and asset specification |
-| [Skeleton world tree.md](./Skeleton%20world%20tree.md) | World Tree structural layout |
 | [content-pipeline.md](./content-pipeline.md) | Content creation workflow |
 | [content-strategy.md](./content-strategy.md) | Content ownership and CMS |
 | [game-design.md](./game-design.md) | Games and trials |

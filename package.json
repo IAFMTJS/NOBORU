@@ -19,15 +19,10 @@
     "test:watch": "vitest",
     "assets:validate": "node scripts/art-direction/validate-mappings.mjs",
     "assets:publish-library": "node scripts/art-direction/publish-art-library.mjs",
-    "assets:publish-world-tree-jlpt": "node scripts/art-direction/publish-world-tree-jlpt-bands.mjs",
-    "assets:publish-world-tree-segments": "node scripts/art-direction/publish-world-tree-segments.mjs",
-    "assets:publish-world-tree": "node scripts/art-direction/publish-world-tree-jlpt-bands.mjs && node scripts/art-direction/publish-world-tree-segments.mjs",
     "assets:audit-immersion": "node scripts/art-direction/audit-immersion.mjs",
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
-    "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs",
-    "assets:preview-world-tree-composition": "node scripts/art-direction/preview-world-tree-composition.mjs",
-    "assets:export-world-tree-audit": "node scripts/art-direction/export-world-tree-page-audit.mjs"
+    "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",

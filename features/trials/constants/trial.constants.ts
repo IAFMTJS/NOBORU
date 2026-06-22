@@ -55,23 +55,26 @@ export function computeTrialEpReward(
   return Math.round(baseReward * TRIAL_GRADE_EP_MULTIPLIER[grade]);
 }
 
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
+
 export function buildReviewRecommendations(
   scorePercent: number,
   regionSlug: string,
 ): string[] {
   const recommendations: string[] = [];
+  const world = normalizeRegionSlug(regionSlug);
 
   if (scorePercent < 80) {
     recommendations.push("Review your SRS queue for weak items.");
   }
-  if (regionSlug === "foothills" || regionSlug === "forest-trail") {
+  if (world === "n5" && (regionSlug === "foothills" || regionSlug === "forest-trail")) {
     recommendations.push("Practice character charts before retrying.");
   }
-  if (regionSlug === "mount-n5") {
+  if (world === "n5") {
     recommendations.push("Revisit N5 vocabulary and grammar lessons on the trail.");
     recommendations.push("Complete reading and listening exercises for comprehension.");
   }
-  if (regionSlug === "mount-n4") {
+  if (world === "n4") {
     recommendations.push("Revisit N4 vocabulary and grammar lessons on the trail.");
     recommendations.push("Complete N4 reading and listening exercises for comprehension.");
   }

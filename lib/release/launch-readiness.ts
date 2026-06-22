@@ -1,6 +1,5 @@
-import { LAUNCH_CRITERIA, REQUIRED_LAUNCH_REGIONS } from "@/lib/release/launch.constants";
+import { getN5WorldLaunchChecks } from "@/lib/release/n5-world-launch-check";
 import { RELEASE } from "@/lib/release/release.constants";
-import { createClient } from "@/lib/supabase/server";
 
 export type LaunchCheckStatus = "pass" | "fail" | "unknown";
 
@@ -98,66 +97,7 @@ export function getStaticLaunchChecks(): LaunchCheckResult[] {
 }
 
 export async function getContentLaunchChecks(): Promise<LaunchCheckResult[]> {
-  const supabase = await createClient();
-  const { data: regions, error } = await supabase
-    .from("regions")
-    .select("slug, status")
-    .in("slug", [...REQUIRED_LAUNCH_REGIONS]);
-
-  if (error) {
-    return LAUNCH_CRITERIA.filter((criterion) =>
-      ["foothills", "forest_trail", "n5"].includes(criterion.id),
-    ).map((criterion) =>
-      fail(criterion.id, criterion.label, criterion.description, error.message),
-    );
-  }
-
-  const regionBySlug = new Map((regions ?? []).map((region) => [region.slug, region.status]));
-
-  return [
-    regionBySlug.get("foothills") === "published"
-      ? pass(
-          "foothills",
-          "Foothills Complete",
-          "Hiragana region published with trail lessons.",
-        )
-      : fail(
-          "foothills",
-          "Foothills Complete",
-          "Hiragana region published with trail lessons.",
-          regionBySlug.has("foothills")
-            ? `Status: ${regionBySlug.get("foothills") ?? "unknown"}`
-            : "Region missing",
-        ),
-    regionBySlug.get("forest-trail") === "published"
-      ? pass(
-          "forest_trail",
-          "Forest Trail Complete",
-          "Katakana region published with trail lessons.",
-        )
-      : fail(
-          "forest_trail",
-          "Forest Trail Complete",
-          "Katakana region published with trail lessons.",
-          regionBySlug.has("forest-trail")
-            ? `Status: ${regionBySlug.get("forest-trail") ?? "unknown"}`
-            : "Region missing",
-        ),
-    regionBySlug.get("mount-n5") === "published"
-      ? pass(
-          "n5",
-          "N5 Complete",
-          "Mount N5 vocabulary, grammar, kanji, reading, listening, and trials.",
-        )
-      : fail(
-          "n5",
-          "N5 Complete",
-          "Mount N5 vocabulary, grammar, kanji, reading, listening, and trials.",
-          regionBySlug.has("mount-n5")
-            ? `Status: ${regionBySlug.get("mount-n5") ?? "unknown"}`
-            : "Region missing",
-        ),
-  ];
+  return getN5WorldLaunchChecks();
 }
 
 export async function getLaunchReadinessReport(): Promise<{

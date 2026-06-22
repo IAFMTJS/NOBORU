@@ -64,6 +64,18 @@ export async function getJourneyPath(): Promise<JourneyPathViewModel> {
   return journeyService.getJourneyPath(userId);
 }
 
+export async function getWorldMapViewModel() {
+  const userId = await requireAuthenticatedUserId();
+  const [journey, passedTrialSlugs] = await Promise.all([
+    journeyService.getJourneyPath(userId),
+    learningPathService.getPassedTrialSlugs(userId),
+  ]);
+  const { buildWorldMapViewModel } = await import(
+    "@/features/world-map/services/world-map.service"
+  );
+  return buildWorldMapViewModel(journey, passedTrialSlugs);
+}
+
 export async function getJourneyPathWithContext(): Promise<{
   journey: JourneyPathViewModel;
   currentRegionSlug: string;
@@ -90,7 +102,7 @@ export async function getJourneyPathWithContext(): Promise<{
       journey.position.currentRegionSlug ??
       profile?.currentRegionSlug ??
       journey.regions[0]?.slug ??
-      "foothills",
+      "n5",
     profileStats: profile
       ? {
           displayName: profile.displayName,

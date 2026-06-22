@@ -25,8 +25,9 @@ export function WorldMapRegionNode({ region }: WorldMapRegionNodeProps) {
         "w-[min(11rem,42vw)] rounded-2xl border p-3 transition-all",
         glass,
         tokens?.border,
-        isLocked && "opacity-45 saturate-50",
-        region.isCurrent && "border-primary/50 ring-2 ring-primary/30 shadow-elevation-2",
+        isLocked && "opacity-45 saturate-50 blur-[0.4px]",
+        region.isCurrent && region.slug === "n5" && "border-trail-glow/50 ring-2 ring-trail-glow/35 shadow-elevation-2",
+        region.isCurrent && region.slug !== "n5" && "border-primary/50 ring-2 ring-primary/30 shadow-elevation-2",
         isCompleted && !region.isCurrent && "border-success/30",
       )}
     >

@@ -1,3 +1,5 @@
+import { normalizeRegionSlug } from "@/lib/design-system/worlds";
+
 export type RegionAvailability = "available" | "locked";
 
 export type RegionAccessViewModel = {
@@ -6,11 +8,10 @@ export type RegionAccessViewModel = {
 };
 
 export const REGION_PREREQUISITE_TRIAL_SLUGS: Record<string, string> = {
-  "mount-n4": "n5-final-trial",
-  "mount-n3": "n4-final-trial",
-  "mount-n2": "n3-final-trial",
-  "mount-n1": "n2-final-trial",
-  "master-summit": "n1-final-trial",
+  n4: "n5-final-trial",
+  n3: "n4-final-trial",
+  n2: "n3-final-trial",
+  n1: "n2-final-trial",
 };
 
 export const PREREQUISITE_TRIAL_LABELS: Record<string, string> = {
@@ -25,7 +26,8 @@ export function resolveRegionAccess(
   regionSlug: string,
   passedTrialSlugs: ReadonlySet<string>,
 ): RegionAccessViewModel {
-  const prerequisiteSlug = REGION_PREREQUISITE_TRIAL_SLUGS[regionSlug];
+  const worldSlug = normalizeRegionSlug(regionSlug);
+  const prerequisiteSlug = REGION_PREREQUISITE_TRIAL_SLUGS[worldSlug];
 
   if (!prerequisiteSlug) {
     return { availability: "available", lockReason: null };
@@ -40,6 +42,6 @@ export function resolveRegionAccess(
 
   return {
     availability: "locked",
-    lockReason: `Complete ${trialLabel} to unlock this region.`,
+    lockReason: `Complete ${trialLabel} to unlock this realm.`,
   };
 }

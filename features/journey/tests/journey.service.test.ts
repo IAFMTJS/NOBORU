@@ -88,7 +88,7 @@ describe("resolveNodeKind", () => {
 describe("buildRegionJourney", () => {
   it("assigns lesson nodes along the regional path contract", () => {
     const region = makeRegion({
-      slug: "foothills",
+      slug: "n5",
       lessonCount: 3,
       units: [
         {
@@ -117,7 +117,7 @@ describe("buildRegionJourney", () => {
 
     const region = makeRegion({
       id: "region-cms",
-      slug: "foothills",
+      slug: "n5",
       lessonCount: lessons.length,
       units: [{ lessons }],
     });
@@ -150,7 +150,7 @@ describe("buildRegionJourney", () => {
     );
 
     const region = makeRegion({
-      slug: "forest-trail",
+      slug: "n5",
       lessonCount: lessons.length,
       units: [{ lessons }],
     });
@@ -166,7 +166,7 @@ describe("buildRegionJourney", () => {
 
   it("locks all nodes when the region trial prerequisite is missing", () => {
     const region = makeRegion({
-      slug: "mount-n4",
+      slug: "n4",
       availability: "locked",
       lockReason: "Complete Final N5 Trial to unlock this region.",
       lessonCount: 2,
@@ -186,7 +186,7 @@ describe("buildRegionJourney", () => {
 
   it("opens only the first incomplete lesson in sequence", () => {
     const region = makeRegion({
-      slug: "foothills",
+      slug: "n5",
       lessonCount: 3,
       units: [
         {
@@ -212,7 +212,7 @@ describe("buildRegionJourney", () => {
 
 describe("canAccessLessonInRegion", () => {
   const region = makeRegion({
-    slug: "foothills",
+    slug: "n5",
     lessonCount: 4,
     units: [
       {
@@ -238,7 +238,7 @@ describe("canAccessLessonInRegion", () => {
 
   it("blocks checkpoint access until prior lessons are complete", () => {
     const checkpointRegion = makeRegion({
-      slug: "foothills",
+      slug: "n5",
       lessonCount: 3,
       units: [
         {
@@ -256,7 +256,7 @@ describe("canAccessLessonInRegion", () => {
 
   it("blocks all lessons in a region locked by trial prerequisites", () => {
     const lockedRegion = makeRegion({
-      slug: "mount-n4",
+      slug: "n4",
       lessonCount: 1,
       units: [{ lessons: [makeLesson("1", "vocabulary")] }],
     });
@@ -270,7 +270,7 @@ describe("canAccessLessonInPath", () => {
     const regions: RegionPathViewModel[] = [
       {
         id: "region-1",
-        slug: "foothills",
+        slug: "n5",
         name: "Foothills",
         description: null,
         lessonCount: 1,
@@ -298,7 +298,7 @@ describe("canAccessLessonInPath", () => {
 
   it("honors progress rows over embedded lesson progress", () => {
     const region = makeRegion({
-      slug: "foothills",
+      slug: "n5",
       lessonCount: 2,
       units: [
         {
@@ -341,7 +341,7 @@ describe("draft CMS lessons", () => {
 
   it("does not block progression gate for published lessons after draft placeholders", () => {
     const region = makeRegion({
-      slug: "mount-n5",
+      slug: "n5",
       units: [
         {
           lessons: [

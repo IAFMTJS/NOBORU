@@ -43,9 +43,9 @@ export const ONBOARDING_COPY = {
     cta: "Continue",
   },
   region: {
-    title: "Welcome to the Foothills",
-    body: "Every summit begins at the base. Your first steps start here — hiragana, katakana, and the foundations of your climb.",
-    trail: "Base Camp Trail",
+    title: "Welcome to the Realm of First Light",
+    body: "Every summit begins with a first step. Hiragana, katakana, and your N5 climb all start here.",
+    trail: "Ember Threshold",
     cta: "Begin Climb",
   },
 } as const;
@@ -95,8 +95,11 @@ export const THEME_OPTIONS: Array<{
   { value: "dark", label: "Dark Mode", description: "Mountain Night" },
 ];
 
-export const FOOTHILLS_REGION = {
-  slug: "foothills",
-  name: "Foothills",
-  trail: "Base Camp Trail",
+export const N5_START_REGION = {
+  slug: "n5",
+  name: "Realm of First Light",
+  trail: "Ember Threshold",
 } as const;
+
+/** @deprecated Use N5_START_REGION */
+export const FOOTHILLS_REGION = N5_START_REGION;
