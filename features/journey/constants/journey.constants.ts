@@ -6,6 +6,12 @@ export const JOURNEY_SKELETON_MODE = true;
 /** When true, stack JLPT hero band art (transparent PNG) on the World Tree canvas. */
 export const JOURNEY_JLPT_BAND_ART = true;
 
+/**
+ * Hero islands bleed into adjacent JLPT bands at seams (canvas %).
+ * Legacy trunk transition PNGs are not used — heroes overlap + gradient junctions blend bands.
+ */
+export const JOURNEY_JLPT_HERO_SEAM_BLEED_PERCENT = 3.5;
+
 /** Insert a landmark destination every N lesson nodes along a regional path. */
 export const LANDMARK_EVERY_N_LESSONS = 5;
 

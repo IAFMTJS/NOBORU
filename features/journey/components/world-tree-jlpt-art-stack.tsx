@@ -166,6 +166,7 @@ export function WorldTreeJlptArtStack({
             zIndex: overlay.zIndex,
           }}
           data-jlpt-overlay={overlay.kind}
+          data-jlpt-junction={overlay.kind === "junction" ? overlay.id : undefined}
           data-jlpt-overlay-band={overlay.bandId}
         />
       ))}

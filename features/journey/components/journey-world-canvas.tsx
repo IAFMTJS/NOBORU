@@ -13,6 +13,7 @@ import { JourneySkeletonArtLayer } from "@/features/journey/components/journey-s
 import { JourneyWorldNodeLayer } from "@/features/journey/components/journey-world-node-layer";
 import { WorldTreeJlptArtStack } from "@/features/journey/components/world-tree-jlpt-art-stack";
 import { WorldTreeRealmBackdrop } from "@/features/journey/components/world-tree-realm-backdrop";
+import { WorldTreeUndergroundLayer } from "@/features/journey/components/world-tree-underground-layer";
 import { JOURNEY_JLPT_BAND_ART } from "@/features/journey/constants/journey.constants";
 import type { WorldTreeZoneId } from "@/features/journey/constants/world-tree-skeleton.constants";
 import {
@@ -24,6 +25,7 @@ import {
 import {
   resolveWorldTreeScrollTargetTop,
 } from "@/features/journey/utils/world-tree-scroll-focus.utils";
+import { resolveWorldTreeUndergroundHeightVh } from "@/features/journey/utils/world-tree-underground-layout.utils";
 import type { JourneyPathViewModel } from "@/features/journey/types/journey.types";
 import { cn } from "@/lib/utils";
 
@@ -75,6 +77,10 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
     );
     const canvasMinHeightVh = layout.canvasMinHeightVh;
     const isOverview = variant === "overview";
+    const showUnderground = isOverview && JOURNEY_JLPT_BAND_ART;
+    const undergroundHeightVh = showUnderground
+      ? resolveWorldTreeUndergroundHeightVh(canvasMinHeightVh)
+      : 0;
     const [visibleYBand, setVisibleYBand] = useState<WorldTreeVisibleYBand>({
       min: 0,
       max: 100,
@@ -199,6 +205,16 @@ export const JourneyWorldCanvas = forwardRef<JourneyWorldCanvasHandle, JourneyWo
               className="z-10"
             />
           </div>
+
+          {showUnderground ? (
+            <div
+              className="relative w-full border-t border-[#D6A85F]/10"
+              style={{ height: `${undergroundHeightVh}vh` }}
+              data-world-tree-underground-block
+            >
+              <WorldTreeUndergroundLayer className="h-full" />
+            </div>
+          ) : null}
         </div>
       </div>
     );

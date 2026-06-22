@@ -2,12 +2,11 @@ import type { WorldTreeJlptBandId } from "@/features/journey/constants/world-tre
 import type {
   WorldTreeJlptHeroAnchor,
   WorldTreeSegmentId,
-  WorldTreeTransitionId,
 } from "@/features/journey/constants/world-tree-jlpt-segment.constants";
 
 /** Vertical slot within a JLPT band (0 = band base, 1 = band crown). */
 export type JlptBandFillSlot = {
-  segmentId: WorldTreeSegmentId | WorldTreeTransitionId;
+  segmentId: WorldTreeSegmentId;
   /** Band-local start (0–1, bottom→top). */
   yStart: number;
   /** Band-local end (0–1). */
@@ -33,11 +32,6 @@ export type WorldTreeJlptZoneLayoutSpec = {
   };
   /** Puzzle pieces tiling gaps around / between hero zones. */
   fillSlots: readonly JlptBandFillSlot[];
-  transitionTop?: WorldTreeTransitionId;
-  /** Transition width (% viewport); wider for portrait seam assets. */
-  transitionWidthPercent?: number;
-  /** Transition height as share of band span (default 0.28). */
-  transitionHeightPercent?: number;
   /** Procedural gap mist tint (hex). */
   gapTint: string;
 };
@@ -54,24 +48,20 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
     trunkCenterX: 50,
     pathSway: 1.2,
     hero: { anchor: "bottom", yStart: 0.08, yEnd: 1, scale: 1.12 },
-    transitionWidthPercent: 52,
-    transitionHeightPercent: 0.28,
     fillSlots: [
-      { segmentId: "roots_a", yStart: 0, yEnd: 0.42, zIndex: 1 },
-      { segmentId: "roots_b", yStart: 0.12, yEnd: 0.52, xOffset: -8, zIndex: 2 },
-      { segmentId: "roots_c", yStart: 0.18, yEnd: 0.58, xOffset: 8, zIndex: 2 },
-      { segmentId: "roots_d", yStart: 0.05, yEnd: 0.35, widthPercent: 38, zIndex: 0 },
-      { segmentId: "roots_e", yStart: 0.34, yEnd: 0.74, widthPercent: 40, zIndex: 1 },
+      { segmentId: "roots_a", yStart: 0, yEnd: 0.48, zIndex: 1 },
+      { segmentId: "roots_b", yStart: 0.1, yEnd: 0.58, xOffset: -10, zIndex: 2 },
+      { segmentId: "roots_c", yStart: 0.16, yEnd: 0.64, xOffset: 10, zIndex: 2 },
+      { segmentId: "roots_d", yStart: 0.02, yEnd: 0.4, widthPercent: 42, zIndex: 0 },
+      { segmentId: "roots_e", yStart: 0.28, yEnd: 0.78, widthPercent: 44, zIndex: 1 },
+      { segmentId: "roots_d", yStart: 0.55, yEnd: 0.92, xOffset: -6, widthPercent: 36, zIndex: 1 },
     ],
     gapTint: "#8B4A42",
-    transitionTop: "transition_root_to_trunk",
   },
   n4: {
     trunkCenterX: 50,
     pathSway: 1.4,
     hero: { anchor: "center", yStart: 0.06, yEnd: 0.98, scale: 1.08 },
-    transitionWidthPercent: 54,
-    transitionHeightPercent: 0.28,
     fillSlots: [
       { segmentId: "roots_e", yStart: 0, yEnd: 0.38, zIndex: 1 },
       { segmentId: "trunk_a", yStart: 0.08, yEnd: 0.55, zIndex: 2 },
@@ -80,14 +70,11 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
       { segmentId: "trunk_c", yStart: 0.66, yEnd: 1, widthPercent: 40, zIndex: 2 },
     ],
     gapTint: "#8B6B2E",
-    transitionTop: "transition_trunk_to_ancient",
   },
   n3: {
     trunkCenterX: 50,
     pathSway: 1.6,
     hero: { anchor: "center", yStart: 0.06, yEnd: 0.98, scale: 1.1 },
-    transitionWidthPercent: 74,
-    transitionHeightPercent: 0.3,
     fillSlots: [
       { segmentId: "trunk_c", yStart: 0, yEnd: 0.45, zIndex: 1 },
       { segmentId: "trunk_d", yStart: 0.15, yEnd: 0.58, zIndex: 2 },
@@ -96,14 +83,11 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
       { segmentId: "trunk_g", yStart: 0.62, yEnd: 1, xOffset: 4, zIndex: 1 },
     ],
     gapTint: "#3D6B3A",
-    transitionTop: "transition_ancient_to_canopy",
   },
   n2: {
     trunkCenterX: 50,
     pathSway: 1.5,
     hero: { anchor: "top", yStart: 0, yEnd: 0.92, scale: 1.1 },
-    transitionWidthPercent: 58,
-    transitionHeightPercent: 0.28,
     fillSlots: [
       { segmentId: "canopy_a", yStart: 0.18, yEnd: 0.62, zIndex: 2 },
       { segmentId: "canopy_b", yStart: 0.08, yEnd: 0.52, xOffset: -6, zIndex: 3 },
@@ -112,7 +96,6 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
       { segmentId: "canopy_e", yStart: 0.72, yEnd: 1, xOffset: 4, zIndex: 0 },
       { segmentId: "canopy_c", yStart: 0.78, yEnd: 1, widthPercent: 42, zIndex: 1 },
     ],
-    transitionTop: "transition_canopy_to_celestial",
     gapTint: "#3A6B8B",
   },
   n1: {

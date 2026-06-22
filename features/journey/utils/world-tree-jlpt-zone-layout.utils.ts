@@ -10,6 +10,7 @@ import {
   type JlptBandFillSlot,
 } from "@/features/journey/constants/world-tree-jlpt-zone-layout.constants";
 import { WORLD_TREE_MANIFEST_ANCHORS } from "@/features/journey/constants/world-tree-skeleton.constants";
+import { JOURNEY_JLPT_HERO_SEAM_BLEED_PERCENT } from "@/features/journey/constants/journey.constants";
 import { worldTreeSegmentArtPath } from "@/features/journey/constants/world-tree-jlpt-segment.constants";
 import { worldTreeJlptBandArtPath } from "@/features/journey/constants/world-tree-jlpt-band.constants";
 import { resolveHeroObjectPosition } from "@/features/journey/constants/world-tree-jlpt-segment.constants";
@@ -49,7 +50,7 @@ export type PlacedOverlay = {
   zIndex: number;
   /** Inline CSS background (usually a gradient). */
   background: string;
-  kind: "crown" | "seam" | "fringe";
+  kind: "crown" | "seam" | "fringe" | "junction";
 };
 
 export type JlptZoneArtLayout = {
@@ -127,6 +128,52 @@ function computeGapSlots(
   return gaps.filter((g) => g.heightPercent > 0.3);
 }
 
+function applyHeroSeamBleed(
+  bandId: WorldTreeJlptBandId,
+  heroTop: number,
+  heroBottom: number,
+): { heroTop: number; heroBottom: number } {
+  const bleed = JOURNEY_JLPT_HERO_SEAM_BLEED_PERCENT;
+  let top = heroTop;
+  let bottom = heroBottom;
+
+  if (bandId !== "n1") {
+    top = Math.max(0, top - bleed);
+  }
+  if (bandId !== "n5") {
+    bottom = Math.min(100, bottom + bleed);
+  }
+
+  return { heroTop: top, heroBottom: bottom };
+}
+
+/** Gradient bridges between adjacent JLPT hero bands (replaces legacy transition PNGs). */
+function buildBandJunctionOverlays(): PlacedOverlay[] {
+  const bands = buildWorldTreeJlptBandLayout();
+  const junctionHeight = 5.5;
+  const overlays: PlacedOverlay[] = [];
+
+  for (let index = 0; index < bands.length - 1; index += 1) {
+    const lowerBand = bands[index]!;
+    const upperBand = bands[index + 1]!;
+    const boundaryY = lowerBand.yMin;
+    const lowerTint = WORLD_TREE_JLPT_ZONE_LAYOUT[lowerBand.id].gapTint;
+    const upperTint = WORLD_TREE_JLPT_ZONE_LAYOUT[upperBand.id].gapTint;
+
+    overlays.push({
+      id: `junction-${lowerBand.id}-${upperBand.id}`,
+      bandId: lowerBand.id,
+      topPercent: boundaryY - junctionHeight / 2,
+      heightPercent: junctionHeight,
+      zIndex: 22,
+      kind: "junction",
+      background: `linear-gradient(to top, ${lowerTint}55 0%, ${upperTint}44 38%, transparent 100%)`,
+    });
+  }
+
+  return overlays;
+}
+
 /** Build art placements for all five JLPT zones. */
 export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayout {
   const jlptBands = buildWorldTreeJlptBandLayout();
@@ -134,36 +181,19 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
   const heroes: PlacedHero[] = [];
   const gaps: PlacedGap[] = [];
   const overlays: PlacedOverlay[] = [];
-  const canvasBg = theme === "light" ? "#E9E1D0" : "#0D1320";
 
   for (const band of WORLD_TREE_JLPT_BANDS) {
     const layout = jlptBands.find((entry) => entry.id === band.id)!;
     const spec = WORLD_TREE_JLPT_ZONE_LAYOUT[band.id];
-    const span = layout.yMax - layout.yMin;
 
     spec.fillSlots.forEach((slot, index) => {
       fill.push(placeFillSlot(slot, layout, band.id, theme, index));
     });
 
-    if (spec.transitionTop) {
-      const transitionHeight = span * (spec.transitionHeightPercent ?? 0.28);
-      const transitionWidth =
-        spec.transitionWidthPercent ??
-        WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 18;
-      fill.push({
-        id: `${band.id}-transition`,
-        src: artLibraryPath(worldTreeSegmentArtPath(spec.transitionTop, theme)),
-        topPercent: layout.yMin - transitionHeight * 0.5,
-        heightPercent: transitionHeight,
-        widthPercent: transitionWidth,
-        leftPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent,
-        zIndex: 35,
-        kind: "transition",
-      });
-    }
+    let heroTop = bandLocalToCanvas(layout, spec.hero.yEnd);
+    let heroBottom = bandLocalToCanvas(layout, spec.hero.yStart);
+    ({ heroTop, heroBottom } = applyHeroSeamBleed(band.id, heroTop, heroBottom));
 
-    const heroTop = bandLocalToCanvas(layout, spec.hero.yEnd);
-    const heroBottom = bandLocalToCanvas(layout, spec.hero.yStart);
     heroes.push({
       id: `${band.id}-hero`,
       bandId: band.id,
@@ -179,42 +209,9 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
     });
 
     gaps.push(...computeGapSlots(band.id, layout, spec));
-
-    // Seam masking — light blend now that heroes fill more of each band.
-    const seamH = Math.max(1.8, span * 0.1);
-    const fringeH = Math.max(1.4, span * 0.08);
-    const crownH = Math.max(1.4, span * 0.09);
-
-    overlays.push({
-      id: `${band.id}-crown-mask`,
-      bandId: band.id,
-      topPercent: heroTop - crownH * 0.3,
-      heightPercent: crownH,
-      zIndex: 28,
-      kind: "crown",
-      background: `linear-gradient(to top, transparent 0%, ${spec.gapTint}33 32%, ${canvasBg}CC 82%, ${canvasBg} 100%)`,
-    });
-
-    overlays.push({
-      id: `${band.id}-seam-mask`,
-      bandId: band.id,
-      topPercent: heroBottom - seamH * 0.75,
-      heightPercent: seamH,
-      zIndex: 30,
-      kind: "seam",
-      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}44 24%, ${canvasBg}CC 80%, ${canvasBg} 100%)`,
-    });
-
-    overlays.push({
-      id: `${band.id}-fringe-mask`,
-      bandId: band.id,
-      topPercent: heroBottom - fringeH * 0.45,
-      heightPercent: fringeH,
-      zIndex: 31,
-      kind: "fringe",
-      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}28 22%, ${canvasBg}E0 68%, ${canvasBg} 100%)`,
-    });
   }
+
+  overlays.push(...buildBandJunctionOverlays());
 
   return { fill, heroes, gaps, overlays };
 }

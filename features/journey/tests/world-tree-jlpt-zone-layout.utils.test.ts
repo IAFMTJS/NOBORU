@@ -53,18 +53,34 @@ describe("buildJlptZoneArtLayout", () => {
     }
   });
 
-  it("places all four JLPT biome transition seams", () => {
+  it("does not place legacy trunk transition PNGs between hero bands", () => {
     const layout = buildJlptZoneArtLayout("light");
     const transitions = layout.fill.filter((piece) => piece.kind === "transition");
 
-    expect(transitions).toHaveLength(4);
-    expect(transitions.map((piece) => piece.id).sort()).toEqual([
-      "n2-transition",
-      "n3-transition",
-      "n4-transition",
-      "n5-transition",
+    expect(transitions).toHaveLength(0);
+  });
+
+  it("bridges adjacent hero bands with procedural junction gradients", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const junctions = layout.overlays.filter((overlay) => overlay.kind === "junction");
+
+    expect(junctions).toHaveLength(4);
+    expect(junctions.map((overlay) => overlay.id).sort()).toEqual([
+      "junction-n2-n1",
+      "junction-n3-n2",
+      "junction-n4-n3",
+      "junction-n5-n4",
     ]);
-    expect(transitions.every((piece) => piece.src.includes("/transitions/"))).toBe(true);
+  });
+
+  it("bleeds heroes into neighboring bands at seams", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const n4Hero = layout.heroes.find((hero) => hero.bandId === "n4")!;
+    const n5Hero = layout.heroes.find((hero) => hero.bandId === "n5")!;
+
+    expect(n4Hero.topPercent).toBeLessThan(60.4);
+    expect(n5Hero.topPercent).toBeLessThan(80);
+    expect(n4Hero.topPercent + n4Hero.heightPercent).toBeGreaterThan(78.8);
   });
 
   it("uses canopy and celestial fill art in N2 and N1 bands", () => {
@@ -88,14 +104,6 @@ describe("buildJlptZoneArtLayout", () => {
     expect(bands[4]?.yMax).toBe(20);
   });
 
-  it("uses a wide transition box for the ancient-to-canopy seam", () => {
-    const layout = buildJlptZoneArtLayout("light");
-    const n3Transition = layout.fill.find((piece) => piece.id === "n3-transition");
-
-    expect(n3Transition).toBeDefined();
-    expect(n3Transition!.widthPercent).toBeGreaterThanOrEqual(70);
-    expect(n3Transition!.heightPercent).toBeGreaterThan(5);
-  });
 
   it("allocates larger hero slots after layout tuning", () => {
     const layout = buildJlptZoneArtLayout("light");
