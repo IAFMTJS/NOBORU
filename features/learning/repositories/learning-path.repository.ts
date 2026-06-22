@@ -137,14 +137,15 @@ class LearningPathRepository {
       .maybeSingle();
 
     if (unitError) throw new Error(unitError.message);
-    if (!unit) {
+    const unitRow = unit as UnitRow | null;
+    if (!unitRow) {
       return { ...lesson, unit: null };
     }
 
     const { data: region, error: regionError } = await client
       .from("regions")
       .select("*")
-      .eq("id", unit.region_id)
+      .eq("id", unitRow.region_id)
       .maybeSingle();
 
     if (regionError) throw new Error(regionError.message);
@@ -152,7 +153,7 @@ class LearningPathRepository {
     return {
       ...lesson,
       unit: {
-        ...(unit as UnitRow),
+        ...unitRow,
         region: (region as RegionRow | null) ?? null,
       },
     };

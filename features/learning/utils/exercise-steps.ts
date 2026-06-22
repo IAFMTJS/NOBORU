@@ -187,12 +187,16 @@ export function buildActiveRecallStep(
   }
 
   const recall = buildRecallStep(content, allAnswers, index, total, "standard");
+  const acceptedAnswers =
+    content.type === "grammar"
+      ? buildAcceptedAnswers(surface)
+      : buildJapaneseSurfaceAcceptedAnswers(content);
   return withContentMeta(
     {
       ...recall,
       mode: "typed" as const,
       options: [],
-      acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
+      acceptedAnswers,
     },
     content,
     stage,

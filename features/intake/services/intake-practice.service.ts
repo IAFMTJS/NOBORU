@@ -81,6 +81,7 @@ function buildVocabularyRecallSteps(
         id: word.id,
         kana: word.kana,
         kanji: word.kanji,
+        romaji: null,
         meaning: word.meaning,
         partOfSpeech: word.part_of_speech,
         audioUrl: word.audio_url,

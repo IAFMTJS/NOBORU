@@ -19,6 +19,7 @@ function vocab(id: string): VocabularyLessonContent {
     id,
     kana: `kana-${id}`,
     kanji: null,
+    romaji: null,
     meaning: `meaning-${id}`,
     partOfSpeech: "noun",
     audioUrl: null,

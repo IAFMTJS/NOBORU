@@ -20,6 +20,7 @@ function vocab(id: string): VocabularyLessonContent {
     id,
     kana: `かな-${id}`,
     kanji: null,
+    romaji: null,
     meaning: `meaning-${id}`,
     partOfSpeech: "verb",
     audioUrl: null,

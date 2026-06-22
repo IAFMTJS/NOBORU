@@ -42,10 +42,10 @@ function resolveActOpacity(
   const y = viewportCenterYPercent;
   let opacity = 1;
 
-  if (zone.fadeInBelow) {
+  if ("fadeInBelow" in zone && zone.fadeInBelow) {
     opacity *= 1 - smoothstep(zone.fadeInBelow.start, zone.fadeInBelow.end, y);
   }
-  if (zone.fadeOutAbove) {
+  if ("fadeOutAbove" in zone && zone.fadeOutAbove) {
     opacity *= smoothstep(zone.fadeOutAbove.start, zone.fadeOutAbove.end, y);
   }
 

@@ -31,6 +31,7 @@ import { listeningProgressService } from "@/features/listening/services/listenin
 import { readingProgressService } from "@/features/reading/services/reading-progress.service";
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
+import { resolveVocabularyLessonRomaji } from "@/features/learning/utils/vocabulary-content.utils";
 import { LessonAccessDeniedError, LessonNotFoundError } from "@/features/learning/errors/lesson.errors";
 import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
@@ -133,7 +134,7 @@ class LessonService {
         id: row.id,
         kana: row.kana,
         kanji: row.kanji,
-        romaji: row.romaji,
+        romaji: resolveVocabularyLessonRomaji(examples),
         meaning: row.meaning,
         partOfSpeech: row.part_of_speech,
         audioUrl: row.audio_url,
@@ -361,7 +362,7 @@ class LessonService {
           id: row.id,
           kana: row.kana,
           kanji: row.kanji,
-          romaji: row.romaji,
+          romaji: resolveVocabularyLessonRomaji(examples),
           meaning: row.meaning,
           partOfSpeech: row.part_of_speech,
           audioUrl: row.audio_url,
@@ -611,7 +612,7 @@ class LessonService {
             id: row.id,
             kana: row.kana,
             kanji: row.kanji,
-            romaji: row.romaji,
+            romaji: resolveVocabularyLessonRomaji(examplesById.get(row.id) ?? []),
             meaning: row.meaning,
             partOfSpeech: row.part_of_speech,
             audioUrl: row.audio_url,
