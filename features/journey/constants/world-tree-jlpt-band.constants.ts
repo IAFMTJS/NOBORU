@@ -36,6 +36,7 @@ export const WORLD_TREE_JLPT_BANDS: readonly WorldTreeJlptBand[] = [
     accentColor: "#D64045",
     accentGlow: "rgba(214, 64, 69, 0.55)",
     artFileBase: "wt_jlpt_n5",
+    artVersion: 2,
   },
   {
     id: "n4",

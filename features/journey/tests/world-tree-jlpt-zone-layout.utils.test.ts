@@ -87,6 +87,24 @@ describe("buildJlptZoneArtLayout", () => {
     expect(bands[4]?.id).toBe("n1");
     expect(bands[4]?.yMax).toBe(20);
   });
+
+  it("uses a wide transition box for the ancient-to-canopy seam", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const n3Transition = layout.fill.find((piece) => piece.id === "n3-transition");
+
+    expect(n3Transition).toBeDefined();
+    expect(n3Transition!.widthPercent).toBeGreaterThanOrEqual(70);
+    expect(n3Transition!.heightPercent).toBeGreaterThan(5);
+  });
+
+  it("allocates larger hero slots after layout tuning", () => {
+    const layout = buildJlptZoneArtLayout("light");
+    const n5Hero = layout.heroes.find((hero) => hero.bandId === "n5");
+    const n1Hero = layout.heroes.find((hero) => hero.bandId === "n1");
+
+    expect(n5Hero!.heightPercent).toBeGreaterThanOrEqual(18);
+    expect(n1Hero!.heightPercent).toBeGreaterThanOrEqual(19);
+  });
 });
 
 describe("assignSpineYByJlptBand", () => {

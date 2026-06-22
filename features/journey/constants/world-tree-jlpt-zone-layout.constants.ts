@@ -34,6 +34,10 @@ export type WorldTreeJlptZoneLayoutSpec = {
   /** Puzzle pieces tiling gaps around / between hero zones. */
   fillSlots: readonly JlptBandFillSlot[];
   transitionTop?: WorldTreeTransitionId;
+  /** Transition width (% viewport); wider for portrait seam assets. */
+  transitionWidthPercent?: number;
+  /** Transition height as share of band span (default 0.28). */
+  transitionHeightPercent?: number;
   /** Procedural gap mist tint (hex). */
   gapTint: string;
 };
@@ -49,7 +53,9 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n5: {
     trunkCenterX: 50,
     pathSway: 1.2,
-    hero: { anchor: "bottom", yStart: 0.18, yEnd: 1, scale: 1.08 },
+    hero: { anchor: "bottom", yStart: 0.08, yEnd: 1, scale: 1.12 },
+    transitionWidthPercent: 52,
+    transitionHeightPercent: 0.28,
     fillSlots: [
       { segmentId: "roots_a", yStart: 0, yEnd: 0.42, zIndex: 1 },
       { segmentId: "roots_b", yStart: 0.12, yEnd: 0.52, xOffset: -8, zIndex: 2 },
@@ -63,7 +69,9 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n4: {
     trunkCenterX: 50,
     pathSway: 1.4,
-    hero: { anchor: "center", yStart: 0.12, yEnd: 0.9, scale: 1.05 },
+    hero: { anchor: "center", yStart: 0.06, yEnd: 0.98, scale: 1.08 },
+    transitionWidthPercent: 54,
+    transitionHeightPercent: 0.28,
     fillSlots: [
       { segmentId: "roots_e", yStart: 0, yEnd: 0.38, zIndex: 1 },
       { segmentId: "trunk_a", yStart: 0.08, yEnd: 0.55, zIndex: 2 },
@@ -77,7 +85,9 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n3: {
     trunkCenterX: 50,
     pathSway: 1.6,
-    hero: { anchor: "center", yStart: 0.1, yEnd: 0.92, scale: 1.04 },
+    hero: { anchor: "center", yStart: 0.06, yEnd: 0.98, scale: 1.1 },
+    transitionWidthPercent: 74,
+    transitionHeightPercent: 0.3,
     fillSlots: [
       { segmentId: "trunk_c", yStart: 0, yEnd: 0.45, zIndex: 1 },
       { segmentId: "trunk_d", yStart: 0.15, yEnd: 0.58, zIndex: 2 },
@@ -91,7 +101,9 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n2: {
     trunkCenterX: 50,
     pathSway: 1.5,
-    hero: { anchor: "top", yStart: 0, yEnd: 0.78, scale: 1.06 },
+    hero: { anchor: "top", yStart: 0, yEnd: 0.92, scale: 1.1 },
+    transitionWidthPercent: 58,
+    transitionHeightPercent: 0.28,
     fillSlots: [
       { segmentId: "canopy_a", yStart: 0.18, yEnd: 0.62, zIndex: 2 },
       { segmentId: "canopy_b", yStart: 0.08, yEnd: 0.52, xOffset: -6, zIndex: 3 },
@@ -106,7 +118,7 @@ export const WORLD_TREE_JLPT_ZONE_LAYOUT: Record<
   n1: {
     trunkCenterX: 50,
     pathSway: 1.1,
-    hero: { anchor: "top", yStart: 0, yEnd: 0.9, scale: 1.1 },
+    hero: { anchor: "top", yStart: 0, yEnd: 0.98, scale: 1.12 },
     fillSlots: [
       { segmentId: "celestial_a", yStart: 0.42, yEnd: 0.88, zIndex: 2 },
       { segmentId: "celestial_b", yStart: 0.22, yEnd: 0.68, xOffset: -5, zIndex: 3 },

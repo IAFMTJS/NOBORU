@@ -146,13 +146,16 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
     });
 
     if (spec.transitionTop) {
-      const transitionHeight = span * 0.24;
+      const transitionHeight = span * (spec.transitionHeightPercent ?? 0.28);
+      const transitionWidth =
+        spec.transitionWidthPercent ??
+        WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 18;
       fill.push({
         id: `${band.id}-transition`,
         src: artLibraryPath(worldTreeSegmentArtPath(spec.transitionTop, theme)),
         topPercent: layout.yMin - transitionHeight * 0.5,
         heightPercent: transitionHeight,
-        widthPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkWidthPercent + 18,
+        widthPercent: transitionWidth,
         leftPercent: WORLD_TREE_MANIFEST_ANCHORS.trunkCenterXPercent,
         zIndex: 35,
         kind: "transition",
@@ -177,13 +180,10 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
 
     gaps.push(...computeGapSlots(band.id, layout, spec));
 
-    // Seam masking overlays — hides harsh underhang fringes and blends hero edges
-    // into the canvas background between JLPT bands.
-    // NOTE: Each JLPT band is only ~20% of the canvas, so these need to be
-    // large enough in absolute canvas-percent to actually cover real fringe pixels.
-    const seamH = Math.max(2.4, span * 0.14);
-    const fringeH = Math.max(2.0, span * 0.11);
-    const crownH = Math.max(2.0, span * 0.12);
+    // Seam masking — light blend now that heroes fill more of each band.
+    const seamH = Math.max(1.8, span * 0.1);
+    const fringeH = Math.max(1.4, span * 0.08);
+    const crownH = Math.max(1.4, span * 0.09);
 
     overlays.push({
       id: `${band.id}-crown-mask`,
@@ -192,7 +192,7 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
       heightPercent: crownH,
       zIndex: 28,
       kind: "crown",
-      background: `linear-gradient(to top, transparent 0%, ${spec.gapTint}55 28%, ${canvasBg}EE 80%, ${canvasBg} 100%)`,
+      background: `linear-gradient(to top, transparent 0%, ${spec.gapTint}33 32%, ${canvasBg}CC 82%, ${canvasBg} 100%)`,
     });
 
     overlays.push({
@@ -202,7 +202,7 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
       heightPercent: seamH,
       zIndex: 30,
       kind: "seam",
-      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}77 20%, ${canvasBg}EE 78%, ${canvasBg} 100%)`,
+      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}44 24%, ${canvasBg}CC 80%, ${canvasBg} 100%)`,
     });
 
     overlays.push({
@@ -212,7 +212,7 @@ export function buildJlptZoneArtLayout(theme: "light" | "dark"): JlptZoneArtLayo
       heightPercent: fringeH,
       zIndex: 31,
       kind: "fringe",
-      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}44 18%, ${canvasBg}F8 62%, ${canvasBg} 100%)`,
+      background: `linear-gradient(to bottom, transparent 0%, ${spec.gapTint}28 22%, ${canvasBg}E0 68%, ${canvasBg} 100%)`,
     });
   }
 

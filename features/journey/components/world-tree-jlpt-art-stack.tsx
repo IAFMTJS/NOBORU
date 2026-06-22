@@ -58,6 +58,12 @@ function JlptBadge({
   );
 }
 
+function resolveHeroObjectFitClass(objectPosition: string): string {
+  if (objectPosition.includes("bottom")) return "object-cover object-bottom";
+  if (objectPosition.includes("top")) return "object-cover object-top";
+  return "object-cover object-center";
+}
+
 /**
  * Full JLPT zone art stack — gap mist, puzzle fill, transition seams, hero bands.
  */
@@ -86,7 +92,7 @@ export function WorldTreeJlptArtStack({
           style={{
             top: `${gap.topPercent}%`,
             height: `${gap.heightPercent}%`,
-            background: `linear-gradient(to top, ${gap.tint}55, ${gap.tint}22 40%, transparent)`,
+            background: `linear-gradient(to top, ${gap.tint}40, ${gap.tint}18 40%, transparent)`,
             zIndex: 0,
           }}
           data-jlpt-gap={gap.bandId}
@@ -141,8 +147,7 @@ export function WorldTreeJlptArtStack({
             src={hero.src}
             alt=""
             fill
-            className="object-contain"
-            style={{ objectPosition: hero.objectPosition }}
+            className={resolveHeroObjectFitClass(hero.objectPosition)}
             sizes="100vw"
             priority={hero.bandId === "n5" || hero.bandId === "n4"}
             unoptimized
