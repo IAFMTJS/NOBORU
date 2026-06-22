@@ -163,7 +163,11 @@ From [06-n5-deep-dive.md](./06-n5-deep-dive.md) priority list:
 
 - [x] N5 art pack v1 constants + backdrop (interim Art Library assets)
 - [x] Published WebP paths under `public/art-library/`
-- [ ] Bespoke act slices commissioned (interim trail/shrine assets in use)
+- [x] Greybox spine signed off — node placement locked (2026-06-22)
+- [x] Generation briefs ready — [14-n5-art-generation-briefs.md](./14-n5-art-generation-briefs.md)
+- [x] Bespoke act slices generated (`bg_n5_act1` … `act3` + realm silhouette)
+- [x] Nine landmark icons + portal matte
+- [x] Ingest → `n5-world-art.constants.ts` wired to bespoke paths
 
 ### Validation
 
@@ -187,7 +191,7 @@ From [06-n5-deep-dive.md](./06-n5-deep-dive.md) priority list:
 
 Spine geometry, act bands, landmark `path_position` targets, art pipeline order, and acceptance checks: **[12-n5-art-and-node-placement.md](./12-n5-art-and-node-placement.md)**.
 
-Greybox spine must be signed off **with** this spec before final N5 environment art is commissioned.
+Greybox spine signed off 2026-06-22 — **art sprint active**. Reference: `Art Library/staging/n5-greybox.png`, briefs: [14-n5-art-generation-briefs.md](./14-n5-art-generation-briefs.md).
 
 ---
 
@@ -195,4 +199,4 @@ Greybox spine must be signed off **with** this spec before final N5 environment 
 
 - [10-n5-rollout-strategy.md](./10-n5-rollout-strategy.md)
 - [06-n5-deep-dive.md](./06-n5-deep-dive.md)
-- [12-n5-art-and-node-placement.md](./12-n5-art-and-node-placement.md)
+- [14-n5-art-generation-briefs.md](./14-n5-art-generation-briefs.md) — copy-paste generation prompts (art sprint)

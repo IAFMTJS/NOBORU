@@ -192,7 +192,7 @@ Follow `art-direction/05_cursor_generation_brief.md` and `08_visual_art_directio
 
 | Step | Action | Output |
 |------|--------|--------|
-| **1. Brief** | Per-slice prompt: act band, hero zones, forbidden elements, palette | Text brief in art ticket |
+| **1. Brief** | Per-slice prompt: act band, hero zones, forbidden elements, palette | [14-n5-art-generation-briefs.md](./14-n5-art-generation-briefs.md) |
 | **2. Greybox reference** | Export skeleton PNG with spine + node dots | `Art Library/staging/n5-greybox.png` |
 | **3. Generate** | Cursor / ComfyUI — **one slice at a time** | `Art Library/backgrounds/n5_*_light_v1.png` + `_dark_v1` |
 | **4. Icons** | Landmark thumbnails — **transparent alpha** | `Art Library/icons/landmark-n5-*_light_v1.png` |

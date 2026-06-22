@@ -4,6 +4,27 @@ Append an entry at the top for every brainstorm session.
 
 ---
 
+## 2026-06-22 — Session 10: N5 art sprint kickoff
+
+**Trigger:** Founder — node placement good; time to make art.
+
+**Decisions:**
+
+- Greybox spine **signed off** — 74 slots (65 visible, 9 reserved), dynamic scroll height locked
+- Art generation proceeds **one slice at a time** per [12](./12-n5-art-and-node-placement.md) pipeline
+- Stacked 3 act slices + realm silhouette + 9 landmark icons + portal matte (unchanged minimum from [11](./11-n5-complete-spec.md))
+
+**Artifacts:**
+
+- Fresh greybox export: `Art Library/staging/n5-greybox.{png,svg,json}`
+- [14-n5-art-generation-briefs.md](./14-n5-art-generation-briefs.md) — copy-paste prompts, sizes, naming, acceptance
+
+**Next:** Composite check on skeleton → founder visual review → manual playthrough.
+
+**Art generated (Session 10 continued):** 10 backgrounds + 18 landmark icons → `Art Library/backgrounds/n5/`, `Art Library/icons/landmarks/n5/` → published WebP → `n5-world-art.constants.ts` wired.
+
+---
+
 ## 2026-06-22 — Session 8: N5 implementation sprint (founder sign-off)
 
 **Trigger:** Founder signed [11-n5-complete-spec.md](./11-n5-complete-spec.md) — full execute.

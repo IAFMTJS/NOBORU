@@ -37,7 +37,7 @@ export function N5WorldBackdrop({ className }: { className?: string }) {
             src={N5_ACT_SLICE_ART[band.actIndex][theme]}
             alt=""
             cover
-            className="absolute inset-0 opacity-55 mix-blend-soft-light"
+            className="absolute inset-0 opacity-70 mix-blend-soft-light"
           />
         </div>
       ))}
