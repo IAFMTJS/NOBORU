@@ -1,4 +1,5 @@
 import { jsonError, jsonOk } from "@/lib/api/responses";
+import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { requireAuthSession } from "@/lib/auth/require-session";
 import { isPlayableGameSlug } from "@/features/games/constants/game.constants";
 import { gameService } from "@/features/games/services/game.service";
@@ -12,6 +13,11 @@ export async function POST(request: Request, { params }: RouteParams) {
   const { slug } = await params;
   if (!isPlayableGameSlug(slug)) {
     return jsonError("Unknown game.", 404);
+  }
+
+  const limit = checkRateLimit(rateLimitKey(session.userId, "game-complete"), 90, 60_000);
+  if (!limit.allowed) {
+    return jsonError("Too many game submissions. Please wait a moment.", 429);
   }
 
   try {

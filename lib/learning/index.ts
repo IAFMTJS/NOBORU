@@ -179,6 +179,21 @@ export {
 } from "@/lib/learning/content-eligibility.service";
 
 export {
+  annotateJapaneseSentence,
+  sentenceHasUnknownTokens,
+} from "@/lib/learning/sentence-annotation.service";
+
+export type {
+  AnnotateSentenceOptions,
+  ComprehensionSupportContext,
+  ComprehensionSupportMode,
+  KanjiLookupEntry,
+  SentenceSegment,
+  SentenceTokenAnnotation,
+  VocabularyLookupEntry,
+} from "@/lib/learning/comprehension-support.types";
+
+export {
   assembleStoryForPlayer,
   type AssembledStorySection,
   type StoryAssemblyResult,

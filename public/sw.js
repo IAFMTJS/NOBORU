@@ -1,4 +1,4 @@
-const CACHE_VERSION = "noboru-v4";
+const CACHE_VERSION = "noboru-v5";
 const APP_SHELL_CACHE = `${CACHE_VERSION}-app-shell`;
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
@@ -11,6 +11,14 @@ const OFFLINE_BACKGROUND_SYNC_TAG = "noboru-offline-sync";
 const STATIC_PRECACHE_URLS = [
   "/manifest.json",
   "/offline",
+  "/icons/icon-192_v1.webp",
+  "/icons/icon-512_v1.webp",
+  "/icons/apple-touch-icon_v1.png",
+  "/art-library/icons/icon_nav_journey_mountain_dark_v1.webp",
+  "/art-library/icons/icon_nav_camp_tent_dark_v1.webp",
+  "/art-library/icons/icon_nav_study_book_dark_v1.webp",
+  "/art-library/icons/icon_nav_bag_backpack_dark_v1.webp",
+  "/art-library/icons/icon_nav_profile_person_dark_v1.webp",
   "/art-library/characters/kitsune/base/kitsune_sitting_campfire_light_v1.webp",
   "/art-library/characters/kitsune/base/kitsune_sitting_campfire_dark_v1.webp",
 ];
@@ -38,6 +46,12 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("sync", (event) => {
   if (event.tag === OFFLINE_BACKGROUND_SYNC_TAG) {
     event.waitUntil(syncOfflineQueueFromIndexedDb());
+  }
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
   }
 });
 

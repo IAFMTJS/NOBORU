@@ -1,7 +1,5 @@
-import { MemoryBookScreen } from "@/features/memory-book/components/memory-book-screen";
-import { memoryBookService } from "@/features/memory-book/services/memory-book.service";
+import { redirect } from "next/navigation";
 
-export default function MemoryBookPage() {
-  const memoryBook = memoryBookService.getMemoryBook();
-  return <MemoryBookScreen memoryBook={memoryBook} />;
+export default function ProfileMemoryBookRedirectPage() {
+  redirect("/memory-book");
 }

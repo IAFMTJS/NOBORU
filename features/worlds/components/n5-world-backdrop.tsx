@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { ArtLibraryImage } from "@/components/media/art-library-image";
 import { cn } from "@/lib/utils";
 
-import { N5_ACT_BACKDROP_GRADIENTS } from "@/features/worlds/constants/n5-world.constants";
+import { N5_ACT_BACKDROP_GRADIENTS, N5_ACT_SENSORY_OVERLAY } from "@/features/worlds/constants/n5-world.constants";
 import {
   N5_ACT_SLICE_ART,
   N5_REALM_SILHOUETTE,
@@ -71,6 +71,12 @@ export function N5WorldBackdrop({ scrollState, className }: N5WorldBackdropProps
               className={cn(
                 "absolute inset-0 bg-gradient-to-b",
                 N5_ACT_BACKDROP_GRADIENTS[actIndex],
+              )}
+            />
+            <div
+              className={cn(
+                "absolute inset-0 bg-gradient-to-b motion-safe:opacity-100 motion-reduce:opacity-0",
+                N5_ACT_SENSORY_OVERLAY[actIndex],
               )}
             />
           </div>

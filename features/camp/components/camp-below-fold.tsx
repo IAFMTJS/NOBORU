@@ -1,11 +1,10 @@
-import { dashboardServerService } from "@/features/learning/services/dashboard-server.service";
 import { CampBelowFoldClient } from "@/features/camp/components/camp-below-fold-client";
+import type { CampBelowFoldViewModel } from "@/features/camp/types/camp.types";
 
 type CampBelowFoldProps = {
-  userId: string;
+  belowFold: CampBelowFoldViewModel;
 };
 
-export async function CampBelowFold({ userId }: CampBelowFoldProps) {
-  const belowFold = await dashboardServerService.getCampBelowFold(userId);
+export function CampBelowFold({ belowFold }: CampBelowFoldProps) {
   return <CampBelowFoldClient belowFold={belowFold} />;
 }

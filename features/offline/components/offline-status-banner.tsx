@@ -3,6 +3,7 @@
 import { WifiOff } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { getOfflineBannerOnlineMessage } from "@/lib/pwa/ios-sync-hint";
 import { cn } from "@/lib/utils";
 
 type OfflineStatusBannerProps = {
@@ -34,7 +35,7 @@ export function OfflineStatusBanner({
         {!isOnline ? <WifiOff className="h-4 w-4" aria-hidden /> : null}
         <span>
           {isOnline
-            ? "Back online. Syncing your offline progress…"
+            ? getOfflineBannerOnlineMessage()
             : "You are offline. Cached lessons and reviews remain available."}
         </span>
       </div>

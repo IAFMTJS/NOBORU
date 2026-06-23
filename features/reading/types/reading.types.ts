@@ -1,4 +1,5 @@
 import type { ContentStatus } from "@/lib/content/types";
+import type { ComprehensionSupportContext } from "@/lib/learning/comprehension-support.types";
 
 export type ReadingExerciseRow = {
   id: string;
@@ -133,6 +134,7 @@ export type StoryDetailViewModel = {
   sections: StorySectionViewModel[];
   questions: ReadingQuestionViewModel[];
   highlightedVocabularyIds?: string[];
+  comprehensionSupport?: ComprehensionSupportContext;
   completed: boolean;
   score: number;
 };

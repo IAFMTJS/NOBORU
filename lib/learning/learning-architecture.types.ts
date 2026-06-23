@@ -52,6 +52,7 @@ export type PlayerKnowledgeContext = {
   unlockedChapterIds: string[];
   knownVocabularyIds: ContentKnowledgeId[];
   knownGrammarIds: ContentKnowledgeId[];
+  knownKanjiIds: ContentKnowledgeId[];
   masteredVocabularyIds: ContentKnowledgeId[];
   weakVocabularyIds: ContentKnowledgeId[];
   activeVocabularyPool: ContentKnowledgeId[];

@@ -15,7 +15,7 @@ for (const file of files) {
   const categories = report.categories ?? {};
   const route = report.finalUrl ?? file;
 
-  for (const category of ["performance", "accessibility", "best-practices"]) {
+  for (const category of ["performance", "accessibility", "best-practices", "pwa"]) {
     const score = Math.round((categories[category]?.score ?? 0) * 100);
     console.log(`${file} · ${category}: ${score}`);
 

@@ -1,5 +1,3 @@
-import { cache } from "react";
-
 import { chestService } from "@/features/chests/services/chest.service";
 import { collectibleService } from "@/features/collectibles/services/collectible.service";
 import { companionService } from "@/features/companion/services/companion.service";

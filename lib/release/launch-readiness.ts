@@ -1,5 +1,6 @@
 import { getN5WorldLaunchChecks } from "@/lib/release/n5-world-launch-check";
 import { RELEASE } from "@/lib/release/release.constants";
+import { checkPwaAssets } from "@/lib/pwa/check-pwa-assets";
 
 export type LaunchCheckStatus = "pass" | "fail" | "unknown";
 
@@ -46,11 +47,21 @@ export function getStaticLaunchChecks(): LaunchCheckResult[] {
           "Public Supabase env vars are present.",
           "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY",
         ),
-    pass(
-      "pwa_assets",
-      "PWA assets present",
-      "Manifest and service worker are part of the release bundle.",
-    ),
+    (() => {
+      const pwa = checkPwaAssets();
+      return pwa.ok
+        ? pass(
+            "pwa_assets",
+            "PWA assets present",
+            "Manifest, service worker, icons, and splash screens are on disk.",
+          )
+        : fail(
+            "pwa_assets",
+            "PWA assets present",
+            "Manifest, service worker, icons, and splash screens are on disk.",
+            pwa.detail ?? pwa.missing.join(", "),
+          );
+    })(),
     pass(
       "review_engine",
       "Review engine stable",

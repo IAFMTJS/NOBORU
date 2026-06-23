@@ -4,6 +4,7 @@ import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import type { VocabularyLifecycleStage } from "@/lib/learning/learning-architecture.constants";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import type { RegionAvailability } from "@/lib/learning/region-unlock";
+import type { ComprehensionSupportContext } from "@/lib/learning/comprehension-support.types";
 import type {
   DialogueLessonContent,
   StoryLessonContent,
@@ -356,6 +357,8 @@ export type LessonSessionViewModel = {
   phaseSummary?: LessonPhaseSummary[];
   /** Content lookup for in-lesson remediation (keyed by content id). */
   contentById?: Record<string, LessonContent>;
+  /** Trail Guide lookup tables for tap-to-gloss sentence support. */
+  comprehensionSupport?: ComprehensionSupportContext;
   nextLesson: {
     title: string;
     href: string;

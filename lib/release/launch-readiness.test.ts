@@ -11,7 +11,14 @@ describe("getStaticLaunchChecks", () => {
     expect(ids).toContain("release_channel");
     expect(ids).toContain("review_engine");
     expect(ids).toContain("analytics");
+    expect(ids).toContain("pwa_assets");
     expect(checks.length).toBeGreaterThan(8);
+  });
+
+  it("marks pwa_assets as pass when required files exist", () => {
+    const checks = getStaticLaunchChecks();
+    const pwaCheck = checks.find((check) => check.id === "pwa_assets");
+    expect(pwaCheck?.status).toBe("pass");
   });
 });
 

@@ -4,17 +4,27 @@ import type { LeagueMembershipRow } from "@/features/leagues/types/league.types"
 
 class LeagueRepository {
   async getActiveSeasonId(): Promise<string | null> {
+    const season = await this.getActiveSeason();
+    return season?.id ?? null;
+  }
+
+  async getActiveSeason(): Promise<{ id: string; endsAt: string } | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("league_seasons")
-      .select("id")
+      .select("id, ends_at")
       .eq("status", "active")
       .order("starts_at", { ascending: false })
       .limit(1)
       .maybeSingle();
 
     if (error) throw new Error(error.message);
-    return (data as { id: string } | null)?.id ?? null;
+    if (!data) return null;
+
+    return {
+      id: (data as { id: string }).id,
+      endsAt: (data as { ends_at: string }).ends_at,
+    };
   }
 
   async ensureMembership(

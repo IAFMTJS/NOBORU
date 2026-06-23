@@ -2,6 +2,8 @@
 
 Purpose: Bring Yama, Noboru's climbing companion, into study flows with supportive presence, encouragement, and celebration — without pressure or guilt.
 
+**Art alias:** Published companion sprites use the `kitsune_*` prefix under `Art Library/characters/kitsune/`. Code and docs refer to the companion as **Yama**; asset filenames use **kitsune** per art-direction naming.
+
 Authoritative expansion spec: [docs/mascot-expansion-system.md](../../../docs/mascot-expansion-system.md)
 
 ## Responsibilities

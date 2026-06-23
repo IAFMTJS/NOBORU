@@ -62,6 +62,8 @@ import { capNewGrammarInLessonContents } from "@/lib/learning/grammar-progressio
 import { planCheckpointActivities } from "@/lib/learning/checkpoint-assembly.service";
 import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
 import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
+import { comprehensionSupportService } from "@/features/learning/services/comprehension-support.service";
+import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
 
 type LessonAssemblyPlan = {
   newContents: LessonContent[];
@@ -955,6 +957,17 @@ class LessonService {
     let steps = this.buildSteps(lesson, contents, assembly ?? undefined);
     const contentById = this.buildContentById(contents);
 
+    const playerContext = await playerKnowledgeService.getContext({
+      userId,
+      regionSlug: lesson.unit.region.slug,
+      unitId: lesson.unit.id,
+      lessonId: lesson.id,
+    });
+    const comprehensionSupport = await comprehensionSupportService.buildForPlayer(
+      playerContext,
+      getJlptLevelForRegion(lesson.unit.region.slug),
+    );
+
     if (lesson.type === "application") {
       const script =
         contents.find(
@@ -993,6 +1006,7 @@ class LessonService {
       stageSummary: summarizeLessonStages(steps),
       phaseSummary: summarizeLessonPhases(steps),
       contentById,
+      comprehensionSupport,
       nextLesson:
         nextLesson && nextLesson.id !== lesson.id
           ? {

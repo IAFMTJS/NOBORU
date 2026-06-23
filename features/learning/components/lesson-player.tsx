@@ -28,7 +28,8 @@ import {
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
-import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
+import { ComprehensionSupportProvider } from "@/features/learning/context/comprehension-support-context";
 import { LessonFailScreen } from "@/features/learning/components/lesson-fail-screen";
 import {
   LessonHeader,
@@ -205,9 +206,11 @@ function ListeningRecallDrill({
 function ReadingDrill({
   step,
   onAnswer,
+  supportMode = "full",
 }: {
   step: LessonReadingStep;
   onAnswer: (correct: boolean) => void;
+  supportMode?: "full" | "tap" | "none";
 }) {
   const [selected, setSelected] = useState<number | null>(null);
   const { content } = step;
@@ -215,10 +218,12 @@ function ReadingDrill({
   return (
     <div className="flex min-h-[min(32rem,calc(100dvh-12rem))] flex-1 flex-col">
       <div className="flex flex-1 flex-col justify-center space-y-4 py-4">
-        <JapaneseText text={content.japaneseText} size="hero" />
-        {content.romaji ? (
-          <p className="text-center text-body-sm text-muted-foreground">{content.romaji}</p>
-        ) : null}
+        <AnnotatedJapaneseText
+          text={content.japaneseText}
+          romaji={content.romaji}
+          size="hero"
+          supportMode={supportMode}
+        />
         <p className="text-center text-body font-medium">{content.question}</p>
       </div>
       <GlassPanel className="mt-auto space-y-2 p-3">
@@ -680,7 +685,8 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   }
 
   return (
-    <>
+    <ComprehensionSupportProvider value={session.comprehensionSupport}>
+      <>
       <LevelUpCeremony
         level={elevationAward?.currentLevel ?? 1}
         open={showLevelUpCeremony}
@@ -737,7 +743,11 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         ) : null}
 
         {currentStep.kind === "teach" ? (
-          <LessonTeachCard step={currentStep} soundEnabled={soundEnabled} />
+          <LessonTeachCard
+            step={currentStep}
+            soundEnabled={soundEnabled}
+            supportMode={currentPhase === "introduction" ? "full" : "tap"}
+          />
         ) : null}
 
         {currentStep.kind === "knowledge_inventory" ? (
@@ -774,6 +784,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         {currentStep.kind === "story" ? (
           <StoryReader
             embedded
+            comprehensionSupport={session.comprehensionSupport}
             story={{
               id: currentStep.content.id,
               title: currentStep.content.title,
@@ -906,6 +917,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         ) : null}
       </MotionDiv>
     </LessonShell>
-    </>
+      </>
+    </ComprehensionSupportProvider>
   );
 }

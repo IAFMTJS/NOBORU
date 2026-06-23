@@ -88,6 +88,19 @@ class VocabularyRepository {
     return data as VocabularyRow | null;
   }
 
+  async findPublishedIdsByKana(kanaKeys: string[]): Promise<string[]> {
+    if (kanaKeys.length === 0) return [];
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("vocabulary")
+      .select("id")
+      .eq("status", "published")
+      .in("kana", kanaKeys);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => row.id);
+  }
+
   async findByIds(ids: string[]): Promise<VocabularyRow[]> {
     if (ids.length === 0) return [];
     const supabase = await createClient();

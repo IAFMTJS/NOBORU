@@ -7,6 +7,7 @@ import {
 } from "@/features/elevation/constants/elevation.constants";
 import { elevationRepository } from "@/features/elevation/repositories/elevation.repository";
 import { revalidateUserElevation } from "@/lib/cache/revalidate-user-data";
+import { revalidateActiveLeagueSeasonCache } from "@/lib/cache/revalidate-league-cache";
 import type {
   ElevationAwardViewModel,
   ElevationSummaryViewModel,
@@ -136,6 +137,7 @@ class ElevationService {
     }
 
     revalidateUserElevation(input.userId);
+    void revalidateActiveLeagueSeasonCache();
 
     return buildElevationAwardViewModel({
       epAwarded: totalAwarded,

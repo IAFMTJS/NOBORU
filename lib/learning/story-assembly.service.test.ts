@@ -9,6 +9,7 @@ const playerContext: PlayerKnowledgeContext = {
   unlockedChapterIds: [],
   knownVocabularyIds: ["v-known"],
   knownGrammarIds: [],
+  knownKanjiIds: [],
   masteredVocabularyIds: ["v-known"],
   weakVocabularyIds: [],
   activeVocabularyPool: ["v-known"],

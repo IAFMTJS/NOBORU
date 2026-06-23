@@ -3,7 +3,7 @@
   "name": "Noboru",
   "short_name": "Noboru",
   "description": "Climb Japanese from Foothills through N5 with trail lessons, spaced review, audio, and offline PWA support.",
-  "start_url": "/home",
+  "start_url": "/tree",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
@@ -14,12 +14,37 @@
   "lang": "en",
   "dir": "ltr",
   "prefer_related_applications": false,
-  "icons": [],
+  "icons": [
+    {
+      "src": "/icons/icon-192_v1.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon_app_maskable_dark_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon_app_maskable_light_v1.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "Continue Learning",
-      "short_name": "Learn",
-      "url": "/learn"
+      "name": "Continue Journey",
+      "short_name": "Journey",
+      "url": "/tree"
     },
     {
       "name": "Review Queue",
@@ -27,9 +52,9 @@
       "url": "/review"
     },
     {
-      "name": "Home Base",
-      "short_name": "Home",
-      "url": "/home"
+      "name": "Camp",
+      "short_name": "Camp",
+      "url": "/camp"
     }
   ]
 }

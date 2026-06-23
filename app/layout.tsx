@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PwaSplashLinks } from "@/components/pwa/pwa-splash-links";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     template: `%s · ${RELEASE.name}`,
   },
   description: RELEASE.isBeta
-    ? "Noboru public beta — climb Japanese from Foothills through N5."
+    ? "Noboru public beta — begin in the Realm of First Light (N5)."
     : OFFICIAL_RELEASE.message,
   manifest: "/manifest.json",
   metadataBase: process.env.NEXT_PUBLIC_APP_URL
@@ -41,7 +42,13 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  icons: {},
+  icons: {
+    icon: [
+      { url: "/icons/icon-192_v1.webp", sizes: "192x192", type: "image/webp" },
+      { url: "/icons/icon-512_v1.webp", sizes: "512x512", type: "image/webp" },
+    ],
+    apple: "/icons/apple-touch-icon_v1.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -61,6 +68,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <PwaSplashLinks />
+      </head>
       <body className={`${inter.variable} font-sans`}>
         <ThemeProvider
           attribute="class"

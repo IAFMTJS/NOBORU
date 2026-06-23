@@ -111,7 +111,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
     setQuickUseOpen(true);
   }
 
-  function useOne(item: InventoryItemViewModel | null) {
+  function applySingleItem(item: InventoryItemViewModel | null) {
     if (!item) return;
     const used = inventoryService.useItem(item.id, 1);
     if (used) refreshFromService(item.id);
@@ -123,7 +123,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
     if (toggled) refreshFromService(item.id);
   }
 
-  function useMultiple(item: InventoryItemViewModel | null, amount: number) {
+  function applyMultipleItems(item: InventoryItemViewModel | null, amount: number) {
     if (!item) return;
     const used = inventoryService.useItem(item.id, amount);
     if (used) {
@@ -189,7 +189,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
       <footer className="shrink-0 p-4 pt-2">
         <InventoryDetailCard
           item={selectedItem}
-          onUse={() => useOne(selectedItem)}
+          onUse={() => applySingleItem(selectedItem)}
           onUseMultiple={handleQuickUseOpen}
           onToggleEquip={() => toggleEquip(selectedItem)}
         />
@@ -215,7 +215,7 @@ export function InventoryScreen({ inventory }: InventoryScreenProps) {
             Math.min(quickUseItem?.quantity ?? quantity, quantity + 1),
           )
         }
-        onUse={() => useMultiple(quickUseItem, quickUseQuantity)}
+        onUse={() => applyMultipleItems(quickUseItem, quickUseQuantity)}
       />
     </TabScene>
   );

@@ -31,11 +31,63 @@ import type {
   WeakAreaViewModel,
 } from "@/features/review/types/review.types";
 import { REVIEW_CONTENT_LABELS } from "@/features/review/types/review.types";
+import {
+  COMPREHENSION_VOCAB_BY_LISTENING_SLUG,
+  COMPREHENSION_VOCAB_BY_STORY_SLUG,
+} from "@/features/review/constants/comprehension-review.constants";
+import { readingRepository } from "@/features/reading/repositories/reading.repository";
+import { listeningRepository } from "@/features/listening/repositories/listening.repository";
+
+type ReviewEnqueueItem = {
+  contentType: ReviewContentType;
+  contentId: string;
+};
 
 class ReviewEnqueueService {
+  private async resolveComprehensionVocabIds(
+    items: Awaited<ReturnType<typeof learningPathRepository.listLessonItems>>,
+  ): Promise<string[]> {
+    const kanaKeys = new Set<string>();
+
+    for (const item of items) {
+      if (item.content_type === "story") {
+        const story = await readingRepository.findStoryById(item.content_id);
+        if (story?.slug) {
+          for (const kana of COMPREHENSION_VOCAB_BY_STORY_SLUG[story.slug] ?? []) {
+            kanaKeys.add(kana);
+          }
+        }
+      } else if (item.content_type === "dialogue") {
+        const dialogue = await readingRepository.findDialogueById(item.content_id);
+        if (dialogue?.slug) {
+          for (const kana of COMPREHENSION_VOCAB_BY_STORY_SLUG[dialogue.slug] ?? []) {
+            kanaKeys.add(kana);
+          }
+        }
+      } else if (item.content_type === "listening") {
+        const exercise = await listeningRepository.findExerciseById(item.content_id);
+        if (exercise?.slug) {
+          for (const kana of COMPREHENSION_VOCAB_BY_LISTENING_SLUG[exercise.slug] ?? []) {
+            kanaKeys.add(kana);
+          }
+        }
+      } else if (item.content_type === "listening_challenge") {
+        const challenge = await listeningRepository.findChallengeById(item.content_id);
+        if (challenge?.slug) {
+          for (const kana of COMPREHENSION_VOCAB_BY_LISTENING_SLUG[challenge.slug] ?? []) {
+            kanaKeys.add(kana);
+          }
+        }
+      }
+    }
+
+    if (kanaKeys.size === 0) return [];
+    return vocabularyRepository.findPublishedIdsByKana([...kanaKeys]);
+  }
+
   async enqueueFromLesson(userId: string, lessonId: string): Promise<number> {
     const items = await learningPathRepository.listLessonItems(lessonId);
-    const reviewItems = items
+    const reviewItems: ReviewEnqueueItem[] = items
       .filter(
         (item) =>
           item.content_type === "hiragana" ||
@@ -45,13 +97,24 @@ class ReviewEnqueueService {
           item.content_type === "kanji",
       )
       .map((item) => ({
-        contentType: item.content_type,
+        contentType: item.content_type as ReviewContentType,
         contentId: item.content_id,
       }));
 
-    if (reviewItems.length === 0) return 0;
-    await reviewRepository.upsertReviewItemsBatch(userId, reviewItems);
-    return reviewItems.length;
+    const comprehensionVocabIds = await this.resolveComprehensionVocabIds(items);
+    for (const contentId of comprehensionVocabIds) {
+      reviewItems.push({ contentType: "vocabulary", contentId });
+    }
+
+    const deduped = new Map<string, ReviewEnqueueItem>();
+    for (const item of reviewItems) {
+      deduped.set(`${item.contentType}:${item.contentId}`, item);
+    }
+
+    const uniqueItems = [...deduped.values()];
+    if (uniqueItems.length === 0) return 0;
+    await reviewRepository.upsertReviewItemsBatch(userId, uniqueItems);
+    return uniqueItems.length;
   }
 }
 

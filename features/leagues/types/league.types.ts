@@ -40,5 +40,6 @@ export type LeagueDashboardViewModel = {
   tierLabel: string;
   weeklyEp: number;
   rank: number | null;
+  seasonEndsAt: string | null;
   leaderboard: LeagueLeaderboardEntry[];
 };

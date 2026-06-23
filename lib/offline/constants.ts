@@ -21,6 +21,7 @@ export const OFFLINE_SYNC_MUTATION_TYPES = [
 
 export const OFFLINE_REVIEW_CACHE_LIMIT = 25;
 export const OFFLINE_AUDIO_CACHE_MAX_ENTRIES = 48;
+export const OFFLINE_PREFETCH_LESSON_LIMIT = 3;
 export const OFFLINE_BACKGROUND_SYNC_TAG = "noboru-offline-sync";
 export const REVIEW_BATCH_FLUSH_SIZE = 5;
 export const REVIEW_BATCH_FLUSH_INTERVAL_MS = 30_000;

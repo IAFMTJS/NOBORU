@@ -1,18 +1,20 @@
 import { cache } from "react";
 
-import { elevationService } from "@/features/elevation/services/elevation.service";
-import { questService } from "@/features/quests/services/quest.service";
-import { reviewServerService } from "@/features/review/services/review-server.service";
+import {
+  getCrossRequestElevationSummary,
+  getCrossRequestQuestDashboard,
+  getCrossRequestReviewStats,
+} from "@/lib/cache/user-data-cache";
 
-/** Per-request dedupe for dashboard reads. Do not wrap in unstable_cache — these services use the cookie-backed Supabase client. */
+/** Per-request dedupe — delegates to cross-request cache when available. */
 export const getCachedElevationSummary = cache((userId: string) =>
-  elevationService.getSummary(userId),
+  getCrossRequestElevationSummary(userId),
 );
 
 export const getCachedReviewStats = cache((userId: string) =>
-  reviewServerService.getStats(userId),
+  getCrossRequestReviewStats(userId),
 );
 
 export const getCachedQuestDashboard = cache((userId: string) =>
-  questService.getQuestDashboard(userId),
+  getCrossRequestQuestDashboard(userId),
 );

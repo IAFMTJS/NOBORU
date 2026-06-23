@@ -8,7 +8,7 @@ export type PrimaryNavItem = {
 
 /** VISUAL MD FILES Doc 01 — Tree · Camp · Study · Bag · Profile */
 export const PRIMARY_NAV_ITEMS: PrimaryNavItem[] = [
-  { href: "/tree", label: "Tree", navTab: "tree" },
+  { href: "/tree", label: "Journey", navTab: "tree" },
   { href: "/camp", label: "Camp", navTab: "camp" },
   { href: "/study", label: "Study", navTab: "study" },
   { href: "/bag", label: "Bag", navTab: "bag" },

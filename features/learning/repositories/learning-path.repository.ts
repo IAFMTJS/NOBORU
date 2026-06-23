@@ -114,7 +114,9 @@ class LearningPathRepository {
   ): Promise<LessonRow | null> {
     const { data, error } = await client
       .from("lessons")
-      .select("*")
+      .select(
+        "id, unit_id, type, title, description, order_index, difficulty, xp_reward, estimated_duration, checkpoint_activity_mix, status, created_at, updated_at",
+      )
       .eq("id", lessonId)
       .eq("status", "published")
       .maybeSingle();
@@ -285,7 +287,9 @@ class LearningPathRepository {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("lesson_items")
-      .select("*")
+      .select(
+        "id, lesson_id, content_type, content_id, order_index, created_at, updated_at",
+      )
       .eq("lesson_id", lessonId)
       .order("order_index", { ascending: true });
 

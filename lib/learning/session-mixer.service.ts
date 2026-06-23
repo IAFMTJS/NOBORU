@@ -1,5 +1,4 @@
 import {
-  NEW_CONTENT_RATIO,
   REVIEW_CONTENT_RATIO,
 } from "@/lib/learning/learning-architecture.constants";
 import type { SessionMixCounts } from "@/lib/learning/learning-architecture.types";

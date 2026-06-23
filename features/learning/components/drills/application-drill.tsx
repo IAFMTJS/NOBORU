@@ -6,7 +6,7 @@ import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
-import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import type { LessonApplicationStep } from "@/features/learning/types/lesson.types";
 import {
   isJapaneseTextAnswerCorrect,
@@ -58,7 +58,12 @@ export function ApplicationDrill({
       result={result}
       hero={
         showJapaneseDisplay ? (
-          <JapaneseText text={step.display} size="hero" className="text-foreground" />
+          <AnnotatedJapaneseText
+            text={step.display}
+            size="hero"
+            className="text-foreground"
+            supportMode="tap"
+          />
         ) : step.direction === "to_japanese" && step.displayHint ? (
           <p className="font-story text-2xl font-semibold text-heading-story sm:text-3xl">
             {step.displayHint}

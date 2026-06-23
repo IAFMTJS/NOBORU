@@ -7,19 +7,28 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/visual";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
+import { ComprehensionSupportProvider } from "@/features/learning/context/comprehension-support-context";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { StudyHubLayout } from "@/features/dojo/components/study-hub-layout";
 import type { StoryDetailViewModel } from "@/features/reading/types/reading.types";
+import type { ComprehensionSupportContext } from "@/lib/learning/comprehension-support.types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { useMountOnceEffect } from "@/lib/hooks/use-mount-once-effect";
 
 type StoryReaderProps = {
   story: StoryDetailViewModel;
   embedded?: boolean;
+  comprehensionSupport?: ComprehensionSupportContext | null;
   onComplete?: (score: number) => void;
 };
 
-export function StoryReader({ story, embedded = false, onComplete }: StoryReaderProps) {
+export function StoryReader({
+  story,
+  embedded = false,
+  comprehensionSupport,
+  onComplete,
+}: StoryReaderProps) {
   const [phase, setPhase] = useState<"read" | "quiz" | "done">(
     story.completed ? "done" : "read",
   );
@@ -84,7 +93,10 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
     void saveProgress(finalScore);
   }
 
+  const resolvedSupport = comprehensionSupport ?? story.comprehensionSupport ?? null;
+
   const content = (
+    <ComprehensionSupportProvider value={resolvedSupport}>
     <div className="space-y-4">
       {error ? <p className="text-caption text-destructive">{error}</p> : null}
 
@@ -95,21 +107,14 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
             <p className="text-caption text-muted-foreground">
               Section {sectionIndex + 1} of {story.sections.length}
             </p>
-            <p className="font-japanese text-heading-4 leading-relaxed" lang="ja">
-              {currentSection.japaneseText}
-            </p>
-            {currentSection.tokenAnnotations?.some((annotation) => annotation.shouldHighlight) ? (
-              <p className="text-caption text-trail-glow">
-                Highlighted words are not in your active pool yet — they will be introduced in a
-                future lesson.
-              </p>
-            ) : null}
-            {currentSection.romaji ? (
-              <p className="text-body-sm text-muted-foreground">{currentSection.romaji}</p>
-            ) : null}
-            {currentSection.english ? (
-              <p className="text-body-sm text-muted-foreground">{currentSection.english}</p>
-            ) : null}
+            <AnnotatedJapaneseText
+              text={currentSection.japaneseText}
+              romaji={currentSection.romaji}
+              english={currentSection.english}
+              size="lg"
+              supportMode="full"
+              comprehensionSupport={resolvedSupport}
+            />
           </GlassPanel>
           <Button
             className="w-full"
@@ -198,6 +203,7 @@ export function StoryReader({ story, embedded = false, onComplete }: StoryReader
         </GlassPanel>
       ) : null}
     </div>
+    </ComprehensionSupportProvider>
   );
 
   if (embedded) {

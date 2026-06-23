@@ -29,19 +29,19 @@ jobs:
       - name: Run Lighthouse on public routes
         run: |
           npx lighthouse http://127.0.0.1:3000/login \
-            --only-categories=performance,accessibility,best-practices \
+            --only-categories=performance,accessibility,best-practices,pwa \
             --chrome-flags="--headless --no-sandbox" \
             --output=json \
             --output-path=./lighthouse-login.json \
             --quiet
           npx lighthouse http://127.0.0.1:3000/register \
-            --only-categories=performance,accessibility,best-practices \
+            --only-categories=performance,accessibility,best-practices,pwa \
             --chrome-flags="--headless --no-sandbox" \
             --output=json \
             --output-path=./lighthouse-register.json \
             --quiet
           npx lighthouse http://127.0.0.1:3000/ \
-            --only-categories=performance,accessibility,best-practices \
+            --only-categories=performance,accessibility,best-practices,pwa \
             --chrome-flags="--headless --no-sandbox" \
             --output=json \
             --output-path=./lighthouse-root.json \
@@ -57,16 +57,20 @@ jobs:
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/camp ./lighthouse-camp.json
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/tree ./lighthouse-tree.json
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/review ./lighthouse-review.json
+          if [ -n "${LIGHTHOUSE_LESSON_ID}" ]; then
+            node scripts/lighthouse-authenticated.mjs "http://127.0.0.1:3000/learn/lesson/${LIGHTHOUSE_LESSON_ID}" ./lighthouse-lesson.json
+          fi
       - name: Enforce Lighthouse score floors
         run: |
           node scripts/check-lighthouse-scores.mjs lighthouse-login.json lighthouse-register.json lighthouse-root.json
-          for report in lighthouse-camp.json lighthouse-tree.json lighthouse-review.json; do
+          for report in lighthouse-camp.json lighthouse-tree.json lighthouse-review.json lighthouse-lesson.json; do
             if [ -f "$report" ]; then
               node scripts/check-lighthouse-scores.mjs "$report"
             fi
           done
         env:
           LIGHTHOUSE_MIN_SCORE: "90"
+          LIGHTHOUSE_LESSON_ID: ${{ secrets.LIGHTHOUSE_LESSON_ID }}
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         with:

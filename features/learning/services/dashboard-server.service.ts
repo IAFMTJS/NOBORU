@@ -93,15 +93,16 @@ class DashboardServerService {
   }
 
   async getCampBelowFold(userId: string): Promise<CampBelowFoldViewModel> {
-    const [shrineProtection, quests] = await Promise.all([
-      shrineProtectionService.getSummary(userId),
-      getCachedQuestDashboard(userId),
-    ]);
-
+    const shrineProtection = await shrineProtectionService.getSummary(userId);
     return {
       shrineProtection,
       quests: {
-        weekly: quests.weekly,
+        weekly: {
+          weekStart: "",
+          completedCount: 0,
+          totalCount: 0,
+          quests: [],
+        },
       },
     };
   }

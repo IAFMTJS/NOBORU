@@ -9,5 +9,5 @@ export const RELEASE = {
 
 export const OFFICIAL_RELEASE = {
   label: "Official Release",
-  message: "Noboru 1.0 — climb from Foothills through N5 with trail lessons, reviews, and offline support.",
+  message: "Noboru 1.0 — climb the JLPT trail from N5 foundations with lessons, reviews, and offline support.",
 } as const;

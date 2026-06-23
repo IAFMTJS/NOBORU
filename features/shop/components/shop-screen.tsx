@@ -9,7 +9,6 @@ import { MerchantStand } from "@/components/visual/world/merchant-stand";
 import { WorldDialogueBubble } from "@/components/visual/world-dialogue-bubble";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { ShopItemCard } from "@/features/shop/components/shop-item-card";
-import { shopService } from "@/features/shop/services/shop.service";
 import type { ShopCatalogViewModel } from "@/features/shop/types/shop.types";
 
 type ShopScreenProps = {
@@ -26,22 +25,40 @@ export function ShopScreen({ catalog: initialCatalog }: ShopScreenProps) {
 
   const { wallet, items } = catalog;
 
-  function handlePurchase(itemId: string) {
+  async function handlePurchase(itemId: string) {
     setPurchasing(true);
     setFeedback(null);
-    const result = shopService.purchase(itemId);
-    setPurchasing(false);
 
-    if (result.success) {
-      setCatalog(result.catalog);
+    try {
+      const response = await fetch("/api/shop/purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId }),
+      });
+      const payload = (await response.json()) as {
+        success?: boolean;
+        data?: { itemName: string; catalog: ShopCatalogViewModel };
+        error?: string;
+      };
+
+      if (!response.ok || !payload.success || !payload.data) {
+        setFeedback({
+          tone: "error",
+          message: payload.error ?? "Purchase could not be completed.",
+        });
+        return;
+      }
+
+      setCatalog(payload.data.catalog);
       setFeedback({
         tone: "success",
-        message: `${result.itemName} is yours — stowed in your backpack.`,
+        message: `${payload.data.itemName} is yours — stowed in your backpack.`,
       });
-      return;
+    } catch {
+      setFeedback({ tone: "error", message: "Purchase could not be completed." });
+    } finally {
+      setPurchasing(false);
     }
-
-    setFeedback({ tone: "error", message: result.error });
   }
 
   return (

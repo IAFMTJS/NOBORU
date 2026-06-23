@@ -4,6 +4,43 @@ Append an entry at the top for every brainstorm session.
 
 ---
 
+## 2026-06-24 — Full audit implementation (Phase 0–5)
+
+**Trigger:** [Noboru Full Audit plan](../performance-audit.md) — shop/collections DB, N5 spine ~300 slots, performance, social finish.
+
+**Shipped:**
+
+- Economy: `shop_items` + wallet from EP; collections museum from collectibles DB
+- N5 spine: blueprint **300** slots; pedagogy script fixed (293 path lessons on `/tree`)
+- Grammar: `は`/`です` dedupe migration; Base Camp duplicate draft; `act_index` on Sentence Foundations
+- Comprehension SRS: expanded story/listening slug maps + unit test
+- Perf: cross-request `unstable_cache` for elevation/quests/review/progress; camp quest dedupe; league cache invalidation on EP
+- Rate limits on mutation routes; JWT claims backfill migration
+- Social: league opt-out, friends follow/unfollow API, community friends tab, camp → leaderboard link
+- Visual: Lantern Gold `--primary`, NavTabItem in bottom nav, N5 canvas reduced-motion scroll, jlpt pills immersion fix
+
+**Blocked (founder):** Manual N5 playthrough sign-off → N4 + [16-post-n5-backlog.md](./16-post-n5-backlog.md).
+
+---
+
+## 2026-06-23 — Full remediation (June audit)
+
+**Trigger:** June 2026 performance + learning audit remediation plan.
+
+**Shipped:**
+
+- CI: journey test types, nav `/tree` → N5 canvas, pedagogy inventory script + CI step
+- Cleanup: dead dashboard module, ESLint 9 flat config, legacy slug inventory, Yama/Kitsune alias docs
+- Social: placeholder data hidden; opt-in `leagueService` wired to `/community` and `/leaderboard`
+- Content: `は`/`です` N5 trail migration; comprehension SRS enqueue for story/listening key vocab
+- Visual: act sensory overlays on N5 backdrop; primary nav label **Journey**
+- Perf: cached league leaderboard (45s), API rate limits on review/sync/games, Lighthouse lesson fixture
+- Docs: [15-n5-playthrough-checklist.md](./15-n5-playthrough-checklist.md), [16-post-n5-backlog.md](./16-post-n5-backlog.md)
+
+**Remaining:** Founder manual N5 playthrough sign-off → N4 unblocked.
+
+---
+
 ## 2026-06-22 — Session 10: N5 art sprint kickoff
 
 **Trigger:** Founder — node placement good; time to make art.

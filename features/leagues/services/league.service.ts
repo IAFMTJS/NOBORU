@@ -1,3 +1,4 @@
+import { getCachedLeaderboardTop100 } from "@/lib/cache/league-cache";
 import { leagueRepository } from "@/features/leagues/repositories/league.repository";
 import {
   LEAGUE_TIER_LABELS,
@@ -7,19 +8,11 @@ import {
 
 class LeagueService {
   async getDashboard(userId: string): Promise<LeagueDashboardViewModel | null> {
-    const seasonId = await leagueRepository.getActiveSeasonId();
-    if (!seasonId) return null;
+    const season = await leagueRepository.getActiveSeason();
+    if (!season) return null;
 
-    const membership = await leagueRepository.ensureMembership(userId, seasonId);
-    const leaderboardRows = await leagueRepository.listLeaderboard(seasonId);
-
-    const leaderboard = leaderboardRows.map((row, index) => ({
-      userId: row.user_id,
-      displayName: row.display_name ?? "Climber",
-      weeklyEp: row.weekly_ep,
-      tier: row.tier as LeagueTier,
-      rank: index + 1,
-    }));
+    const membership = await leagueRepository.ensureMembership(userId, season.id);
+    const leaderboard = await getCachedLeaderboardTop100(season.id);
 
     const userRank =
       leaderboard.find((entry) => entry.userId === userId)?.rank ?? null;
@@ -30,6 +23,7 @@ class LeagueService {
       tierLabel: LEAGUE_TIER_LABELS[membership.tier as LeagueTier],
       weeklyEp: membership.weekly_ep,
       rank: userRank,
+      seasonEndsAt: season.endsAt,
       leaderboard,
     };
   }
@@ -43,6 +37,20 @@ class LeagueService {
       userId,
       seasonId,
       optedIn: true,
+    });
+
+    return this.getDashboard(userId);
+  }
+
+  async optOut(userId: string): Promise<LeagueDashboardViewModel | null> {
+    const seasonId = await leagueRepository.getActiveSeasonId();
+    if (!seasonId) return null;
+
+    await leagueRepository.ensureMembership(userId, seasonId);
+    await leagueRepository.updateMembership({
+      userId,
+      seasonId,
+      optedIn: false,
     });
 
     return this.getDashboard(userId);

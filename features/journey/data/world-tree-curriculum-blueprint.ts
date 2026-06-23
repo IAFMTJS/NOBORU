@@ -47,7 +47,7 @@ const LESSON_TYPES = [
 
 /** Target lesson + checkpoint + trial slots per world (landmarks added at runtime). */
 export const REGION_SLOT_TARGETS: Record<RegionSlug, number> = {
-  n5: 132,
+  n5: 300,
   n4: 85,
   n3: 180,
   n2: 160,
@@ -73,7 +73,16 @@ const REGION_CONFIGS: readonly RegionGeneratorConfig[] = [
       "Places",
       "Time",
       "Verbs",
+      "Vocabulary I",
+      "Vocabulary II",
+      "Vocabulary III",
+      "Vocabulary IV",
+      "Grammar I",
+      "Grammar II",
+      "Kanji I",
+      "Kanji II",
       "Reading",
+      "Listening",
       "Review",
     ],
   },

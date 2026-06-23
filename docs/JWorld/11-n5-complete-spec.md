@@ -173,7 +173,7 @@ From [06-n5-deep-dive.md](./06-n5-deep-dive.md) priority list:
 
 - [x] Static implementation audit — [13-n5-implementation-audit.md](./13-n5-implementation-audit.md)
 - [x] Launch criterion `n5_world` enhanced (`n5-world-launch-check.ts`)
-- [ ] Full manual playthrough Act I → Final trial
+- [ ] Full manual playthrough Act I → Final trial — [15-n5-playthrough-checklist.md](./15-n5-playthrough-checklist.md)
 - [ ] Founder N5 validated → unlock N4 spec
 
 ---
@@ -183,7 +183,7 @@ From [06-n5-deep-dive.md](./06-n5-deep-dive.md) priority list:
 | Role | Name | Date | Notes |
 |------|------|------|-------|
 | Founder | Siebe | 2026-06-22 | Concept approved → implementation sprint |
-| Founder | | | N5 validated → start N4 |
+| Founder | | | N5 validated → start N4 — **pending manual playthrough** ([15-n5-playthrough-checklist.md](./15-n5-playthrough-checklist.md)); engineering blockers cleared 2026-06-24 |
 
 ---
 

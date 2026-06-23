@@ -70,7 +70,7 @@ describe("augmentRegionsWithBlueprint", () => {
     );
     const n5 = augmented.find((region) => region.slug === "n5")!;
 
-    expect(n5.lessonCount).toBe(132);
+    expect(n5.lessonCount).toBe(300);
     expect(n5.units.flatMap((unit) => unit.lessons).some((lesson) => lesson.id.startsWith("blueprint:"))).toBe(
       true,
     );

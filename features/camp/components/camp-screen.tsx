@@ -188,6 +188,15 @@ export function CampScreen({ data: initialData, belowFold }: CampScreenProps) {
           Return to trail
         </Link>
         <Link
+          href="/leaderboard"
+          className={cn(
+            "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",
+            glassSurface.buttonSecondary,
+          )}
+        >
+          Weekly league
+        </Link>
+        <Link
           href="/shop"
           className={cn(
             "focus-ring motion-button flex h-11 w-full items-center justify-center px-5 font-sans text-body-sm",

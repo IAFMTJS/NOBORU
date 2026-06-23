@@ -86,7 +86,7 @@ class CompanionService {
   ): Promise<CompanionViewModel> {
     const row = await companionRepository.ensureCompanion(userId);
     const amount = BOND_XP_AWARDS[source];
-    let newXp = row.bond_xp + amount;
+    const newXp = row.bond_xp + amount;
     let newLevel = row.bond_level;
 
     while (newLevel < 50) {

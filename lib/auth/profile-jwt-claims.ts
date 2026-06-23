@@ -7,6 +7,7 @@ export type ProfileJwtClaims = {
   onboarding_completed: boolean;
   role: string;
   is_content_admin: boolean;
+  display_name: string | null;
 };
 
 export type MiddlewareProfile = {
@@ -46,7 +47,7 @@ export async function ensureProfileJwtClaims(userId: string): Promise<void> {
     const admin = createAdminClient();
     const { data: profile, error: profileError } = await admin
       .from("profiles")
-      .select("onboarding_completed, role")
+      .select("onboarding_completed, role, display_name")
       .eq("user_id", userId)
       .maybeSingle();
 
@@ -69,11 +70,19 @@ export async function ensureProfileJwtClaims(userId: string): Promise<void> {
         "onboarding_completed" in profile &&
         (profile as { onboarding_completed?: boolean }).onboarding_completed,
     );
+    const displayName =
+      profile &&
+      typeof profile === "object" &&
+      "display_name" in profile &&
+      typeof (profile as { display_name?: string | null }).display_name === "string"
+        ? (profile as { display_name: string }).display_name
+        : null;
 
     const claims: ProfileJwtClaims = {
       onboarding_completed: onboardingCompleted,
       role,
       is_content_admin: isContentAdminRole(role),
+      display_name: displayName,
     };
 
     const { error: updateError } = await admin.auth.admin.updateUserById(userId, {

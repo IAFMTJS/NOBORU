@@ -6,6 +6,7 @@ import type { JourneyRegionViewModel } from "@/features/journey/types/journey.ty
 
 import { N5PortalTransition } from "@/features/worlds/components/n5-portal-transition";
 import { N5WorldCanvas } from "@/features/worlds/components/n5-world-canvas";
+import { PwaInstallSlot } from "@/features/offline/components/pwa-install-slot";
 
 export type N5WorldScreenProps = {
   region: JourneyRegionViewModel;
@@ -45,6 +46,7 @@ export function N5WorldScreen({
         }}
       />
       <N5PortalTransition open={portalOpen} onStay={() => setPortalOpen(false)} />
+      <PwaInstallSlot />
     </>
   );
 }

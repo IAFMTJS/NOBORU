@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { analyticsRepository } from "@/features/analytics/repositories/analytics.repository";
 import { validateAnalyticsEvent } from "@/features/analytics/services/analytics-validation";
+import { checkRateLimit, rateLimitKey } from "@/lib/api/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
@@ -12,6 +13,11 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const limit = checkRateLimit(rateLimitKey(user.id, "analytics-batch"), 120, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
 
   let body: unknown;

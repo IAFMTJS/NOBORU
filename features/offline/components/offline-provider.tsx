@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, type ReactNode } from "react";
 
 import { OfflineStatusBanner } from "@/features/offline/components/offline-status-banner";
 import { OfflineSyncRewardsFeedback } from "@/features/offline/components/offline-sync-rewards-feedback";
+import { ServiceWorkerUpdateBanner } from "@/features/offline/components/service-worker-update-banner";
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import type {
@@ -12,6 +13,7 @@ import type {
 } from "@/lib/offline/types";
 
 type OfflineContextValue = {
+  userId?: string;
   isOnline: boolean;
   pendingMutations: number;
   status: OfflineStatusViewModel | null;
@@ -72,6 +74,7 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
   return (
     <OfflineContext.Provider
       value={{
+        userId,
         isOnline,
         pendingMutations: status?.pendingMutations ?? 0,
         status,
@@ -83,6 +86,7 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
         dismissSyncRewards,
       }}
     >
+      <ServiceWorkerUpdateBanner />
       <OfflineStatusBanner
         isOnline={isOnline}
         pendingMutations={status?.pendingMutations ?? 0}

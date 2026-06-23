@@ -11,7 +11,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 
 const SCAN_ROOTS = [join(root, "app/(app)"), join(root, "features")];
 
-const SKIP_PATH_PARTS = ["features/admin", "components/layout", "components/ui"];
+const SKIP_PATH_PARTS = ["features/admin", "components/layout"];
+
+const EXTRA_SCAN_FILES = [
+  join(root, "components/ui/jlpt-level-pills.tsx"),
+];
 
 const FORBIDDEN = [
   {
@@ -80,6 +84,20 @@ for (const scanRoot of SCAN_ROOTS) {
         violations.push({ file: rel, rule: rule.id, message: rule.message });
       }
     }
+  }
+}
+
+for (const extraFile of EXTRA_SCAN_FILES) {
+  try {
+    const content = readFileSync(extraFile, "utf8");
+    const rel = relative(root, extraFile).replace(/\\/g, "/");
+    for (const rule of FORBIDDEN) {
+      if (rule.pattern.test(content)) {
+        violations.push({ file: rel, rule: rule.id, message: rule.message });
+      }
+    }
+  } catch {
+    continue;
   }
 }
 

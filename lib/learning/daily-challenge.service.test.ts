@@ -12,6 +12,7 @@ function context(
     unlockedChapterIds: [],
     knownVocabularyIds: ["a", "b", "c"],
     knownGrammarIds: [],
+    knownKanjiIds: [],
     masteredVocabularyIds: ["c"],
     weakVocabularyIds: ["b"],
     activeVocabularyPool: ["a", "b", "c"],

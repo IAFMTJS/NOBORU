@@ -414,21 +414,18 @@ Score each lesson 1–5 on:
 |--------|-----------|-------------------|----------|---------|
 | Hiragana | **71** characters | ~71 (full syllabary) | **100%** | Complete |
 | Katakana | **71** characters | ~71 | **100%** | Complete |
-| Kanji | **103** characters | ~103 | **100%** | Complete — strong MVP asset |
-| Vocabulary | **38** unique N5 words* | ~600–800 | **~5%** | Critical gap for “N5 complete” claim |
-| Grammar | **17** points (15 on Mount N5 trail) | ~70–90 | **~19%** | Major gap — missing core patterns |
-| Reading | 3 stories + 2 dialogues + 6 script passages | Ongoing exposure | **Starter** | Adequate for MVP slice, not exam depth |
-| Listening | 4 exercises + 1 challenge | Ongoing exposure | **Starter** | Adequate for MVP slice |
-| Speaking | 0 | Required pillar (5%) | **0%** | Post-MVP |
-| Writing | 0 | Required pillar (5%) | **0%** | Post-MVP |
+| Kanji | **103** characters | ~103 | **100%** | Complete |
+| Vocabulary | **817** N5 words | ~600–800 | **102%** | CMS breadth met; trail pacing via waves |
+| Grammar | **90** points | ~70–90 | **113%** | Expanded waves + Sentence Foundations on trail |
+| Reading | **12** stories + **12** dialogues | Ongoing exposure | **Strong starter** | Comprehension SRS maps in constants |
+| Listening | **33** exercises + **4** challenges | Ongoing exposure | **Strong starter** | Comprehension SRS maps in constants |
+| Trials | **5** templates | Capstone exams | **MVP** | Sentinel/Final reference CMS `content_id` |
+| Speaking | 0 | Required pillar (5%) | **0%** | Post-N5 ([16-post-n5-backlog.md](./JWorld/16-post-n5-backlog.md)) |
+| Writing | 0 | Required pillar (5%) | **0%** | Post-N5 |
 
-\*38 = 35 Mount N5 seed words + 3 Base Camp greetings (`こんにちは`, `ありがとう`, `さようなら`). No deduplication overlap.
+**N5 path inventory (2026-06-24 `npm run audit:pedagogy`):** **293** published path lessons on world `n5`; journey blueprint **300** slots (reserved trials/landmarks headroom). Avg pedagogy **4.4**.
 
-**Published grammar points (CMS):**
-
-`を`, `が`, `に`, `で`, `と`, `も`, `へ`, `の`, `か`, `ません`, `ましょう`, `あります・います`, `い-adjective + です`, `な-adjective + です`, `くない`, `が好き` — plus Base Camp: `は (wa)`, `です`.
-
-**Notable N5 grammar absent from CMS:** polite past `ました`, `て-form`, plain `ない`, question words as patterns (`どこ`, `何`, `いつ`), `から`/`まで`, counters, `たい`, `てください`, comparative `より`, potential `できる`, etc.
+**Published grammar on trail includes:** `は (wa)`, `です`, particle set, expansion waves through Act III — Base Camp `First Sentences` deduped to draft preview (migration `20260624130000`).
 
 #### 2.6.2 Per-region pedagogy scores
 
@@ -961,6 +958,9 @@ lib/orchestration/games.orchestrator.ts
 | 2026-06-11 | No new daily quest for games in MVP | EP feeds existing `earn_ep` quest |
 | 2026-06-11 | Do not compete with Bunpro on grammar volume short-term | 17 vs 900+ points |
 | 2026-06-11 | Lead positioning: **JLPT trail + complete N5 kanji** | §2 kanji 100%; unique vs Duolingo/LingoDeer |
+| 2026-06-23 | Pedagogy script reconciled counts (~817 vocab, ~90 grammar, ~103 kanji in migrations) | Remediation Phase 0.3; marketing stays **N5 foundations** until founder playthrough |
+| 2026-06-23 | Comprehension SRS enqueue for story/listening lessons | Remediation Track A — key vocab maps in `comprehension-review.constants.ts` |
+| 2026-06-23 | Opt-in leagues replace placeholder social | Remediation Phase 6 — `FEATURE_FLAGS.socialLeagues` |
 
 ### 5.3 Final prioritized backlog (draft)
 

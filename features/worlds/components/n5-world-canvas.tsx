@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 
 import type { JourneyNode, JourneyRegionViewModel } from "@/features/journey/types/journey.types";
@@ -48,6 +49,8 @@ export function N5WorldCanvas({
   onNodeFocus,
 }: N5WorldCanvasProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const scrollBehavior = prefersReducedMotion ? "auto" : "smooth";
   const autoOpenedCurrentRef = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
@@ -84,9 +87,9 @@ export function N5WorldCanvas({
     const targetY = (position.y / 100) * container.scrollHeight - container.clientHeight * 0.55;
     container.scrollTo({
       top: Math.max(0, targetY),
-      behavior: "smooth",
+      behavior: scrollBehavior,
     });
-  }, [positions]);
+  }, [positions, scrollBehavior]);
 
   useEffect(() => {
     const targetId = focusNodeId ?? currentNodeId;
@@ -124,7 +127,7 @@ export function N5WorldCanvas({
       <div
         ref={scrollRef}
         className="relative z-10 h-full w-full snap-y snap-mandatory overflow-y-auto overscroll-contain"
-        style={{ scrollBehavior: "smooth" }}
+        style={{ scrollBehavior }}
       >
         <div
           className="relative w-full"

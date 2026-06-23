@@ -1,7 +1,6 @@
 import type {
   LessonContent,
   LessonPhaseSummary,
-  LessonRecallStep,
   LessonStageSummary,
   LessonStep,
   ScoredLessonStep,
@@ -563,13 +562,4 @@ export function hasListeningAudio(contents: LessonContent[]): boolean {
     (content): content is VocabularyLessonContent =>
       content.type === "vocabulary" && content.audioUrl != null,
   );
-}
-
-function buildRecallReviewStep(
-  content: LessonContent,
-  allAnswers: string[],
-  index: number,
-  total: number,
-): LessonRecallStep | null {
-  return buildActiveRecallStep(content, allAnswers, index, total, "review_injection");
 }

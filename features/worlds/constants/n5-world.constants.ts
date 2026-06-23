@@ -88,3 +88,10 @@ export const N5_ACT_BACKDROP_GRADIENTS: Record<1 | 2 | 3, string> = {
   2: "from-black/15 via-transparent to-black/15",
   3: "from-black/10 via-transparent to-black/20",
 };
+
+/** Act-aware sensory tint overlays (JWorld § Sensory defaults). */
+export const N5_ACT_SENSORY_OVERLAY: Record<1 | 2 | 3, string> = {
+  1: "from-sky-300/12 via-emerald-900/5 to-transparent",
+  2: "from-amber-200/8 via-transparent to-transparent",
+  3: "from-orange-100/6 via-transparent to-slate-900/12",
+};

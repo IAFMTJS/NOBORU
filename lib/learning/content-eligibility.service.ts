@@ -1,5 +1,4 @@
 import { validateGoldenContentRule } from "@/lib/learning/golden-content.validator";
-import { filterGrammarIdsToKnown } from "@/lib/learning/grammar-progression.service";
 import type { PlayerKnowledgeContext } from "@/lib/learning/learning-architecture.types";
 
 export type ContentEligibilityResult = {
@@ -21,7 +20,6 @@ export function evaluateContentEligibility(
     knownVocabulary,
   );
 
-  const allowedGrammar = filterGrammarIdsToKnown(requiredGrammarIds, knownGrammar);
   const unknownGrammarIds = requiredGrammarIds.filter(
     (id) => !knownGrammar.has(id),
   );

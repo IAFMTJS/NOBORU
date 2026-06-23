@@ -15,6 +15,17 @@ This folder documents Noboru's visual identity and mockup boards so Cursor can g
 
 Cursor rule: `.cursor/rules/visual-reference.mdc`
 
+**Companion naming:** Learner-facing name is **Yama** (code: `features/yama/`). Art Library files use **`kitsune_*`** — same character, different namespace (code vs assets).
+
+## Production ingest pipeline
+
+1. Generate / save PNG masters → `Art Library/<category>/` (local, gitignored masters)
+2. Post-process (transparency, dark variants) → `scripts/art-direction/`
+3. Publish WebP → `npm run assets:publish-library` → `public/art-library/`
+4. Register mappings → `lib/assets/` + `docs/asset-registry.md`
+
+Do **not** serve from `public/Art Library/` (removed). Site serves **`/art-library/*.webp` only**.
+
 ## Source Mockups (Supplementary)
 
 **In repo (`assets/marketing/`):**

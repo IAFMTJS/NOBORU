@@ -98,6 +98,7 @@ class PlayerKnowledgeService {
       previousChapterVocabularyIds,
       knownVocabularyIds,
       knownGrammarIds,
+      knownKanjiIds,
       masteredVocabularyIds,
       weakVocabularyIds,
       scheduledReviewVocabularyIds,
@@ -108,6 +109,7 @@ class PlayerKnowledgeService {
       listPreviousLessonVocabularyIds(scope.unitId, scope.lessonId),
       learnedContentRepository.getKnownIdsByContentType(scope.userId, "vocabulary"),
       learnedContentRepository.getKnownIdsByContentType(scope.userId, "grammar"),
+      learnedContentRepository.getKnownIdsByContentType(scope.userId, "kanji"),
       learnedContentRepository.getMasteredIdsByContentType(scope.userId, "vocabulary"),
       learnedContentRepository.getWeakIdsByContentType(scope.userId, "vocabulary"),
       learnedContentRepository.getScheduledReviewIdsByContentType(
@@ -124,6 +126,7 @@ class PlayerKnowledgeService {
 
     const knownVocabularyIdsResolved = knownVocabularyIds;
     const knownGrammarIdsResolved = knownGrammarIds;
+    const knownKanjiIdsResolved = knownKanjiIds;
     const masteredVocabularyIdsResolved = masteredVocabularyIds;
     const weakVocabularyIdsResolved = weakVocabularyIds;
     const scheduledReviewVocabularyIdsResolved = scheduledReviewVocabularyIds;
@@ -156,6 +159,7 @@ class PlayerKnowledgeService {
       ),
       knownVocabularyIds: knownVocabularyIdsResolved,
       knownGrammarIds: knownGrammarIdsResolved,
+      knownKanjiIds: knownKanjiIdsResolved,
       masteredVocabularyIds: masteredVocabularyIdsResolved,
       weakVocabularyIds: weakVocabularyIdsResolved,
       activeVocabularyPool: activePool.vocabularyIds,

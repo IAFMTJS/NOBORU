@@ -8,7 +8,10 @@ import {
   canAccessLessonOnJourney,
   resolveNodeKind,
 } from "@/features/journey/services/journey.service";
-import type { RegionJourneyInput } from "@/features/journey/types/journey.types";
+import type {
+  JourneyPathViewModel,
+  RegionJourneyInput,
+} from "@/features/journey/types/journey.types";
 import type { RegionPathViewModel } from "@/features/learning/types/lesson.types";
 import type { UserProgressRow } from "@/features/learning/types/progress.types";
 
@@ -60,6 +63,33 @@ function makeLessonSummary(
     progress,
     score: progress === "completed" ? 100 : 0,
     contentStatus: "published" as const,
+  };
+}
+
+function wrapRegionAsJourneyPath(
+  regionJourney: ReturnType<typeof buildRegionJourney>,
+): JourneyPathViewModel {
+  const currentNode =
+    regionJourney.currentNodeIndex != null
+      ? regionJourney.nodes[regionJourney.currentNodeIndex]
+      : null;
+  const nextNode = regionJourney.nodes.find(
+    (node) => node.state === "available" || node.state === "in_progress",
+  );
+
+  return {
+    regions: [regionJourney],
+    position: {
+      currentRegionSlug: regionJourney.slug,
+      currentRegionIndex: 0,
+      currentLessonId: currentNode?.lessonId ?? null,
+      currentNodeId: currentNode?.id ?? null,
+      globalNodeIndex: currentNode?.globalIndex ?? 0,
+      globalLessonIndex: 0,
+      pathPosition: currentNode?.pathPosition ?? 0,
+    },
+    nextLessonId: nextNode?.lessonId ?? null,
+    nextLessonHref: nextNode?.href ?? null,
   };
 }
 
@@ -387,14 +417,10 @@ describe("draft CMS lessons", () => {
           lessons: [
             {
               id: "blueprint:n5-branch-0-ch-1",
-              unitId: "blueprint-unit:n5-branch-0",
               type: "listening",
               title: "Listening · Chapter 1",
-              description: "Planned",
               xpReward: 10,
-              estimatedDuration: 5,
               progress: "not_started",
-              score: 0,
               contentStatus: "draft",
             },
           ],
@@ -421,20 +447,13 @@ describe("draft CMS lessons", () => {
       lessonCount: 1,
     });
 
-    const journey = buildRegionJourney(region, [], new Set());
+    const regionJourney = buildRegionJourney(region, [], new Set());
+    const journeyPath = wrapRegionAsJourneyPath(regionJourney);
 
     expect(
-      canAccessLessonOnJourney(
-        { regions: [journey], position: journey.position },
-        "blueprint:n5-branch-0-ch-1",
-      ),
+      canAccessLessonOnJourney(journeyPath, "blueprint:n5-branch-0-ch-1"),
     ).toBe(false);
-    expect(
-      canAccessLessonOnJourney(
-        { regions: [journey], position: journey.position },
-        "published-1",
-      ),
-    ).toBe(true);
+    expect(canAccessLessonOnJourney(journeyPath, "published-1")).toBe(true);
   });
 
   it("prefers the next lesson node over an available landmark for current position", () => {
@@ -460,12 +479,13 @@ describe("draft CMS lessons", () => {
           {
             id: "landmark-1",
             regionId: "region-1",
+            slug: "lantern-hamlet",
             label: "Lantern Hamlet",
             subtitle: "灯里",
             kind: "village",
             triggerAfterLessonCount: 1,
             pathPosition: 0.38,
-            status: "published",
+            orderIndex: 0,
           },
         ],
       },

@@ -1,4 +1,3 @@
-import type { JlptLevel } from "@/lib/content/types";
 import type { LearningFlowStage } from "@/lib/learning/learning-architecture.constants";
 
 /** Maps lesson step kinds to bible learning flow stages. */

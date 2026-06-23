@@ -1,25 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { ArtLibraryImage } from "@/components/media/art-library-image";
 import { glassSurface } from "@/components/visual/primitives/glass-surface";
+import { NavTabItem } from "@/components/visual/navigation/nav-tab-item";
 import { isNavActive } from "@/lib/navigation/is-nav-active";
-import type { ImmersiveNavTab } from "@/lib/navigation/immersive-nav.constants";
 import { PRIMARY_NAV_ITEMS } from "@/lib/navigation/primary-nav";
 import { cn } from "@/lib/utils";
 
-const NAV_ICON_BASE: Record<ImmersiveNavTab, string> = {
-  journey: "icons/icon_nav_journey_mountain",
-  tree: "icons/icon_nav_world_pagoda",
-  camp: "icons/icon_nav_camp_tent",
-  study: "icons/icon_nav_dojo_torii",
-  bag: "icons/icon_nav_bag_backpack",
-  profile: "icons/icon_nav_profile_fox",
-};
-
-/** Floating glass pill primary navigation. */
+/** Floating glass pill primary navigation with mockup-aligned active tab treatment. */
 export function BottomNav() {
   const pathname = usePathname();
 
@@ -31,39 +20,21 @@ export function BottomNav() {
         "pb-[max(0.5rem,env(safe-area-inset-bottom))]",
       )}
     >
-      <div className={cn("pointer-events-auto flex items-center gap-0.5", glassSurface.navShell)}>
-        {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => {
-          const active = isNavActive(pathname, href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              prefetch={false}
-              aria-current={active ? "page" : undefined}
-              aria-label={label}
-              className={cn(
-                "focus-ring inline-flex h-8 min-w-8 items-center justify-center rounded-full transition-all duration-200",
-                active
-                  ? cn(glassSurface.navItemActive, "gap-1 px-2.5")
-                  : cn(glassSurface.navItemInactive, "px-1.5"),
-              )}
-            >
-              <ArtLibraryImage
-                themedBase={NAV_ICON_BASE[navTab]}
-                src=""
-                alt=""
-                width={18}
-                height={18}
-                className={cn("shrink-0 transition", !active && "opacity-70")}
-              />
-              {active ? (
-                <span className="max-w-[4.25rem] truncate font-sans text-[9px] font-semibold leading-none tracking-wide">
-                  {label}
-                </span>
-              ) : null}
-            </Link>
-          );
-        })}
+      <div
+        className={cn(
+          "pointer-events-auto flex w-full max-w-phone items-end justify-between gap-0.5 px-1 pt-6",
+          glassSurface.navShell,
+        )}
+      >
+        {PRIMARY_NAV_ITEMS.map(({ href, label, navTab }) => (
+          <NavTabItem
+            key={href}
+            href={href}
+            label={label}
+            navTab={navTab}
+            isActive={isNavActive(pathname, href)}
+          />
+        ))}
       </div>
     </nav>
   );

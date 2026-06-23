@@ -61,7 +61,7 @@ From [immersive-navigation-system.md](./immersive-navigation-system.md):
 
 Settings is accessed from Profile — not a sixth tab.
 
-Legacy routes: `/home` → `/camp`, `/dojo` → `/study`, `/world/inventory` → `/bag`. Secondary discovery routes (`/world`, `/games`, `/community`, `/trials`, `/achievements`) are reachable from Camp, Study, or Profile — see [route-map.md](./route-map.md).
+Legacy routes: `/home` → `/tree`, `/dojo` → `/study`, `/world/inventory` → `/bag`. Secondary discovery routes (`/world`, `/games`, `/community`, `/trials`, `/achievements`) are reachable from Camp, Study, or Profile — see [route-map.md](./route-map.md).
 
 ---
 
@@ -76,7 +76,7 @@ Legacy routes: `/home` → `/camp`, `/dojo` → `/study`, `/world/inventory` →
 | `/register` | `(auth)` | Public | Email registration |
 | `/` | root | Public | Landing / redirect to Camp |
 | `/camp` | `(app)` | Protected | Camp headquarters (daily dashboard) |
-| `/home` | `(app)` | Protected | Redirect → `/camp` |
+| `/home` | `(app)` | Protected | Redirect → `/tree` |
 | `/learn` | `(app)` | Protected | Journey path hub (continuous world scroll) |
 | `/study` | `(app)` | Protected | Study hub (travel study area) |
 | `/dojo` | `(app)` | Protected | Redirect → `/study` |
@@ -249,7 +249,7 @@ Post-MVP information discovery:
 
 From `public/manifest.json`:
 
-- `start_url`: `/home`
+- `start_url`: `/tree`
 - `display`: `standalone`
 - Icons reference [asset-registry.md](./asset-registry.md)
 

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 
 import { ArtLibraryImage } from "@/components/media/art-library-image";
 import { GlassPanel } from "@/components/visual";
@@ -34,8 +33,6 @@ export function N5WorldNode({
   selected,
   onSelect,
 }: N5WorldNodeProps) {
-  const { resolvedTheme } = useTheme();
-  const theme = resolvedTheme === "light" ? "light" : "dark";
   const state = toTrailState(node.state);
   const size = isCurrent ? "lg" : node.kind === "landmark" ? "md" : "md";
 

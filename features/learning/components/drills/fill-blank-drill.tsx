@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
-import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import { cn } from "@/lib/utils";
 import type { LessonFillBlankStep } from "@/features/learning/types/lesson.types";
 
@@ -42,7 +42,12 @@ export function FillBlankDrill({
       result={result}
       hero={
         <div className="space-y-3">
-          <JapaneseText text={step.sentenceWithBlank} size="hero" className="text-foreground" />
+          <AnnotatedJapaneseText
+            text={step.sentenceWithBlank}
+            size="hero"
+            className="text-foreground"
+            supportMode="tap"
+          />
           <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
         </div>
       }

@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/visual";
 import { glassSurface } from "@/components/visual/primitives/glass-surface";
 import { useOfflineContext } from "@/features/offline/components/offline-provider";
+import { offlinePrefetchService } from "@/features/offline/services/offline-prefetch.service";
 import { cn } from "@/lib/utils";
+import { getOfflineSyncHint } from "@/lib/pwa/ios-sync-hint";
 
 function SyncStatRow({ label, value }: { label: string; value: string }) {
   return (
@@ -23,16 +26,42 @@ function SyncStatRow({ label, value }: { label: string; value: string }) {
 }
 
 export function OfflineSyncPanel() {
-  const { status, syncing, error, syncNow, refresh } = useOfflineContext();
+  const { status, syncing, error, syncNow, refresh, userId } = useOfflineContext();
+  const [preparing, setPreparing] = useState(false);
+  const [prepareMessage, setPrepareMessage] = useState<string | null>(null);
+  const [prepareError, setPrepareError] = useState<string | null>(null);
 
   if (!status) return null;
+
+  async function handlePrepareForOffline() {
+    if (!userId || !status?.isOnline) return;
+    setPreparing(true);
+    setPrepareMessage(null);
+    setPrepareError(null);
+    try {
+      const result = await offlinePrefetchService.prepareForOffline(userId);
+      await refresh();
+      setPrepareMessage(
+        `Prepared ${result.lessonsCached} lesson${result.lessonsCached === 1 ? "" : "s"}, ${result.reviewCardsCached} review card${result.reviewCardsCached === 1 ? "" : "s"}, and ${result.audioFilesCached} audio clip${result.audioFilesCached === 1 ? "" : "s"}.`,
+      );
+      if (result.errors.length > 0) {
+        setPrepareError(result.errors[0] ?? "Some items could not be cached.");
+      }
+    } catch (caught) {
+      setPrepareError(
+        caught instanceof Error ? caught.message : "Unable to prepare offline cache.",
+      );
+    } finally {
+      setPreparing(false);
+    }
+  }
 
   return (
     <GlassPanel className="space-y-3 p-4">
       <div className="space-y-1">
         <h3 className="font-sans text-body font-semibold tracking-wide">Offline & Sync</h3>
         <p className="text-caption text-muted-foreground">
-          Cached lessons, reviews, and progress sync when you reconnect.
+          {getOfflineSyncHint()}
         </p>
       </div>
       <SyncStatRow
@@ -57,6 +86,25 @@ export function OfflineSyncPanel() {
           {error}
         </p>
       ) : null}
+      {prepareMessage ? (
+        <p className="text-caption text-muted-foreground" role="status">
+          {prepareMessage}
+        </p>
+      ) : null}
+      {prepareError ? (
+        <p className="text-caption text-destructive" role="alert">
+          {prepareError}
+        </p>
+      ) : null}
+      <Button
+        className="w-full"
+        variant="secondary"
+        loading={preparing}
+        disabled={!status.isOnline || !userId}
+        onClick={() => void handlePrepareForOffline()}
+      >
+        Prepare for offline
+      </Button>
       <div className="flex gap-2">
         <Button
           className="flex-1"

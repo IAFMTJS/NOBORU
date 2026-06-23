@@ -219,8 +219,8 @@ function resolveVisibleNodePositions(
     return map;
   }
 
-  let scrollVh = resolveN5LayoutScrollMinHeightVh(count, options);
-  let minYGapPercent = (N5_TARGET_NODE_GAP_VH / scrollVh) * 100;
+  const scrollVh = resolveN5LayoutScrollMinHeightVh(count, options);
+  const minYGapPercent = (N5_TARGET_NODE_GAP_VH / scrollVh) * 100;
   const startY = computeJourneyPathCoordinates(
     N5_NODE_PATH_START,
     N5_WORLD_SLUG,

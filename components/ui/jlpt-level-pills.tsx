@@ -31,7 +31,7 @@ export function JlptLevelPills({
               "rounded-full border px-3 py-1 text-caption font-medium transition-colors",
               isActive
                 ? "border-primary bg-primary/10 text-primary"
-                : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                : "border-border bg-black/40 text-muted-foreground hover:border-primary/40 hover:text-foreground",
             )}
           >
             {level.toUpperCase()}

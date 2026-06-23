@@ -27,7 +27,7 @@ execSync(
     "npx lighthouse",
     targetUrl,
     "--port=9222",
-    "--only-categories=performance,accessibility,best-practices",
+    "--only-categories=performance,accessibility,best-practices,pwa",
     '--chrome-flags="--headless --no-sandbox"',
     "--output=json",
     `--output-path=${outputPath}`,

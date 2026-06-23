@@ -1,6 +1,7 @@
-import { assembleStoryForPlayer } from "@/lib/learning/story-assembly.service";
+import { annotateJapaneseSentence } from "@/lib/learning/sentence-annotation.service";
 import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
-import { vocabularyRepository } from "@/features/vocabulary/repositories/vocabulary.repository";
+import { comprehensionSupportService } from "@/features/learning/services/comprehension-support.service";
+import type { JlptLevel } from "@/lib/content/types";
 import { elevationService } from "@/features/elevation/services/elevation.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import { achievementService } from "@/features/achievements/services/achievement.service";
@@ -146,42 +147,35 @@ class ReadingProgressService {
     ]);
 
     const baseSections = mapSections(sections);
-    let enrichedSections = baseSections;
     let highlightedVocabularyIds: string[] | undefined;
+    let comprehensionSupport:
+      | Awaited<ReturnType<typeof comprehensionSupportService.buildForPlayer>>
+      | undefined;
 
     if (playerContext) {
-      const vocabularyRows = await vocabularyRepository.findByIds(
-        playerContext.knownVocabularyIds,
-      );
-      const vocabularyLookup = new Map(
-        vocabularyRows.map((row) => [
-          row.id,
-          {
-            id: row.id,
-            surfaceForms: [row.kana, row.kanji].filter(
-              (value): value is string => Boolean(value),
-            ),
-          },
-        ]),
-      );
-
-      const assembly = assembleStoryForPlayer(
-        baseSections.map((section) => ({
-          id: section.id,
-          japaneseText: section.japaneseText,
-        })),
+      const jlptLevel = (story.jlpt_level ?? "n5") as JlptLevel;
+      comprehensionSupport = await comprehensionSupportService.buildForPlayer(
         playerContext,
-        vocabularyLookup,
+        jlptLevel,
       );
 
-      highlightedVocabularyIds = assembly.highlightedVocabularyIds;
-      enrichedSections = baseSections.map((section) => {
-        const assembled = assembly.sections.find((entry) => entry.id === section.id);
-        return {
-          ...section,
-          tokenAnnotations: assembled?.annotations,
-        };
-      });
+      const highlighted = new Set<string>();
+      for (const section of baseSections) {
+        const segments = annotateJapaneseSentence(
+          section.japaneseText,
+          comprehensionSupport,
+        );
+        for (const segment of segments) {
+          if (
+            segment.kind === "token" &&
+            segment.annotation.shouldGloss &&
+            segment.annotation.vocabularyId
+          ) {
+            highlighted.add(segment.annotation.vocabularyId);
+          }
+        }
+      }
+      highlightedVocabularyIds = Array.from(highlighted);
     }
 
     return {
@@ -191,9 +185,10 @@ class ReadingProgressService {
       summary: story.summary,
       jlptLevel: story.jlpt_level,
       estimatedReadTime: story.estimated_read_time,
-      sections: enrichedSections,
+      sections: baseSections,
       questions: mapQuestions(questions),
       highlightedVocabularyIds,
+      comprehensionSupport,
       completed: progress?.status === "completed",
       score: progress?.score ?? 0,
     };

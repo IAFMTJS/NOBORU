@@ -247,16 +247,24 @@ Vercel GitHub integration handles preview and production deployments automatical
 
 From `public/manifest.json`:
 
-- `start_url`: `/home`
+- `start_url`: `/tree`
 - `display`: `standalone`
-- Icons: `/icons/icon_app_light_v1.webp`, `/icons/icon_app_dark_v1.webp`
+- Icons: `public/icons/` (`icon-192_v1.webp`, `icon-512_v1.webp`, maskable variants, `apple-touch-icon_v1.png`)
+- Splash screens: `public/icons/splash/` (`apple-touch-startup-image` links in root layout)
 
 ### PWA Requirements
 
-- Service worker for offline caching (future implementation)
-- Manifest served from `public/`
+- Service worker: `public/sw.js` (cache-first static assets, network-first navigation, offline fallback at `/offline`)
+- Manifest served from `public/manifest.json`
 - HTTPS required (Vercel provides automatically)
-- Install prompt on supported browsers
+- Install prompt on supported browsers; iOS Safari uses Share → Add to Home Screen guide
+- Regenerate icons after art updates: `npm run pwa:icons`
+- Validate before deploy: `npm run pwa:validate`
+
+### iOS Notes
+
+- Background Sync API is **not** available on iOS Safari. Offline mutations sync on reconnect, manual sync, or when the standalone app is reopened online.
+- Home screen icon requires `apple-touch-icon_v1.png` and manifest icons (screenshot fallback otherwise).
 
 ---
 
@@ -272,10 +280,15 @@ Asset files must exist in `public/` before deployment:
 public/
 ├── icons/
 │   ├── icon_app_light_v1.webp
-│   └── icon_app_dark_v1.webp
+│   ├── icon_app_dark_v1.webp
+│   ├── icon-192_v1.webp
+│   ├── icon-512_v1.webp
+│   ├── apple-touch-icon_v1.png
+│   └── splash/
 ├── mascots/
 │   ├── yama_main_light_v1.webp
 │   └── yama_main_dark_v1.webp
+├── sw.js
 └── manifest.json
 ```
 
@@ -293,8 +306,8 @@ public/
 
 ### Performance Monitoring
 
-- **Public routes:** optional Lighthouse CI workflow (`.github/workflows/lighthouse.yml`) targets `/login` and `/register` on pull requests.
-- **Authenticated routes:** use Vercel Speed Insights RUM in production; local Lighthouse runs require an auth fixture and are not part of CI yet.
+- **Authenticated routes:** Lighthouse CI (`.github/workflows/lighthouse.yml`) audits `/camp`, `/tree`, `/review`, and optionally `/learn/lesson/[id]` when `LIGHTHOUSE_LESSON_ID` secret is set.
+- **API rate limits:** `lib/api/rate-limit.ts` guards hot POST routes (review submit/batch, offline sync, game complete, shop purchase, lesson progress, reading/listening progress, trial complete, chest claim, analytics batch, league/friends mutations). Replace with Upstash/Vercel KV for multi-instance production scale.
 - **Bundle analysis:** run `npm run analyze` locally to open the webpack bundle analyzer (`ANALYZE=true` during `next build`).
 
 ---

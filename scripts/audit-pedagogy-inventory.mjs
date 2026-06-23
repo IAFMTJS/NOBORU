@@ -5,8 +5,131 @@ const root = process.cwd();
 const migrationsDir = path.join(root, "supabase/migrations");
 const files = fs.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql")).sort();
 
+/** Legacy CMS region slugs → canonical JWorld world slug. */
+const LEGACY_REGION_TO_WORLD = {
+  foothills: "n5",
+  "forest-trail": "n5",
+  "mount-n5": "n5",
+  n5: "n5",
+};
+
+const PEDAGOGY_THRESHOLDS = {
+  vocabularyN5: 300,
+  grammarN5: 40,
+};
+
 function readSql(name) {
   return fs.readFileSync(path.join(migrationsDir, name), "utf8");
+}
+
+function readAllMigrationSql() {
+  return files.map((file) => readSql(file)).join("\n");
+}
+
+/** Collect unique N5 vocabulary rows from every migration file. */
+function extractAllN5Vocabulary() {
+  const byKana = new Map();
+  const vocabRowRe =
+    /\('([^']*)',\s*(?:'([^']*)'|null),\s*'((?:[^'\\]|\\.)*)',\s*'([^']*)',\s*'n5'::public\.jlpt_level/gi;
+
+  for (const file of files) {
+    const sql = readSql(file);
+    for (const m of sql.matchAll(vocabRowRe)) {
+      byKana.set(m[1], {
+        kana: m[1],
+        kanji: m[2] || null,
+        meaning: m[3],
+        pos: m[4],
+        jlpt: "n5",
+        sourceMigration: file,
+      });
+    }
+  }
+  return [...byKana.values()];
+}
+
+/** Collect unique N5 grammar points from every migration file. */
+function extractAllN5Grammar() {
+  const byTitle = new Map();
+  const grammarRowRe =
+    /\('([^']+)',\s*'((?:[^'\\]|\\.)*)',\s*'(?:[^'\\]|\\.)*',\s*'n5'::public\.jlpt_level/gi;
+
+  for (const file of files) {
+    const sql = readSql(file);
+    for (const m of sql.matchAll(grammarRowRe)) {
+      byTitle.set(m[1], {
+        title: m[1],
+        meaning: m[2],
+        jlpt: "n5",
+        sourceMigration: file,
+      });
+    }
+  }
+  return [...byTitle.values()];
+}
+
+/** Collect unique N5 kanji from every migration file. */
+function extractAllN5Kanji() {
+  const byChar = new Map();
+  const kanjiRowRe =
+    /\('([^']+)',\s*'((?:[^'\\]|\\.)*)',\s*'n5'::public\.jlpt_level/gi;
+
+  for (const file of files) {
+    if (!file.includes("kanji") && !file.includes("learning_engine")) continue;
+    const sql = readSql(file);
+    if (!sql.includes("insert into public.kanji")) continue;
+    for (const m of sql.matchAll(kanjiRowRe)) {
+      byChar.set(m[1], {
+        character: m[1],
+        meaning: m[2],
+        jlpt: "n5",
+        sourceMigration: file,
+      });
+    }
+  }
+  return [...byChar.values()];
+}
+
+function inferLegacyRegionFromMigration(fileName) {
+  if (fileName.includes("hiragana")) return "foothills";
+  if (fileName.includes("katakana")) return "forest-trail";
+  if (
+    fileName.includes("n5_vocabulary") ||
+    fileName.includes("n5_grammar") ||
+    fileName.includes("n5_kanji") ||
+    fileName.includes("reading") ||
+    fileName.includes("listening") ||
+    fileName.includes("grammar_expansion") ||
+    fileName.includes("vocabulary_expansion")
+  ) {
+    return "mount-n5";
+  }
+  return "mount-n5";
+}
+
+function extractAllPublishedLessons() {
+  const lessons = [];
+  for (const file of files) {
+    const sql = readSql(file);
+    const legacyRegion = inferLegacyRegionFromMigration(file);
+    const worldSlug = LEGACY_REGION_TO_WORLD[legacyRegion] ?? "n5";
+    for (const lesson of extractLessonSelects(sql)) {
+      lessons.push({
+        ...lesson,
+        legacyRegion,
+        worldSlug,
+        sourceMigration: file,
+      });
+    }
+  }
+  return lessons;
+}
+
+function countCatalogCharacters(catalogText) {
+  const catalogSection =
+    catalogText.match(/export const (?:HIRAGANA|KATAKANA)_CATALOG[\s\S]*?^];/m)?.[0] ??
+    catalogText;
+  return (catalogSection.match(/\["[\u3040-\u309f\u30a0-\u30ffーン]",/g) || []).length;
 }
 
 function countN5Rows(sql, tablePattern) {
@@ -131,6 +254,8 @@ const listeningSql = readSql(regionFiles.listening);
 const hiraganaLessons = [
   ...extractLessonTitleArrays(hiraganaSql).map((title) => ({
     region: "foothills",
+    legacyRegion: "foothills",
+    worldSlug: "n5",
     type: "hiragana",
     title,
     estimatedDuration: title.includes("Combination") || title.includes("Voiced") ? 6 : 5,
@@ -138,12 +263,14 @@ const hiraganaLessons = [
   })),
   ...extractLessonSelects(hiraganaSql)
     .filter((l) => l.type === "practice")
-    .map((l) => ({ region: "foothills", ...l })),
+    .map((l) => ({ region: "foothills", legacyRegion: "foothills", worldSlug: "n5", ...l })),
 ];
 
 const katakanaLessons = [
   ...extractLessonTitleArrays(katakanaSql).map((title) => ({
     region: "forest-trail",
+    legacyRegion: "forest-trail",
+    worldSlug: "n5",
     type: "katakana",
     title,
     estimatedDuration: title.includes("Combination") || title.includes("Voiced") ? 6 : 5,
@@ -151,7 +278,7 @@ const katakanaLessons = [
   })),
   ...extractLessonSelects(katakanaSql)
     .filter((l) => l.type === "practice")
-    .map((l) => ({ region: "forest-trail", ...l })),
+    .map((l) => ({ region: "forest-trail", legacyRegion: "forest-trail", worldSlug: "n5", ...l })),
 ];
 
 const mountN5Lessons = [
@@ -162,9 +289,10 @@ const mountN5Lessons = [
   ...extractLessonSelects(listeningSql).map((l) => ({ region: "mount-n5", unit: "listening", ...l })),
 ];
 
-const vocabN5 = extractVocabValues(vocabSql);
-const grammarN5 = extractGrammarValues(grammarSql);
-const kanjiN5 = extractKanjiValues(kanjiSql);
+const vocabN5 = extractAllN5Vocabulary();
+const grammarN5 = extractAllN5Grammar();
+const kanjiN5 = extractAllN5Kanji();
+const expansionLessons = extractAllPublishedLessons();
 
 const vocabLessonWords = extractWordLists(vocabSql);
 const grammarLessonPoints = extractGrammarLists(grammarSql);
@@ -179,18 +307,16 @@ const katakanaCatalog = fs.readFileSync(
   path.join(root, "features/katakana/constants/katakana-catalog.ts"),
   "utf8",
 );
-const hiraganaCount = (hiraganaCatalog.match(/character:/g) || []).length;
-const katakanaCount = (katakanaCatalog.match(/character:/g) || []).length;
+const hiraganaCount = countCatalogCharacters(hiraganaCatalog);
+const katakanaCount = countCatalogCharacters(katakanaCatalog);
 
-// Reading/listening content counts from migrations
-const storyCount = (readingSql.match(/insert into public\.reading_stories/gi) || []).length;
-const dialogueCount = (readingSql.match(/insert into public\.reading_dialogues/gi) || []).length;
-const listeningExerciseCount = (listeningSql.match(/insert into public\.listening_exercises/gi) || []).length;
-const listeningChallengeCount = (listeningSql.match(/insert into public\.listening_challenges/gi) || []).length;
-
-// Trials
-const trialsSql = readSql(regionFiles.trials);
-const trialCount = (trialsSql.match(/insert into public\.trial_templates/gi) || []).length;
+// Reading/listening/trial counts across all migrations
+const allSql = readAllMigrationSql();
+const storyCount = (allSql.match(/insert into public\.stories\b/gi) || []).length;
+const dialogueCount = (allSql.match(/insert into public\.dialogue_scenarios\b/gi) || []).length;
+const listeningExerciseCount = (allSql.match(/insert into public\.listening_exercises\b/gi) || []).length;
+const listeningChallengeCount = (allSql.match(/insert into public\.listening_challenges\b/gi) || []).length;
+const trialCount = (allSql.match(/insert into public\.trial_templates\b/gi) || []).length;
 
 function scoreLesson(lesson, itemCount, drillNotes) {
   const type = lesson.type;
@@ -315,24 +441,50 @@ const allLessons = [
   ...extractLessonSelects(vocabSql)
     .map((l, idx) => ({
       region: "mount-n5",
+      legacyRegion: "mount-n5",
+      worldSlug: "n5",
       ...l,
       itemCount: vocabLessonWords[idx]?.length ?? 0,
       items: vocabLessonWords[idx] ?? [],
     })),
   ...extractLessonSelects(grammarSql).map((l, idx) => ({
     region: "mount-n5",
+    legacyRegion: "mount-n5",
+    worldSlug: "n5",
     ...l,
     itemCount: grammarLessonPoints[idx]?.length ?? 0,
     items: grammarLessonPoints[idx] ?? [],
   })),
   ...extractLessonSelects(kanjiSql).map((l, idx) => ({
     region: "mount-n5",
+    legacyRegion: "mount-n5",
+    worldSlug: "n5",
     ...l,
     itemCount: kanjiLessonChars[idx]?.length ?? 0,
     items: kanjiLessonChars[idx] ?? [],
   })),
-  ...extractLessonSelects(readingSql).map((l) => ({ region: "mount-n5", ...l, itemCount: 1 })),
-  ...extractLessonSelects(listeningSql).map((l) => ({ region: "mount-n5", ...l, itemCount: 1 })),
+  ...extractLessonSelects(readingSql).map((l) => ({
+    region: "mount-n5",
+    legacyRegion: "mount-n5",
+    worldSlug: "n5",
+    ...l,
+    itemCount: 1,
+  })),
+  ...extractLessonSelects(listeningSql).map((l) => ({
+    region: "mount-n5",
+    legacyRegion: "mount-n5",
+    worldSlug: "n5",
+    ...l,
+    itemCount: 1,
+  })),
+  ...expansionLessons
+    .filter(
+      (l) =>
+        l.sourceMigration.includes("vocabulary_expansion") ||
+        l.sourceMigration.includes("grammar_expansion") ||
+        l.sourceMigration.includes("grammar_and_quizzes"),
+    )
+    .map((l) => ({ ...l, itemCount: l.type === "vocabulary" ? 5 : l.itemCount ?? 1 })),
 ];
 
 // Fix hiragana/katakana item counts from row groups properly
@@ -378,24 +530,23 @@ const JLPT_N5_REFERENCE = {
 };
 
 const regionSummary = {
-  foothills: {
-    lessons: lessonsScored.filter((l) => l.region === "foothills").length,
+  n5: {
+    lessons: lessonsScored.length,
     avgPedagogy: 0,
-  },
-  "forest-trail": {
-    lessons: lessonsScored.filter((l) => l.region === "forest-trail").length,
-    avgPedagogy: 0,
-  },
-  "mount-n5": {
-    lessons: lessonsScored.filter((l) => l.region === "mount-n5").length,
-    avgPedagogy: 0,
+    legacyBreakdown: {
+      foothills: lessonsScored.filter((l) => l.legacyRegion === "foothills").length,
+      forestTrail: lessonsScored.filter((l) => l.legacyRegion === "forest-trail").length,
+      mountN5: lessonsScored.filter((l) => l.legacyRegion === "mount-n5").length,
+    },
   },
 };
 
 for (const key of Object.keys(regionSummary)) {
-  const ls = lessonsScored.filter((l) => l.region === key);
+  const ls = lessonsScored.filter((l) => l.worldSlug === key);
   regionSummary[key].avgPedagogy =
-    Math.round((ls.reduce((s, l) => s + l.scores.average, 0) / ls.length) * 10) / 10;
+    ls.length === 0
+      ? 0
+      : Math.round((ls.reduce((s, l) => s + l.scores.average, 0) / ls.length) * 10) / 10;
 }
 
 const contentBalance = {
@@ -425,6 +576,7 @@ const report = {
     listeningExercises: listeningExerciseCount,
     listeningChallenges: listeningChallengeCount,
     trials: trialCount,
+    expansionLessonsFromMigrations: expansionLessons.length,
   },
   coverageVsJlptN5: {
     hiragana: { published: hiraganaCount, target: 71, percent: Math.round((hiraganaCount / 71) * 100) },
@@ -435,10 +587,11 @@ const report = {
   },
   lessonInventory: {
     totalN5PathLessons: lessonsScored.length,
-    byRegion: {
-      foothills: lessonsScored.filter((l) => l.region === "foothills").length,
-      forestTrail: lessonsScored.filter((l) => l.region === "forest-trail").length,
-      mountN5: lessonsScored.filter((l) => l.region === "mount-n5").length,
+    worldSlug: "n5",
+    byLegacyRegion: {
+      foothills: lessonsScored.filter((l) => l.legacyRegion === "foothills" || l.region === "foothills").length,
+      forestTrail: lessonsScored.filter((l) => l.legacyRegion === "forest-trail" || l.region === "forest-trail").length,
+      mountN5: lessonsScored.filter((l) => l.legacyRegion === "mount-n5" || l.region === "mount-n5").length,
     },
     byType: lessonsScored.reduce((acc, l) => {
       acc[l.type] = (acc[l.type] || 0) + 1;
@@ -449,12 +602,25 @@ const report = {
       0,
     ),
   },
+  thresholds: PEDAGOGY_THRESHOLDS,
+  thresholdWarnings: [],
   regionPedagogyScores: regionSummary,
   lessons: lessonsScored,
   vocabularyWords: vocabN5,
   grammarPoints: grammarN5,
   kanjiCharacters: kanjiN5.map((k) => k.character),
 };
+
+if (report.contentPublished.vocabularyN5 < PEDAGOGY_THRESHOLDS.vocabularyN5) {
+  report.thresholdWarnings.push(
+    `vocabularyN5 ${report.contentPublished.vocabularyN5} < ${PEDAGOGY_THRESHOLDS.vocabularyN5} (honest messaging: N5 starter path)`,
+  );
+}
+if (report.contentPublished.grammarN5 < PEDAGOGY_THRESHOLDS.grammarN5) {
+  report.thresholdWarnings.push(
+    `grammarN5 ${report.contentPublished.grammarN5} < ${PEDAGOGY_THRESHOLDS.grammarN5}`,
+  );
+}
 
 fs.writeFileSync(
   path.join(root, "scripts/audit-pedagogy-inventory.json"),
@@ -466,5 +632,18 @@ console.log(JSON.stringify({
   coverageVsJlptN5: report.coverageVsJlptN5,
   lessonInventory: report.lessonInventory,
   regionPedagogyScores: report.regionPedagogyScores,
-  lessonTitles: lessonsScored.map((l) => `${l.region} | ${l.type} | ${l.title} | items:${l.itemCount} | score:${l.scores.average}`),
+  thresholdWarnings: report.thresholdWarnings,
+  lessonTitles: lessonsScored.map((l) => `${l.worldSlug ?? "n5"} | ${l.type} | ${l.title} | items:${l.itemCount} | score:${l.scores.average}`),
 }, null, 2));
+
+if (report.thresholdWarnings.length > 0) {
+  console.warn("\nPedagogy threshold warnings:");
+  for (const warning of report.thresholdWarnings) {
+    console.warn(`  - ${warning}`);
+  }
+}
+
+const strict = process.argv.includes("--strict") || process.env.AUDIT_PEDAGOGY_STRICT === "1";
+if (strict && report.thresholdWarnings.length > 0) {
+  process.exit(1);
+}

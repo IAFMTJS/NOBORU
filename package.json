@@ -12,7 +12,7 @@
     "predev": "node scripts/art-direction/publish-art-library.mjs --if-needed",
     "analyze": "node -e \"process.env.ANALYZE='true'; require('child_process').execSync('next build', {stdio:'inherit', env:process.env})\"",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --max-warnings 40",
     "typecheck": "tsc --noEmit",
     "db:types": "supabase gen types typescript --local > lib/supabase/database.types.ts",
     "test": "vitest run",
@@ -23,7 +23,10 @@
     "assets:generate": "node scripts/art-direction/generate.mjs",
     "assets:publish-source": "node scripts/art-direction/publish-source.mjs",
     "assets:ingest-staging": "node scripts/art-direction/ingest-staging.mjs",
-    "assets:export-n5-greybox": "npx tsx scripts/art-direction/export-n5-greybox.ts"
+    "assets:export-n5-greybox": "npx tsx scripts/art-direction/export-n5-greybox.ts",
+    "audit:pedagogy": "node scripts/audit-pedagogy-inventory.mjs",
+    "pwa:icons": "node scripts/build-pwa-icons.mjs",
+    "pwa:validate": "node scripts/check-pwa-manifest.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.2.9",
@@ -54,6 +57,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@next/bundle-analyzer": "^15.5.19",
     "@types/node": "^25.9.2",
     "@types/react": "^19.2.17",

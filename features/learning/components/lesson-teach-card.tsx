@@ -3,15 +3,21 @@
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { Badge } from "@/components/ui/badge";
 import { GlassPanel, StoryTitle } from "@/components/visual";
-import { JapaneseText } from "@/features/learning/components/japanese-text";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import type { LessonTeachStep } from "@/features/learning/types/lesson.types";
+import type { ComprehensionSupportMode } from "@/lib/learning/comprehension-support.types";
 
 type LessonTeachCardProps = {
   step: LessonTeachStep;
   soundEnabled?: boolean;
+  supportMode?: ComprehensionSupportMode;
 };
 
-export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardProps) {
+export function LessonTeachCard({
+  step,
+  soundEnabled = true,
+  supportMode = "full",
+}: LessonTeachCardProps) {
   const { content } = step;
 
   if (content.type === "vocabulary") {
@@ -21,10 +27,11 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           <p className="text-caption text-muted-foreground">
             Vocabulary · {step.index}/{step.total}
           </p>
-          <JapaneseText
+          <AnnotatedJapaneseText
             text={content.kanji ?? content.kana}
             reading={content.kanji ? content.kana : null}
             size="hero"
+            supportMode="none"
           />
           {soundEnabled ? (
             <div className="flex justify-center">
@@ -47,12 +54,13 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
           {content.examples.length > 0 ? (
             <div className="mt-4 space-y-3 border-t border-white/10 pt-3">
               {content.examples.map((example) => (
-                <JapaneseText
+                <AnnotatedJapaneseText
                   key={example.japaneseText}
                   text={example.japaneseText}
                   romaji={example.romaji}
                   english={example.english}
                   size="sm"
+                  supportMode={supportMode}
                 />
               ))}
             </div>
@@ -114,6 +122,20 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
               Kun: {content.kunyomi.join(" · ")}
             </p>
           ) : null}
+          {content.examples.length > 0 ? (
+            <div className="mt-4 space-y-3 border-t border-white/10 pt-3">
+              {content.examples.map((example) => (
+                <AnnotatedJapaneseText
+                  key={example.japaneseText}
+                  text={example.japaneseText}
+                  romaji={example.romaji}
+                  english={example.english}
+                  size="sm"
+                  supportMode={supportMode}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -135,12 +157,13 @@ export function LessonTeachCard({ step, soundEnabled = true }: LessonTeachCardPr
         {content.examples.length > 0 ? (
           <div className="space-y-3 border-t border-glass-border pt-3">
             {content.examples.map((example) => (
-              <JapaneseText
+              <AnnotatedJapaneseText
                 key={example.japaneseText}
                 text={example.japaneseText}
                 romaji={example.romaji}
                 english={example.english}
                 size="sm"
+                supportMode={supportMode}
               />
             ))}
           </div>
