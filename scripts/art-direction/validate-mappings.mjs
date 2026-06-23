@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Validates legacy ArtAssetRef mappings resolve to files in Art Library/.
+ * Validates legacy ArtAssetRef mappings resolve to published WebP in public/art-library/.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -10,7 +10,11 @@ import { mapLegacyAssetToArtLibrary } from "./legacy-art-library-map.mjs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const mappingsPath = join(root, "lib/assets/art-mappings.ts");
 const lessonNodePath = join(root, "lib/assets/lesson-node-assets.ts");
-const artLibraryRoot = join(root, "Art Library");
+const publishedArtRoot = join(root, "public/art-library");
+
+function toPublishedWebpPath(relativePath) {
+  return relativePath.replace(/\.(png|jpe?g)$/i, ".webp");
+}
 
 const SCREEN_ASSET_EXPORTS = [
   "JOURNEY_WORLD_ASSETS",
@@ -63,7 +67,7 @@ function extractBlock(source, exportName) {
 function resolvePath(ref) {
   const relative = mapLegacyAssetToArtLibrary(ref, "dark");
   if (!relative) return null;
-  return join(artLibraryRoot, relative);
+  return join(publishedArtRoot, toPublishedWebpPath(relative));
 }
 
 const mappingsSource = existsSync(mappingsPath) ? readFileSync(mappingsPath, "utf8") : "";
@@ -101,14 +105,14 @@ const yamaExpressionRefs = extractRefs(yamaExpressionBlock);
 const yamaPoseRefs = extractRefs(yamaPoseBlock);
 
 if (missing.length > 0) {
-  console.error("Missing Art Library assets:");
+  console.error("Missing published art-library assets:");
   for (const entry of missing.sort()) {
     console.error(`  - ${entry}`);
   }
   process.exit(1);
 }
 
-console.log(`OK: ${seen.size - unmapped.length} mapped asset refs validated in Art Library.`);
+console.log(`OK: ${seen.size - unmapped.length} mapped asset refs validated in public/art-library.`);
 if (unmapped.length > 0) {
   console.log(`Note: ${unmapped.length} refs have no Art Library mapping yet (optional art).`);
 }

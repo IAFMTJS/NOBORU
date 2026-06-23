@@ -19,9 +19,10 @@
 # production
 /build
 
-# Art Library/ PNG masters = high-res source catalog (LFS). Regenerate site assets with:
+# Art Library/ = local PNG masters (not in git). Publish to repo with:
 #   npm run assets:publish-library
 # Site serves committed public/art-library/*.webp only.
+Art Library/
 
 # misc
 .DS_Store

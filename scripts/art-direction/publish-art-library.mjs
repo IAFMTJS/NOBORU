@@ -4,7 +4,7 @@
  * Masters stay in Art Library/ for archival quality; the site serves WebP only.
  * Usage: node scripts/art-direction/publish-art-library.mjs [--if-needed]
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import sharp from "sharp";
 
@@ -12,7 +12,6 @@ const ROOT = resolve(import.meta.dirname, "../..");
 const SRC = join(ROOT, "Art Library");
 const DEST = join(ROOT, "public/art-library");
 const ifNeeded = process.argv.includes("--if-needed");
-const LFS_POINTER_PREFIX = "version https://git-lfs.github.com/spec/v1";
 const RASTER_EXT = /\.(png|jpe?g)$/i;
 
 const WEBP_OPTIONS = {
@@ -21,11 +20,16 @@ const WEBP_OPTIONS = {
   alphaQuality: 100,
 };
 
-const SAMPLE_FILES = [
-  join(SRC, "icons", "icon_nav_journey_mountain_dark_v1.png"),
-  join(SRC, "backgrounds", "trail", "bg_trail_dark_v1.png"),
-  join(SRC, "characters", "kitsune", "base", "kitsune_standing_traveler_dark_v1.png"),
-];
+function publishedWebpPath(sourcePath) {
+  const rel = relative(SRC, sourcePath).replace(/\\/g, "/");
+  return join(DEST, rel.replace(RASTER_EXT, ".webp"));
+}
+
+async function publishRaster(sourcePath) {
+  const destPath = publishedWebpPath(sourcePath);
+  mkdirSync(dirname(destPath), { recursive: true });
+  await sharp(sourcePath).webp(WEBP_OPTIONS).toFile(destPath);
+}
 
 function walkRasterFiles(dir, results = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -71,26 +75,6 @@ function shouldSkipPublish() {
   return newestMtime(DEST) >= newestMtime(SRC);
 }
 
-function hasPointerFiles() {
-  const samples = SAMPLE_FILES.filter((filePath) => existsSync(filePath));
-  if (samples.length === 0) return false;
-  return samples.some((filePath) => {
-    const head = readFileSync(filePath, { encoding: "utf8", flag: "r" }).slice(0, 80);
-    return head.startsWith(LFS_POINTER_PREFIX);
-  });
-}
-
-function publishedWebpPath(sourcePath) {
-  const rel = relative(SRC, sourcePath).replace(/\\/g, "/");
-  return join(DEST, rel.replace(RASTER_EXT, ".webp"));
-}
-
-async function publishRaster(sourcePath) {
-  const destPath = publishedWebpPath(sourcePath);
-  mkdirSync(dirname(destPath), { recursive: true });
-  await sharp(sourcePath).webp(WEBP_OPTIONS).toFile(destPath);
-}
-
 async function publishArtLibrary() {
   if (!existsSync(SRC)) {
     console.warn("Art Library folder not found — skipping publish.");
@@ -99,14 +83,6 @@ async function publishArtLibrary() {
 
   if (shouldSkipPublish()) {
     console.log("Art Library publish skipped (public/art-library is up to date).");
-    return;
-  }
-
-  if (hasPointerFiles()) {
-    console.warn(
-      "Art Library contains Git LFS pointers — cannot regenerate public/art-library WebP.",
-    );
-    console.warn("Run locally with materialized masters, or use committed WebP in public/.");
     return;
   }
 
