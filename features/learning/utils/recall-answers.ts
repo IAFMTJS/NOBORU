@@ -89,14 +89,48 @@ export function isJapaneseTextAnswerCorrect(
     return true;
   }
 
-  if (isMostlyLatinAnswer(trimmed) && romajiAnswers.length > 0) {
-    const normalizedRomaji = normalizeRomajiAnswer(trimmed);
-    return romajiAnswers.some(
-      (answer) => normalizeRomajiAnswer(answer) === normalizedRomaji,
-    );
+  if (!isMostlyLatinAnswer(trimmed)) {
+    return false;
   }
 
-  return false;
+  const normalizedRomaji = normalizeRomajiAnswer(trimmed);
+  if (
+    romajiAnswers.some(
+      (answer) => normalizeRomajiAnswer(answer) === normalizedRomaji,
+    )
+  ) {
+    return true;
+  }
+
+  // Derive romaji from kana surfaces so typed answers work even when steps omit
+  // explicit romaji (cached sessions, legacy assembly, or sentence-level metadata).
+  return japaneseAnswers.some((answer) => {
+    const derived = deriveKanaRomaji(answer);
+    return derived !== "" && normalizeRomajiAnswer(derived) === normalizedRomaji;
+  });
+}
+
+/** Prefer romaji in mistake feedback when the learner typed latin input. */
+export function pickJapaneseAnswerCorrection(
+  acceptedAnswers: string[],
+  userAnswer = "",
+): string {
+  if (!acceptedAnswers.length) return "";
+
+  if (isMostlyLatinAnswer(userAnswer)) {
+    const listedRomaji = acceptedAnswers.find((answer) =>
+      isMostlyLatinAnswer(answer),
+    );
+    if (listedRomaji) return listedRomaji;
+
+    for (const answer of acceptedAnswers) {
+      if (isMostlyLatinAnswer(answer)) continue;
+      const derived = deriveKanaRomaji(answer);
+      if (derived) return derived;
+    }
+  }
+
+  return acceptedAnswers[0] ?? "";
 }
 
 export function buildAcceptedAnswers(

@@ -181,4 +181,14 @@ describe("embedded lesson assembly", () => {
     expect(mixed).toHaveLength(1);
     expect(mixed[0]?.type).toBe("vocabulary");
   });
+
+  it("does not plan drills for listening-only lesson content", () => {
+    const { steps: drills } = assembleStagedExerciseSteps({
+      newContents: [],
+      reviewContents: [],
+      isCheckpoint: false,
+    });
+
+    expect(drills).toHaveLength(0);
+  });
 });

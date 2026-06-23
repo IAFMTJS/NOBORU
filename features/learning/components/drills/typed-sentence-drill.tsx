@@ -6,7 +6,10 @@ import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
-import { isJapaneseTextAnswerCorrect } from "@/features/learning/utils/recall-answers";
+import {
+  isJapaneseTextAnswerCorrect,
+  pickJapaneseAnswerCorrection,
+} from "@/features/learning/utils/recall-answers";
 
 type TypedSentenceDrillProps = {
   prompt: string;
@@ -65,7 +68,7 @@ export function TypedSentenceDrill({
           <LearningFailurePanel
             className="mt-3"
             userAnswer={value}
-            correctAnswer={acceptedAnswers[0] ?? ""}
+            correctAnswer={pickJapaneseAnswerCorrection(acceptedAnswers, value)}
             seed={0}
           />
         ) : null

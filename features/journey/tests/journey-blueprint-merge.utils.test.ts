@@ -102,6 +102,47 @@ describe("augmentRegionsWithBlueprint", () => {
     expect(firstBranchFirstLesson?.blueprint?.branchIndex).toBe(0);
   });
 
+  it("matches CMS units to blueprint branches by thematic name instead of array index", () => {
+    const greetingsUnit = {
+      id: "unit-greetings",
+      name: "Greetings & Politeness",
+      description: null,
+      orderIndex: 99,
+      lessonCount: 1,
+      completedCount: 0,
+      lessons: [
+        {
+          id: "greetings-lesson-1",
+          unitId: "unit-greetings",
+          type: "vocabulary",
+          title: "Hello and Thanks",
+          description: null,
+          xpReward: 10,
+          estimatedDuration: 5,
+          progress: "not_started" as const,
+          score: 0,
+          contentStatus: "published" as const,
+        },
+      ],
+    };
+
+    const cms: RegionPathViewModel = {
+      ...makeCmsRegion("n5", 2, 1),
+      units: [makeCmsRegion("n5", 2, 1).units[0]!, greetingsUnit],
+      lessonCount: 3,
+    };
+
+    const augmented = augmentRegionsWithBlueprint([cms], new Set());
+    const n5 = augmented.find((region) => region.slug === "n5")!;
+    const greetingsBranch = n5.units.find((unit) => unit.name === "Greetings");
+    const greetingsLesson = greetingsBranch?.lessons.find(
+      (lesson) => lesson.id === "greetings-lesson-1",
+    );
+
+    expect(greetingsLesson?.title).toBe("Hello and Thanks");
+    expect(greetingsLesson?.blueprint?.branchId).toContain("branch-");
+  });
+
   it("does not assign the same CMS lesson id to multiple blueprint slots", () => {
     const cmsRegions = [makeCmsRegion("n5", 55, 4)];
     const augmented = augmentRegionsWithBlueprint(cmsRegions, new Set());

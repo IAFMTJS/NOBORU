@@ -11,6 +11,7 @@ import {
   isJapaneseTextAnswerCorrect,
   isMostlyLatinAnswer,
   isRecallAnswerCorrect,
+  pickJapaneseAnswerCorrection,
 } from "@/features/learning/utils/recall-answers";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
 
@@ -85,7 +86,7 @@ export function TypedRecallDrill({
           <LearningFailurePanel
             className="mt-3"
             userAnswer={input}
-            correctAnswer={acceptedAnswers[0] ?? ""}
+            correctAnswer={pickJapaneseAnswerCorrection(acceptedAnswers, input)}
             seed={step.index}
           />
         ) : null

@@ -20,7 +20,6 @@ import {
 import {
   LESSON_AUTO_ADVANCE_MS,
   LESSON_MAX_HEARTS,
-  LESSON_WRONG_EXPLANATION_MS,
 } from "@/features/learning/constants/lesson-ui.constants";
 import {
   LessonDrillStep,
@@ -276,8 +275,10 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
   const [heartsRemaining, setHeartsRemaining] = useState(LESSON_MAX_HEARTS);
   const [streakCount, setStreakCount] = useState(0);
   const [showLevelUpCeremony, setShowLevelUpCeremony] = useState(false);
+  const [awaitingDrillContinue, setAwaitingDrillContinue] = useState(false);
 
   const advanceTimerRef = useRef<number | null>(null);
+  const pendingFailScoreRef = useRef<number | null>(null);
 
   const isReviewSession = session.progress === "completed";
   const currentStep: LessonStep | undefined = lessonSteps[stepIndex];
@@ -316,6 +317,8 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
   useEffect(() => {
     setEmbeddedComplete(false);
+    setAwaitingDrillContinue(false);
+    pendingFailScoreRef.current = null;
     clearAdvanceTimer();
   }, [stepIndex, clearAdvanceTimer]);
 
@@ -467,6 +470,30 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     [clearAdvanceTimer, goNext],
   );
 
+  const handleDrillContinue = useCallback(() => {
+    clearAdvanceTimer();
+    const pendingFailScore = pendingFailScoreRef.current;
+    pendingFailScoreRef.current = null;
+    setAwaitingDrillContinue(false);
+
+    if (pendingFailScore !== null) {
+      setFailedScore(pendingFailScore);
+      setLessonFailed(true);
+      void analyticsService.track({
+        name: "lesson_failed",
+        properties: {
+          lessonId: session.lessonId,
+          regionSlug: session.regionSlug,
+          score: pendingFailScore,
+          passScore: session.passScore,
+        },
+      });
+      return;
+    }
+
+    goNext();
+  }, [clearAdvanceTimer, goNext, session.lessonId, session.passScore, session.regionSlug]);
+
   const handleRecallAnswer = useCallback(
     (correct: boolean, answeredStep?: LessonStep) => {
       const step = answeredStep ?? currentStep;
@@ -529,22 +556,18 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
       }
 
       setStreakCount(0);
+      setAwaitingDrillContinue(true);
       setHeartsRemaining((current) => {
         const next = current - 1;
         if (next <= 0) {
           const scoreAfterWrong = calculateLessonScore(nextCorrect, nextTotal);
           const scoreMeetsPassThreshold =
             isReviewSession || scoreAfterWrong >= session.passScore;
-          scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
           if (!scoreMeetsPassThreshold) {
-            window.setTimeout(() => {
-              setFailedScore(scoreAfterWrong);
-              setLessonFailed(true);
-            }, LESSON_WRONG_EXPLANATION_MS);
+            pendingFailScoreRef.current = scoreAfterWrong;
           }
           return 0;
         }
-        scheduleAdvance(LESSON_WRONG_EXPLANATION_MS);
         return next;
       });
     },
@@ -570,6 +593,8 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     setRecallCorrect(0);
     setRecallTotal(0);
     setEmbeddedComplete(false);
+    setAwaitingDrillContinue(false);
+    pendingFailScoreRef.current = null;
     setHeartsRemaining(LESSON_MAX_HEARTS);
     setStreakCount(0);
     setFailureTracker(new Map());
@@ -586,6 +611,15 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
 
   const stickyFooter = useMemo(() => {
     if (!currentStep || lessonFailed) return null;
+
+    if (awaitingDrillContinue && isAutoAdvanceDrillStep(currentStep)) {
+      return (
+        <PrimaryClimbButton className="w-full" onClick={handleDrillContinue}>
+          Continue
+        </PrimaryClimbButton>
+      );
+    }
+
     if (isAutoAdvanceDrillStep(currentStep)) return null;
 
     if (currentStep.kind === "teach" || currentStep.kind === "knowledge_inventory") {
@@ -618,7 +652,15 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     }
 
     return null;
-  }, [currentStep, embeddedComplete, goNext, lessonFailed, started]);
+  }, [
+    awaitingDrillContinue,
+    currentStep,
+    embeddedComplete,
+    goNext,
+    handleDrillContinue,
+    lessonFailed,
+    started,
+  ]);
 
   if (!currentStep) {
     return null;

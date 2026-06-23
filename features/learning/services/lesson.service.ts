@@ -695,22 +695,34 @@ class LessonService {
       ),
     );
 
-    const crossLessonReviewVocabulary = await this.loadReviewVocabularyContents(
-      userId,
-      new Set(workingContents.map((content) => content.id)),
-      isEmbeddedLessonType(lesson.type)
-        ? Math.max(newContents.length * 3, 8)
-        : Math.max(newContents.length * 3, 6),
-    );
+    const embeddedDrillPreambleEnabled =
+      !isEmbeddedLessonType(lesson.type) || drillSourceContents.length > 0;
+
+    const crossLessonReviewVocabulary =
+      embeddedDrillPreambleEnabled && newContents.length > 0
+        ? await this.loadReviewVocabularyContents(
+            userId,
+            new Set(workingContents.map((content) => content.id)),
+            isEmbeddedLessonType(lesson.type)
+              ? Math.max(newContents.length * 3, 8)
+              : Math.max(newContents.length * 3, 6),
+          )
+        : [];
 
     const branchPriorContents =
-      lesson.type === "practice" || isEmbeddedLessonType(lesson.type)
+      lesson.type === "practice"
         ? await this.loadBranchPriorLessonContents(
             lesson.unit.id,
             lesson.id,
             lesson.order_index,
           )
-        : [];
+        : isEmbeddedLessonType(lesson.type) && embeddedDrillPreambleEnabled
+          ? await this.loadBranchPriorLessonContents(
+              lesson.unit.id,
+              lesson.id,
+              lesson.order_index,
+            )
+          : [];
 
     const reviewContents = [
       ...knownContents,
@@ -804,13 +816,18 @@ class LessonService {
       return [intro, complete];
     }
 
-    const newContents = assembly?.newContents ?? extractDrillableLessonContents(contents);
+    const drillableContents = extractDrillableLessonContents(contents);
+    const newContents = assembly?.newContents ?? drillableContents;
     const reviewContents = assembly?.reviewContents ?? [];
+    const runDrillPreamble =
+      drillableContents.length > 0 && (newContents.length > 0 || reviewContents.length > 0);
 
-    const drillSteps: LessonStep[] = [
-      ...this.buildDiscoverTeachSteps(newContents),
-      ...this.buildStagedExerciseBlock(newContents, reviewContents, false),
-    ];
+    const drillSteps: LessonStep[] = runDrillPreamble
+      ? [
+          ...this.buildDiscoverTeachSteps(newContents),
+          ...this.buildStagedExerciseBlock(newContents, reviewContents, false),
+        ]
+      : [];
 
     const contextSteps = buildEmbeddedContextSteps(
       lesson.type,

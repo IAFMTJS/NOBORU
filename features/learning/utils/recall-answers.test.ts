@@ -5,6 +5,7 @@ import {
   isJapaneseTextAnswerCorrect,
   isRecallAnswerCorrect,
   normalizeRomajiAnswer,
+  pickJapaneseAnswerCorrection,
 } from "@/features/learning/utils/recall-answers";
 
 describe("isJapaneseTextAnswerCorrect", () => {
@@ -31,6 +32,16 @@ describe("isJapaneseTextAnswerCorrect", () => {
 
   it("accepts hiragana character when romaji is expected", () => {
     expect(isJapaneseTextAnswerCorrect("あ", ["あ", "a"])).toBe(true);
+  });
+
+  it("accepts romaji derived from kana when explicit romaji was omitted", () => {
+    expect(
+      isJapaneseTextAnswerCorrect("kazoku", ["家族", "かぞく"]),
+    ).toBe(true);
+    expect(isJapaneseTextAnswerCorrect("mi", ["み"])).toBe(true);
+    expect(isJapaneseTextAnswerCorrect("taberu", ["食べる", "たべる"])).toBe(
+      true,
+    );
   });
 });
 
@@ -91,6 +102,23 @@ describe("buildJapaneseSurfaceAcceptedAnswers", () => {
     expect(answers).toContain("耳");
     expect(answers).toContain("みみ");
     expect(answers).toContain("mimi");
+  });
+});
+
+describe("pickJapaneseAnswerCorrection", () => {
+  it("shows romaji when the learner typed latin input", () => {
+    expect(
+      pickJapaneseAnswerCorrection(["家族", "かぞく", "kazoku"], "kazoku"),
+    ).toBe("kazoku");
+    expect(pickJapaneseAnswerCorrection(["家族", "かぞく"], "kazoku")).toBe(
+      "kazoku",
+    );
+  });
+
+  it("keeps the primary japanese answer for japanese input", () => {
+    expect(
+      pickJapaneseAnswerCorrection(["家族", "かぞく", "kazoku"], "家族"),
+    ).toBe("家族");
   });
 });
 

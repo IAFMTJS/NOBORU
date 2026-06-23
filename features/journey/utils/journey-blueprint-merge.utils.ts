@@ -12,6 +12,7 @@ import { getRegionVisuals } from "@/lib/design-system/region-tokens";
 import { REGION_SLUGS, type RegionSlug } from "@/lib/design-system/regions";
 import { normalizeRegionSlug } from "@/lib/design-system/worlds";
 import { resolveRegionAccess } from "@/lib/learning/region-unlock";
+import { resolveThematicCategorySlugForUnitName } from "@/lib/learning/world-tree-branch.utils";
 
 const REGION_META: Record<RegionSlug, { name: string; description: string }> =
   Object.fromEntries(
@@ -85,27 +86,131 @@ function contentIndexForSlot(
     .length;
 }
 
+function resolveBranchName(slot: BlueprintSlot): string {
+  return slot.title.split(" · ")[0]?.trim() ?? slot.branchId;
+}
+
+function normalizeBranchLabel(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function scoreUnitBranchMatch(branchName: string, unitName: string): number {
+  const branch = normalizeBranchLabel(branchName);
+  const unit = normalizeBranchLabel(unitName);
+  if (!branch || !unit) return 0;
+  if (branch === unit) return 100;
+  if (unit.includes(branch) || branch.includes(unit)) return 80;
+
+  if (branch.includes("hiragana") && unit.includes("hiragana")) return 70;
+  if (branch.includes("katakana") && unit.includes("katakana")) return 70;
+
+  const branchCategory = resolveThematicCategorySlugForUnitName(branchName);
+  const unitCategory = resolveThematicCategorySlugForUnitName(unitName);
+  if (branchCategory === unitCategory && branchCategory !== "daily-activities") {
+    return 60;
+  }
+
+  return 0;
+}
+
+function resolveOrdinalIndex(label: string): number | null {
+  const match = label.match(/\b(i{1,3}|iv|v|vi{0,3}|[1-9])\b/i);
+  if (!match?.[1]) return null;
+
+  const token = match[1].toLowerCase();
+  const roman: Record<string, number> = {
+    i: 0,
+    ii: 1,
+    iii: 2,
+    iv: 3,
+    v: 4,
+    vi: 5,
+  };
+  if (token in roman) return roman[token]!;
+  const parsed = Number.parseInt(token, 10);
+  return Number.isFinite(parsed) ? Math.max(0, parsed - 1) : null;
+}
+
+function resolveCmsUnitForSlot(
+  slot: BlueprintSlot,
+  units: UnitSummaryViewModel[],
+): UnitSummaryViewModel | null {
+  const branchName = resolveBranchName(slot);
+  const ranked = units
+    .map((unit, index) => ({
+      unit,
+      index,
+      score: scoreUnitBranchMatch(branchName, unit.name),
+    }))
+    .filter((entry) => entry.score > 0)
+    .sort((left, right) => right.score - left.score || left.index - right.index);
+
+  if (ranked.length === 0) {
+    return null;
+  }
+
+  const topScore = ranked[0]!.score;
+  const topMatches = ranked.filter((entry) => entry.score === topScore);
+  const ordinalIndex = resolveOrdinalIndex(branchName);
+  if (ordinalIndex != null && topMatches.length > 1) {
+    return topMatches[ordinalIndex]?.unit ?? topMatches[0]!.unit;
+  }
+
+  return topMatches[0]!.unit;
+}
+
 function resolveCmsLessonForSlot(
   slot: BlueprintSlot,
   slots: readonly BlueprintSlot[],
   units: UnitSummaryViewModel[],
 ): LessonSummaryViewModel | null {
-  const unit = units[slot.branchIndex];
+  const unit = resolveCmsUnitForSlot(slot, units);
   if (!unit) return null;
 
   const contentIndex = contentIndexForSlot(slots, slot);
   return unit.lessons[contentIndex] ?? null;
 }
 
+function unitMatchesBlueprintBranch(
+  unit: UnitSummaryViewModel,
+  branchName: string,
+): boolean {
+  return scoreUnitBranchMatch(branchName, unit.name) > 0;
+}
+
+function isLessonReservedForBlueprintBranch(
+  lesson: LessonSummaryViewModel,
+  units: readonly UnitSummaryViewModel[],
+  slots: readonly BlueprintSlot[],
+): boolean {
+  const unit = units.find((entry) => entry.id === lesson.unitId);
+  if (!unit) return false;
+
+  const branchNames = new Set(slots.map((slot) => resolveBranchName(slot)));
+  for (const branchName of branchNames) {
+    if (unitMatchesBlueprintBranch(unit, branchName)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function takeNextUnusedLesson(
   flatPool: readonly LessonSummaryViewModel[],
   usedLessonIds: ReadonlySet<string>,
   flatCursor: { current: number },
+  units: readonly UnitSummaryViewModel[],
+  slots: readonly BlueprintSlot[],
   preferredType?: string,
 ): LessonSummaryViewModel | null {
+  const isEligible = (lesson: LessonSummaryViewModel) =>
+    !usedLessonIds.has(lesson.id) &&
+    !isLessonReservedForBlueprintBranch(lesson, units, slots);
+
   if (preferredType) {
     const typedMatch = flatPool.find(
-      (lesson) => !usedLessonIds.has(lesson.id) && lesson.type === preferredType,
+      (lesson) => isEligible(lesson) && lesson.type === preferredType,
     );
     if (typedMatch) return typedMatch;
   }
@@ -113,7 +218,7 @@ function takeNextUnusedLesson(
   while (flatCursor.current < flatPool.length) {
     const lesson = flatPool[flatCursor.current]!;
     flatCursor.current += 1;
-    if (!usedLessonIds.has(lesson.id)) {
+    if (isEligible(lesson)) {
       return lesson;
     }
   }
@@ -147,15 +252,20 @@ function mergeLessonsIntoBlueprint(
       return attachBlueprintMeta(branchLesson, slot);
     }
 
-    const fallbackLesson = takeNextUnusedLesson(
-      flatPool,
-      usedLessonIds,
-      flatCursor,
-      resolveSlotLessonType(slot),
-    );
-    if (fallbackLesson) {
-      usedLessonIds.add(fallbackLesson.id);
-      return attachBlueprintMeta(fallbackLesson, slot);
+    const branchUnit = resolveCmsUnitForSlot(slot, cmsUnits);
+    if (!branchUnit) {
+      const fallbackLesson = takeNextUnusedLesson(
+        flatPool,
+        usedLessonIds,
+        flatCursor,
+        cmsUnits,
+        slots,
+        resolveSlotLessonType(slot),
+      );
+      if (fallbackLesson) {
+        usedLessonIds.add(fallbackLesson.id);
+        return attachBlueprintMeta(fallbackLesson, slot);
+      }
     }
 
     return lessonFromBlueprintSlot(slot, `blueprint-unit:${slot.branchId}`);

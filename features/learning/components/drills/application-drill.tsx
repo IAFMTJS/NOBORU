@@ -12,6 +12,7 @@ import {
   isJapaneseTextAnswerCorrect,
   isRecallAnswerCorrect,
   normalizeRecallAnswer,
+  pickJapaneseAnswerCorrection,
 } from "@/features/learning/utils/recall-answers";
 
 type ApplicationDrillProps = {
@@ -95,7 +96,10 @@ export function ApplicationDrill({
           <LearningFailurePanel
             className="mt-3"
             userAnswer={value}
-            correctAnswer={step.acceptedAnswers[0] ?? ""}
+            correctAnswer={pickJapaneseAnswerCorrection(
+              step.acceptedAnswers,
+              value,
+            )}
             seed={step.index}
           />
         ) : null
