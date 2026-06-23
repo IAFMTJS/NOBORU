@@ -1,4 +1,5 @@
 import type { LessonContent } from "@/features/learning/types/lesson.types";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
 
 export function normalizeRecallAnswer(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
@@ -120,16 +121,22 @@ export function buildJapaneseSurfaceAcceptedAnswers(
     case "vocabulary": {
       if (content.kanji) surfaces.push(content.kanji);
       surfaces.push(content.kana);
-      if (content.romaji) surfaces.push(content.romaji);
+      const romaji = deriveKanaRomaji(content.kana);
+      if (romaji) surfaces.push(romaji);
       break;
     }
     case "hiragana":
     case "katakana":
       surfaces.push(content.character, content.romaji);
       break;
-    case "kanji":
+    case "kanji": {
       surfaces.push(content.character, ...content.kunyomi, ...content.onyomi);
+      for (const reading of [...content.kunyomi, ...content.onyomi]) {
+        const romaji = deriveKanaRomaji(reading);
+        if (romaji) surfaces.push(romaji);
+      }
       break;
+    }
   }
 
   const [primary, ...rest] = surfaces.filter(Boolean);

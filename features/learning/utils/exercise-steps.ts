@@ -225,7 +225,34 @@ export function buildMasteryChallengeStep(
   }
 
   const recall = buildRecallStep(content, allAnswers, index, total, "consolidation");
-  return { ...recall, stage: "mastery_challenge" as const, prompt: "Mastery challenge", mode: "typed" as const };
+  const typedRecall: LessonRecallStep = {
+    ...recall,
+    stage: "mastery_challenge" as const,
+    prompt: "Mastery challenge",
+    mode: "typed" as const,
+    options: [],
+  };
+
+  if (
+    content.type === "vocabulary" ||
+    content.type === "kanji" ||
+    content.type === "hiragana" ||
+    content.type === "katakana"
+  ) {
+    const meaning = getRecallAnswer(content);
+    return {
+      ...typedRecall,
+      acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
+      ...(content.type === "vocabulary" || content.type === "kanji"
+        ? {
+            prompt: `Translate: "${meaning}" (Japanese or romaji)`,
+            display: meaning,
+          }
+        : {}),
+    };
+  }
+
+  return typedRecall;
 }
 
 export function buildRecallOptions(correct: string, distractors: string[]): string[] {

@@ -1,6 +1,7 @@
-/** Word-level romaji lives on examples until vocabulary rows store it directly. */
-export function resolveVocabularyLessonRomaji(
-  examples: ReadonlyArray<{ romaji: string | null }>,
-): string | null {
-  return examples.find((example) => example.romaji)?.romaji ?? null;
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
+
+/** Word-level romaji for vocabulary recall — derived from kana, not example sentences. */
+export function resolveVocabularyLessonRomaji(kana: string): string | null {
+  const romaji = deriveKanaRomaji(kana);
+  return romaji || null;
 }

@@ -41,7 +41,7 @@ export function ApplicationDrill({
 
   function handleSubmit() {
     const correct =
-      step.direction === "to_japanese"
+      step.direction === "to_japanese" || step.direction === "to_romaji"
         ? isJapaneseTextAnswerCorrect(value, step.acceptedAnswers)
         : isRecallAnswerCorrect(value, step.acceptedAnswers);
     setResult(correct ? "correct" : "incorrect");

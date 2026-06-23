@@ -52,6 +52,46 @@ describe("buildJapaneseSurfaceAcceptedAnswers", () => {
     expect(answers).toContain("たべる");
     expect(answers).toContain("taberu");
   });
+
+  it("derives word romaji from kana instead of sentence example romaji", () => {
+    const answers = buildJapaneseSurfaceAcceptedAnswers({
+      type: "vocabulary",
+      id: "v2",
+      kana: "かぞく",
+      kanji: "家族",
+      romaji: "Kazoku wa gonin desu.",
+      meaning: "family",
+      partOfSpeech: null,
+      audioUrl: null,
+      examples: [
+        {
+          japaneseText: "家族は五人です。",
+          romaji: "Kazoku wa gonin desu.",
+          english: "There are five people in my family.",
+        },
+      ],
+    });
+
+    expect(answers).toContain("kazoku");
+    expect(answers).not.toContain("Kazoku wa gonin desu.");
+  });
+
+  it("includes romaji readings for kanji recall", () => {
+    const answers = buildJapaneseSurfaceAcceptedAnswers({
+      type: "kanji",
+      id: "k1",
+      character: "耳",
+      meaning: "ear",
+      strokeCount: 9,
+      onyomi: ["ジ"],
+      kunyomi: ["みみ"],
+      examples: [],
+    });
+
+    expect(answers).toContain("耳");
+    expect(answers).toContain("みみ");
+    expect(answers).toContain("mimi");
+  });
 });
 
 describe("isRecallAnswerCorrect", () => {
