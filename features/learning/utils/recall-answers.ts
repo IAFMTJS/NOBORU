@@ -142,6 +142,35 @@ export function buildAcceptedAnswers(
   );
 }
 
+/** English meaning variants for typed grammar recall (not the surface title). */
+export function buildGrammarMeaningAcceptedAnswers(
+  meaning: string,
+  extras: string[] = [],
+): string[] {
+  const variants = new Set<string>();
+
+  function addVariant(value: string) {
+    const trimmed = value.trim();
+    if (trimmed) variants.add(trimmed);
+  }
+
+  addVariant(meaning);
+  addVariant(meaning.replace(/\s*\([^)]*\)\s*/g, " ").trim());
+
+  if (meaning.includes("/")) {
+    for (const part of meaning.split("/")) {
+      addVariant(part);
+      addVariant(part.replace(/\s*\([^)]*\)\s*/g, " ").trim());
+    }
+  }
+
+  for (const extra of extras) {
+    addVariant(extra);
+  }
+
+  return Array.from(variants);
+}
+
 export function buildJapaneseSurfaceAcceptedAnswers(
   content: Extract<
     LessonContent,

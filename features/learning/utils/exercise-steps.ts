@@ -20,7 +20,12 @@ import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
 } from "@/features/learning/constants/lesson.constants";
-import { buildAcceptedAnswers, buildJapaneseSurfaceAcceptedAnswers } from "@/features/learning/utils/recall-answers";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
+import {
+  buildAcceptedAnswers,
+  buildGrammarMeaningAcceptedAnswers,
+  buildJapaneseSurfaceAcceptedAnswers,
+} from "@/features/learning/utils/recall-answers";
 import { tokenizeJapaneseSentence } from "@/features/learning/utils/japanese-tokenizer";
 
 function phaseForStage(stage: LessonStage): LessonPhase {
@@ -166,7 +171,6 @@ export function buildActiveRecallStep(
   }
 
   const meaning = getRecallAnswer(content);
-  const surface = getJapaneseSurface(content);
 
   if (content.type === "vocabulary" || content.type === "kanji") {
     return withContentMeta(
@@ -190,7 +194,7 @@ export function buildActiveRecallStep(
   const recall = buildRecallStep(content, allAnswers, index, total, "standard");
   const acceptedAnswers =
     content.type === "grammar"
-      ? buildAcceptedAnswers(surface)
+      ? buildGrammarMeaningAcceptedAnswers(meaning)
       : buildJapaneseSurfaceAcceptedAnswers(content);
   return withContentMeta(
     {
@@ -302,6 +306,66 @@ type TokenMetadata = {
   reading: string | null;
 };
 
+function parseGrammarTitleMetadata(title: string): TokenMetadata {
+  const match = title.match(/^(.+?)\s*\(([a-zA-Z][a-zA-Z\s\-']*)\)\s*$/);
+  if (!match) {
+    return { romaji: null, reading: null };
+  }
+
+  const reading = match[1]?.trim() ?? null;
+  const romaji = match[2]?.trim().toLowerCase() ?? null;
+  return {
+    reading: reading && reading.length > 0 ? reading : null,
+    romaji: romaji && romaji.length > 0 ? romaji : null,
+  };
+}
+
+function findVocabularyMetadataForSurface(
+  japanese: string,
+  contents: LessonContent[],
+): TokenMetadata | null {
+  let best: { meta: TokenMetadata; length: number } | null = null;
+
+  for (const content of contents) {
+    if (content.type !== "vocabulary") continue;
+
+    const surfaces = [content.kanji, content.kana].filter(
+      (value): value is string => Boolean(value),
+    );
+    const romaji =
+      content.romaji && !/\s/.test(content.romaji)
+        ? content.romaji
+        : deriveKanaRomaji(content.kana) || null;
+    const meta: TokenMetadata = {
+      romaji,
+      reading: content.kana,
+    };
+
+    for (const surface of surfaces) {
+      const matches =
+        japanese === surface ||
+        surface.startsWith(japanese) ||
+        japanese.startsWith(surface);
+      if (!matches) continue;
+
+      const length = surface.length;
+      if (!best || length > best.length) {
+        best = { meta, length };
+      }
+    }
+
+    const leadingKanji = content.kanji?.match(/^[\u4e00-\u9fff]+/)?.[0];
+    if (leadingKanji && leadingKanji === japanese) {
+      const length = leadingKanji.length;
+      if (!best || length > best.length) {
+        best = { meta, length };
+      }
+    }
+  }
+
+  return best?.meta ?? null;
+}
+
 function buildJapaneseTokenMetadataLookup(
   contents: LessonContent[],
 ): Map<string, TokenMetadata> {
@@ -319,23 +383,37 @@ function buildJapaneseTokenMetadataLookup(
   for (const content of contents) {
     if (content.type === "vocabulary") {
       const japanese = content.kanji ?? content.kana;
-      const meta = { romaji: content.romaji, reading: content.kana };
+      const romaji =
+        content.romaji && !/\s/.test(content.romaji)
+          ? content.romaji
+          : deriveKanaRomaji(content.kana) || null;
+      const meta = { romaji, reading: content.kana };
       register(japanese, meta);
       register(content.kana, meta);
-      if (content.kanji) register(content.kanji, meta);
+      if (content.kanji) {
+        register(content.kanji, meta);
+        const leadingKanji = content.kanji.match(/^[\u4e00-\u9fff]+/)?.[0];
+        if (leadingKanji && leadingKanji !== content.kanji) {
+          register(leadingKanji, meta);
+        }
+      }
     }
 
     if (content.type === "kanji") {
       const reading = content.kunyomi[0] ?? content.onyomi[0] ?? null;
-      register(content.character, { romaji: null, reading });
+      const romaji = reading ? deriveKanaRomaji(reading) || null : null;
+      register(content.character, { romaji, reading });
     }
 
     if (content.type === "hiragana" || content.type === "katakana") {
-      register(content.character, { romaji: content.romaji, reading: content.character });
+      register(content.character, {
+        romaji: content.romaji,
+        reading: content.character,
+      });
     }
 
     if (content.type === "grammar") {
-      register(content.title, { romaji: null, reading: null });
+      register(content.title, parseGrammarTitleMetadata(content.title));
     }
   }
 
@@ -345,15 +423,21 @@ function buildJapaneseTokenMetadataLookup(
 function resolveFillBlankOption(
   japanese: string,
   lookup: Map<string, TokenMetadata>,
+  contents: LessonContent[] = [],
 ): LessonFillBlankOption {
-  const meta = lookup.get(japanese);
+  const meta =
+    lookup.get(japanese) ?? findVocabularyMetadataForSurface(japanese, contents);
   const reading =
     meta?.reading ??
     (isKanaOnly(japanese) ? japanese : containsKanji(japanese) ? null : japanese);
+  const romaji =
+    meta?.romaji ??
+    (reading ? deriveKanaRomaji(reading) || null : null) ??
+    (isKanaOnly(japanese) ? deriveKanaRomaji(japanese) || null : null);
 
   return {
     japanese,
-    romaji: meta?.romaji ?? null,
+    romaji,
     reading: reading && reading !== japanese ? reading : null,
   };
 }
@@ -390,13 +474,29 @@ function pickBlankToken(
       : [content.title];
 
   for (const surface of lessonSurfaces) {
-    const match = tokens.find(
-      (token) =>
-        !isJapaneseParticle(token) &&
-        (token === surface || token.includes(surface) || surface.includes(token)),
+    const exact = tokens.find(
+      (token) => !isJapaneseParticle(token) && token === surface,
     );
-    if (match) return match;
+    if (exact) return exact;
   }
+
+  let bestMatch: string | null = null;
+  let bestLength = -1;
+
+  for (const surface of lessonSurfaces) {
+    for (const token of tokens) {
+      if (isJapaneseParticle(token)) continue;
+      if (token === surface) return token;
+      if (token.includes(surface) || surface.includes(token)) {
+        if (token.length > bestLength) {
+          bestLength = token.length;
+          bestMatch = token;
+        }
+      }
+    }
+  }
+
+  if (bestMatch) return bestMatch;
 
   const candidates = tokens.filter(
     (token) => token.length >= 2 && !isJapaneseParticle(token) && isJapaneseSurface(token),
@@ -611,6 +711,7 @@ export function buildFillBlankStep(
   if (sentenceWithBlank === example.japaneseText) return null;
 
   const lookup = buildJapaneseTokenMetadataLookup([content, ...pool.lessonContents]);
+  const contentPool = [content, ...pool.lessonContents];
   const distractorPool = collectJapaneseDistractorPool(
     example.japaneseText,
     blankToken,
@@ -618,12 +719,18 @@ export function buildFillBlankStep(
   ).filter((candidate) => {
     if (candidate === blankToken) return false;
     if (!isJapaneseSurface(candidate)) return false;
-    if (containsKanji(candidate) && !lookup.has(candidate)) return false;
+    if (
+      containsKanji(candidate) &&
+      !lookup.has(candidate) &&
+      !findVocabularyMetadataForSurface(candidate, contentPool)
+    ) {
+      return false;
+    }
     return true;
   });
 
   const japaneseOptions = buildRecallOptions(blankToken, distractorPool).map((japanese) =>
-    resolveFillBlankOption(japanese, lookup),
+    resolveFillBlankOption(japanese, lookup, contentPool),
   );
   const correctIndex = japaneseOptions.findIndex(
     (option) => option.japanese === blankToken,
@@ -637,6 +744,7 @@ export function buildFillBlankStep(
         index % 2 === 0 ? "Tap a word to fill the blank" : "Fill in the blank",
       sentenceWithBlank,
       englishHint: example.english,
+      sentenceRomaji: example.romaji ?? null,
       options: japaneseOptions,
       correctIndex,
       interaction: index % 2 === 0 ? "blocks" : "choice",

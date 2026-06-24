@@ -33,6 +33,7 @@ function FillBlankSentenceHero({
     <div className="space-y-3">
       <AnnotatedJapaneseText
         text={displayText}
+        romaji={step.sentenceRomaji}
         size="hero"
         className="text-foreground"
         supportMode="tap"

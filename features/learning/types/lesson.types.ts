@@ -196,6 +196,7 @@ export type LessonFillBlankStep = {
   prompt: string;
   sentenceWithBlank: string;
   englishHint: string;
+  sentenceRomaji: string | null;
   options: LessonFillBlankOption[];
   correctIndex: number;
   interaction: LessonFillBlankInteraction;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  buildGrammarMeaningAcceptedAnswers,
   buildJapaneseSurfaceAcceptedAnswers,
   isJapaneseTextAnswerCorrect,
   isRecallAnswerCorrect,
@@ -125,6 +126,24 @@ describe("pickJapaneseAnswerCorrection", () => {
 describe("isRecallAnswerCorrect", () => {
   it("still handles English meaning recall", () => {
     expect(isRecallAnswerCorrect("to eat", ["to eat", "eat"])).toBe(true);
+  });
+
+  it("accepts grammar meaning answers instead of surface titles", () => {
+    const answers = buildGrammarMeaningAcceptedAnswers("Topic particle");
+    expect(isRecallAnswerCorrect("topic particle", answers)).toBe(true);
+    expect(isRecallAnswerCorrect("ha", answers)).toBe(false);
+  });
+});
+
+describe("buildGrammarMeaningAcceptedAnswers", () => {
+  it("strips parenthetical hints from slash-separated titles", () => {
+    expect(buildGrammarMeaningAcceptedAnswers("What (question word)")).toEqual([
+      "What (question word)",
+      "What",
+    ]);
+    expect(buildGrammarMeaningAcceptedAnswers("なに/何 (nani)")).toEqual(
+      expect.arrayContaining(["なに/何 (nani)", "なに", "何", "なに/何"]),
+    );
   });
 });
 
