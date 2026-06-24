@@ -57,7 +57,7 @@ import {
   getContentIdFromStep,
   resolveStepPhase,
 } from "@/lib/learning/lesson-phase.utils";
-import { getRecallAnswer } from "@/features/learning/utils/exercise-steps";
+import { buildLessonDrillPoolContext, getRecallAnswer } from "@/features/learning/utils/exercise-steps";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
 import { fadeInUp } from "@/lib/motion/presets";
 
@@ -294,22 +294,8 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     () => Object.values(contentById).map(getRecallAnswer).filter(Boolean),
     [contentById],
   );
-  const allSurfaces = useMemo(
-    () =>
-      Object.values(contentById).map((content) => {
-        switch (content.type) {
-          case "vocabulary":
-            return content.kanji ?? content.kana;
-          case "kanji":
-          case "hiragana":
-          case "katakana":
-            return content.character;
-          case "grammar":
-            return content.title;
-          default:
-            return "";
-        }
-      }),
+  const drillPool = useMemo(
+    () => buildLessonDrillPoolContext(Object.values(contentById)),
     [contentById],
   );
 
@@ -538,7 +524,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
               const remediation = buildRemediationStep(
                 content,
                 allAnswers,
-                allSurfaces,
+                drillPool,
                 failureCount,
                 nextTotal + 1,
                 lessonSteps.length + 1,
@@ -578,7 +564,7 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
     },
     [
       allAnswers,
-      allSurfaces,
+      drillPool,
       contentById,
       currentStep,
       failureTracker,

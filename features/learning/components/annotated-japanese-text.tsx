@@ -81,7 +81,7 @@ function AnnotatedToken({
           sizeClass,
         )}
         lang="ja"
-        aria-label={`${annotation.surface}, tap for meaning`}
+        aria-label={`${annotation.surface}, tap for reading and romaji`}
         onClick={() => onSelect(annotation)}
       >
         <ruby>
@@ -103,7 +103,7 @@ function AnnotatedToken({
         sizeClass,
       )}
       lang="ja"
-      aria-label={`${annotation.surface}, tap for meaning`}
+      aria-label={`${annotation.surface}, tap for reading and romaji`}
       onClick={() => onSelect(annotation)}
     >
       {annotation.surface}
@@ -171,7 +171,7 @@ export function AnnotatedJapaneseText({
       </p>
       {supportMode === "full" && hasGlossableTokens ? (
         <p className="text-caption text-muted-foreground">
-          Dotted words are new — tap for reading and meaning.
+          Dotted words are not mastered yet — tap for reading, romaji, and meaning.
         </p>
       ) : null}
       {romaji ? <p className="text-caption text-muted-foreground">{romaji}</p> : null}

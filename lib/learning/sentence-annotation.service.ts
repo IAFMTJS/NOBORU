@@ -6,9 +6,15 @@ import type {
   SentenceTokenAnnotation,
   VocabularyLookupEntry,
 } from "@/lib/learning/comprehension-support.types";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
 
 const TOKEN_PATTERN = /[\u3040-\u9fff\u30a0-\u30ff]+/g;
 const KANJI_PATTERN = /[\u4e00-\u9fff]/g;
+const KANA_ONLY_PATTERN = /^[\u3040-\u309F\u30A0-\u30FFー]+$/;
+
+function isKanaOnly(text: string): boolean {
+  return KANA_ONLY_PATTERN.test(text);
+}
 
 function listKanjiCharacters(text: string): string[] {
   const matches = text.match(KANJI_PATTERN);
@@ -48,23 +54,35 @@ function listUnknownKanjiInToken(
     .filter((entry) => !knownKanji.has(entry.id));
 }
 
-function isVocabularyKnown(
-  vocabularyId: string,
+function isTokenMastered(
+  vocabulary: VocabularyLookupEntry | null,
+  unknownKanji: KanjiLookupEntry[],
   support: ComprehensionSupportContext,
-  options: AnnotateSentenceOptions,
 ): boolean {
-  if (support.knownVocabularyIds.includes(vocabularyId)) {
-    return true;
+  const vocabularyMastered = vocabulary
+    ? support.masteredVocabularyIds.includes(vocabulary.id)
+    : true;
+
+  return vocabularyMastered && unknownKanji.length === 0;
+}
+
+function resolveTokenRomaji(
+  token: string,
+  vocabulary: VocabularyLookupEntry | null,
+): string | null {
+  if (vocabulary?.romaji) {
+    return vocabulary.romaji;
   }
 
-  if (options.glossActivePool) {
-    return support.masteredVocabularyIds.includes(vocabularyId);
+  if (isKanaOnly(token)) {
+    return deriveKanaRomaji(token) || null;
   }
 
-  return (
-    support.masteredVocabularyIds.includes(vocabularyId) ||
-    support.activeVocabularyPool.includes(vocabularyId)
-  );
+  if (vocabulary?.kana) {
+    return deriveKanaRomaji(vocabulary.kana) || null;
+  }
+
+  return null;
 }
 
 function buildTokenMeaning(
@@ -85,26 +103,26 @@ function buildTokenMeaning(
 function annotateToken(
   token: string,
   support: ComprehensionSupportContext,
-  options: AnnotateSentenceOptions,
+  _options: AnnotateSentenceOptions,
 ): SentenceTokenAnnotation {
   const vocabulary = matchVocabularyToken(token, support);
   const unknownKanji = listUnknownKanjiInToken(token, support);
-  const vocabularyKnown = vocabulary
-    ? isVocabularyKnown(vocabulary.id, support, options)
-    : unknownKanji.length === 0;
-  const isKnown = vocabularyKnown && unknownKanji.length === 0;
-  const shouldGloss = !isKnown && (vocabulary !== null || unknownKanji.length > 0);
+  const isMastered = isTokenMastered(vocabulary, unknownKanji, support);
+  const shouldGloss = !isMastered && (vocabulary !== null || unknownKanji.length > 0);
   const reading =
     vocabulary && vocabulary.kana !== token ? vocabulary.kana : null;
   const showFurigana = shouldGloss && Boolean(reading && reading !== token);
+  const romaji = shouldGloss ? resolveTokenRomaji(token, vocabulary) : null;
 
   return {
     surface: token,
     reading,
+    romaji,
     meaning: buildTokenMeaning(vocabulary, unknownKanji),
     vocabularyId: vocabulary?.id ?? null,
     unknownKanji,
-    isKnown,
+    isKnown: isMastered,
+    isMastered,
     shouldGloss,
     showFurigana,
   };

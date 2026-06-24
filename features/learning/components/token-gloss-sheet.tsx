@@ -34,6 +34,9 @@ export function TokenGlossSheet({
           <SheetTitle className="font-japanese text-3xl" lang="ja">
             {annotation.surface}
           </SheetTitle>
+          {annotation.romaji ? (
+            <p className="text-body font-medium text-trail-glow">{annotation.romaji}</p>
+          ) : null}
           <SheetDescription>
             {readingLabel ? `${readingLabel} · ` : ""}
             {annotation.meaning ?? "New on the trail"}
@@ -58,8 +61,8 @@ export function TokenGlossSheet({
           </div>
         ) : null}
         <p className="mt-4 text-caption text-muted-foreground">
-          This word will be taught on the trail soon. Tap any dotted word while learning to see
-          its reading and meaning.
+          Tap any dotted word while learning to see its reading and meaning. Romaji stays
+          available until you master the word on the trail.
         </p>
       </SheetContent>
     </Sheet>

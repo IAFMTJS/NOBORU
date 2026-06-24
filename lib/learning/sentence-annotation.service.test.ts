@@ -16,6 +16,7 @@ const support: ComprehensionSupportContext = {
       id: "v-thanks",
       kana: "ありがとう",
       kanji: null,
+      romaji: "arigatou",
       meaning: "thank you",
       surfaceForms: ["ありがとう"],
     },
@@ -23,6 +24,7 @@ const support: ComprehensionSupportContext = {
       id: "v-goodbye",
       kana: "さようなら",
       kanji: null,
+      romaji: "sayounara",
       meaning: "goodbye",
       surfaceForms: ["さようなら"],
     },
@@ -30,6 +32,7 @@ const support: ComprehensionSupportContext = {
       id: "v-student",
       kana: "がくせい",
       kanji: "学生",
+      romaji: "gakusei",
       meaning: "student",
       surfaceForms: ["がくせい", "学生"],
     },
@@ -70,8 +73,44 @@ describe("annotateJapaneseSentence", () => {
     if (goodbye?.kind !== "token") return;
 
     expect(goodbye.annotation.isKnown).toBe(false);
+    expect(goodbye.annotation.isMastered).toBe(false);
     expect(goodbye.annotation.shouldGloss).toBe(true);
     expect(goodbye.annotation.meaning).toBe("goodbye");
+    expect(goodbye.annotation.romaji).toBe("sayounara");
+  });
+
+  it("still glosses words in the active pool until they are mastered", () => {
+    const learningSupport: ComprehensionSupportContext = {
+      ...support,
+      knownVocabularyIds: ["v-goodbye"],
+      activeVocabularyPool: ["v-goodbye"],
+      masteredVocabularyIds: ["v-thanks"],
+    };
+
+    const segments = annotateJapaneseSentence("さようなら。", learningSupport);
+    const goodbye = segments.find(
+      (segment) => segment.kind === "token" && segment.annotation.surface === "さようなら",
+    );
+
+    expect(goodbye?.kind).toBe("token");
+    if (goodbye?.kind !== "token") return;
+
+    expect(goodbye.annotation.shouldGloss).toBe(true);
+    expect(goodbye.annotation.romaji).toBe("sayounara");
+  });
+
+  it("does not gloss mastered vocabulary", () => {
+    const segments = annotateJapaneseSentence("ありがとう。", support);
+    const thanks = segments.find(
+      (segment) => segment.kind === "token" && segment.annotation.surface === "ありがとう",
+    );
+
+    expect(thanks?.kind).toBe("token");
+    if (thanks?.kind !== "token") return;
+
+    expect(thanks.annotation.isMastered).toBe(true);
+    expect(thanks.annotation.shouldGloss).toBe(false);
+    expect(thanks.annotation.romaji).toBeNull();
   });
 
   it("flags unknown kanji inside a token", () => {

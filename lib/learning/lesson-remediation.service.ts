@@ -6,11 +6,13 @@ import type {
 import {
   buildActiveRecallStep,
   buildFillBlankStep,
+  buildLessonDrillPoolContext,
   buildListeningRecallStep,
   buildRecognitionChoiceStep,
   buildReverseRecognitionStep,
   getRecallAnswer,
   shuffle,
+  type LessonDrillPoolContext,
 } from "@/features/learning/utils/exercise-steps";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 
@@ -47,7 +49,7 @@ function isDrillContent(
 export function buildRemediationStep(
   content: LessonContent,
   allAnswers: string[],
-  allSurfaces: string[],
+  drillPool: LessonDrillPoolContext,
   failureCount: number,
   index: number,
   total: number,
@@ -61,7 +63,7 @@ export function buildRemediationStep(
   }
 
   if (stage === "guided_practice" && (content.type === "grammar" || content.type === "vocabulary")) {
-    const fillBlank = buildFillBlankStep(content, allAnswers, index, total);
+    const fillBlank = buildFillBlankStep(content, drillPool, index, total);
     if (fillBlank) return { ...fillBlank, stage };
   }
 
@@ -75,7 +77,7 @@ export function buildRemediationStep(
   }
 
   const variant = failureCount % 2 === 0
-    ? buildReverseRecognitionStep(content, allSurfaces, index, total, stage)
+    ? buildReverseRecognitionStep(content, drillPool.japaneseSurfaces, index, total, stage)
     : buildRecognitionChoiceStep(content, allAnswers, index, total, stage);
 
   return variant;
@@ -113,27 +115,14 @@ export function buildFinalRemediationBatch(
   if (pool.length === 0) return [];
 
   const allAnswers = pool.map(getRecallAnswer);
-  const allSurfaces = shuffle(pool).map((content) => {
-    switch (content.type) {
-      case "vocabulary":
-        return content.kanji ?? content.kana;
-      case "kanji":
-      case "hiragana":
-      case "katakana":
-        return content.character;
-      case "grammar":
-        return content.title;
-      default:
-        return "";
-    }
-  });
+  const drillPool = buildLessonDrillPoolContext(pool);
 
   return pool
     .map((content, offset) =>
       buildRemediationStep(
         content,
         allAnswers,
-        allSurfaces,
+        drillPool,
         2,
         startIndex + offset + 1,
         pool.length,

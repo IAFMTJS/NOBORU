@@ -183,13 +183,22 @@ export type LessonListeningRecallStep = {
   total: number;
 };
 
+export type LessonFillBlankOption = {
+  japanese: string;
+  romaji: string | null;
+  reading: string | null;
+};
+
+export type LessonFillBlankInteraction = "choice" | "blocks";
+
 export type LessonFillBlankStep = {
   kind: "fill_blank";
   prompt: string;
   sentenceWithBlank: string;
   englishHint: string;
-  options: string[];
+  options: LessonFillBlankOption[];
   correctIndex: number;
+  interaction: LessonFillBlankInteraction;
   stage?: LessonStage;
   lessonPhase?: LessonPhase;
   contentId?: string;

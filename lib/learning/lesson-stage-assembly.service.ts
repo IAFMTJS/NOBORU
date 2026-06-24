@@ -6,9 +6,11 @@ import type {
   ScoredLessonStep,
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
+import type { LessonDrillPoolContext } from "@/features/learning/utils/exercise-steps";
 import {
   buildActiveRecallStep,
   buildFillBlankStep,
+  buildLessonDrillPoolContext,
   buildListeningRecallStep,
   buildMasteryChallengeStep,
   buildMatchingStep,
@@ -17,7 +19,6 @@ import {
   buildSentenceTypedStep,
   buildVarietyStep,
   buildWordBankStep,
-  getJapaneseSurface,
   getRecallAnswer,
   shuffle,
 } from "@/features/learning/utils/exercise-steps";
@@ -222,7 +223,7 @@ export function computeStagePlans(
 function buildConceptExposurePlans(
   content: LessonContent,
   allAnswers: string[],
-  allSurfaces: string[],
+  drillPool: LessonDrillPoolContext,
 ): ConceptExposurePlan[] {
   if (!isDrillContent(content)) return [];
 
@@ -237,7 +238,8 @@ function buildConceptExposurePlans(
       content,
       stage: "recognition",
       lessonPhase: "recognition",
-      build: () => buildReverseRecognitionStep(content, allSurfaces, 0, 0, "recognition"),
+      build: () =>
+        buildReverseRecognitionStep(content, drillPool.japaneseSurfaces, 0, 0, "recognition"),
     },
     {
       content,
@@ -248,10 +250,10 @@ function buildConceptExposurePlans(
           return buildListeningRecallStep(content, allAnswers, 0, 0, "listening");
         }
         if (content.type === "grammar" || content.type === "vocabulary") {
-          const fillBlank = buildFillBlankStep(content, allAnswers, 0, 0);
+          const fillBlank = buildFillBlankStep(content, drillPool, 0, 0);
           if (fillBlank) return { ...fillBlank, stage: "guided_practice" as const };
         }
-        return buildVarietyStep(content, allAnswers, 1, 0, 0);
+        return buildVarietyStep(content, allAnswers, drillPool, 1, 0, 0);
       },
     },
     {
@@ -290,7 +292,7 @@ function buildConceptExposurePlans(
       content,
       stage: "mastery_challenge",
       lessonPhase: "context_mastery",
-      build: () => buildMasteryChallengeStep(content, allAnswers, 0, 0),
+      build: () => buildMasteryChallengeStep(content, allAnswers, drillPool, 0, 0),
     },
   ];
 
@@ -300,11 +302,11 @@ function buildConceptExposurePlans(
 function interleaveSpiralExposures(
   concepts: LessonContent[],
   allAnswers: string[],
-  allSurfaces: string[],
+  drillPool: LessonDrillPoolContext,
 ): ScoredLessonStep[] {
   const orderedConcepts = shuffle(concepts);
   const plansByConcept = orderedConcepts.map((content) =>
-    buildConceptExposurePlans(content, allAnswers, allSurfaces),
+    buildConceptExposurePlans(content, allAnswers, drillPool),
   );
 
   const maxDepth = Math.max(
@@ -334,6 +336,7 @@ function interleaveSpiralExposures(
 function buildReviewInjectionSteps(
   reviewContents: LessonContent[],
   allAnswers: string[],
+  drillPool: LessonDrillPoolContext,
   count: number,
   startIndex: number,
   total: number,
@@ -348,6 +351,7 @@ function buildReviewInjectionSteps(
     const variety = buildVarietyStep(
       content,
       allAnswers,
+      drillPool,
       Math.floor(Math.random() * 4),
       startIndex + index + 1,
       total,
@@ -376,7 +380,7 @@ function buildReviewInjectionSteps(
 function buildCheckpointSteps(
   reviewContents: LessonContent[],
   allAnswers: string[],
-  allSurfaces: string[],
+  drillPool: LessonDrillPoolContext,
 ): ScoredLessonStep[] {
   const stagePlans = computeStagePlans(0, true);
   const total = stagePlans.reduce((sum, plan) => sum + plan.count, 0);
@@ -403,13 +407,20 @@ function buildCheckpointSteps(
               )
             : buildReverseRecognitionStep(
                 content,
-                allSurfaces,
+                drillPool.japaneseSurfaces,
                 runningIndex + index + 1,
                 total,
                 plan.stage,
               );
       } else if (plan.stage === "guided_practice") {
-        const variety = buildVarietyStep(content, allAnswers, index, runningIndex + index + 1, total);
+        const variety = buildVarietyStep(
+          content,
+          allAnswers,
+          drillPool,
+          index,
+          runningIndex + index + 1,
+          total,
+        );
         step = variety ? ({ ...variety, stage: plan.stage } as ScoredLessonStep) : null;
       } else if (plan.stage === "active_recall") {
         step = buildActiveRecallStep(content, allAnswers, runningIndex + index + 1, total, plan.stage);
@@ -425,7 +436,13 @@ function buildCheckpointSteps(
       } else if (plan.stage === "review_injection") {
         step = buildActiveRecallStep(content, allAnswers, runningIndex + index + 1, total, plan.stage);
       } else if (plan.stage === "mastery_challenge") {
-        step = buildMasteryChallengeStep(content, allAnswers, runningIndex + index + 1, total);
+        step = buildMasteryChallengeStep(
+          content,
+          allAnswers,
+          drillPool,
+          runningIndex + index + 1,
+          total,
+        );
       }
 
       if (step) rawSteps.push(step);
@@ -488,14 +505,14 @@ export function assembleStagedExerciseSteps(
     ...drillReview.filter((c) => !primaryPool.some((p) => p.id === c.id)),
   ];
   const allAnswers = allPool.map(getRecallAnswer);
-  const allSurfaces = allPool.map(getJapaneseSurface);
+  const drillPool = buildLessonDrillPoolContext(allPool);
 
   let rawSteps: ScoredLessonStep[];
 
   if (input.isCheckpoint) {
-    rawSteps = buildCheckpointSteps(drillReview, allAnswers, allSurfaces);
+    rawSteps = buildCheckpointSteps(drillReview, allAnswers, drillPool);
   } else if (drillNew.length > 0) {
-    rawSteps = interleaveSpiralExposures(drillNew, allAnswers, allSurfaces);
+    rawSteps = interleaveSpiralExposures(drillNew, allAnswers, drillPool);
 
     const matching = buildMatchingStep(drillNew);
     if (matching) {
@@ -513,6 +530,7 @@ export function assembleStagedExerciseSteps(
       const reviewSteps = buildReviewInjectionSteps(
         drillReview,
         allAnswers,
+        drillPool,
         Math.max(2, minReview),
         rawSteps.length,
         rawSteps.length + minReview,
@@ -520,7 +538,7 @@ export function assembleStagedExerciseSteps(
       rawSteps.push(...reviewSteps);
     }
   } else {
-    rawSteps = buildCheckpointSteps(allPool, allAnswers, allSurfaces);
+    rawSteps = buildCheckpointSteps(allPool, allAnswers, drillPool);
   }
 
   const bounded = trimToExerciseBounds(rawSteps);

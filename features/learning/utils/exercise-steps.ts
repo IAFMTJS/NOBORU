@@ -4,6 +4,7 @@ import type {
   KanjiLessonContent,
   KatakanaLessonContent,
   LessonContent,
+  LessonFillBlankOption,
   LessonFillBlankStep,
   LessonListeningRecallStep,
   LessonMatchingStep,
@@ -206,6 +207,7 @@ export function buildActiveRecallStep(
 export function buildMasteryChallengeStep(
   content: LessonContent,
   allAnswers: string[],
+  pool: LessonDrillPoolContext,
   index: number,
   total: number,
 ): LessonFillBlankStep | LessonWordBankStep | LessonSentenceTypedStep | LessonRecallStep | null {
@@ -218,7 +220,7 @@ export function buildMasteryChallengeStep(
     if (wordBank) {
       return { ...wordBank, stage: "mastery_challenge" as const, prompt: "Mastery challenge" };
     }
-    const fillBlank = buildFillBlankStep(content, allAnswers, index, total);
+    const fillBlank = buildFillBlankStep(content, pool, index, total);
     if (fillBlank) {
       return { ...fillBlank, stage: "mastery_challenge" as const, prompt: "Mastery challenge" };
     }
@@ -260,6 +262,153 @@ export function buildRecallOptions(correct: string, distractors: string[]): stri
     new Set(distractors.filter((value) => value !== correct)),
   ).slice(0, 3);
   return shuffle([correct, ...unique]).slice(0, 4);
+}
+
+export type LessonDrillPoolContext = {
+  japaneseSurfaces: string[];
+  lessonContents: LessonContent[];
+};
+
+export function buildLessonDrillPoolContext(
+  lessonContents: LessonContent[],
+): LessonDrillPoolContext {
+  return {
+    japaneseSurfaces: lessonContents.map(getJapaneseSurface).filter(Boolean),
+    lessonContents,
+  };
+}
+
+const JAPANESE_PARTICLE_RE =
+  /^[はがをにのでともへかや]$|^です$|^ます$|^ません$|^ましょう$|^でした$/;
+
+function isJapaneseParticle(token: string): boolean {
+  return JAPANESE_PARTICLE_RE.test(token);
+}
+
+function containsKanji(text: string): boolean {
+  return /\p{Script=Han}/u.test(text);
+}
+
+function isKanaOnly(text: string): boolean {
+  return /^[\u3040-\u309F\u30A0-\u30FFー]+$/.test(text);
+}
+
+function isJapaneseSurface(text: string): boolean {
+  return /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
+}
+
+type TokenMetadata = {
+  romaji: string | null;
+  reading: string | null;
+};
+
+function buildJapaneseTokenMetadataLookup(
+  contents: LessonContent[],
+): Map<string, TokenMetadata> {
+  const lookup = new Map<string, TokenMetadata>();
+
+  function register(japanese: string, meta: TokenMetadata) {
+    if (!japanese || !isJapaneseSurface(japanese)) return;
+    const existing = lookup.get(japanese);
+    lookup.set(japanese, {
+      romaji: meta.romaji ?? existing?.romaji ?? null,
+      reading: meta.reading ?? existing?.reading ?? null,
+    });
+  }
+
+  for (const content of contents) {
+    if (content.type === "vocabulary") {
+      const japanese = content.kanji ?? content.kana;
+      const meta = { romaji: content.romaji, reading: content.kana };
+      register(japanese, meta);
+      register(content.kana, meta);
+      if (content.kanji) register(content.kanji, meta);
+    }
+
+    if (content.type === "kanji") {
+      const reading = content.kunyomi[0] ?? content.onyomi[0] ?? null;
+      register(content.character, { romaji: null, reading });
+    }
+
+    if (content.type === "hiragana" || content.type === "katakana") {
+      register(content.character, { romaji: content.romaji, reading: content.character });
+    }
+
+    if (content.type === "grammar") {
+      register(content.title, { romaji: null, reading: null });
+    }
+  }
+
+  return lookup;
+}
+
+function resolveFillBlankOption(
+  japanese: string,
+  lookup: Map<string, TokenMetadata>,
+): LessonFillBlankOption {
+  const meta = lookup.get(japanese);
+  const reading =
+    meta?.reading ??
+    (isKanaOnly(japanese) ? japanese : containsKanji(japanese) ? null : japanese);
+
+  return {
+    japanese,
+    romaji: meta?.romaji ?? null,
+    reading: reading && reading !== japanese ? reading : null,
+  };
+}
+
+export function formatFillBlankAnswer(option: LessonFillBlankOption): string {
+  if (option.romaji) return `${option.japanese} (${option.romaji})`;
+  if (option.reading) return `${option.japanese} — ${option.reading}`;
+  return option.japanese;
+}
+
+function collectJapaneseDistractorPool(
+  exampleText: string,
+  blankToken: string,
+  pool: LessonDrillPoolContext,
+): string[] {
+  const sentenceTokens = tokenizeJapaneseSentence(exampleText).filter(
+    (token) => token !== blankToken && !isJapaneseParticle(token) && isJapaneseSurface(token),
+  );
+
+  const lessonSurfaces = pool.japaneseSurfaces.filter(
+    (surface) => surface !== blankToken && isJapaneseSurface(surface),
+  );
+
+  return Array.from(new Set([...sentenceTokens, ...lessonSurfaces]));
+}
+
+function pickBlankToken(
+  tokens: string[],
+  content: GrammarLessonContent | VocabularyLessonContent,
+): string | null {
+  const lessonSurfaces =
+    content.type === "vocabulary"
+      ? [content.kanji, content.kana].filter((value): value is string => Boolean(value))
+      : [content.title];
+
+  for (const surface of lessonSurfaces) {
+    const match = tokens.find(
+      (token) =>
+        !isJapaneseParticle(token) &&
+        (token === surface || token.includes(surface) || surface.includes(token)),
+    );
+    if (match) return match;
+  }
+
+  const candidates = tokens.filter(
+    (token) => token.length >= 2 && !isJapaneseParticle(token) && isJapaneseSurface(token),
+  );
+  if (candidates.length > 0) {
+    return [...candidates].sort((left, right) => right.length - left.length)[0] ?? null;
+  }
+
+  const fallback = tokens.find(
+    (token) => token.length >= 1 && !isJapaneseParticle(token) && isJapaneseSurface(token),
+  );
+  return fallback ?? null;
 }
 
 export function getRecallAnswer(content: LessonContent): string {
@@ -445,17 +594,9 @@ export function buildRecallStep(
   };
 }
 
-function pickBlankToken(tokens: string[]): string | null {
-  const candidates = tokens.filter(
-    (token) => token.length >= 1 && !/^[はがをにのでともへか]+$/.test(token),
-  );
-  if (candidates.length === 0) return null;
-  return candidates[Math.floor(candidates.length / 2)] ?? candidates[0] ?? null;
-}
-
 export function buildFillBlankStep(
   content: GrammarLessonContent | VocabularyLessonContent,
-  allAnswers: string[],
+  pool: LessonDrillPoolContext,
   index: number,
   total: number,
 ): LessonFillBlankStep | null {
@@ -463,30 +604,42 @@ export function buildFillBlankStep(
   if (!example) return null;
 
   const tokens = tokenizeJapaneseSentence(example.japaneseText);
-  const blankToken = pickBlankToken(tokens);
-  if (!blankToken || blankToken.length > 8) return null;
+  const blankToken = pickBlankToken(tokens, content);
+  if (!blankToken || blankToken.length > 12) return null;
 
-  const blankChar =
-    blankToken.length > 2 ? blankToken.slice(0, 1) : blankToken;
   const sentenceWithBlank = example.japaneseText.replace(blankToken, "___");
   if (sentenceWithBlank === example.japaneseText) return null;
 
-  const distractors = shuffle(
-    allAnswers
-      .flatMap((answer) => answer.split(/\s+/))
-      .filter((value) => value.length <= 3 && value !== blankChar),
-  ).slice(0, 3);
+  const lookup = buildJapaneseTokenMetadataLookup([content, ...pool.lessonContents]);
+  const distractorPool = collectJapaneseDistractorPool(
+    example.japaneseText,
+    blankToken,
+    pool,
+  ).filter((candidate) => {
+    if (candidate === blankToken) return false;
+    if (!isJapaneseSurface(candidate)) return false;
+    if (containsKanji(candidate) && !lookup.has(candidate)) return false;
+    return true;
+  });
 
-  const options = buildRecallOptions(blankChar, [...distractors, blankToken.slice(1)]);
+  const japaneseOptions = buildRecallOptions(blankToken, distractorPool).map((japanese) =>
+    resolveFillBlankOption(japanese, lookup),
+  );
+  const correctIndex = japaneseOptions.findIndex(
+    (option) => option.japanese === blankToken,
+  );
+  if (correctIndex < 0) return null;
 
   return withContentMeta(
     {
       kind: "fill_blank",
-      prompt: "Fill in the blank",
+      prompt:
+        index % 2 === 0 ? "Tap a word to fill the blank" : "Fill in the blank",
       sentenceWithBlank,
       englishHint: example.english,
-      options,
-      correctIndex: options.indexOf(blankChar),
+      options: japaneseOptions,
+      correctIndex,
+      interaction: index % 2 === 0 ? "blocks" : "choice",
       index,
       total,
     },
@@ -575,13 +728,13 @@ export function buildSentenceTypedStep(
 
 export function buildGrammarProductionStep(
   content: GrammarLessonContent,
-  allAnswers: string[],
+  pool: LessonDrillPoolContext,
   index: number,
   total: number,
 ): LessonFillBlankStep | LessonWordBankStep | LessonSentenceTypedStep | null {
   const variant = index % 3;
   if (variant === 0) return buildWordBankStep(content, index, total);
-  if (variant === 1) return buildFillBlankStep(content, allAnswers, index, total);
+  if (variant === 1) return buildFillBlankStep(content, pool, index, total);
   return buildSentenceTypedStep(content, index, total);
 }
 
@@ -620,28 +773,29 @@ export function buildMixedRecallSteps(contents: LessonContent[]): LessonRecallSt
 type VarietyBuilder = (
   content: LessonContent,
   allAnswers: string[],
+  pool: LessonDrillPoolContext,
   index: number,
   total: number,
 ) => { kind: string } | null;
 
 const VARIETY_ROTATION: VarietyBuilder[] = [
-  (content, allAnswers, index, total) => {
+  (content, allAnswers, _pool, index, total) => {
     if (content.type !== "vocabulary" || !content.audioUrl) return null;
     return buildListeningRecallStep(content, allAnswers, index, total);
   },
-  (content, allAnswers, index, total) => {
+  (content, _allAnswers, pool, index, total) => {
     if (content.type !== "grammar" && content.type !== "vocabulary") return null;
-    return buildFillBlankStep(content, allAnswers, index, total);
+    return buildFillBlankStep(content, pool, index, total);
   },
-  (content, _allAnswers, index, total) => {
+  (content, _allAnswers, _pool, index, total) => {
     if (content.type !== "grammar" && content.type !== "vocabulary") return null;
     return buildWordBankStep(content, index, total);
   },
-  (content, _allAnswers, index, total) => {
+  (content, _allAnswers, _pool, index, total) => {
     if (content.type !== "grammar" && content.type !== "vocabulary") return null;
     return buildSentenceTypedStep(content, index, total);
   },
-  (content, allAnswers, index, total) => {
+  (content, allAnswers, _pool, index, total) => {
     if (content.type !== "grammar") return null;
     const step = buildRecallStep(content, allAnswers, index, total);
     return { ...step, mode: "choice" as const };
@@ -651,6 +805,7 @@ const VARIETY_ROTATION: VarietyBuilder[] = [
 export function buildVarietyStep(
   content: LessonContent,
   allAnswers: string[],
+  pool: LessonDrillPoolContext,
   contentIndex: number,
   drillIndex: number,
   total: number,
@@ -658,7 +813,7 @@ export function buildVarietyStep(
   const start = contentIndex % VARIETY_ROTATION.length;
   for (let offset = 0; offset < VARIETY_ROTATION.length; offset += 1) {
     const builder = VARIETY_ROTATION[(start + offset) % VARIETY_ROTATION.length];
-    const step = builder(content, allAnswers, drillIndex, total);
+    const step = builder(content, allAnswers, pool, drillIndex, total);
     if (step) return step as ReturnType<typeof buildVarietyStep>;
   }
   return null;

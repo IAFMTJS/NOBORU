@@ -1,4 +1,5 @@
 import type { JlptLevel } from "@/lib/content/types";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
 import type {
   ComprehensionSupportContext,
   KanjiLookupEntry,
@@ -22,6 +23,7 @@ function buildVocabularyLookupEntry(row: {
     id: row.id,
     kana: row.kana,
     kanji: row.kanji,
+    romaji: deriveKanaRomaji(row.kana) || null,
     meaning: row.meaning,
     surfaceForms,
   };

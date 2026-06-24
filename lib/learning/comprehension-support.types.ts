@@ -3,6 +3,7 @@ export type VocabularyLookupEntry = {
   id: string;
   kana: string;
   kanji: string | null;
+  romaji: string | null;
   meaning: string;
   surfaceForms: string[];
 };
@@ -27,10 +28,13 @@ export type ComprehensionSupportContext = {
 export type SentenceTokenAnnotation = {
   surface: string;
   reading: string | null;
+  romaji: string | null;
   meaning: string | null;
   vocabularyId: string | null;
   unknownKanji: KanjiLookupEntry[];
+  /** @deprecated Use isMastered — kept for existing readers. */
   isKnown: boolean;
+  isMastered: boolean;
   shouldGloss: boolean;
   showFurigana: boolean;
 };
