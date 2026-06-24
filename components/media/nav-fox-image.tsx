@@ -54,8 +54,8 @@ export function NavFoxImage({
 
   const sizeClass =
     variant === "bar-anchor"
-      ? "h-[4.5rem] w-[4.5rem] shrink-0"
-      : "h-16 w-16 shrink-0";
+      ? "h-16 w-16 shrink-0"
+      : "h-14 w-14 shrink-0";
 
 
 
@@ -85,7 +85,7 @@ export function NavFoxImage({
 
 
 
-  const px = variant === "bar-anchor" ? 72 : 64;
+  const px = variant === "bar-anchor" ? 64 : 56;
 
   return (
     <CharacterStickerFrame className={cn(sizeClass, className)}>

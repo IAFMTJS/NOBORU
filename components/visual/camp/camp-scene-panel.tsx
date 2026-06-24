@@ -53,7 +53,7 @@ export function CampScenePanel({
         aria-labelledby="camp-scene-panel-title"
         aria-describedby="camp-scene-panel-description"
         className={cn(
-          "absolute bottom-0 left-0 right-0 z-50 mx-auto max-w-phone rounded-t-2xl border-x border-t shadow-elevation-3",
+          "absolute bottom-nav-clearance left-0 right-0 z-50 mx-auto max-w-phone rounded-t-2xl border-x border-t shadow-elevation-3",
           VISUAL_MOCKUP.glass.sheetClass,
           className,
         )}

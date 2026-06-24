@@ -125,7 +125,7 @@ export function N5WorldNodeCard({ node, isCurrent = false, onClose }: N5WorldNod
   return (
     <GlassPanel
       variant="panel"
-      className="pointer-events-auto absolute inset-x-4 bottom-24 z-30 border border-trail-glow/25 p-4 shadow-lg"
+      className="pointer-events-auto absolute inset-x-4 bottom-above-nav z-30 border border-trail-glow/25 p-4 shadow-lg"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">

@@ -167,7 +167,7 @@ export function N5WorldCanvas({
 
       <p
         className={cn(
-          "pointer-events-none absolute bottom-20 left-0 right-0 z-20 text-center text-caption text-muted-foreground",
+          "pointer-events-none absolute bottom-nav-clearance left-0 right-0 z-20 text-center text-caption text-muted-foreground",
         )}
       >
         Scroll to explore

@@ -37,7 +37,7 @@ export function OfflineSyncRewardsFeedback({
   if (!hasRewards) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-20 z-50 px-4 sm:bottom-6 sm:px-6">
+    <div className="fixed inset-x-0 bottom-above-nav z-50 px-4 sm:px-6">
       <MotionDiv
         {...scaleIn}
         initial="initial"

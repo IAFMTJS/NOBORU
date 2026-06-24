@@ -68,8 +68,8 @@
     --app-height: 100dvh;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --nav-height: 3.25rem;
-    --nav-clearance: calc(var(--nav-height) + var(--safe-bottom));
+    --nav-height: 5.5rem;
+    --nav-clearance: calc(var(--nav-height) + max(0.5rem, var(--safe-bottom)));
     --hud-height: 3.25rem;
     --content-height: calc(var(--app-height) - var(--nav-clearance));
     --phone-max-width: 32rem;
@@ -130,6 +130,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    scroll-padding-bottom: var(--nav-clearance);
   }
 
   h1 {
@@ -258,6 +259,10 @@
 
   .bottom-nav-clearance {
     bottom: var(--nav-clearance);
+  }
+
+  .bottom-above-nav {
+    bottom: calc(var(--nav-clearance) + 0.75rem);
   }
 
   .pb-safe-bottom {

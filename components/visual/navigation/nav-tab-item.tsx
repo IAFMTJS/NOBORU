@@ -66,7 +66,7 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
     >
       {isActive ? (
         <div
-          className="pointer-events-none absolute -top-[3.5rem] left-1/2 z-20 flex -translate-x-1/2 flex-col items-center"
+          className="pointer-events-none absolute -top-[3rem] left-1/2 z-20 flex -translate-x-1/2 flex-col items-center"
           aria-hidden
         >
           <motion.div
@@ -91,7 +91,7 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
 
       <span
         className={cn(
-          "relative z-10 mt-7 flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300",
+          "relative z-10 mt-5 flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300",
           isActive
             ? cn(
                 config.activeIconRingClass,
