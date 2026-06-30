@@ -306,8 +306,8 @@ public/
 
 ### Performance Monitoring
 
-- **Authenticated routes:** Lighthouse CI (`.github/workflows/lighthouse.yml`) audits `/camp`, `/tree`, `/review`, and optionally `/learn/lesson/[id]` when `LIGHTHOUSE_LESSON_ID` secret is set.
-- **API rate limits:** `lib/api/rate-limit.ts` guards hot POST routes (review submit/batch, offline sync, game complete, shop purchase, lesson progress, reading/listening progress, trial complete, chest claim, analytics batch, league/friends mutations). Replace with Upstash/Vercel KV for multi-instance production scale.
+- **Authenticated routes:** Lighthouse CI (`.github/workflows/lighthouse.yml`) audits `/camp`, `/tree`, `/review`, and `/learn/lesson/[id]`. Lesson id is resolved by `scripts/lighthouse-resolve-lesson-id.mjs` from the learning-path API when `LIGHTHOUSE_LESSON_ID` is not set (optional override secret).
+- **API rate limits:** `lib/api/rate-limit.ts` uses Upstash when `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set; falls back to in-process limits locally.
 - **Bundle analysis:** run `npm run analyze` locally to open the webpack bundle analyzer (`ANALYZE=true` during `next build`).
 
 ---

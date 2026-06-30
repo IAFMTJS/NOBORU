@@ -22,7 +22,7 @@ Shared runtime rules: `lib/learning/` (constants, golden content validator, acti
 
 ## Responsibilities
 
-- Home dashboard via `dashboard-server.service.ts` (orchestrated in `lib/orchestration/home.orchestrator.ts`)
+- Home dashboard via `dashboard-server.service.ts` (camp above-fold; `/home` redirects to `/tree`)
 - Learning path via `learning-path.service.ts` (orchestrated in `lib/orchestration/learn.orchestrator.ts`)
 - Lesson assembly and player steps via `lesson.service.ts`
 - Progress persistence via `progress.service.ts` and `user_progress` table

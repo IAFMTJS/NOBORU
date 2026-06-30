@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { authService } from "@/features/authentication/services/auth.service";
+import { loadAuthService } from "@/features/authentication/utils/load-auth-service";
 
 export function usePasswordReset() {
   const [email, setEmail] = useState("");
@@ -15,6 +15,7 @@ export function usePasswordReset() {
     setError(null);
     setMessage(null);
 
+    const authService = await loadAuthService();
     const result = await authService.requestPasswordReset({ email });
 
     setLoading(false);

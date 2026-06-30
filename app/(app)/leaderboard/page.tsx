@@ -7,8 +7,6 @@ import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants"
 import { getAuthSession } from "@/lib/auth/require-session";
 import { FEATURE_FLAGS } from "@/lib/release/feature-flags";
 
-export const dynamic = "force-dynamic";
-
 export default async function LeaderboardPage() {
   if (!FEATURE_FLAGS.socialLeagues) {
     return (

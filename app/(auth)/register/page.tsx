@@ -1,5 +1,6 @@
 import { AuthBrandHeader } from "@/components/auth/auth-brand-header";
-import { GlassPanel, StoryTitle } from "@/components/visual";
+import { GlassPanel } from "@/components/visual/primitives/glass-panel";
+import { StoryTitle } from "@/components/visual/primitives/story-title";
 import { RegisterForm } from "@/features/authentication/components/register-form";
 
 export default function RegisterPage() {

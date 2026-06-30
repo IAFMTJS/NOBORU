@@ -5,8 +5,6 @@ import { collectionsServerService } from "@/features/collections/services/collec
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
 import { getAuthSession } from "@/lib/auth/require-session";
 
-export const dynamic = "force-dynamic";
-
 export default async function CollectionsPage() {
   const session = await getAuthSession();
   if (!session) redirect(AUTH_ROUTES.login);

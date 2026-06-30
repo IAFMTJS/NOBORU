@@ -38,14 +38,14 @@ export function N5WorldBackdrop({ scrollState, className }: N5WorldBackdropProps
           src={N5_REALM_SILHOUETTE[theme]}
           alt=""
           cover
-          priority
-          className="absolute inset-0 size-full opacity-35"
+          sizePreset="hero"
+          className="opacity-35"
         />
       </div>
 
       {([1, 2, 3] as const).map((actIndex) => {
         const layer = scrollState.acts[actIndex];
-        if (layer.opacity <= 0.01) return null;
+        if (layer.opacity <= 0.05) return null;
 
         return (
           <div
@@ -58,8 +58,8 @@ export function N5WorldBackdrop({ scrollState, className }: N5WorldBackdropProps
                 src={N5_ACT_SLICE_ART[actIndex][theme]}
                 alt=""
                 cover
-                priority={actIndex === 1}
-                className="absolute inset-0 size-full"
+                sizePreset="hero"
+                priority={actIndex === 1 && layer.opacity > 0.5}
                 style={{
                   objectPosition: `${layer.objectXPercent}% ${layer.objectYPercent}%`,
                   transform: `scale(${layer.scale})`,

@@ -1,7 +1,13 @@
+import { JapaneseFontScope } from "@/components/fonts/japanese-font-scope";
+
 export default function LearnLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="relative">{children}</div>;
+  return (
+    <JapaneseFontScope>
+      <div className="relative">{children}</div>
+    </JapaneseFontScope>
+  );
 }

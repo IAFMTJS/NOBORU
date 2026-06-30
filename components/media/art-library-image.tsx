@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import type { CSSProperties } from "react";
 
@@ -8,6 +9,10 @@ import {
   artLibraryThemedPath,
   type ArtLibraryTheme,
 } from "@/lib/assets/art-library-paths";
+import {
+  resolveArtLibraryImageSizes,
+  type ArtLibraryImageSizePreset,
+} from "@/lib/assets/art-library-image-presentation";
 import { cn } from "@/lib/utils";
 
 type ArtLibraryImageProps = {
@@ -21,9 +26,11 @@ type ArtLibraryImageProps = {
   style?: CSSProperties;
   width?: number;
   height?: number;
-  /** Fill parent with object-cover — no max-width cap. */
+  /** Fill parent with object-cover — uses next/image for responsive delivery. */
   cover?: boolean;
   priority?: boolean;
+  /** Responsive sizes preset when cover=true — defaults to hero. */
+  sizePreset?: ArtLibraryImageSizePreset;
 };
 
 function resolveSrc(
@@ -73,13 +80,29 @@ export function ArtLibraryImage({
   height,
   cover = false,
   priority = false,
+  sizePreset,
 }: ArtLibraryImageProps) {
   const { resolvedTheme } = useTheme();
   const theme = resolveTheme(themeProp, resolvedTheme);
   const url = resolveSrc(src, themedBase, theme);
 
+  if (cover) {
+    return (
+      <Image
+        src={url}
+        alt={alt}
+        fill
+        priority={priority}
+        sizes={resolveArtLibraryImageSizes(sizePreset)}
+        className={cn("object-cover object-center", className)}
+        style={style}
+        draggable={false}
+      />
+    );
+  }
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- Art Library static assets
+    // eslint-disable-next-line @next/next/no-img-element -- small icons skip optimizer overhead
     <img
       src={url}
       alt={alt}
@@ -88,10 +111,7 @@ export function ArtLibraryImage({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : "auto"}
       decoding="async"
-      className={cn(
-        cover ? "size-full min-h-full min-w-full object-cover object-center" : "max-w-full",
-        className,
-      )}
+      className={cn("max-w-full", className)}
       style={style}
       draggable={false}
     />

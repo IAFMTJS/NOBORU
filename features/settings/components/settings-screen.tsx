@@ -11,8 +11,7 @@ import {
   AUTH_ROUTES,
 } from "@/features/authentication/constants/auth.constants";
 import { useLogout } from "@/features/authentication/hooks/use-logout";
-import { OfflineSyncPanel } from "@/features/offline/components/offline-sync-panel";
-import { PwaInstallPrompt } from "@/features/offline/components/pwa-install-prompt";
+import { SettingsOfflineSection } from "@/features/settings/components/settings-offline-section";
 import { BETA_RELEASE } from "@/lib/release/beta.constants";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
 import { ThemeSelector } from "@/features/settings/components/theme-selector";
@@ -135,8 +134,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
               <TrailPreferenceRow label="Data export" value="Request scroll" href="/feedback" />
             </GlassPanel>
 
-            <PwaInstallPrompt />
-            <OfflineSyncPanel />
+            <SettingsOfflineSection />
 
             <GlassPanel className="space-y-3 p-4">
               <h3 className="font-sans text-body font-semibold tracking-wide">Support</h3>

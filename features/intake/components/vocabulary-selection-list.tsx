@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input";
+import { WindowedList } from "@/components/ui/windowed-list";
 import { YamaEmptyState } from "@/features/yama/components/yama-empty-state";
 import { SelectionCard } from "@/features/onboarding/components/selection-card";
 import type { VocabularyListEntry } from "@/features/vocabulary/types/vocabulary.types";
@@ -78,24 +79,27 @@ export function VocabularySelectionList({
         </button>
       </div>
 
-      <div className="max-h-[50dvh] space-y-2 overflow-y-auto pr-1">
-        {filtered.map((entry) => (
+      <WindowedList
+        className="max-h-[50dvh] space-y-2 overflow-y-auto pr-1"
+        items={filtered}
+        estimateSize={88}
+        getKey={(entry) => entry.id}
+        renderItem={(entry) => (
           <SelectionCard
-            key={entry.id}
             label={entry.kanji ?? entry.kana}
             description={`${entry.kana} · ${entry.meaning}`}
             selected={selectedIds.has(entry.id)}
             onClick={() => toggleEntry(entry.id)}
           />
-        ))}
-        {filtered.length === 0 ? (
+        )}
+      />
+      {filtered.length === 0 ? (
           <YamaEmptyState
             surface="search"
             title="No words on this path"
             description="Adjust your search — different characters or a broader term may reveal the word you need."
           />
         ) : null}
-      </div>
     </div>
   );
 }

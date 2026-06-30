@@ -1,3 +1,6 @@
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 type RateLimitBucket = {
   count: number;
   resetAt: number;
@@ -11,11 +14,31 @@ export type RateLimitResult = {
   resetAt: number;
 };
 
-/**
- * In-process sliding window limiter (per server instance).
- * Replace with Upstash/Vercel KV for multi-instance production scale.
- */
-export function checkRateLimit(
+const upstashLimiters = new Map<string, Ratelimit>();
+
+function getUpstashLimiter(limit: number, windowMs: number): Ratelimit | null {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
+    return null;
+  }
+
+  const cacheKey = `${limit}:${windowMs}`;
+  const existing = upstashLimiters.get(cacheKey);
+  if (existing) {
+    return existing;
+  }
+
+  const limiter = new Ratelimit({
+    redis: new Redis({ url, token }),
+    limiter: Ratelimit.slidingWindow(limit, `${windowMs} ms`),
+    prefix: "noboru:rl",
+  });
+  upstashLimiters.set(cacheKey, limiter);
+  return limiter;
+}
+
+function checkInProcessRateLimit(
   key: string,
   limit: number,
   windowMs: number,
@@ -36,6 +59,27 @@ export function checkRateLimit(
   bucket.count += 1;
   buckets.set(key, bucket);
   return { allowed: true, remaining: limit - bucket.count, resetAt: bucket.resetAt };
+}
+
+/**
+ * Distributed sliding-window limiter (Upstash) with in-process fallback for local dev.
+ */
+export async function checkRateLimit(
+  key: string,
+  limit: number,
+  windowMs: number,
+): Promise<RateLimitResult> {
+  const limiter = getUpstashLimiter(limit, windowMs);
+  if (!limiter) {
+    return checkInProcessRateLimit(key, limit, windowMs);
+  }
+
+  const result = await limiter.limit(key);
+  return {
+    allowed: result.success,
+    remaining: result.remaining,
+    resetAt: result.reset,
+  };
 }
 
 export function rateLimitKey(userId: string, route: string): string {

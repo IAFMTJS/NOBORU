@@ -9,8 +9,6 @@ import { profileServerService } from "@/features/profile/services/profile-server
 import { shrineProtectionService } from "@/features/streak-protection/services/shrine-protection.service";
 import { getCachedQuestDashboard } from "@/lib/cache/dashboard-cache";
 
-export const dynamic = "force-dynamic";
-
 export default async function CampPage() {
   const profile = await profileServerService.getProfileCore();
 

@@ -25,7 +25,8 @@ export async function GET(request: Request) {
             userId: user.id,
             displayName: resolveDisplayName(user.user_metadata),
           });
-          void ensureProfileJwtClaims(user.id);
+          await ensureProfileJwtClaims(user.id);
+          await supabase.auth.refreshSession();
         } catch (bootstrapError) {
           console.error(
             "[auth/callback] Failed to ensure user records:",

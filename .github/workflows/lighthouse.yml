@@ -52,13 +52,19 @@ jobs:
           LIGHTHOUSE_TEST_EMAIL: ${{ secrets.LIGHTHOUSE_TEST_EMAIL }}
           LIGHTHOUSE_TEST_PASSWORD: ${{ secrets.LIGHTHOUSE_TEST_PASSWORD }}
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
+      - name: Resolve Lighthouse lesson fixture
+        run: node scripts/lighthouse-resolve-lesson-id.mjs
+        env:
+          LIGHTHOUSE_LESSON_ID: ${{ secrets.LIGHTHOUSE_LESSON_ID }}
+          LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
       - name: Run Lighthouse on authenticated learning routes
         run: |
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/camp ./lighthouse-camp.json
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/tree ./lighthouse-tree.json
           node scripts/lighthouse-authenticated.mjs http://127.0.0.1:3000/review ./lighthouse-review.json
-          if [ -n "${LIGHTHOUSE_LESSON_ID}" ]; then
-            node scripts/lighthouse-authenticated.mjs "http://127.0.0.1:3000/learn/lesson/${LIGHTHOUSE_LESSON_ID}" ./lighthouse-lesson.json
+          if [ -f tests/lighthouse/lesson-id.txt ]; then
+            LESSON_ID="$(cat tests/lighthouse/lesson-id.txt)"
+            node scripts/lighthouse-authenticated.mjs "http://127.0.0.1:3000/learn/lesson/${LESSON_ID}" ./lighthouse-lesson.json
           fi
       - name: Enforce Lighthouse score floors
         run: |
@@ -70,7 +76,6 @@ jobs:
           done
         env:
           LIGHTHOUSE_MIN_SCORE: "90"
-          LIGHTHOUSE_LESSON_ID: ${{ secrets.LIGHTHOUSE_LESSON_ID }}
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v4
         with:

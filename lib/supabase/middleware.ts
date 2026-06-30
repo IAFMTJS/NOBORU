@@ -118,42 +118,52 @@ export async function updateSession(request: NextRequest) {
     profile = readProfileClaimsFromUser(user);
 
     if (!profile) {
-      const { data: profileRow, error: profileError } = await supabase
-        .from("profiles")
-        .select("user_id, onboarding_completed, role")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      await ensureProfileJwtClaims(user.id);
 
-      if (profileError) {
-        console.error("[middleware] Failed to load profile:", profileError.message);
-        return redirectToLoginWithError(request, "profile_load_failed");
+      const {
+        data: { user: refreshedUser },
+      } = await supabase.auth.getUser();
+      if (refreshedUser) {
+        profile = readProfileClaimsFromUser(refreshedUser);
       }
 
-      if (!profileRow && isAuthRequiredRoute(pathname)) {
-        console.error(
-          "[middleware] Profile missing for authenticated user:",
-          user.id,
-        );
-        return redirectToLoginWithError(request, "account_setup_failed");
-      }
+      if (!profile) {
+        const { data: profileRow, error: profileError } = await supabase
+          .from("profiles")
+          .select("user_id, onboarding_completed, role")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-      if (
-        !profileRow &&
-        (isOnboardingRequiredRoute(pathname) || isOnboardingRoute(pathname))
-      ) {
-        console.error(
-          "[middleware] Profile missing after bootstrap for user:",
-          user.id,
-        );
-        return redirectToLoginWithError(request, "profile_missing");
-      }
+        if (profileError) {
+          console.error("[middleware] Failed to load profile:", profileError.message);
+          return redirectToLoginWithError(request, "profile_load_failed");
+        }
 
-      if (profileRow) {
-        profile = {
-          onboarding_completed: profileRow.onboarding_completed,
-          role: profileRow.role ?? null,
-        };
-        void ensureProfileJwtClaims(user.id);
+        if (!profileRow && isAuthRequiredRoute(pathname)) {
+          console.error(
+            "[middleware] Profile missing for authenticated user:",
+            user.id,
+          );
+          return redirectToLoginWithError(request, "account_setup_failed");
+        }
+
+        if (
+          !profileRow &&
+          (isOnboardingRequiredRoute(pathname) || isOnboardingRoute(pathname))
+        ) {
+          console.error(
+            "[middleware] Profile missing after bootstrap for user:",
+            user.id,
+          );
+          return redirectToLoginWithError(request, "profile_missing");
+        }
+
+        if (profileRow) {
+          profile = {
+            onboarding_completed: profileRow.onboarding_completed,
+            role: profileRow.role ?? null,
+          };
+        }
       }
     }
 

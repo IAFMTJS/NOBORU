@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const { session, error } = await requireAuthSession();
   if (error || !session) return error ?? jsonError("Unauthorized.", 401);
 
-  const limit = checkRateLimit(rateLimitKey(session.userId, "sync-batch"), 60, 60_000);
+  const limit = await checkRateLimit(rateLimitKey(session.userId, "sync-batch"), 60, 60_000);
   if (!limit.allowed) {
     return jsonError("Too many sync requests. Please wait a moment.", 429);
   }

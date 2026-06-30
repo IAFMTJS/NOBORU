@@ -15,7 +15,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     return jsonError("Unknown game.", 404);
   }
 
-  const limit = checkRateLimit(rateLimitKey(session.userId, "game-complete"), 90, 60_000);
+  const limit = await checkRateLimit(rateLimitKey(session.userId, "game-complete"), 90, 60_000);
   if (!limit.allowed) {
     return jsonError("Too many game submissions. Please wait a moment.", 429);
   }

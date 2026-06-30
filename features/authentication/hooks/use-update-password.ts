@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
-import { authService } from "@/features/authentication/services/auth.service";
+import { loadAuthService } from "@/features/authentication/utils/load-auth-service";
 
 export function useUpdatePassword() {
   const router = useRouter();
@@ -19,6 +19,7 @@ export function useUpdatePassword() {
     setError(null);
     setMessage(null);
 
+    const authService = await loadAuthService();
     const result = await authService.updatePassword({
       password,
       confirmPassword,

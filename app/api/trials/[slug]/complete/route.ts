@@ -9,7 +9,7 @@ export async function POST(request: Request, { params }: RouteParams) {
   const { session, error } = await requireAuthSession();
   if (error || !session) return error ?? jsonError("Unauthorized.", 401);
 
-  const limit = checkRateLimit(rateLimitKey(session.userId, "trial-complete"), 30, 60_000);
+  const limit = await checkRateLimit(rateLimitKey(session.userId, "trial-complete"), 30, 60_000);
   if (!limit.allowed) {
     return jsonError("Too many requests. Try again shortly.", 429);
   }

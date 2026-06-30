@@ -1,5 +1,3 @@
-import "./japanese-fonts.css";
-
 import { AppViewportBackground } from "@/components/visual/navigation/app-viewport-background";
 import { BottomNav } from "@/components/visual/navigation/bottom-nav";
 import { BetaBanner } from "@/features/feedback/components/beta-banner";

@@ -25,7 +25,7 @@ await page.goto(`${baseUrl}/login`, { waitUntil: "networkidle" });
 await page.getByLabel("Email").fill(email);
 await page.getByLabel("Password").fill(password);
 await page.getByRole("button", { name: "Sign In" }).click();
-await page.waitForURL((current) => /\/(camp|home)$/.test(current.pathname), {
+await page.waitForURL((current) => /\/(camp|tree|home)$/.test(current.pathname), {
   timeout: 60_000,
 });
 

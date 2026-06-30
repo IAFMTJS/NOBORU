@@ -2,9 +2,7 @@
 
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 
-import { OfflineStatusBanner } from "@/features/offline/components/offline-status-banner";
-import { OfflineSyncRewardsFeedback } from "@/features/offline/components/offline-sync-rewards-feedback";
-import { ServiceWorkerUpdateBanner } from "@/features/offline/components/service-worker-update-banner";
+import { OfflineProviderChrome } from "@/features/offline/components/offline-provider-chrome";
 import { useOfflineSync } from "@/features/offline/hooks/use-offline-sync";
 import { useOnlineStatus } from "@/features/offline/hooks/use-online-status";
 import type {
@@ -86,14 +84,11 @@ export function OfflineProvider({ children, userId }: OfflineProviderProps) {
         dismissSyncRewards,
       }}
     >
-      <ServiceWorkerUpdateBanner />
-      <OfflineStatusBanner
+      <OfflineProviderChrome
         isOnline={isOnline}
         pendingMutations={status?.pendingMutations ?? 0}
-      />
-      <OfflineSyncRewardsFeedback
-        rewards={syncRewards}
-        onDismiss={dismissSyncRewards}
+        syncRewards={syncRewards}
+        onDismissSyncRewards={dismissSyncRewards}
       />
       {children}
     </OfflineContext.Provider>

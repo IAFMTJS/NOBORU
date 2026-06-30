@@ -20,17 +20,25 @@ const syncedClaimUsers = new Set<string>();
 export function readProfileClaimsFromUser(
   user: User,
 ): MiddlewareProfile | null {
-  const metadata = user.app_metadata ?? {};
-  const onboardingCompleted = metadata.onboarding_completed;
+  const appMetadata = user.app_metadata ?? {};
+  const userMetadata = user.user_metadata ?? {};
+  const onboardingCompleted =
+    typeof appMetadata.onboarding_completed === "boolean"
+      ? appMetadata.onboarding_completed
+      : typeof userMetadata.onboarding_completed === "boolean"
+        ? userMetadata.onboarding_completed
+        : null;
 
-  if (typeof onboardingCompleted !== "boolean") {
+  if (onboardingCompleted === null) {
     return null;
   }
 
   const role =
-    typeof metadata.role === "string" && metadata.role.length > 0
-      ? metadata.role
-      : "learner";
+    typeof appMetadata.role === "string" && appMetadata.role.length > 0
+      ? appMetadata.role
+      : typeof userMetadata.role === "string" && userMetadata.role.length > 0
+        ? userMetadata.role
+        : "learner";
 
   return {
     onboarding_completed: onboardingCompleted,

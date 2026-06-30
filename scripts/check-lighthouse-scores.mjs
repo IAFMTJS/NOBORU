@@ -8,15 +8,46 @@ if (files.length === 0) {
   process.exit(1);
 }
 
+const CATEGORY_AUDIT_IDS = {
+  performance: "performance",
+  accessibility: "accessibility",
+  "best-practices": "best-practices",
+  pwa: "pwa",
+};
+
+function resolveCategoryScore(report, category) {
+  const direct = report.categories?.[category]?.score;
+  if (typeof direct === "number") {
+    return Math.round(direct * 100);
+  }
+
+  const auditId = CATEGORY_AUDIT_IDS[category];
+  const auditScore = report.audits?.[auditId]?.score;
+  if (typeof auditScore === "number") {
+    return Math.round(auditScore * 100);
+  }
+
+  return null;
+}
+
 let failed = false;
 
 for (const file of files) {
+  if (!fs.existsSync(file)) {
+    console.warn(`${file} · skipped (missing)`);
+    continue;
+  }
+
   const report = JSON.parse(fs.readFileSync(file, "utf8"));
-  const categories = report.categories ?? {};
   const route = report.finalUrl ?? file;
 
   for (const category of ["performance", "accessibility", "best-practices", "pwa"]) {
-    const score = Math.round((categories[category]?.score ?? 0) * 100);
+    const score = resolveCategoryScore(report, category);
+    if (score === null) {
+      console.warn(`${file} · ${category}: unavailable in report`);
+      continue;
+    }
+
     console.log(`${file} · ${category}: ${score}`);
 
     if (score < minimumScore) {

@@ -1,6 +1,19 @@
+"use client";
+
+import dynamic from "next/dynamic";
+
 import { NoboruWordmark } from "@/components/brand/noboru-wordmark";
-import { StoryTitle } from "@/components/visual/story-title";
-import { YamaAvatar } from "@/features/yama/components/yama-avatar";
+import { StoryTitle } from "@/components/visual/primitives/story-title";
+
+const YamaAvatar = dynamic(
+  () =>
+    import("@/features/yama/components/yama-avatar").then((module) => ({
+      default: module.YamaAvatar,
+    })),
+  {
+    loading: () => <div className="mx-auto mb-3 h-24 w-24 rounded-full bg-muted/40" aria-hidden />,
+  },
+);
 
 type AuthBrandHeaderProps = {
   title: string;
@@ -12,7 +25,7 @@ export function AuthBrandHeader({ title, description }: AuthBrandHeaderProps) {
     <div className="text-center">
       <NoboruWordmark className="mx-auto mb-4" priority />
       <div className="mx-auto mb-3 flex justify-center">
-        <YamaAvatar expression="main" size="lg" alt="Yama" priority />
+        <YamaAvatar expression="main" size="lg" alt="Yama" />
       </div>
       <p className="font-japanese text-body-sm tracking-widest text-muted-foreground">
         登る

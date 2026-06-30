@@ -46,5 +46,5 @@ Guidelines for image and media delivery in Noboru. Aligns with `next.config.ts` 
 1. Light + dark variant where applicable
 2. Transparent background for icons
 3. Register in `docs/asset-registry.md`
-4. Use `ArtLibraryImage` or `next/image` — never raw `<img>` for learner UI art
+4. Use `ArtLibraryImage` (`cover` → `next/image` + sizes presets) or `next/image` — avoid raw `<img>` for learner hero art
 5. Lazy-load below-fold decorative art

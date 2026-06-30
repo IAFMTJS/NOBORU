@@ -5,8 +5,6 @@ import { shopServerService } from "@/features/shop/services/shop-server.service"
 import { AUTH_ROUTES } from "@/features/authentication/constants/auth.constants";
 import { getAuthSession } from "@/lib/auth/require-session";
 
-export const dynamic = "force-dynamic";
-
 export default async function ShopPage() {
   const session = await getAuthSession();
   if (!session) redirect(AUTH_ROUTES.login);

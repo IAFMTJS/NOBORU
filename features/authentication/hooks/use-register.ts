@@ -7,7 +7,7 @@ import {
   AUTH_MESSAGES,
   AUTH_ROUTES,
 } from "@/features/authentication/constants/auth.constants";
-import { authService } from "@/features/authentication/services/auth.service";
+import { loadAuthService } from "@/features/authentication/utils/load-auth-service";
 
 export function useRegister() {
   const router = useRouter();
@@ -24,6 +24,7 @@ export function useRegister() {
     setError(null);
     setMessage(null);
 
+    const authService = await loadAuthService();
     const result = await authService.signUp({
       displayName,
       email,

@@ -1,5 +1,6 @@
 import { AuthBrandHeader } from "@/components/auth/auth-brand-header";
-import { GlassPanel, StoryTitle } from "@/components/visual";
+import { GlassPanel } from "@/components/visual/primitives/glass-panel";
+import { StoryTitle } from "@/components/visual/primitives/story-title";
 import { ForgotPasswordForm } from "@/features/authentication/components/forgot-password-form";
 
 export default function ForgotPasswordPage() {
