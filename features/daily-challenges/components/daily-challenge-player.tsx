@@ -82,6 +82,8 @@ export function DailyChallengePlayer({ session }: DailyChallengePlayerProps) {
       contentType: "vocabulary",
       prompt: "What does this word mean?",
       display: current.display,
+      reading: current.reading,
+      romaji: current.romaji,
       options,
       correctIndex: options.indexOf(current.meaning),
       phase: "consolidation",

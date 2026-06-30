@@ -77,7 +77,7 @@ export function buildRemediationStep(
   }
 
   const variant = failureCount % 2 === 0
-    ? buildReverseRecognitionStep(content, drillPool.japaneseSurfaces, index, total, stage)
+    ? buildReverseRecognitionStep(content, drillPool, index, total, stage)
     : buildRecognitionChoiceStep(content, allAnswers, index, total, stage);
 
   return variant;

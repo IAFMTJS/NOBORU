@@ -22,7 +22,7 @@ export function BottomNav() {
     >
       <div
         className={cn(
-          "pointer-events-auto flex w-full max-w-phone items-end justify-between gap-0.5 px-1 py-1.5",
+          "pointer-events-auto flex w-full max-w-phone items-center justify-between gap-0.5 px-1 py-1.5",
           glassSurface.navShell,
         )}
       >

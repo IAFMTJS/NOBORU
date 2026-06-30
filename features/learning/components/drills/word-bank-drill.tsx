@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
+import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { cn } from "@/lib/utils";
 import type { LessonWordBankStep } from "@/features/learning/types/lesson.types";
 
@@ -61,24 +63,43 @@ export function WordBankDrill({
       prompt={`${step.prompt} · ${step.index}/${step.total}`}
       result={result}
       hero={
-        <div
-          className="min-h-16 w-full max-w-md rounded-xl border border-dashed border-white/20 bg-black/25 p-4"
-          aria-label="Your sentence"
-        >
-          {selected.length === 0 ? (
-            <p className="text-body-sm text-muted-foreground">
-              Tap words below to build the sentence
-            </p>
+        <div className="space-y-4">
+          {step.referenceJapanese ? (
+            <AnnotatedJapaneseText
+              text={step.referenceJapanese}
+              romaji={step.sentenceRomaji}
+              english={step.englishHint}
+              size="lg"
+              className="text-foreground"
+              supportMode="tap"
+            />
           ) : (
-            <p className="font-story text-2xl font-semibold leading-relaxed text-heading-story sm:text-3xl">
-              {selected.join("")}
-            </p>
+            <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
           )}
+          <div
+            className="min-h-16 w-full max-w-md rounded-xl border border-dashed border-white/20 bg-black/25 p-4"
+            aria-label="Your sentence"
+          >
+            {selected.length === 0 ? (
+              <p className="text-body-sm text-muted-foreground">
+                Tap words below to build the sentence
+              </p>
+            ) : (
+              <JapaneseText
+                text={selected.join("")}
+                romaji={step.sentenceRomaji}
+                size="lg"
+                className="font-story font-semibold leading-relaxed text-heading-story"
+              />
+            )}
+          </div>
         </div>
       }
       footer={
         <>
-          <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+          {!step.referenceJapanese ? (
+            <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+          ) : null}
           <div className="flex flex-wrap gap-2">
             {remainingTokens.map((token, index) => (
               <button

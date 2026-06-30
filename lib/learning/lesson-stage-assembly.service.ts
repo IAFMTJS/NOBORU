@@ -239,7 +239,7 @@ function buildConceptExposurePlans(
       stage: "recognition",
       lessonPhase: "recognition",
       build: () =>
-        buildReverseRecognitionStep(content, drillPool.japaneseSurfaces, 0, 0, "recognition"),
+        buildReverseRecognitionStep(content, drillPool, 0, 0, "recognition"),
     },
     {
       content,
@@ -407,7 +407,7 @@ function buildCheckpointSteps(
               )
             : buildReverseRecognitionStep(
                 content,
-                drillPool.japaneseSurfaces,
+                drillPool,
                 runningIndex + index + 1,
                 total,
                 plan.stage,

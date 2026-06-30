@@ -60,6 +60,7 @@ export function ApplicationDrill({
         showJapaneseDisplay ? (
           <AnnotatedJapaneseText
             text={step.display}
+            romaji={step.displayRomaji}
             size="hero"
             className="text-foreground"
             supportMode="tap"

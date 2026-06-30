@@ -19,6 +19,7 @@ import type { OfflineReviewBundle } from "@/lib/offline/types";
 import { offlineClient } from "@/features/offline/services/offline-client.service";
 import { reviewBatchClient } from "@/features/review/services/review-batch-client.service";
 import { YamaPresence } from "@/features/yama/components/yama-presence";
+import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { yamaService } from "@/features/yama/services/yama.service";
 import type { ElevationAwardViewModel } from "@/features/elevation/types/elevation.types";
 import type { ReviewSessionViewModel } from "@/features/review/types/review.types";
@@ -303,11 +304,15 @@ export function ReviewSession({
             <p className="text-caption font-medium uppercase tracking-widest text-trail-glow/80">
               {formatReviewStateLabel(session.currentCard.state)} · {session.currentCard.contentType}
             </p>
-            <h2 className="font-story text-4xl font-bold text-heading-story sm:text-5xl">
-              <span lang="ja" className="font-japanese">
-                {session.currentCard.term}
-              </span>
-            </h2>
+            <div className="flex justify-center">
+              <JapaneseText
+                text={session.currentCard.term}
+                reading={session.currentCard.termReading}
+                romaji={session.currentCard.romaji}
+                size="hero"
+                className="text-foreground"
+              />
+            </div>
             <p className="text-caption text-muted-foreground">
               {session.currentCard.nextReviewLabel}
             </p>
@@ -315,9 +320,13 @@ export function ReviewSession({
           <div className="space-y-4 text-center">
             {revealed ? (
               <>
-                <p className="text-body-sm text-muted-foreground">
-                  {session.currentCard.reading}
-                </p>
+                {session.currentCard.reading &&
+                session.currentCard.reading !== session.currentCard.romaji &&
+                session.currentCard.reading !== session.currentCard.termReading ? (
+                  <p className="text-body-sm text-muted-foreground">
+                    {session.currentCard.reading}
+                  </p>
+                ) : null}
                 <p className="text-body">{session.currentCard.meaning}</p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   <Button variant="outline" onClick={() => void submitRating("again")}>

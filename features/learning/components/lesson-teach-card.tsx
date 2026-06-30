@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { GlassPanel, StoryTitle } from "@/components/visual";
 import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import type { LessonTeachStep } from "@/features/learning/types/lesson.types";
+import { getJapaneseRomaji } from "@/features/learning/utils/exercise-steps";
 import type { ComprehensionSupportMode } from "@/lib/learning/comprehension-support.types";
 
 type LessonTeachCardProps = {
@@ -30,6 +31,7 @@ export function LessonTeachCard({
           <AnnotatedJapaneseText
             text={content.kanji ?? content.kana}
             reading={content.kanji ? content.kana : null}
+            romaji={getJapaneseRomaji(content)}
             size="hero"
             supportMode="none"
           />
@@ -99,6 +101,7 @@ export function LessonTeachCard({
           <p className="font-japanese text-6xl font-semibold sm:text-7xl" lang="ja">
             {content.character}
           </p>
+          <p className="text-heading-4 text-foreground">{getJapaneseRomaji(content)}</p>
           {soundEnabled ? (
             <div className="flex justify-center">
               <AudioPlayback audioUrl={null} japaneseText={content.character} label="Listen" />
@@ -142,6 +145,7 @@ export function LessonTeachCard({
   }
 
   if (content.type === "grammar") {
+    const titleRomaji = getJapaneseRomaji(content);
     return (
       <GlassPanel className="space-y-4 p-5">
         <p className="text-caption text-muted-foreground">
@@ -150,6 +154,9 @@ export function LessonTeachCard({
         <StoryTitle as="h2" className="font-japanese text-2xl normal-case" lang="ja">
           {content.title}
         </StoryTitle>
+        {titleRomaji ? (
+          <p className="text-caption text-muted-foreground">{titleRomaji}</p>
+        ) : null}
         <p className="text-body">{content.meaning}</p>
         {content.explanation ? (
           <p className="text-body-sm text-muted-foreground">{content.explanation}</p>

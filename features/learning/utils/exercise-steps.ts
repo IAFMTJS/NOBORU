@@ -20,7 +20,7 @@ import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
 } from "@/features/learning/constants/lesson.constants";
-import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
+import { deriveKanaRomaji, deriveSentenceRomaji } from "@/features/learning/utils/kana-romaji";
 import {
   buildAcceptedAnswers,
   buildGrammarMeaningAcceptedAnswers,
@@ -80,6 +80,57 @@ export function getJapaneseReading(content: LessonContent): string | null {
   }
 }
 
+export function getJapaneseRomaji(content: LessonContent): string | null {
+  switch (content.type) {
+    case "vocabulary": {
+      if (content.romaji && !/\s/.test(content.romaji)) {
+        return content.romaji;
+      }
+      return deriveKanaRomaji(content.kana) || null;
+    }
+    case "kanji": {
+      const reading = content.kunyomi[0] ?? content.onyomi[0] ?? null;
+      return reading ? deriveKanaRomaji(reading) || null : null;
+    }
+    case "hiragana":
+    case "katakana":
+      return content.romaji || null;
+    case "grammar":
+      return parseGrammarTitleMetadata(content.title).romaji;
+    default:
+      return null;
+  }
+}
+
+/** Romaji for recall prompts — uses step metadata with fallbacks for cached sessions. */
+export function resolveRecallStepRomaji(
+  step: Pick<LessonRecallStep, "display" | "reading" | "romaji" | "contentType">,
+): string | null {
+  if (step.romaji) return step.romaji;
+
+  const reading = step.reading?.trim();
+  if (reading && reading !== step.display) {
+    const fromReading = deriveKanaRomaji(reading);
+    if (fromReading) return fromReading;
+  }
+
+  if (step.contentType === "grammar") {
+    return parseGrammarTitleMetadata(step.display).romaji;
+  }
+
+  if (
+    step.contentType === "vocabulary" ||
+    step.contentType === "kanji" ||
+    step.contentType === "hiragana" ||
+    step.contentType === "katakana"
+  ) {
+    const fromDisplay = deriveKanaRomaji(step.display);
+    if (fromDisplay) return fromDisplay;
+  }
+
+  return null;
+}
+
 export function buildRecognitionChoiceStep(
   content: LessonContent,
   allAnswers: string[],
@@ -108,6 +159,7 @@ export function buildRecognitionChoiceStep(
       prompt: "Choose the correct meaning",
       display: getJapaneseSurface(content),
       reading: getJapaneseReading(content),
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(meaning),
       index,
@@ -120,7 +172,7 @@ export function buildRecognitionChoiceStep(
 
 export function buildReverseRecognitionStep(
   content: LessonContent,
-  allJapaneseSurfaces: string[],
+  pool: LessonDrillPoolContext,
   index: number,
   total: number,
   stage: LessonStage = "recognition",
@@ -134,7 +186,7 @@ export function buildReverseRecognitionStep(
   }
 
   const surface = getJapaneseSurface(content);
-  const options = buildRecallOptions(surface, allJapaneseSurfaces);
+  const options = buildRecallOptions(surface, pool.japaneseSurfaces);
 
   return withContentMeta(
     {
@@ -144,6 +196,7 @@ export function buildReverseRecognitionStep(
       prompt: "Choose the correct Japanese",
       display: getRecallAnswer(content),
       options,
+      optionMeta: buildSurfaceOptionMeta(options, pool.lessonContents),
       correctIndex: options.indexOf(surface),
       index,
       total,
@@ -420,6 +473,33 @@ function buildJapaneseTokenMetadataLookup(
   return lookup;
 }
 
+export function resolveSurfaceDisplayMeta(
+  surface: string,
+  contents: LessonContent[],
+): LessonFillBlankOption {
+  const lookup = buildJapaneseTokenMetadataLookup(contents);
+  const meta = lookup.get(surface) ?? findVocabularyMetadataForSurface(surface, contents);
+  const reading =
+    meta?.reading && meta.reading !== surface ? meta.reading : null;
+  const romaji =
+    meta?.romaji ??
+    (reading ? deriveKanaRomaji(reading) || null : null) ??
+    (deriveKanaRomaji(surface) || null);
+
+  return {
+    japanese: surface,
+    reading,
+    romaji,
+  };
+}
+
+export function buildSurfaceOptionMeta(
+  surfaces: string[],
+  contents: LessonContent[],
+): LessonFillBlankOption[] {
+  return surfaces.map((surface) => resolveSurfaceDisplayMeta(surface, contents));
+}
+
 function resolveFillBlankOption(
   japanese: string,
   lookup: Map<string, TokenMetadata>,
@@ -554,6 +634,8 @@ export function buildMatchingStep(contents: LessonContent[]): LessonMatchingStep
     id: content.id,
     prompt: getMatchingPrompt(content),
     answer: getRecallAnswer(content),
+    promptReading: getJapaneseReading(content),
+    promptRomaji: getJapaneseRomaji(content),
   }));
 
   return {
@@ -587,6 +669,7 @@ export function buildRecallStep(
           : "Type the meaning of this word",
       display: content.kanji ?? content.kana,
       reading: content.kanji ? content.kana : null,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),
@@ -608,6 +691,7 @@ export function buildRecallStep(
           : "Type the meaning of this kanji",
       display: content.character,
       reading: content.kunyomi[0] ?? content.onyomi[0] ?? null,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers: buildAcceptedAnswers(content.meaning),
@@ -628,6 +712,7 @@ export function buildRecallStep(
           ? "Recall · type the romaji reading"
           : "Type the romaji reading",
       display: content.character,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.romaji),
       acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
@@ -648,6 +733,7 @@ export function buildRecallStep(
           ? "Recall · type the romaji reading"
           : "Type the romaji reading",
       display: content.character,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.romaji),
       acceptedAnswers: buildJapaneseSurfaceAcceptedAnswers(content),
@@ -668,6 +754,7 @@ export function buildRecallStep(
           ? "Recall · type what this grammar point means"
           : "What does this grammar point mean?",
       display: content.title,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.meaning),
       acceptedAnswers:
@@ -772,6 +859,8 @@ export function buildWordBankStep(
       kind: "word_bank",
       prompt: "Build the sentence",
       englishHint: example.english,
+      referenceJapanese: example.japaneseText,
+      sentenceRomaji: example.romaji ?? (deriveSentenceRomaji(example.japaneseText) || null),
       tokens: shuffle(correctOrder),
       correctOrder,
       index,
@@ -799,6 +888,8 @@ export function buildListeningRecallStep(
       prompt: "Listen and choose the meaning",
       audioUrl: content.audioUrl,
       display: content.kanji ?? content.kana,
+      reading: content.kanji ? content.kana : null,
+      romaji: getJapaneseRomaji(content),
       options,
       correctIndex: options.indexOf(content.meaning),
       index,
@@ -822,6 +913,8 @@ export function buildSentenceTypedStep(
       kind: "sentence_typed",
       prompt: "Type the sentence in Japanese or romaji",
       englishHint: example.english,
+      referenceJapanese: example.japaneseText,
+      sentenceRomaji: example.romaji ?? (deriveSentenceRomaji(example.japaneseText) || null),
       acceptedAnswers: buildAcceptedAnswers(
         example.japaneseText.replace(/[。、！？]+$/g, ""),
         example.romaji ? [example.romaji] : [],

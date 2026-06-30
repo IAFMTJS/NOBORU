@@ -3,6 +3,8 @@ export type DailyChallengeItemViewModel = {
   reviewItemId: string | null;
   priority: string;
   display: string;
+  reading?: string | null;
+  romaji?: string | null;
   meaning: string;
 };
 

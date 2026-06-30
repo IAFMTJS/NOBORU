@@ -157,7 +157,9 @@ export type LessonRecallStep = {
   prompt: string;
   display: string;
   reading?: string | null;
+  romaji?: string | null;
   options: string[];
+  optionMeta?: LessonFillBlankOption[];
   correctIndex: number;
   acceptedAnswers?: string[];
   phase?: LessonRecallPhase;
@@ -174,6 +176,8 @@ export type LessonListeningRecallStep = {
   prompt: string;
   audioUrl: string;
   display: string;
+  reading?: string | null;
+  romaji?: string | null;
   options: string[];
   correctIndex: number;
   stage?: LessonStage;
@@ -211,6 +215,8 @@ export type LessonWordBankStep = {
   kind: "word_bank";
   prompt: string;
   englishHint: string;
+  referenceJapanese?: string;
+  sentenceRomaji?: string | null;
   tokens: string[];
   correctOrder: string[];
   stage?: LessonStage;
@@ -224,6 +230,8 @@ export type LessonSentenceTypedStep = {
   kind: "sentence_typed";
   prompt: string;
   englishHint: string;
+  referenceJapanese?: string;
+  sentenceRomaji?: string | null;
   acceptedAnswers: string[];
   stage?: LessonStage;
   lessonPhase?: LessonPhase;
@@ -236,6 +244,8 @@ export type LessonMatchingPair = {
   id: string;
   prompt: string;
   answer: string;
+  promptReading?: string | null;
+  promptRomaji?: string | null;
 };
 
 export type LessonMatchingStep = {
@@ -289,6 +299,7 @@ export type LessonApplicationStep = {
   prompt: string;
   display: string;
   displayHint: string | null;
+  displayRomaji?: string | null;
   acceptedAnswers: string[];
   lessonPhase?: LessonPhase;
   index: number;

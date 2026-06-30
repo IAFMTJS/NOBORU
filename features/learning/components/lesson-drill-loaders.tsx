@@ -122,6 +122,8 @@ export function LessonDrillStep({
         <TypedSentenceDrill
           prompt={step.prompt}
           display={step.englishHint}
+          referenceJapanese={step.referenceJapanese}
+          sentenceRomaji={step.sentenceRomaji}
           acceptedAnswers={step.acceptedAnswers}
           onAnswer={onAnswer}
         />

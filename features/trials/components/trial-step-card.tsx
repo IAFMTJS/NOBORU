@@ -3,6 +3,8 @@
 import { ChoiceRecallDrill } from "@/features/learning/components/drills/choice-recall-drill";
 import { MatchingDrill } from "@/features/learning/components/drills/matching-drill";
 import { TypedRecallDrill } from "@/features/learning/components/drills/typed-recall-drill";
+import { isJapaneseSurfaceText } from "@/features/learning/components/japanese-answer-label";
+import { deriveKanaRomaji, deriveSentenceRomaji } from "@/features/learning/utils/kana-romaji";
 import type { TrialStepKind, TrialStepViewModel } from "@/features/trials/types/trial.types";
 
 type TrialStepCardProps = {
@@ -11,6 +13,11 @@ type TrialStepCardProps = {
 };
 
 const TRIAL_LIFECYCLE = "applied" as const;
+
+function resolveTrialDisplayRomaji(display: string): string | null {
+  if (!isJapaneseSurfaceText(display)) return null;
+  return deriveSentenceRomaji(display) || deriveKanaRomaji(display) || null;
+}
 
 const TYPED_STEP_KINDS = new Set<TrialStepKind>([
   "typed_recall",
@@ -27,6 +34,8 @@ const CHOICE_STEP_KINDS = new Set<TrialStepKind>([
 ]);
 
 export function TrialStepCard({ step, onAnswer }: TrialStepCardProps) {
+  const displayRomaji = resolveTrialDisplayRomaji(step.display);
+
   if (TYPED_STEP_KINDS.has(step.kind)) {
     return (
       <TypedRecallDrill
@@ -38,6 +47,7 @@ export function TrialStepCard({ step, onAnswer }: TrialStepCardProps) {
           total: step.total,
           prompt: step.prompt,
           display: step.display,
+          romaji: displayRomaji,
           options: [],
           correctIndex: 0,
           acceptedAnswers: step.acceptedAnswers ?? [],
@@ -59,6 +69,7 @@ export function TrialStepCard({ step, onAnswer }: TrialStepCardProps) {
           total: step.total,
           prompt: step.prompt,
           display: step.display,
+          romaji: displayRomaji,
           options: step.options ?? [],
           correctIndex: step.correctIndex ?? 0,
           lifecycleStage: TRIAL_LIFECYCLE,
@@ -80,6 +91,7 @@ export function TrialStepCard({ step, onAnswer }: TrialStepCardProps) {
           id: pair.id,
           prompt: pair.prompt,
           answer: pair.answer,
+          promptRomaji: resolveTrialDisplayRomaji(pair.prompt),
         })),
       }}
       onAnswer={onAnswer}

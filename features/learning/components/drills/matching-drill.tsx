@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import { JapaneseAnswerLabel } from "@/features/learning/components/japanese-answer-label";
 import type { DrillDifficultyProps } from "@/features/learning/types/drill-difficulty.types";
 import { cn } from "@/lib/utils";
 import type { LessonMatchingStep } from "@/features/learning/types/lesson.types";
@@ -107,7 +108,13 @@ export function MatchingDrill({ step, onAnswer, disabled = false }: MatchingDril
 
                 return {
                   id: pair.id,
-                  label: pair.prompt,
+                  label: (
+                    <JapaneseAnswerLabel
+                      text={pair.prompt}
+                      reading={pair.promptReading}
+                      romaji={pair.promptRomaji}
+                    />
+                  ),
                   state,
                   onSelect:
                     matched || result === "correct" || disabled

@@ -8,9 +8,14 @@ import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
 import { DrillCompanionReaction } from "@/features/learning/components/lesson/drill-companion-reaction";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
 import { DrillRecognitionTimer } from "@/features/learning/components/drills/drill-recognition-timer";
+import {
+  JapaneseAnswerLabel,
+  isJapaneseSurfaceText,
+} from "@/features/learning/components/japanese-answer-label";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import type { DrillDifficultyProps } from "@/features/learning/types/drill-difficulty.types";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
+import { resolveRecallStepRomaji } from "@/features/learning/utils/exercise-steps";
 import { resolveLifecycleStageFromPhase } from "@/features/learning/utils/drill-lifecycle";
 import { resolveDifficultyProfile } from "@/lib/learning/difficulty-scaling.service";
 import {
@@ -83,6 +88,11 @@ export function ChoiceRecallDrill({
 
   const japaneseFocus = isJapaneseFocusType(step.contentType);
   const correctAnswer = scaled.options[scaled.correctIndex];
+  const displayRomaji = resolveRecallStepRomaji(step);
+  const japaneseChoiceOptions =
+    step.optionMeta !== undefined
+      ? step.optionMeta.length > 0
+      : scaled.options.some((option) => isJapaneseSurfaceText(option));
 
   const handleTimeout = useCallback(() => {
     if (selected !== null || disabled) return;
@@ -129,6 +139,7 @@ export function ChoiceRecallDrill({
           <JapaneseText
             text={step.display}
             reading={furiganaReading}
+            romaji={displayRomaji}
             size="hero"
             className="relative text-foreground drop-shadow-sm"
           />
@@ -160,7 +171,15 @@ export function ChoiceRecallDrill({
 
           return {
             id: option,
-            label: option,
+            label: japaneseChoiceOptions ? (
+              <JapaneseAnswerLabel
+                text={option}
+                reading={step.optionMeta?.[index]?.reading}
+                romaji={step.optionMeta?.[index]?.romaji}
+              />
+            ) : (
+              option
+            ),
             state,
             shake: shakeIndex === index,
             onSelect:

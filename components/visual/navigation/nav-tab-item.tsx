@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 
-import { NavFoxImage } from "@/components/media/nav-fox-image";
 import { NavIconImage } from "@/components/media/nav-icon-image";
 import {
   IMMERSIVE_NAV_TAB_CONFIG,
@@ -50,7 +49,6 @@ function NavTabParticles({ tab, active }: { tab: ImmersiveNavTab; active: boolea
   );
 }
 
-/** Mockup — fox overlaps the active tab with glow emphasis. */
 export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
   const config = IMMERSIVE_NAV_TAB_CONFIG[navTab];
   const prefersReducedMotion = useReducedMotion();
@@ -64,34 +62,11 @@ export function NavTabItem({ href, label, navTab, isActive }: NavTabItemProps) {
         isActive ? config.activeLabelClass : "text-muted-foreground/80 hover:text-foreground/90",
       )}
     >
-      {isActive ? (
-        <div
-          className="pointer-events-none absolute -top-[3rem] left-1/2 z-20 flex -translate-x-1/2 flex-col items-center"
-          aria-hidden
-        >
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 6, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.32, ease: "easeOut" }}
-            className="relative"
-          >
-            <span
-              className={cn(
-                "absolute -inset-3 rounded-full blur-2xl",
-                config.activeGlowClass,
-                "opacity-70",
-              )}
-            />
-            <NavFoxImage tab={navTab} variant="bar-anchor" priority />
-          </motion.div>
-        </div>
-      ) : null}
-
       <NavTabParticles tab={navTab} active={isActive} />
 
       <span
         className={cn(
-          "relative z-10 mt-5 flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300",
+          "relative z-10 flex h-8 w-8 items-center justify-center rounded-full ring-1 ring-transparent transition-all duration-300",
           isActive
             ? cn(
                 config.activeIconRingClass,

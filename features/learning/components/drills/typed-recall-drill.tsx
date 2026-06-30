@@ -14,6 +14,7 @@ import {
   pickJapaneseAnswerCorrection,
 } from "@/features/learning/utils/recall-answers";
 import type { LessonRecallStep } from "@/features/learning/types/lesson.types";
+import { resolveRecallStepRomaji } from "@/features/learning/utils/exercise-steps";
 
 type TypedRecallDrillProps = {
   step: LessonRecallStep;
@@ -54,7 +55,15 @@ export function TypedRecallDrill({
     <LessonDrillLayout
       prompt={`${step.prompt} · ${step.index}/${step.total}`}
       result={result}
-      hero={<JapaneseText text={step.display} size="hero" className="text-foreground" />}
+      hero={
+        <JapaneseText
+          text={step.display}
+          reading={step.reading}
+          romaji={resolveRecallStepRomaji(step)}
+          size="hero"
+          className="text-foreground"
+        />
+      }
       footer={
         <>
           <Input

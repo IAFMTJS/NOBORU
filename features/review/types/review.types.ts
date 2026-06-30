@@ -14,7 +14,9 @@ export type ReviewCardViewModel = {
   id: string;
   contentType: ReviewContentType;
   term: string;
+  termReading?: string | null;
   reading: string;
+  romaji: string | null;
   meaning: string;
   state: ReviewState;
   masteryScore: number;

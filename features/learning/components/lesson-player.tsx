@@ -27,6 +27,7 @@ import {
 } from "@/features/learning/components/lesson-drill-loaders";
 import { AudioPlayback } from "@/components/media/audio-playback";
 import { TrailAnswerPad } from "@/components/visual/world/trail-answer-pad";
+import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { KnowledgeInventoryCard } from "@/features/learning/components/knowledge-inventory-card";
 import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import { ComprehensionSupportProvider } from "@/features/learning/context/comprehension-support-context";
@@ -168,7 +169,14 @@ function ListeningRecallDrill({
   return (
     <div className="flex flex-1 flex-col gap-6">
       <p className="text-body text-muted-foreground">{step.prompt}</p>
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-2">
+        <JapaneseText
+          text={step.display}
+          reading={step.reading}
+          romaji={step.romaji}
+          size="lg"
+          className="text-foreground"
+        />
         <AudioPlayback
           audioUrl={step.audioUrl}
           japaneseText={step.display}

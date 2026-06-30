@@ -9,6 +9,7 @@ import { reviewRepository } from "@/features/review/repositories/review.reposito
 import { profileServerRepository } from "@/features/profile/repositories/profile-server.repository";
 import { contentMasteryService } from "@/features/vocabulary/services/content-mastery.service";
 import { dailyChallengeRepository } from "@/features/daily-challenges/repositories/daily-challenge.repository";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
 import type {
   DailyChallengeCompleteInput,
   DailyChallengeCompleteViewModel,
@@ -106,6 +107,8 @@ class DailyChallengeService {
           reviewItemId: reviewItemIdByVocabularyId.get(item.vocabularyId) ?? null,
           priority: item.priority,
           display: row.kanji ?? row.kana,
+          reading: row.kanji ? row.kana : null,
+          romaji: deriveKanaRomaji(row.kana) || null,
           meaning: row.meaning,
         };
       })

@@ -32,6 +32,7 @@ import { readingProgressService } from "@/features/reading/services/reading-prog
 import { readingRepository } from "@/features/reading/repositories/reading.repository";
 import { getLessonPassScore } from "@/features/learning/constants/lesson.constants";
 import { resolveVocabularyLessonRomaji } from "@/features/learning/utils/vocabulary-content.utils";
+import { resolveJapaneseDisplayRomaji } from "@/features/learning/utils/kana-romaji";
 import { LessonAccessDeniedError, LessonNotFoundError } from "@/features/learning/errors/lesson.errors";
 import { isBlueprintLessonId } from "@/features/journey/utils/journey-blueprint-merge.utils";
 import { learningPathService } from "@/features/learning/services/learning-path.service";
@@ -482,6 +483,10 @@ class LessonService {
       prompt: content.prompt,
       display,
       displayHint: content.displayHint,
+      displayRomaji:
+        content.direction === "to_japanese"
+          ? null
+          : resolveJapaneseDisplayRomaji(display, content.acceptedAnswers),
       acceptedAnswers: content.acceptedAnswers,
       index,
       total,

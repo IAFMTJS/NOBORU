@@ -18,6 +18,7 @@ import {
 import type { ApplicationExerciseRow } from "@/features/application/types/application.types";
 import type { LessonApplicationStep } from "@/features/learning/types/lesson.types";
 import { buildRecallStep, shuffle } from "@/features/learning/utils/exercise-steps";
+import { resolveJapaneseDisplayRomaji } from "@/features/learning/utils/kana-romaji";
 import type { VocabularyRow } from "@/features/vocabulary/types/vocabulary.types";
 
 function toApplicationStep(
@@ -31,6 +32,10 @@ function toApplicationStep(
     prompt: exercise.prompt,
     display: exercise.japanese_text ?? "",
     displayHint: exercise.display_hint,
+    displayRomaji: resolveJapaneseDisplayRomaji(
+      exercise.japanese_text,
+      exercise.accepted_answers,
+    ),
     acceptedAnswers: exercise.accepted_answers,
     index,
     total,

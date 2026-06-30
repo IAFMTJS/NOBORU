@@ -31,6 +31,7 @@ import type {
   WeakAreaViewModel,
 } from "@/features/review/types/review.types";
 import { REVIEW_CONTENT_LABELS } from "@/features/review/types/review.types";
+import { deriveKanaRomaji } from "@/features/learning/utils/kana-romaji";
 import {
   COMPREHENSION_VOCAB_BY_LISTENING_SLUG,
   COMPREHENSION_VOCAB_BY_STORY_SLUG,
@@ -700,7 +701,7 @@ class ReviewServerService {
 
   private buildCard(
     item: ReviewItemRow,
-    contentLookup: Map<string, { term: string; reading: string; meaning: string }>,
+    contentLookup: Map<string, { term: string; termReading: string | null; reading: string; romaji: string | null; meaning: string }>,
   ): ReviewCardViewModel | null {
     const content = contentLookup.get(
       `${item.content_type}:${item.content_id}`,
@@ -712,7 +713,9 @@ class ReviewServerService {
       id: item.id,
       contentType: item.content_type as ReviewContentType,
       term: content.term,
+      termReading: content.termReading,
       reading: content.reading,
+      romaji: content.romaji,
       meaning: content.meaning,
       state: item.state,
       masteryScore: item.mastery_score,
@@ -747,7 +750,7 @@ class ReviewServerService {
 
   private async resolveContentBatch(
     entries: Array<{ contentType: ReviewContentType; contentId: string }>,
-  ): Promise<Map<string, { term: string; reading: string; meaning: string }>> {
+  ): Promise<Map<string, { term: string; termReading: string | null; reading: string; romaji: string | null; meaning: string }>> {
     const uniqueByType = new Map<ReviewContentType, Set<string>>();
     for (const entry of entries) {
       const ids = uniqueByType.get(entry.contentType) ?? new Set<string>();
@@ -777,39 +780,53 @@ class ReviewServerService {
       kanjiRepository.findByIds(Array.from(uniqueByType.get("kanji") ?? [])),
     ]);
 
-    const lookup = new Map<string, { term: string; reading: string; meaning: string }>();
+    const lookup = new Map<string, { term: string; termReading: string | null; reading: string; romaji: string | null; meaning: string }>();
 
     for (const row of hiraganaRows) {
       lookup.set(`hiragana:${row.id}`, {
         term: row.character,
+        termReading: null,
         reading: row.romaji,
+        romaji: row.romaji,
         meaning: row.row_label,
       });
     }
     for (const row of katakanaRows) {
       lookup.set(`katakana:${row.id}`, {
         term: row.character,
+        termReading: null,
         reading: row.romaji,
+        romaji: row.romaji,
         meaning: row.row_label,
       });
     }
     for (const row of vocabularyRows) {
       lookup.set(`vocabulary:${row.id}`, {
         term: row.kanji ?? row.kana,
+        termReading: row.kanji ? row.kana : null,
         reading: row.kanji ? row.kana : (row.part_of_speech ?? ""),
+        romaji: deriveKanaRomaji(row.kana) || null,
         meaning: row.meaning,
       });
     }
     for (const row of grammarRows) {
+      const titleMatch = row.title.match(/^(.+?)\s*\(([a-zA-Z][a-zA-Z\s\-']*)\)\s*$/);
       lookup.set(`grammar:${row.id}`, {
         term: row.title,
+        termReading: titleMatch?.[1]?.trim() ?? null,
         reading: row.meaning,
+        romaji: titleMatch?.[2]?.trim().toLowerCase() ?? null,
         meaning: row.explanation ?? row.meaning,
       });
     }
     for (const row of kanjiRows) {
+      const primaryReading =
+        row.readings.find((reading) => reading.reading_type === "kunyomi")?.reading ??
+        row.readings.find((reading) => reading.reading_type === "onyomi")?.reading ??
+        null;
       lookup.set(`kanji:${row.id}`, {
         term: row.character,
+        termReading: primaryReading,
         reading: [
           ...row.readings
             .filter((reading) => reading.reading_type === "onyomi")
@@ -818,6 +835,7 @@ class ReviewServerService {
             .filter((reading) => reading.reading_type === "kunyomi")
             .map((reading) => reading.reading),
         ].join(" · "),
+        romaji: primaryReading ? deriveKanaRomaji(primaryReading) || null : null,
         meaning: row.meaning,
       });
     }
@@ -828,13 +846,15 @@ class ReviewServerService {
   private async resolveContent(
     contentType: ReviewContentType,
     contentId: string,
-  ): Promise<{ term: string; reading: string; meaning: string } | null> {
+  ): Promise<{ term: string; termReading: string | null; reading: string; romaji: string | null; meaning: string } | null> {
     if (contentType === "hiragana") {
       const hiragana = await hiraganaRepository.findById(contentId);
       if (!hiragana) return null;
       return {
         term: hiragana.character,
+        termReading: null,
         reading: hiragana.romaji,
+        romaji: hiragana.romaji,
         meaning: hiragana.row_label,
       };
     }
@@ -844,7 +864,9 @@ class ReviewServerService {
       if (!katakana) return null;
       return {
         term: katakana.character,
+        termReading: null,
         reading: katakana.romaji,
+        romaji: katakana.romaji,
         meaning: katakana.row_label,
       };
     }
@@ -854,7 +876,9 @@ class ReviewServerService {
       if (!vocabulary) return null;
       return {
         term: vocabulary.kanji ?? vocabulary.kana,
+        termReading: vocabulary.kanji ? vocabulary.kana : null,
         reading: vocabulary.kanji ? vocabulary.kana : (vocabulary.part_of_speech ?? ""),
+        romaji: deriveKanaRomaji(vocabulary.kana) || null,
         meaning: vocabulary.meaning,
       };
     }
@@ -862,9 +886,12 @@ class ReviewServerService {
     if (contentType === "grammar") {
       const grammar = await grammarRepository.findById(contentId);
       if (!grammar) return null;
+      const titleMatch = grammar.title.match(/^(.+?)\s*\(([a-zA-Z][a-zA-Z\s\-']*)\)\s*$/);
       return {
         term: grammar.title,
+        termReading: titleMatch?.[1]?.trim() ?? null,
         reading: grammar.meaning,
+        romaji: titleMatch?.[2]?.trim().toLowerCase() ?? null,
         meaning: grammar.explanation ?? grammar.meaning,
       };
     }
@@ -872,8 +899,13 @@ class ReviewServerService {
     if (contentType === "kanji") {
       const kanji = await kanjiRepository.findById(contentId);
       if (!kanji) return null;
+      const primaryReading =
+        kanji.readings.find((reading) => reading.reading_type === "kunyomi")?.reading ??
+        kanji.readings.find((reading) => reading.reading_type === "onyomi")?.reading ??
+        null;
       return {
         term: kanji.character,
+        termReading: primaryReading,
         reading: [
           ...kanji.readings
             .filter((reading) => reading.reading_type === "onyomi")
@@ -882,6 +914,7 @@ class ReviewServerService {
             .filter((reading) => reading.reading_type === "kunyomi")
             .map((reading) => reading.reading),
         ].join(" · "),
+        romaji: primaryReading ? deriveKanaRomaji(primaryReading) || null : null,
         meaning: kanji.meaning,
       };
     }

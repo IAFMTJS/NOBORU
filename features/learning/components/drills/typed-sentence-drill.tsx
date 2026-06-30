@@ -6,6 +6,7 @@ import { PrimaryClimbButton } from "@/components/visual/primary-climb-button";
 import { Input } from "@/components/ui/input";
 import { LessonDrillLayout } from "@/features/learning/components/lesson/lesson-drill-layout";
 import { LearningFailurePanel } from "@/features/learning/components/learning-failure-panel";
+import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import {
   isJapaneseTextAnswerCorrect,
   pickJapaneseAnswerCorrection,
@@ -14,6 +15,8 @@ import {
 type TypedSentenceDrillProps = {
   prompt: string;
   display: string;
+  referenceJapanese?: string;
+  sentenceRomaji?: string | null;
   acceptedAnswers: string[];
   onAnswer: (correct: boolean) => void;
   disabled?: boolean;
@@ -22,6 +25,8 @@ type TypedSentenceDrillProps = {
 export function TypedSentenceDrill({
   prompt,
   display,
+  referenceJapanese,
+  sentenceRomaji,
   acceptedAnswers,
   onAnswer,
   disabled = false,
@@ -40,7 +45,18 @@ export function TypedSentenceDrill({
       prompt={prompt}
       result={result}
       hero={
-        <p className="max-w-md text-body text-muted-foreground">{display}</p>
+        referenceJapanese ? (
+          <AnnotatedJapaneseText
+            text={referenceJapanese}
+            romaji={sentenceRomaji}
+            english={display}
+            size="lg"
+            className="max-w-md text-foreground"
+            supportMode="tap"
+          />
+        ) : (
+          <p className="max-w-md text-body text-muted-foreground">{display}</p>
+        )
       }
       footer={
         <>
