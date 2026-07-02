@@ -4,18 +4,26 @@ import type {
   KanjiLessonContent,
   KatakanaLessonContent,
   LessonContent,
+  LessonConjugationStep,
   LessonFillBlankOption,
   LessonFillBlankStep,
   LessonListeningRecallStep,
   LessonMatchingStep,
   LessonRecallStep,
   LessonSentenceTypedStep,
+  LessonStep,
+  LessonTranslationChoiceStep,
   LessonWordBankStep,
+  PedagogyStepMeta,
+  ScoredLessonStep,
   VocabularyLessonContent,
 } from "@/features/learning/types/lesson.types";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import type { LessonPhase } from "@/lib/learning/lesson-phase.constants";
 import { STAGE_TO_PHASE } from "@/lib/learning/lesson-phase.constants";
+import type { HintVisibility } from "@/lib/learning/hint-policy.service";
+import type { BlankTarget } from "@/lib/learning/knowledge-block/types";
+import { parseTeachingStepsFromExplanation } from "@/lib/learning/knowledge-block/concept-detection";
 import {
   LESSON_MIXED_RECALL_MAX_ITEMS,
   LESSON_MIXED_RECALL_MIN_ITEMS,
@@ -522,8 +530,41 @@ function resolveFillBlankOption(
   };
 }
 
-export function formatFillBlankAnswer(option: LessonFillBlankOption): string {
-  if (option.romaji) return `${option.japanese} (${option.romaji})`;
+export function resolveFillBlankPrompt(blankTarget?: BlankTarget): string {
+  switch (blankTarget) {
+    case "particle":
+      return "Choose the missing particle.";
+    case "conjugation":
+      return "Complete the verb form.";
+    case "grammar_element":
+      return "Select the correct sentence piece.";
+    case "word":
+    default:
+      return "Choose the missing part.";
+  }
+}
+
+export function applyHintPolicyToStep<T extends LessonStep>(
+  step: T,
+  hintPolicy: HintVisibility,
+): T {
+  return {
+    ...step,
+    hintPolicy: {
+      showKanji: hintPolicy.showKanji,
+      showFurigana: hintPolicy.showFurigana,
+      showRomaji: hintPolicy.showRomaji,
+      showTranslation: hintPolicy.showTranslation,
+      romajiOnDemand: hintPolicy.romajiOnDemand,
+    },
+  };
+}
+
+export function formatFillBlankAnswer(
+  option: LessonFillBlankOption,
+  showRomaji = true,
+): string {
+  if (showRomaji && option.romaji) return `${option.japanese} (${option.romaji})`;
   if (option.reading) return `${option.japanese} — ${option.reading}`;
   return option.japanese;
 }
@@ -532,22 +573,49 @@ function collectJapaneseDistractorPool(
   exampleText: string,
   blankToken: string,
   pool: LessonDrillPoolContext,
+  blankTarget?: BlankTarget,
 ): string[] {
   const sentenceTokens = tokenizeJapaneseSentence(exampleText).filter(
-    (token) => token !== blankToken && !isJapaneseParticle(token) && isJapaneseSurface(token),
+    (token) => token !== blankToken && isJapaneseSurface(token),
   );
+
+  if (blankTarget === "particle") {
+    const particles = ["は", "が", "を", "に", "で", "の", "と", "も", "へ"];
+    return Array.from(new Set([...particles, ...sentenceTokens.filter(isJapaneseParticle)]));
+  }
 
   const lessonSurfaces = pool.japaneseSurfaces.filter(
     (surface) => surface !== blankToken && isJapaneseSurface(surface),
   );
 
-  return Array.from(new Set([...sentenceTokens, ...lessonSurfaces]));
+  return Array.from(
+    new Set([
+      ...sentenceTokens.filter((token) => !isJapaneseParticle(token)),
+      ...lessonSurfaces,
+    ]),
+  );
 }
 
 function pickBlankToken(
   tokens: string[],
   content: GrammarLessonContent | VocabularyLessonContent,
+  blankTarget?: BlankTarget,
 ): string | null {
+  if (blankTarget === "particle") {
+    return tokens.find((token) => isJapaneseParticle(token)) ?? null;
+  }
+
+  if (blankTarget === "conjugation") {
+    const verbStem = tokens.find(
+      (token) =>
+        /み$|び$|ち$|き$|ぎ$|し$|り$|に$|い$/.test(token) &&
+        !isJapaneseParticle(token),
+    );
+    if (verbStem) return verbStem;
+    const polite = tokens.find((token) => token.endsWith("ます"));
+    if (polite) return polite.replace(/ます$/, "");
+  }
+
   const lessonSurfaces =
     content.type === "vocabulary"
       ? [content.kanji, content.kana].filter((value): value is string => Boolean(value))
@@ -786,12 +854,18 @@ export function buildFillBlankStep(
   pool: LessonDrillPoolContext,
   index: number,
   total: number,
+  options?: { blankTarget?: BlankTarget; deferFullSentence?: boolean },
 ): LessonFillBlankStep | null {
+  if (options?.deferFullSentence && content.type === "vocabulary") {
+    return null;
+  }
+
   const example = content.examples[0];
   if (!example) return null;
 
   const tokens = tokenizeJapaneseSentence(example.japaneseText);
-  const blankToken = pickBlankToken(tokens, content);
+  const blankTarget = options?.blankTarget ?? inferBlankTarget(tokens, content);
+  const blankToken = pickBlankToken(tokens, content, blankTarget);
   if (!blankToken || blankToken.length > 12) return null;
 
   const sentenceWithBlank = example.japaneseText.replace(blankToken, "___");
@@ -803,6 +877,7 @@ export function buildFillBlankStep(
     example.japaneseText,
     blankToken,
     pool,
+    blankTarget,
   ).filter((candidate) => {
     if (candidate === blankToken) return false;
     if (!isJapaneseSurface(candidate)) return false;
@@ -827,20 +902,38 @@ export function buildFillBlankStep(
   return withContentMeta(
     {
       kind: "fill_blank",
-      prompt:
-        index % 2 === 0 ? "Tap a word to fill the blank" : "Fill in the blank",
+      prompt: resolveFillBlankPrompt(blankTarget),
       sentenceWithBlank,
       englishHint: example.english,
       sentenceRomaji: example.romaji ?? null,
       options: japaneseOptions,
       correctIndex,
       interaction: index % 2 === 0 ? "blocks" : "choice",
+      blankTarget,
       index,
       total,
     },
     content,
     "guided_practice",
   ) as LessonFillBlankStep;
+}
+
+function inferBlankTarget(
+  tokens: string[],
+  content: GrammarLessonContent | VocabularyLessonContent,
+): BlankTarget {
+  if (content.type === "vocabulary") {
+    return "word";
+  }
+
+  const title = content.title.replace(/\s*\([^)]*\)\s*$/, "").trim();
+  if (/^(は|が|を|に|で|の|と|も|へ|から|まで|より|か)$/.test(title)) {
+    return "particle";
+  }
+  if (/ます|て-form|た-form|stem|conjugat/i.test(`${content.title} ${content.meaning}`)) {
+    return "conjugation";
+  }
+  return "grammar_element";
 }
 
 export function buildWordBankStep(
@@ -1018,4 +1111,134 @@ export function buildVarietyStep(
     if (step) return step as ReturnType<typeof buildVarietyStep>;
   }
   return null;
+}
+
+const PARTICLE_OPTIONS = ["は", "が", "を", "に", "で", "の", "と", "も", "へ"];
+
+export function buildParticleChoiceStep(
+  content: GrammarLessonContent,
+  pool: LessonDrillPoolContext,
+  index: number,
+  total: number,
+): LessonFillBlankStep | null {
+  const particle = content.title.replace(/\s*\([^)]*\)\s*$/, "").trim();
+  const example = content.examples[0];
+  if (!example) {
+    const options = buildRecallOptions(particle, PARTICLE_OPTIONS).map((japanese) => ({
+      japanese,
+      romaji: null,
+      reading: null,
+    }));
+    return withContentMeta(
+      {
+        kind: "fill_blank",
+        prompt: resolveFillBlankPrompt("particle"),
+        sentenceWithBlank: `___`,
+        englishHint: content.meaning,
+        sentenceRomaji: null,
+        options,
+        correctIndex: options.findIndex((option) => option.japanese === particle),
+        interaction: "choice",
+        blankTarget: "particle",
+        index,
+        total,
+      },
+      content,
+      "guided_practice",
+    ) as LessonFillBlankStep;
+  }
+
+  return buildFillBlankStep(content, pool, index, total, { blankTarget: "particle" });
+}
+
+export function buildConjugationStep(
+  content: GrammarLessonContent,
+  pool: LessonDrillPoolContext,
+  index: number,
+  total: number,
+): LessonConjugationStep | null {
+  const teachingSteps = parseTeachingStepsFromExplanation(content.explanation);
+  const example = content.examples[0];
+
+  let dictionaryForm = teachingSteps?.[0]?.japanese ?? "";
+  let targetForm = teachingSteps?.[teachingSteps.length - 1]?.japanese ?? "";
+
+  if (!dictionaryForm && example) {
+    const tokens = tokenizeJapaneseSentence(example.japaneseText);
+    dictionaryForm = tokens.find((token) => /[ぁ-ん]+/.test(token) && !isJapaneseParticle(token)) ?? "";
+    targetForm = tokens.find((token) => token.endsWith("ます")) ?? tokens[tokens.length - 1] ?? "";
+  }
+
+  if (!dictionaryForm || !targetForm) return null;
+
+  const distractors = pool.japaneseSurfaces
+    .filter((surface) => surface !== targetForm && surface.length <= targetForm.length + 2)
+    .slice(0, 6);
+
+  const options = buildRecallOptions(targetForm, [dictionaryForm, ...distractors]);
+  const correctIndex = options.indexOf(targetForm);
+  if (correctIndex < 0) return null;
+
+  return withContentMeta(
+    {
+      kind: "conjugation",
+      prompt: "Complete the verb form.",
+      dictionaryForm,
+      targetForm,
+      options,
+      correctIndex,
+      teachingChain: teachingSteps?.map((step) => step.japanese),
+      index,
+      total,
+    },
+    content,
+    "guided_practice",
+  ) as LessonConjugationStep;
+}
+
+export function buildTranslationChoiceStep(
+  content: GrammarLessonContent | VocabularyLessonContent,
+  poolContents: LessonContent[],
+  index: number,
+  total: number,
+): LessonTranslationChoiceStep | null {
+  const example = content.examples[0];
+  if (!example) return null;
+
+  const correct = example.japaneseText.replace(/[。、！？]+$/g, "");
+  const distractors = poolContents
+    .filter((item) => item.id !== content.id)
+    .map((item) => {
+      if (item.type === "vocabulary" || item.type === "grammar") {
+        return item.examples[0]?.japaneseText.replace(/[。、！？]+$/g, "") ?? null;
+      }
+      return null;
+    })
+    .filter((value): value is string => Boolean(value) && value !== correct)
+    .slice(0, 3);
+
+  while (distractors.length < 3) {
+    distractors.push(
+      correct
+        .replace("を", "が")
+        .replace("が", "を")
+        .concat(distractors.length === 0 ? "ます" : ""),
+    );
+  }
+
+  const options = buildRecallOptions(correct, distractors);
+
+  return withContentMeta(
+    {
+      kind: "translation_choice",
+      prompt: "Choose the correct Japanese sentence.",
+      englishPrompt: example.english,
+      options,
+      correctIndex: options.indexOf(correct),
+      index,
+      total,
+    },
+    content,
+    "context_application",
+  ) as LessonTranslationChoiceStep;
 }

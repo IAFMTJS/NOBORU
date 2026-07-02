@@ -42,6 +42,8 @@ export type GrammarDetailViewModel = {
   learned: boolean;
 };
 
+import type { GrammarConceptKind, TeachingStep } from "@/lib/learning/knowledge-block/types";
+
 export type GrammarRow = {
   id: string;
   title: string;
@@ -50,6 +52,8 @@ export type GrammarRow = {
   jlpt_level: JlptLevel | null;
   difficulty: number;
   status: ContentStatus;
+  concept_kind: GrammarConceptKind | null;
+  teaching_steps: TeachingStep[] | null;
   created_at: string;
   updated_at: string;
 };

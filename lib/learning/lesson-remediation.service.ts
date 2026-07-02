@@ -16,10 +16,14 @@ import {
 } from "@/features/learning/utils/exercise-steps";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 
+import type { LearningLayer } from "@/lib/learning/knowledge-block/types";
+import { layerExerciseType } from "@/lib/learning/layer-mastery.service";
+
 export type LessonFailureRecord = {
   contentId: string;
   failureCount: number;
   remediated: boolean;
+  learningLayer?: LearningLayer;
 };
 
 const REMEDIATION_STAGES: ScoredLessonStage[] = [
@@ -53,35 +57,51 @@ export function buildRemediationStep(
   failureCount: number,
   index: number,
   total: number,
+  learningLayer?: LearningLayer,
 ): ScoredLessonStep | null {
   if (!isDrillContent(content)) return null;
 
   const stage = REMEDIATION_STAGES[(failureCount - 1) % REMEDIATION_STAGES.length]!;
+  const layerMeta = learningLayer
+    ? { learningLayer, learningObjective: `Reinforce ${learningLayer.replace(/_/g, " ")}` }
+    : {};
 
   if (stage === "guided_practice" && content.type === "vocabulary" && content.audioUrl) {
-    return buildListeningRecallStep(content, allAnswers, index, total, stage);
+    const step = buildListeningRecallStep(content, allAnswers, index, total, stage);
+    return step ? { ...step, ...layerMeta, stage } : null;
   }
 
   if (stage === "guided_practice" && (content.type === "grammar" || content.type === "vocabulary")) {
     const fillBlank = buildFillBlankStep(content, drillPool, index, total);
-    if (fillBlank) return { ...fillBlank, stage };
+    if (fillBlank) return { ...fillBlank, ...layerMeta, stage };
   }
 
   if (stage === "active_recall") {
-    return buildActiveRecallStep(content, allAnswers, index, total, stage);
+    const step = buildActiveRecallStep(content, allAnswers, index, total, stage);
+    return step ? { ...step, ...layerMeta, stage } : null;
   }
 
   if (stage === "context_application") {
     const recall = buildActiveRecallStep(content, allAnswers, index, total, stage);
-    if (recall) return recall;
+    if (recall) return { ...recall, ...layerMeta, stage };
   }
 
   const variant = failureCount % 2 === 0
     ? buildReverseRecognitionStep(content, drillPool, index, total, stage)
     : buildRecognitionChoiceStep(content, allAnswers, index, total, stage);
 
-  return variant;
+  return variant ? { ...variant, ...layerMeta, stage } : null;
 }
+
+export function recordLayerMiss(
+  missCounts: Map<LearningLayer, number>,
+  layer?: LearningLayer,
+): void {
+  if (!layer) return;
+  missCounts.set(layer, (missCounts.get(layer) ?? 0) + 1);
+}
+
+export { layerExerciseType };
 
 export function insertRemediationStep(
   steps: LessonStep[],

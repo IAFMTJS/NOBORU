@@ -8,6 +8,8 @@ import { LearningFailurePanel } from "@/features/learning/components/learning-fa
 import { AnnotatedJapaneseText } from "@/features/learning/components/annotated-japanese-text";
 import { JapaneseText } from "@/features/learning/components/japanese-text";
 import { FillBlankOptionTile } from "@/features/learning/components/drills/fill-blank-option-tile";
+import { ShowPronunciationButton } from "@/features/learning/components/drills/show-pronunciation-button";
+import { useStepHintPolicy } from "@/features/learning/hooks/use-step-hint-policy";
 import { cn } from "@/lib/utils";
 import type { LessonFillBlankStep } from "@/features/learning/types/lesson.types";
 import { formatFillBlankAnswer } from "@/features/learning/utils/exercise-steps";
@@ -21,9 +23,19 @@ type FillBlankDrillProps = {
 function FillBlankSentenceHero({
   step,
   filledJapanese,
+  showRomaji,
+  showTranslation,
+  onRevealRomaji,
+  canRevealRomaji,
+  romajiRevealed,
 }: {
   step: LessonFillBlankStep;
   filledJapanese?: string | null;
+  showRomaji: boolean;
+  showTranslation: boolean;
+  onRevealRomaji: () => void;
+  canRevealRomaji: boolean;
+  romajiRevealed: boolean;
 }) {
   const displayText = filledJapanese
     ? step.sentenceWithBlank.replace("___", filledJapanese)
@@ -33,12 +45,19 @@ function FillBlankSentenceHero({
     <div className="space-y-3">
       <AnnotatedJapaneseText
         text={displayText}
-        romaji={step.sentenceRomaji}
+        romaji={showRomaji ? step.sentenceRomaji : null}
         size="hero"
         className="text-foreground"
         supportMode="tap"
       />
-      <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+      <ShowPronunciationButton
+        visible={canRevealRomaji}
+        revealed={romajiRevealed}
+        onReveal={onRevealRomaji}
+      />
+      {showTranslation ? (
+        <p className="text-body-sm text-muted-foreground">{step.englishHint}</p>
+      ) : null}
     </div>
   );
 }
@@ -49,6 +68,7 @@ function FillBlankChoiceMode({
   disabled = false,
 }: FillBlankDrillProps) {
   const [selected, setSelected] = useState<number | null>(null);
+  const hints = useStepHintPolicy(step);
   const result =
     selected === null
       ? null
@@ -61,7 +81,16 @@ function FillBlankChoiceMode({
     <LessonDrillLayout
       prompt={`${step.prompt} · ${step.index}/${step.total}`}
       result={result}
-      hero={<FillBlankSentenceHero step={step} />}
+      hero={
+        <FillBlankSentenceHero
+          step={step}
+          showRomaji={hints.showRomaji}
+          showTranslation={hints.showTranslation}
+          onRevealRomaji={hints.revealRomaji}
+          canRevealRomaji={hints.canRevealRomaji}
+          romajiRevealed={hints.romajiRevealed}
+        />
+      }
       footer={
         <>
           {step.options.map((option, index) => {
@@ -93,9 +122,17 @@ function FillBlankChoiceMode({
           <LearningFailurePanel
             className="mt-3"
             userAnswer={
-              selected === null ? "" : formatFillBlankAnswer(step.options[selected]!)
+              selected === null
+                ? ""
+                : formatFillBlankAnswer(step.options[selected]!, hints.showRomaji)
             }
-            correctAnswer={correctAnswer ? formatFillBlankAnswer(correctAnswer) : ""}
+            correctAnswer={
+              correctAnswer ? formatFillBlankAnswer(correctAnswer, hints.showRomaji) : ""
+            }
+            sentence={step.sentenceWithBlank.replace("___", correctAnswer?.japanese ?? "")}
+            meaning={hints.showTranslation ? step.englishHint : undefined}
+            pronunciation={step.sentenceRomaji ?? undefined}
+            showPronunciation={hints.canRevealRomaji || hints.showRomaji}
             seed={step.index}
           />
         ) : null
@@ -111,6 +148,7 @@ function FillBlankBlocksMode({
 }: FillBlankDrillProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
+  const hints = useStepHintPolicy(step);
 
   const selectedOption = selectedIndex === null ? null : step.options[selectedIndex];
   const showResult = result !== null;
@@ -143,6 +181,11 @@ function FillBlankBlocksMode({
           <FillBlankSentenceHero
             step={step}
             filledJapanese={selectedOption?.japanese ?? null}
+            showRomaji={hints.showRomaji}
+            showTranslation={hints.showTranslation}
+            onRevealRomaji={hints.revealRomaji}
+            canRevealRomaji={hints.canRevealRomaji}
+            romajiRevealed={hints.romajiRevealed}
           />
           <div
             className={cn(
@@ -163,7 +206,7 @@ function FillBlankBlocksMode({
               />
             ) : (
               <p className="text-body-sm text-muted-foreground">
-                Tap a word below to fill the blank
+                Choose the missing part below
               </p>
             )}
           </div>
@@ -212,9 +255,15 @@ function FillBlankBlocksMode({
           <LearningFailurePanel
             className="mt-3"
             userAnswer={
-              selectedOption ? formatFillBlankAnswer(selectedOption) : ""
+              selectedOption ? formatFillBlankAnswer(selectedOption, hints.showRomaji) : ""
             }
-            correctAnswer={correctAnswer ? formatFillBlankAnswer(correctAnswer) : ""}
+            correctAnswer={
+              correctAnswer ? formatFillBlankAnswer(correctAnswer, hints.showRomaji) : ""
+            }
+            sentence={step.sentenceWithBlank.replace("___", correctAnswer?.japanese ?? "")}
+            meaning={hints.showTranslation ? step.englishHint : undefined}
+            pronunciation={step.sentenceRomaji ?? undefined}
+            showPronunciation={hints.canRevealRomaji || hints.showRomaji}
             seed={step.index}
           />
         ) : null

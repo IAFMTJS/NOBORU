@@ -43,6 +43,14 @@ import {
   summarizeLessonPhases,
   summarizeLessonStages,
 } from "@/lib/learning/lesson-stage-assembly.service";
+import {
+  assembleKnowledgeBlockSteps,
+  decomposeLessonIntoBlocks,
+} from "@/lib/learning/knowledge-block";
+import { resolveHintPolicy } from "@/lib/learning/hint-policy.service";
+import { resolveDifficultyProfile } from "@/lib/learning/difficulty-scaling.service";
+import { DEFAULT_STUDY_DIFFICULTY } from "@/lib/learning/hint-policy.types";
+import { filterStepsByGoldenRule } from "@/lib/learning/step-concept.validator";
 import { shuffle } from "@/features/learning/utils/exercise-steps";
 import {
   buildContextStepsFromLessonContents,
@@ -64,13 +72,58 @@ import { planCheckpointActivities } from "@/lib/learning/checkpoint-assembly.ser
 import { learnedContentRepository } from "@/features/learning/repositories/learned-content.repository";
 import { playerKnowledgeService } from "@/features/learning/services/player-knowledge.service";
 import { comprehensionSupportService } from "@/features/learning/services/comprehension-support.service";
+import type { PlayerKnowledgeContext } from "@/lib/learning/learning-architecture.types";
 import { getJlptLevelForRegion } from "@/lib/learning/region-jlpt";
 
 type LessonAssemblyPlan = {
   newContents: LessonContent[];
   reviewContents: LessonContent[];
   isCheckpoint: boolean;
+  priorKnownConceptIds: Set<string>;
+  playerContext: PlayerKnowledgeContext;
+  studyDifficulty?: import("@/lib/learning/hint-policy.types").StudyDifficulty;
 };
+
+function buildPriorKnownConceptIds(
+  contents: LessonContent[],
+  knownIdsByType: ReadonlyMap<string, ReadonlySet<string>>,
+): Set<string> {
+  const ids = new Set<string>();
+  for (const content of contents) {
+    const known = knownIdsByType.get(content.type);
+    if (known?.has(content.id)) {
+      ids.add(`${content.type}:${content.id}`);
+    }
+  }
+  return ids;
+}
+
+function mapGrammarRowToLessonContent(
+  row: {
+    id: string;
+    title: string;
+    meaning: string;
+    explanation: string | null;
+    concept_kind?: GrammarLessonContent["conceptKind"];
+    teaching_steps?: GrammarLessonContent["teachingSteps"] | null;
+  },
+  examples: Array<{ japanese_text: string; romaji: string | null; english: string }>,
+): GrammarLessonContent {
+  return {
+    type: "grammar",
+    id: row.id,
+    title: row.title,
+    meaning: row.meaning,
+    explanation: row.explanation,
+    conceptKind: row.concept_kind ?? null,
+    teachingSteps: row.teaching_steps ?? undefined,
+    examples: examples.map((example) => ({
+      japaneseText: example.japanese_text,
+      romaji: example.romaji,
+      english: example.english,
+    })),
+  };
+}
 
 function isKnownLessonContent(
   content: LessonContent,
@@ -179,18 +232,7 @@ class LessonService {
       const examples = await grammarRepository.listPublishedExamplesByGrammarId(
         row.id,
       );
-      return {
-        type: "grammar",
-        id: row.id,
-        title: row.title,
-        meaning: row.meaning,
-        explanation: row.explanation,
-        examples: examples.map((example) => ({
-          japaneseText: example.japanese_text,
-          romaji: example.romaji,
-          english: example.english,
-        })),
-      } satisfies GrammarLessonContent;
+      return mapGrammarRowToLessonContent(row, examples);
     }
 
     if (contentType === "hiragana") {
@@ -405,18 +447,7 @@ class LessonService {
         const row = grammarById.get(item.content_id);
         if (!row || row.status !== "published") return null;
         const examples = grammarExamplesById.get(row.id) ?? [];
-        return {
-          type: "grammar",
-          id: row.id,
-          title: row.title,
-          meaning: row.meaning,
-          explanation: row.explanation,
-          examples: examples.map((example) => ({
-            japaneseText: example.japanese_text,
-            romaji: example.romaji,
-            english: example.english,
-          })),
-        } satisfies GrammarLessonContent;
+        return mapGrammarRowToLessonContent(row, examples);
       }
 
       if (item.content_type === "hiragana") {
@@ -526,15 +557,46 @@ class LessonService {
     return map;
   }
 
-  private buildStagedExerciseBlock(
-    newContents: LessonContent[],
-    reviewContents: LessonContent[],
-    isCheckpoint: boolean,
+  private buildKnowledgeBlockExerciseBlock(
+    assembly: LessonAssemblyPlan,
   ): LessonStep[] {
+    const hintPolicy = resolveHintPolicy({
+      studyDifficulty: assembly.studyDifficulty ?? DEFAULT_STUDY_DIFFICULTY,
+      lifecycleProfile: resolveDifficultyProfile("discovered"),
+    });
+
+    const blocks = decomposeLessonIntoBlocks({
+      contents: assembly.newContents,
+      playerContext: assembly.playerContext,
+      knownContentIds: assembly.priorKnownConceptIds,
+    });
+
+    const { steps, registry } = assembleKnowledgeBlockSteps({
+      blocks,
+      reviewContents: assembly.reviewContents,
+      isCheckpoint: assembly.isCheckpoint,
+      hintPolicy,
+      priorKnownConceptIds: assembly.priorKnownConceptIds,
+    });
+
+    return filterStepsByGoldenRule(
+      steps,
+      registry,
+      assembly.priorKnownConceptIds,
+    );
+  }
+
+  private buildStagedExerciseBlock(
+    assembly: LessonAssemblyPlan,
+  ): LessonStep[] {
+    if (!assembly.isCheckpoint && assembly.newContents.length > 0) {
+      return this.buildKnowledgeBlockExerciseBlock(assembly);
+    }
+
     const { steps } = assembleStagedExerciseSteps({
-      newContents,
-      reviewContents,
-      isCheckpoint,
+      newContents: assembly.newContents,
+      reviewContents: assembly.reviewContents,
+      isCheckpoint: assembly.isCheckpoint,
     });
     return steps;
   }
@@ -783,6 +845,8 @@ class LessonService {
         newContents: [],
         reviewContents: mergedReview,
         isCheckpoint: true,
+        priorKnownConceptIds: buildPriorKnownConceptIds(workingContents, knownIdsByType),
+        playerContext,
       };
     }
 
@@ -791,6 +855,8 @@ class LessonService {
         newContents,
         reviewContents,
         isCheckpoint: false,
+        priorKnownConceptIds: buildPriorKnownConceptIds(workingContents, knownIdsByType),
+        playerContext,
       };
     }
 
@@ -798,6 +864,8 @@ class LessonService {
       newContents,
       reviewContents,
       isCheckpoint: false,
+      priorKnownConceptIds: buildPriorKnownConceptIds(workingContents, knownIdsByType),
+      playerContext,
     };
   }
 
@@ -829,12 +897,33 @@ class LessonService {
     const runDrillPreamble =
       drillableContents.length > 0 && (newContents.length > 0 || reviewContents.length > 0);
 
-    const drillSteps: LessonStep[] = runDrillPreamble
+    const drillSteps: LessonStep[] = runDrillPreamble && assembly
       ? [
           ...this.buildDiscoverTeachSteps(newContents),
-          ...this.buildStagedExerciseBlock(newContents, reviewContents, false),
+          ...this.buildStagedExerciseBlock(assembly),
         ]
-      : [];
+      : runDrillPreamble
+        ? [
+            ...this.buildDiscoverTeachSteps(newContents),
+            ...this.buildStagedExerciseBlock({
+              newContents,
+              reviewContents,
+              isCheckpoint: false,
+              priorKnownConceptIds: new Set(),
+              playerContext: {
+                jlptLevel: "n5",
+                unlockedBranchIds: [],
+                unlockedChapterIds: [],
+                knownVocabularyIds: [],
+                knownGrammarIds: [],
+                knownKanjiIds: [],
+                masteredVocabularyIds: [],
+                weakVocabularyIds: [],
+                activeVocabularyPool: [],
+              },
+            }),
+          ]
+        : [];
 
     const contextSteps = buildEmbeddedContextSteps(
       lesson.type,
@@ -874,12 +963,24 @@ class LessonService {
 
     if (lesson.type === "practice") {
       const drillBlock = assembly
-        ? this.buildStagedExerciseBlock(
-            assembly.newContents,
-            assembly.reviewContents,
-            assembly.isCheckpoint,
-          )
-        : this.buildStagedExerciseBlock([], contents, true);
+        ? this.buildStagedExerciseBlock(assembly)
+        : this.buildStagedExerciseBlock({
+            newContents: [],
+            reviewContents: contents,
+            isCheckpoint: true,
+            priorKnownConceptIds: new Set(),
+            playerContext: {
+              jlptLevel: "n5",
+              unlockedBranchIds: [],
+              unlockedChapterIds: [],
+              knownVocabularyIds: [],
+              knownGrammarIds: [],
+              knownKanjiIds: [],
+              masteredVocabularyIds: [],
+              weakVocabularyIds: [],
+              activeVocabularyPool: [],
+            },
+          });
       const contextSteps = buildContextStepsFromLessonContents(
         contents,
         (content, index, total) => this.buildApplicationStep(content, index, total),
@@ -891,12 +992,7 @@ class LessonService {
     if (assembly) {
       return [
         intro,
-        ...this.buildDiscoverTeachSteps(assembly.newContents),
-        ...this.buildStagedExerciseBlock(
-          assembly.newContents,
-          assembly.reviewContents,
-          assembly.isCheckpoint,
-        ),
+        ...this.buildStagedExerciseBlock(assembly),
         complete,
       ];
     }
@@ -904,7 +1000,23 @@ class LessonService {
     return [
       intro,
       ...this.buildDiscoverTeachSteps(contents),
-      ...this.buildStagedExerciseBlock(contents, [], false),
+      ...this.buildStagedExerciseBlock({
+        newContents: contents,
+        reviewContents: [],
+        isCheckpoint: false,
+        priorKnownConceptIds: new Set(),
+        playerContext: {
+          jlptLevel: "n5",
+          unlockedBranchIds: [],
+          unlockedChapterIds: [],
+          knownVocabularyIds: [],
+          knownGrammarIds: [],
+          knownKanjiIds: [],
+          masteredVocabularyIds: [],
+          weakVocabularyIds: [],
+          activeVocabularyPool: [],
+        },
+      }),
       complete,
     ];
   }

@@ -151,7 +151,9 @@ function isAutoAdvanceDrillStep(step: LessonStep): boolean {
     step.kind === "application" ||
     step.kind === "fill_blank" ||
     step.kind === "word_bank" ||
-    step.kind === "sentence_typed"
+    step.kind === "sentence_typed" ||
+    step.kind === "conjugation" ||
+    step.kind === "translation_choice"
   );
 }
 
@@ -753,6 +755,8 @@ export function LessonPlayer({ session, soundEnabled = true }: LessonPlayerProps
         currentStep.kind === "fill_blank" ||
         currentStep.kind === "word_bank" ||
         currentStep.kind === "sentence_typed" ||
+        currentStep.kind === "conjugation" ||
+        currentStep.kind === "translation_choice" ||
         currentStep.kind === "matching" ? (
           <LessonDrillStep
             step={currentStep}

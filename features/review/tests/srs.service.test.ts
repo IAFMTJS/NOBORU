@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { applySrsRating } from "@/features/review/services/srs.service";
+import { applySrsRating, mapRatingForServerRpc } from "@/features/review/services/srs.service";
 
 describe("applySrsRating", () => {
   const base = {
@@ -37,5 +37,13 @@ describe("applySrsRating", () => {
     const strong = applySrsRating({ ...base, rating: "strong" });
     expect(strong.intervalDays).toBe(easy.intervalDays);
     expect(strong.masteryScore).toBe(easy.masteryScore);
+  });
+
+  it("maps learner ratings to server RPC values", () => {
+    expect(mapRatingForServerRpc("again")).toBe("again");
+    expect(mapRatingForServerRpc("hard")).toBe("good");
+    expect(mapRatingForServerRpc("good")).toBe("good");
+    expect(mapRatingForServerRpc("easy")).toBe("strong");
+    expect(mapRatingForServerRpc("strong")).toBe("strong");
   });
 });

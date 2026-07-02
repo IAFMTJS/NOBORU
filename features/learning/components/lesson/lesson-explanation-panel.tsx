@@ -23,7 +23,7 @@ export function LessonExplanationPanel({
         className={cn(className)}
         correctAnswer="—"
         explanation={message}
-        userAnswer={userAnswer}
+        userAnswer={userAnswer ?? ""}
       />
     );
   }
@@ -32,7 +32,7 @@ export function LessonExplanationPanel({
     <LearningFailurePanel
       className={className}
       correctAnswer={correctAnswer}
-      userAnswer={userAnswer}
+      userAnswer={userAnswer ?? ""}
       explanation={message}
     />
   );

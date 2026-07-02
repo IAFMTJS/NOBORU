@@ -18,6 +18,17 @@ function normalizeRating(rating: ReviewRating): "again" | "hard" | "good" | "eas
   return rating;
 }
 
+/** Maps learner-facing ratings to DB RPC values (again | good | strong). */
+export function mapRatingForServerRpc(
+  rating: ReviewRating,
+): "again" | "good" | "strong" {
+  const normalized = normalizeRating(rating);
+  if (normalized === "again") return "again";
+  if (normalized === "easy") return "strong";
+  if (normalized === "hard") return "good";
+  return "good";
+}
+
 export function applySrsRating(input: {
   state: ReviewState;
   rating: ReviewRating;

@@ -14,6 +14,7 @@ import { useLogout } from "@/features/authentication/hooks/use-logout";
 import { SettingsOfflineSection } from "@/features/settings/components/settings-offline-section";
 import { BETA_RELEASE } from "@/lib/release/beta.constants";
 import { OFFICIAL_RELEASE, RELEASE } from "@/lib/release/release.constants";
+import { StudyDifficultyPreferenceRow } from "@/features/settings/components/study-difficulty-preference-row";
 import { ThemeSelector } from "@/features/settings/components/theme-selector";
 import { useThemeSetting } from "@/features/settings/hooks/use-theme-setting";
 import { useTrailPreferences } from "@/features/settings/hooks/use-trail-preferences";
@@ -118,6 +119,7 @@ export function SettingsScreen({ settings }: SettingsScreenProps) {
                 }
               />
               <TrailPreferenceRow label="Romaji hints" value="When needed" />
+              <StudyDifficultyPreferenceRow />
             </GlassPanel>
 
             <GlassPanel className="space-y-3 p-4">

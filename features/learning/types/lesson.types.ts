@@ -1,7 +1,14 @@
 import type { ContentStatus } from "@/lib/content/types";
+import type { HintPolicyFields } from "@/lib/learning/hint-policy.types";
 import type { LessonPhase } from "@/lib/learning/lesson-phase.constants";
 import type { LessonStage } from "@/lib/learning/lesson-stage.constants";
 import type { VocabularyLifecycleStage } from "@/lib/learning/learning-architecture.constants";
+import type {
+  BlankTarget,
+  GrammarConceptKind,
+  LearningLayer,
+  TeachingStep,
+} from "@/lib/learning/knowledge-block/types";
 import type { ProgressStatus } from "@/features/learning/types/progress.types";
 import type { RegionAvailability } from "@/lib/learning/region-unlock";
 import type { ComprehensionSupportContext } from "@/lib/learning/comprehension-support.types";
@@ -85,6 +92,8 @@ export type GrammarLessonContent = {
   title: string;
   meaning: string;
   explanation: string | null;
+  conceptKind?: GrammarConceptKind | null;
+  teachingSteps?: TeachingStep[];
   examples: GrammarExampleContent[];
 };
 
@@ -129,6 +138,11 @@ export type LessonContent =
   | ListeningChallengeLessonContent
   | ApplicationLessonContent;
 
+export type PedagogyStepMeta = HintPolicyFields & {
+  learningLayer?: LearningLayer;
+  learningObjective?: string;
+};
+
 export type LessonIntroStep = {
   kind: "intro";
   title: string;
@@ -137,7 +151,7 @@ export type LessonIntroStep = {
   xpReward: number;
 };
 
-export type LessonTeachStep = {
+export type LessonTeachStep = PedagogyStepMeta & {
   kind: "teach";
   content: LessonContent;
   index: number;
@@ -150,7 +164,7 @@ export type LessonRecallMode = "choice" | "typed";
 
 export type LessonRecallPhase = "standard" | "consolidation";
 
-export type LessonRecallStep = {
+export type LessonRecallStep = PedagogyStepMeta & {
   kind: "recall";
   mode: LessonRecallMode;
   contentType: LessonContentType;
@@ -158,6 +172,7 @@ export type LessonRecallStep = {
   display: string;
   reading?: string | null;
   romaji?: string | null;
+  mediaUrl?: string | null;
   options: string[];
   optionMeta?: LessonFillBlankOption[];
   correctIndex: number;
@@ -171,7 +186,7 @@ export type LessonRecallStep = {
   total: number;
 };
 
-export type LessonListeningRecallStep = {
+export type LessonListeningRecallStep = PedagogyStepMeta & {
   kind: "listening_recall";
   prompt: string;
   audioUrl: string;
@@ -195,7 +210,7 @@ export type LessonFillBlankOption = {
 
 export type LessonFillBlankInteraction = "choice" | "blocks";
 
-export type LessonFillBlankStep = {
+export type LessonFillBlankStep = PedagogyStepMeta & {
   kind: "fill_blank";
   prompt: string;
   sentenceWithBlank: string;
@@ -204,6 +219,7 @@ export type LessonFillBlankStep = {
   options: LessonFillBlankOption[];
   correctIndex: number;
   interaction: LessonFillBlankInteraction;
+  blankTarget?: BlankTarget;
   stage?: LessonStage;
   lessonPhase?: LessonPhase;
   contentId?: string;
@@ -211,7 +227,7 @@ export type LessonFillBlankStep = {
   total: number;
 };
 
-export type LessonWordBankStep = {
+export type LessonWordBankStep = PedagogyStepMeta & {
   kind: "word_bank";
   prompt: string;
   englishHint: string;
@@ -226,13 +242,41 @@ export type LessonWordBankStep = {
   total: number;
 };
 
-export type LessonSentenceTypedStep = {
+export type LessonSentenceTypedStep = PedagogyStepMeta & {
   kind: "sentence_typed";
   prompt: string;
   englishHint: string;
   referenceJapanese?: string;
   sentenceRomaji?: string | null;
   acceptedAnswers: string[];
+  stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
+  index: number;
+  total: number;
+};
+
+export type LessonConjugationStep = PedagogyStepMeta & {
+  kind: "conjugation";
+  prompt: string;
+  dictionaryForm: string;
+  targetForm: string;
+  options: string[];
+  correctIndex: number;
+  teachingChain?: string[];
+  stage?: LessonStage;
+  lessonPhase?: LessonPhase;
+  contentId?: string;
+  index: number;
+  total: number;
+};
+
+export type LessonTranslationChoiceStep = PedagogyStepMeta & {
+  kind: "translation_choice";
+  prompt: string;
+  englishPrompt: string;
+  options: string[];
+  correctIndex: number;
   stage?: LessonStage;
   lessonPhase?: LessonPhase;
   contentId?: string;
@@ -248,7 +292,7 @@ export type LessonMatchingPair = {
   promptRomaji?: string | null;
 };
 
-export type LessonMatchingStep = {
+export type LessonMatchingStep = PedagogyStepMeta & {
   kind: "matching";
   prompt: string;
   pairs: LessonMatchingPair[];
@@ -325,7 +369,9 @@ export type ScoredLessonStep =
   | LessonFillBlankStep
   | LessonWordBankStep
   | LessonSentenceTypedStep
-  | LessonMatchingStep;
+  | LessonMatchingStep
+  | LessonConjugationStep
+  | LessonTranslationChoiceStep;
 
 export type LessonStep =
   | LessonIntroStep
@@ -336,6 +382,8 @@ export type LessonStep =
   | LessonWordBankStep
   | LessonSentenceTypedStep
   | LessonMatchingStep
+  | LessonConjugationStep
+  | LessonTranslationChoiceStep
   | LessonReadingStep
   | LessonStoryStep
   | LessonDialogueStep

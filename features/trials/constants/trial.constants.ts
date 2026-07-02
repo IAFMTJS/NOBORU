@@ -60,12 +60,18 @@ import { normalizeRegionSlug } from "@/lib/design-system/worlds";
 export function buildReviewRecommendations(
   scorePercent: number,
   regionSlug: string,
+  weakItems: Array<{ contentType: string; contentId: string; label?: string }> = [],
 ): string[] {
   const recommendations: string[] = [];
   const world = normalizeRegionSlug(regionSlug);
 
+  for (const item of weakItems.slice(0, 3)) {
+    const label = item.label ?? `${item.contentType} item`;
+    recommendations.push(`Review weak ${label} in Study → /review?contentType=${item.contentType}&weakOnly=true`);
+  }
+
   if (scorePercent < 80) {
-    recommendations.push("Review your SRS queue for weak items.");
+    recommendations.push("Review your SRS queue for weak items → /review?weakOnly=true");
   }
   if (world === "n5" && (regionSlug === "foothills" || regionSlug === "forest-trail")) {
     recommendations.push("Practice character charts before retrying.");

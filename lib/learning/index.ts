@@ -89,7 +89,38 @@ export {
 export {
   assertGoldenContentRule,
   validateGoldenContentRule,
+  validateGrammarGoldenRule,
+  extractRequiredConceptsFromStep,
+  validateStepAgainstRegistry,
+  assertStepAllowed,
+  filterStepsByGoldenRule,
 } from "@/lib/learning/golden-content.validator";
+
+export {
+  resolveHintPolicy,
+  shouldRevealRomaji,
+  type HintVisibility,
+} from "@/lib/learning/hint-policy.service";
+
+export {
+  DEFAULT_STUDY_DIFFICULTY,
+  type StudyDifficulty,
+  type HintPolicyFields,
+} from "@/lib/learning/hint-policy.types";
+
+export {
+  layerExerciseType,
+  parseLayerFromExerciseType,
+  rankWeakLayers,
+  getWeakLayersFromMasteryRows,
+} from "@/lib/learning/layer-mastery.service";
+
+export {
+  decomposeLessonIntoBlocks,
+  assembleKnowledgeBlockSteps,
+  type KnowledgeBlock,
+  type LearningLayer,
+} from "@/lib/learning/knowledge-block";
 
 export {
   computeSessionMixCounts,
@@ -162,8 +193,11 @@ export {
 
 export {
   buildFailureFeedback,
+  buildRichFailureFeedback,
   type FailureFeedbackInput,
   type FailureFeedbackViewModel,
+  type RichFailureFeedbackInput,
+  type RichFailureFeedbackViewModel,
 } from "@/lib/learning/failure-feedback.service";
 
 export {

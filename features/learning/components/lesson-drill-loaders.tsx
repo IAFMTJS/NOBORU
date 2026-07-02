@@ -69,6 +69,22 @@ const WordBankDrill = dynamic(
   { loading: () => <DrillSkeleton /> },
 );
 
+const ConjugationDrill = dynamic(
+  () =>
+    import("@/features/learning/components/drills/conjugation-drill").then(
+      (module) => module.ConjugationDrill,
+    ),
+  { loading: () => <DrillSkeleton /> },
+);
+
+const TranslationChoiceDrill = dynamic(
+  () =>
+    import("@/features/learning/components/drills/translation-choice-drill").then(
+      (module) => module.TranslationChoiceDrill,
+    ),
+  { loading: () => <DrillSkeleton /> },
+);
+
 const LevelUpCeremony = dynamic(
   () =>
     import("@/components/visual/world/level-up-ceremony").then(
@@ -88,6 +104,8 @@ type LessonDrillStepProps = {
     | { kind: "fill_blank" }
     | { kind: "word_bank" }
     | { kind: "sentence_typed" }
+    | { kind: "conjugation" }
+    | { kind: "translation_choice" }
   >;
   onAnswer: RecallHandler;
   soundEnabled?: boolean;
@@ -125,9 +143,14 @@ export function LessonDrillStep({
           referenceJapanese={step.referenceJapanese}
           sentenceRomaji={step.sentenceRomaji}
           acceptedAnswers={step.acceptedAnswers}
+          hintPolicy={step.hintPolicy}
           onAnswer={onAnswer}
         />
       );
+    case "conjugation":
+      return <ConjugationDrill step={step} onAnswer={onAnswer} />;
+    case "translation_choice":
+      return <TranslationChoiceDrill step={step} onAnswer={onAnswer} />;
     default:
       return null;
   }

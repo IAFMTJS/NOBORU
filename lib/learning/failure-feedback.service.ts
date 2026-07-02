@@ -13,6 +13,29 @@ export type FailureFeedbackViewModel = {
   reinforcementHint: string;
 };
 
+export type RichFailureFeedbackInput = FailureFeedbackInput & {
+  sentence?: string;
+  meaning?: string;
+  grammarChain?: string[];
+  pronunciation?: string;
+  showGrammar?: boolean;
+  showPronunciation?: boolean;
+};
+
+export type RichFailureFeedbackViewModel = {
+  correction: string;
+  explanation: string;
+  encouragement: string;
+  shouldRetry: boolean;
+  reinforcementHint: string;
+  sentence?: string;
+  meaning?: string;
+  grammarChain?: string[];
+  pronunciation?: string;
+  showGrammar: boolean;
+  showPronunciation: boolean;
+};
+
 const ENCOURAGEMENT_MESSAGES = [
   "Every mistake is a step on the trail — let's try again.",
   "Good effort. The correct form is right here with you.",
@@ -37,5 +60,21 @@ export function buildFailureFeedback(
       ENCOURAGEMENT_MESSAGES[0],
     shouldRetry: true,
     reinforcementHint: "Review the meaning once, then try again without penalty.",
+  };
+}
+
+export function buildRichFailureFeedback(
+  input: RichFailureFeedbackInput,
+  seed = 0,
+): RichFailureFeedbackViewModel {
+  const base = buildFailureFeedback(input, seed);
+  return {
+    ...base,
+    sentence: input.sentence,
+    meaning: input.meaning,
+    grammarChain: input.grammarChain,
+    pronunciation: input.pronunciation,
+    showGrammar: input.showGrammar ?? Boolean(input.grammarChain?.length),
+    showPronunciation: input.showPronunciation ?? Boolean(input.pronunciation),
   };
 }

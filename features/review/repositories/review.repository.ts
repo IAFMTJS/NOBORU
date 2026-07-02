@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Json, SubmitReviewRatingRpcResult, SubmitReviewRatingsBatchRpcResult } from "@/lib/supabase/database.types";
 import type { ReviewRating } from "@/features/review/types/review.types";
+import { mapRatingForServerRpc } from "@/features/review/services/srs.service";
 
 export type ReviewState =
   | "new"
@@ -330,7 +331,7 @@ class ReviewRepository {
     const { data, error } = await supabase.rpc("submit_review_rating", {
       p_user_id: userId,
       p_review_item_id: reviewItemId,
-      p_rating: rating,
+      p_rating: mapRatingForServerRpc(rating),
       p_client_event_id: clientEventId ?? null,
     });
 
@@ -360,7 +361,7 @@ class ReviewRepository {
       p_user_id: userId,
       p_items: items.map((item) => ({
         review_item_id: item.reviewItemId,
-        rating: item.rating,
+        rating: mapRatingForServerRpc(item.rating),
         client_event_id: item.clientEventId ?? null,
       })) as Json,
     });

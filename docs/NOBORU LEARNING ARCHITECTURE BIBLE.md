@@ -215,6 +215,20 @@ Including:
 
 Nothing should appear without prior introduction.
 
+Grammar, particles, and conjugation forms are validated via `lib/learning/step-concept.validator.ts` and the algorithmic knowledge block engine.
+
+⸻
+
+Knowledge Blocks (algorithmic)
+
+Lessons decompose ordered `lesson_items` into one-concept-at-a-time blocks at runtime.
+
+Implementation: `lib/learning/knowledge-block/`
+
+Flow per block: teach → layer drills → combine → mastery.
+
+Authoritative spec: [learning-system-redesign.md](./learning-system-redesign.md).
+
 ⸻
 
 Vocabulary Lifecycle

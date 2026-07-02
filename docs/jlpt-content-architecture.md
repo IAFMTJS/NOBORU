@@ -62,6 +62,12 @@ Mastery
 
 Long-Term Retention
 
+Runtime lessons also follow the redesign loop:
+
+Teach → Practice → Combine → Master → Review → Apply
+
+See [learning-system-redesign.md](./learning-system-redesign.md).
+
 No content may skip stages.
 
 ⸻

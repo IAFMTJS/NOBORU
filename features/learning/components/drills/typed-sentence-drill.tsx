@@ -12,7 +12,11 @@ import {
   pickJapaneseAnswerCorrection,
 } from "@/features/learning/utils/recall-answers";
 
-type TypedSentenceDrillProps = {
+import type { HintPolicyFields } from "@/lib/learning/hint-policy.types";
+import { useStepHintPolicy } from "@/features/learning/hooks/use-step-hint-policy";
+import { ShowPronunciationButton } from "@/features/learning/components/drills/show-pronunciation-button";
+
+type TypedSentenceDrillProps = HintPolicyFields & {
   prompt: string;
   display: string;
   referenceJapanese?: string;
@@ -28,11 +32,13 @@ export function TypedSentenceDrill({
   referenceJapanese,
   sentenceRomaji,
   acceptedAnswers,
+  hintPolicy,
   onAnswer,
   disabled = false,
 }: TypedSentenceDrillProps) {
   const [value, setValue] = useState("");
   const [result, setResult] = useState<"correct" | "incorrect" | null>(null);
+  const hints = useStepHintPolicy({ hintPolicy });
 
   function handleSubmit() {
     const correct = isJapaneseTextAnswerCorrect(value, acceptedAnswers);
@@ -46,14 +52,21 @@ export function TypedSentenceDrill({
       result={result}
       hero={
         referenceJapanese ? (
-          <AnnotatedJapaneseText
-            text={referenceJapanese}
-            romaji={sentenceRomaji}
-            english={display}
-            size="lg"
-            className="max-w-md text-foreground"
-            supportMode="tap"
-          />
+          <div className="space-y-2">
+            <AnnotatedJapaneseText
+              text={referenceJapanese}
+              romaji={hints.showRomaji ? sentenceRomaji : null}
+              english={hints.showTranslation ? display : null}
+              size="lg"
+              className="max-w-md text-foreground"
+              supportMode="tap"
+            />
+            <ShowPronunciationButton
+              visible={hints.canRevealRomaji}
+              revealed={hints.romajiRevealed}
+              onReveal={hints.revealRomaji}
+            />
+          </div>
         ) : (
           <p className="max-w-md text-body text-muted-foreground">{display}</p>
         )
